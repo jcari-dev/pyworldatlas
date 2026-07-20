@@ -1,0 +1,9 @@
+{
+  "dataset_version": "2026.07.20",
+  "countries": 12,
+  "capitals": 12,
+  "major_cities": 1429,
+  "capital_coordinates": 12,
+  "database_sha256": "1429c0108701930436e9d526dae88b3e96d29700f0c619ec4b146b3a51b05e90",
+  "validation": "PASS"
+}

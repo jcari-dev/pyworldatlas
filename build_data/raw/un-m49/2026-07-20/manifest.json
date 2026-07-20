@@ -1,0 +1,13 @@
+{
+  "source_id": "un-m49",
+  "source_version": "2026-07-20",
+  "retrieved_at": "2026-07-20T00:00:00Z",
+  "files": [
+    {
+      "url": "https://unstats.un.org/unsd/methodology/m49/overview/",
+      "path": "overview.html",
+      "sha256": "748f6ff7380c8a50ea9448f068b79e3a1ee31be63207249e8cc89bf1eb969d11",
+      "size_bytes": 1721568
+    }
+  ]
+}

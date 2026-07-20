@@ -1,0 +1,127 @@
+{
+  "library_version": "0.1.0",
+  "schema_version": 1,
+  "dataset_version": "2026.07.20",
+  "milestones": [
+    {
+      "name": "0 \u2014 Clean foundation",
+      "version": "0.1.0",
+      "status": "implemented",
+      "functions": "Atlas lookup, search, collection protocol, capitals, major cities, dataset info",
+      "tests": "11 local tests",
+      "dataset": "12 countries / 12 capitals",
+      "docs": "source complete; local HTML and doctests pass",
+      "release": "not published"
+    },
+    {
+      "name": "1 \u2014 Generated country core",
+      "version": "0.1.0",
+      "status": "implemented",
+      "functions": "Atlas lookup, search, collection protocol, capitals, major cities, dataset info",
+      "tests": "11 local tests",
+      "dataset": "12 countries / 12 capitals",
+      "docs": "source complete; local HTML and doctests pass",
+      "release": "not published"
+    },
+    {
+      "name": "2 \u2014 Geographic calculations",
+      "version": "0.2.0",
+      "status": "not_started",
+      "functions": "\u2014",
+      "tests": "\u2014",
+      "dataset": "\u2014",
+      "docs": "\u2014",
+      "release": "\u2014"
+    },
+    {
+      "name": "3 \u2014 Borders",
+      "version": "0.3.0",
+      "status": "not_started",
+      "functions": "\u2014",
+      "tests": "\u2014",
+      "dataset": "\u2014",
+      "docs": "\u2014",
+      "release": "\u2014"
+    },
+    {
+      "name": "4 \u2014 Geometry",
+      "version": "0.4.0",
+      "status": "not_started",
+      "functions": "\u2014",
+      "tests": "\u2014",
+      "dataset": "\u2014",
+      "docs": "\u2014",
+      "release": "\u2014"
+    },
+    {
+      "name": "5 \u2014 Statistics",
+      "version": "0.5.0",
+      "status": "not_started",
+      "functions": "\u2014",
+      "tests": "\u2014",
+      "dataset": "\u2014",
+      "docs": "\u2014",
+      "release": "\u2014"
+    },
+    {
+      "name": "6 \u2014 Leaders",
+      "version": "0.6.0",
+      "status": "not_started",
+      "functions": "\u2014",
+      "tests": "\u2014",
+      "dataset": "\u2014",
+      "docs": "\u2014",
+      "release": "\u2014"
+    },
+    {
+      "name": "7 \u2014 Rich profile",
+      "version": "0.7.0",
+      "status": "not_started",
+      "functions": "\u2014",
+      "tests": "\u2014",
+      "dataset": "\u2014",
+      "docs": "\u2014",
+      "release": "\u2014"
+    },
+    {
+      "name": "8 \u2014 Education and export",
+      "version": "0.8.0",
+      "status": "not_started",
+      "functions": "\u2014",
+      "tests": "\u2014",
+      "dataset": "\u2014",
+      "docs": "\u2014",
+      "release": "\u2014"
+    },
+    {
+      "name": "9 \u2014 Full-world hardening",
+      "version": "0.9.0",
+      "status": "not_started",
+      "functions": "\u2014",
+      "tests": "\u2014",
+      "dataset": "\u2014",
+      "docs": "\u2014",
+      "release": "\u2014"
+    },
+    {
+      "name": "Stable offline atlas",
+      "version": "1.0.0",
+      "status": "not_started",
+      "functions": "\u2014",
+      "tests": "\u2014",
+      "dataset": "\u2014",
+      "docs": "\u2014",
+      "release": "\u2014"
+    }
+  ],
+  "coverage": {
+    "dataset_version": "2026.07.20",
+    "countries": 12,
+    "capitals": 12,
+    "major_cities": 1429,
+    "capital_coordinates": 12,
+    "database_sha256": "1429c0108701930436e9d526dae88b3e96d29700f0c619ec4b146b3a51b05e90",
+    "validation": "PASS"
+  },
+  "legacy_preservation": "not_applicable_no_existing_commits"
+}

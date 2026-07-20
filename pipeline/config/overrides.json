@@ -1,0 +1,30 @@
+[
+  {
+    "country_code": "BO",
+    "field_path": "name",
+    "operation": "replace",
+    "value": "Bolivia",
+    "reason": "Use the familiar short name while retaining the UN M49 name as the official sourced name.",
+    "evidence": ["UN M49 record 068"],
+    "reviewed_at": "2026-07-20"
+  },
+  {
+    "country_code": "US",
+    "field_path": "name",
+    "operation": "replace",
+    "value": "United States",
+    "reason": "Use the familiar short name while retaining the UN M49 name as the official sourced name.",
+    "evidence": ["UN M49 record 840"],
+    "reviewed_at": "2026-07-20"
+  },
+  {
+    "country_code": "VA",
+    "field_path": "name",
+    "operation": "replace",
+    "value": "Vatican City",
+    "reason": "Use the familiar atlas name while retaining Holy See as the UN M49 sourced name.",
+    "evidence": ["UN M49 record 336", "GeoNames VA country record"],
+    "reviewed_at": "2026-07-20"
+  }
+]
+

@@ -1,0 +1,19 @@
+{
+  "source_id": "geonames",
+  "source_version": "2026-07-20",
+  "retrieved_at": "2026-07-20T00:00:00Z",
+  "files": [
+    {
+      "url": "https://download.geonames.org/export/dump/countryInfo.txt",
+      "path": "countryInfo.txt",
+      "sha256": "93bafc525813f22e4711ff9ed6d626343094ce48c26388dc7c49189b3d7d5512",
+      "size_bytes": 31678
+    },
+    {
+      "url": "https://download.geonames.org/export/dump/cities15000.zip",
+      "path": "cities15000.zip",
+      "sha256": "7d4ec0fc35dba7f351447d8918594db8f471dfc8ffa2819e26d75543597b8bbf",
+      "size_bytes": 3300610
+    }
+  ]
+}
