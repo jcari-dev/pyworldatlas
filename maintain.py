@@ -121,6 +121,24 @@ def docs(wheel: Path | None = None) -> None:
             temporary.cleanup()
 
 
+def preview(*, host: str = "127.0.0.1", port: int = 8000) -> None:
+    """Build the documentation and serve it until the user presses Ctrl+C."""
+    docs()
+    output = ROOT / "docs/_build/html"
+    url = f"http://{host}:{port}/"
+    print(f"\nDocumentation preview: {url}")
+    print("Press Ctrl+C to stop the preview server.\n")
+    command = [
+        sys.executable, "-m", "http.server", str(port),
+        "--bind", host, "--directory", str(output),
+    ]
+    print("  $", " ".join(command), flush=True)
+    try:
+        subprocess.run(command, cwd=ROOT, check=True)
+    except KeyboardInterrupt:
+        print("\nDocumentation preview stopped.")
+
+
 def check() -> None:
     print("[1/4] Runtime and pipeline tests")
     run_tests()
@@ -149,6 +167,9 @@ def main() -> int:
     sub.add_parser("test")
     sub.add_parser("demo")
     sub.add_parser("docs")
+    preview_parser = sub.add_parser("preview")
+    preview_parser.add_argument("--host", default="127.0.0.1")
+    preview_parser.add_argument("--port", default=8000, type=int)
     sub.add_parser("check")
     args = parser.parse_args()
     if args.command == "refresh":
@@ -163,6 +184,8 @@ def main() -> int:
         demo()
     elif args.command == "docs":
         docs()
+    elif args.command == "preview":
+        preview(host=args.host, port=args.port)
     else:
         check()
     return 0

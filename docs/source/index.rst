@@ -1,31 +1,31 @@
 PyWorldAtlas
 ============
 
-.. raw:: html
+PyWorldAtlas is a compact, source-aware world atlas for Python. It provides
+typed country, capital, and city records from one bundled SQLite database and
+works without an API key, runtime download, or third-party dependency.
 
-   <section class="atlas-hero">
-     <div class="atlas-eyebrow">Offline geography for Python</div>
-     <h1>Keep the world close.</h1>
-     <p>A small, source-aware atlas for learning, teaching, prototyping, and exploring—without API keys, runtime downloads, or third-party dependencies.</p>
-     <div class="atlas-badges">
-       <span class="atlas-badge">Release 0.1.0</span>
-       <span class="atlas-badge">Dataset 2026.07.20</span>
-       <span class="atlas-badge">Python 3.10–3.14</span>
-       <span class="atlas-badge">100% offline runtime</span>
-     </div>
-   </section>
+**Release:** 0.1.0 | **Dataset:** 2026.07.20 | **Python:** 3.10–3.14 |
+**Runtime dependencies:** 0
 
-.. raw:: html
+.. note::
 
-   <div class="atlas-stats">
-     <div class="atlas-stat"><strong>12</strong><span>representative countries</span></div>
-     <div class="atlas-stat"><strong>12</strong><span>primary capitals</span></div>
-     <div class="atlas-stat"><strong>1,429</strong><span>major-city records</span></div>
-     <div class="atlas-stat"><strong>0</strong><span>runtime dependencies</span></div>
-   </div>
+   Version 0.1.0 is an intentionally small first release containing twelve
+   representative countries, twelve capitals, and 1,429 major-city records.
+   The current coverage is explicit; later milestones expand the package.
 
-Two lines to the atlas
-----------------------
+Installation
+------------
+
+Install the current source checkout while the rebuilt release is being
+prepared for PyPI:
+
+.. code-block:: console
+
+   python -m pip install -e .
+
+Quick example
+-------------
 
 .. doctest::
 
@@ -42,21 +42,14 @@ The installed wheel contains ordinary Python source and one read-only SQLite
 database. Constructing :class:`~pyworldatlas.Atlas` never contacts a server and
 does not load the complete dataset into memory.
 
-.. raw:: html
+Documentation
+-------------
 
-   <div class="atlas-note"><strong>An honest first release.</strong> Version 0.1.0 proves the new architecture with twelve representative countries. It does not pretend to be the final full-world dataset. Every page clearly distinguishes what works today from what arrives in later milestones.</div>
-
-Designed to be explored
------------------------
-
-.. raw:: html
-
-   <div class="atlas-cards">
-     <article class="atlas-card"><h3>Start in sixty seconds</h3><p>Install the package, look up a country, and inspect its capital and identifiers.</p><a href="quickstart.html">Read the quickstart →</a></article>
-     <article class="atlas-card"><h3>See the complete profile</h3><p>Understand every field available in the current immutable country model.</p><a href="country_profile.html">Tour a country profile →</a></article>
-     <article class="atlas-card"><h3>Test every record</h3><p>Run the VS Code playground to audit all countries, capitals, and cities.</p><a href="playground.html">Open the playground guide →</a></article>
-     <article class="atlas-card"><h3>Trust the data trail</h3><p>See exactly which source provides identity, regions, capitals, and cities.</p><a href="data_sources.html">Inspect sources and quality →</a></article>
-   </div>
+- Follow the :doc:`quickstart` for a guided first session.
+- Use the :doc:`playground` to audit and explore every bundled record in VS Code.
+- Read :doc:`country_profile` for the complete current data model.
+- See :doc:`data_sources` and :doc:`data_quality` for provenance and limitations.
+- Consult the :doc:`api` for the generated public reference.
 
 What works in 0.1.0
 -------------------
@@ -69,6 +62,23 @@ What works in 0.1.0
 - Primary capitals with WGS84 coordinates, population, timezone, and GeoNames ID.
 - Major cities over the configured population threshold.
 - JSON-compatible serialization and explicit source references.
+
+Current coverage
+----------------
+
+.. list-table:: Bundled dataset
+   :header-rows: 1
+
+   * - Records
+     - Count
+   * - Countries
+     - 12
+   * - Primary capitals
+     - 12
+   * - Capital coordinates
+     - 12 / 12
+   * - Major cities
+     - 1,429
 
 .. toctree::
    :hidden:

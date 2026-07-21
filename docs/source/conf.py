@@ -15,12 +15,7 @@ nitpick_ignore = [("py:class", "pathlib.Path")]
 html_theme = "sphinx_rtd_theme"
 html_title = "PyWorldAtlas 0.1.0"
 html_short_title = "PyWorldAtlas"
-html_logo = "_static/logo.svg"
-html_favicon = "_static/favicon.svg"
-html_static_path = ["_static"]
-html_css_files = ["custom.css"]
 html_theme_options = {
-    "logo_only": False,
     "prev_next_buttons_location": "bottom",
     "style_external_links": True,
     "navigation_depth": 3,
@@ -33,5 +28,4 @@ html_context = {
     "display_github": False,
     "current_version": release,
 }
-pygments_style = "friendly"
 exclude_patterns = ["_build"]
