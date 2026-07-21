@@ -242,8 +242,9 @@ def preview(*, host: str = "127.0.0.1", port: int = 8000) -> None:
 def check() -> None:
     print("[1/4] Runtime and pipeline tests")
     run_tests()
-    print("[2/4] Offline wheel demo")
-    wheel = demo()
+    print("[2/4] Build distributions and run offline wheel demo")
+    wheel, _ = build_distributions()
+    demo(wheel)
     print("[3/4] Documentation")
     docs(wheel)
     print("[4/4] Wheel content audit")
