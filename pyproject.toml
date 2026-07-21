@@ -1,25 +1,41 @@
 [build-system]
-requires = ["setuptools>=69"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyworldatlas"
 version = "0.1.0"
 description = "A small, rich, dependency-free offline Python atlas"
+keywords = ["atlas", "countries", "geography", "offline", "world-data"]
 readme = "README.md"
 requires-python = ">=3.10"
-license = {text = "MIT"}
-authors = [{name = "PyWorldAtlas maintainers"}]
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{name = "jcari-dev"}]
+maintainers = [{name = "jcari-dev"}]
 dependencies = []
 classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Education",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: Only",
-  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Operating System :: OS Independent",
+  "Topic :: Scientific/Engineering :: GIS",
+  "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
 [project.urls]
+Homepage = "https://jcari-dev.github.io/pyworldatlas-documentation/"
 Documentation = "https://jcari-dev.github.io/pyworldatlas-documentation/"
+Source = "https://github.com/jcari-dev/pyworldatlas"
+Issues = "https://github.com/jcari-dev/pyworldatlas-issue-tracker/issues"
+Changelog = "https://jcari-dev.github.io/pyworldatlas-documentation/changelog.html"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
@@ -29,4 +45,3 @@ where = ["src"]
 
 [tool.setuptools.package-data]
 pyworldatlas = ["data/atlas.sqlite3"]
-

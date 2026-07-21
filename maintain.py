@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import argparse
+from hashlib import sha256
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import sys
@@ -28,6 +30,14 @@ def builder_env() -> dict[str, str]:
         parts.append(env["PYTHONPATH"])
     env["PYTHONPATH"] = os.pathsep.join(parts)
     return env
+
+
+def bootstrap() -> None:
+    """Install the runtime, builder, release, and documentation toolchain."""
+    run([
+        sys.executable, "-m", "pip", "install", "-r", "docs/requirements.txt",
+        "build>=1.2,<2", "-e", ".", "-e", "pipeline",
+    ])
 
 
 def refresh() -> None:
@@ -88,8 +98,38 @@ def build_wheel() -> Path:
     return wheels[0]
 
 
-def demo() -> Path:
-    wheel = build_wheel()
+def project_version() -> str:
+    """Read the canonical package version without importing the project."""
+    text = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    match = re.search(r'^version\s*=\s*"([^"]+)"', text, flags=re.MULTILINE)
+    if match is None:
+        raise RuntimeError("Could not read the project version from pyproject.toml")
+    return match.group(1)
+
+
+def file_sha256(path: Path) -> str:
+    digest = sha256()
+    with path.open("rb") as stream:
+        for block in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def build_distributions() -> tuple[Path, Path]:
+    """Build one wheel and one source distribution with the standard frontend."""
+    dist = ROOT / "dist"
+    if dist.exists():
+        shutil.rmtree(dist)
+    run([sys.executable, "-m", "build"])
+    wheels = sorted(dist.glob("*.whl"))
+    sdists = sorted(dist.glob("*.tar.gz"))
+    if len(wheels) != 1 or len(sdists) != 1:
+        raise RuntimeError(f"Expected one wheel and one sdist, found {wheels!r} and {sdists!r}")
+    return wheels[0], sdists[0]
+
+
+def demo(wheel: Path | None = None) -> Path:
+    wheel = wheel or build_wheel()
     with tempfile.TemporaryDirectory(prefix="pyworldatlas-demo-") as folder:
         environment = Path(folder) / "venv"
         venv.EnvBuilder(with_pip=True).create(environment)
@@ -121,6 +161,66 @@ def docs(wheel: Path | None = None) -> None:
             temporary.cleanup()
 
 
+def prepare_release(version: str) -> None:
+    """Validate and build a release with checksums and a machine-readable manifest."""
+    current = project_version()
+    if version != current:
+        raise RuntimeError(f"Requested release {version}, but pyproject.toml contains {current}")
+    version_module = (ROOT / "src/pyworldatlas/_version.py").read_text(encoding="utf-8")
+    if f'__version__ = "{version}"' not in version_module:
+        raise RuntimeError("src/pyworldatlas/_version.py does not match pyproject.toml")
+    docs_config = (ROOT / "docs/source/conf.py").read_text(encoding="utf-8")
+    if f'release = "{version}"' not in docs_config:
+        raise RuntimeError("docs/source/conf.py does not match pyproject.toml")
+    if f"## {version} " not in (ROOT / "CHANGELOG.md").read_text(encoding="utf-8"):
+        raise RuntimeError(f"CHANGELOG.md has no {version} release heading")
+
+    print("[1/5] Runtime and pipeline tests")
+    run_tests()
+    print("[2/5] Build wheel and source distribution")
+    wheel, sdist = build_distributions()
+    print("[3/5] Clean installation and examples from release wheel")
+    demo(wheel)
+    print("[4/5] Documentation from release wheel")
+    docs(wheel)
+    print("[5/5] Release wheel content audit")
+    audit_wheel(wheel)
+    artifacts = [wheel, sdist]
+    status_data = json.loads((ROOT / "build_data/reports/status.json").read_text(encoding="utf-8"))
+    if status_data["library_version"] != version:
+        raise RuntimeError("Generated status metadata does not match the release version")
+    git_result = subprocess.run(
+        ["git", "rev-parse", "HEAD"], cwd=ROOT, check=True,
+        capture_output=True, text=True,
+    )
+    manifest = {
+        "library_version": version,
+        "dataset_version": status_data["dataset_version"],
+        "schema_version": status_data["schema_version"],
+        "git_commit": git_result.stdout.strip(),
+        "country_count": status_data["coverage"]["countries"],
+        "capital_count": status_data["coverage"]["capitals"],
+        "major_city_count": status_data["coverage"]["major_cities"],
+        "artifacts": {
+            path.name: {"sha256": file_sha256(path), "size_bytes": path.stat().st_size}
+            for path in artifacts
+        },
+        "tests": "passed",
+        "wheel_smoke_test": "passed",
+        "docs_html": "passed",
+        "docs_doctest": "passed",
+        "wheel_audit": "passed",
+    }
+    (ROOT / "dist/release-manifest.json").write_text(
+        json.dumps(manifest, indent=2) + "\n", encoding="utf-8",
+    )
+    (ROOT / "dist/SHA256SUMS").write_text(
+        "".join(f"{file_sha256(path)}  {path.name}\n" for path in artifacts),
+        encoding="utf-8",
+    )
+    print(f"Release {version} prepared in {ROOT / 'dist'}")
+
+
 def preview(*, host: str = "127.0.0.1", port: int = 8000) -> None:
     """Build the documentation and serve it until the user presses Ctrl+C."""
     docs()
@@ -147,8 +247,12 @@ def check() -> None:
     print("[3/4] Documentation")
     docs(wheel)
     print("[4/4] Wheel content audit")
+    audit_wheel(wheel)
+
+
+def audit_wheel(wheel: Path) -> None:
+    """Ensure the runtime wheel contains one database and no development tree."""
     import zipfile
-    wheel = next((ROOT / "dist").glob("*.whl"))
     with zipfile.ZipFile(wheel) as archive:
         names = archive.namelist()
     databases = [name for name in names if name.endswith(".sqlite3")]
@@ -161,18 +265,24 @@ def check() -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
+    sub.add_parser("bootstrap")
     refresh_parser = sub.add_parser("refresh")
     refresh_parser.add_argument("--offline", action="store_true", help="use captured raw snapshots only")
     sub.add_parser("status")
     sub.add_parser("test")
     sub.add_parser("demo")
-    sub.add_parser("docs")
+    docs_parser = sub.add_parser("docs")
+    docs_parser.add_argument("--wheel", type=Path, help="build documentation from this wheel")
     preview_parser = sub.add_parser("preview")
     preview_parser.add_argument("--host", default="127.0.0.1")
     preview_parser.add_argument("--port", default=8000, type=int)
+    release_parser = sub.add_parser("prepare-release")
+    release_parser.add_argument("version")
     sub.add_parser("check")
     args = parser.parse_args()
-    if args.command == "refresh":
+    if args.command == "bootstrap":
+        bootstrap()
+    elif args.command == "refresh":
         if not args.offline:
             parser.error("Release 0.1.0 currently requires --offline; fetch is intentionally separate from the deterministic build")
         refresh()
@@ -183,9 +293,11 @@ def main() -> int:
     elif args.command == "demo":
         demo()
     elif args.command == "docs":
-        docs()
+        docs(args.wheel)
     elif args.command == "preview":
         preview(host=args.host, port=args.port)
+    elif args.command == "prepare-release":
+        prepare_release(args.version)
     else:
         check()
     return 0

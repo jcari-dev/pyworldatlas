@@ -1,0 +1,117 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and verify distributions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install release toolchain
+        run: python -m pip install -r docs/requirements.txt "build>=1.2,<2" -e . -e pipeline
+      - name: Prepare release artifacts
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          python maintain.py prepare-release "$VERSION"
+      - uses: actions/upload-artifact@v5
+        with:
+          name: python-package-distributions
+          path: |
+            dist/*.whl
+            dist/*.tar.gz
+      - uses: actions/upload-artifact@v5
+        with:
+          name: release-metadata
+          path: |
+            dist/release-manifest.json
+            dist/SHA256SUMS
+
+  publish-pypi:
+    name: Publish to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/pyworldatlas
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v6
+        with:
+          name: python-package-distributions
+          path: dist
+      - uses: pypa/gh-action-pypi-publish@release/v1
+
+  github-release:
+    name: Create GitHub release
+    needs: [build, publish-pypi]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v6
+        with:
+          name: python-package-distributions
+          path: dist
+      - uses: actions/download-artifact@v6
+        with:
+          name: release-metadata
+          path: metadata
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/* metadata/* --generate-notes --verify-tag
+
+  deploy-docs:
+    name: Deploy documentation
+    needs: [build, publish-pypi]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+      - uses: actions/download-artifact@v6
+        with:
+          name: python-package-distributions
+          path: dist
+      - name: Install documentation toolchain
+        run: python -m pip install -r docs/requirements.txt
+      - name: Build documentation from the released wheel
+        run: python maintain.py docs --wheel dist/*.whl
+      - name: Check out documentation repository
+        uses: actions/checkout@v6
+        with:
+          repository: jcari-dev/pyworldatlas-documentation
+          token: ${{ secrets.DOCS_DEPLOY_TOKEN }}
+          path: documentation-site
+      - name: Publish generated HTML
+        run: |
+          rsync --archive --delete --exclude=.git docs/_build/html/ documentation-site/
+          touch documentation-site/.nojekyll
+          git -C documentation-site config user.name "github-actions[bot]"
+          git -C documentation-site config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git -C documentation-site add --all
+          if git -C documentation-site diff --cached --quiet; then
+            echo "Documentation is already current."
+          else
+            git -C documentation-site commit -m "Deploy PyWorldAtlas ${GITHUB_REF_NAME}"
+            git -C documentation-site push
+          fi
+

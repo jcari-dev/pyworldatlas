@@ -47,7 +47,7 @@ Missing data is a valid value
 
 ``None`` means the current sources did not provide a field or that its roadmap
 milestone has not been implemented. It does not mean zero, false, or an inferred
-fact. PyWorldAtlas never fills a gap from model memory.
+fact. PyWorldAtlas never fills a gap with an unsourced assumption.
 
 Interpretation cautions
 -----------------------

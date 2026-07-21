@@ -8,6 +8,7 @@ from html.parser import HTMLParser
 import json
 import os
 from pathlib import Path
+import re
 import sqlite3
 import zipfile
 
@@ -63,6 +64,14 @@ def _sha(path: Path) -> str:
         for block in iter(lambda: stream.read(1024 * 1024), b""):
             digest.update(block)
     return digest.hexdigest()
+
+
+def _project_version(root: Path) -> str:
+    text = (root / "pyproject.toml").read_text(encoding="utf-8")
+    match = re.search(r'^version\s*=\s*"([^"]+)"', text, flags=re.MULTILINE)
+    if match is None:
+        raise ValueError("Could not read library version from pyproject.toml")
+    return match.group(1)
 
 
 def write_manifests(root: Path) -> None:
@@ -213,11 +222,12 @@ def build_database(root: Path, normalized: dict[str, object]) -> Path:
     con.executescript(SCHEMA)
     epoch = os.environ.get("SOURCE_DATE_EPOCH")
     built_at = datetime.fromtimestamp(int(epoch), timezone.utc).isoformat().replace("+00:00", "Z") if epoch else "2026-07-20T00:00:00Z"
-    meta = {"schema_version": "1", "dataset_version": "2026.07.20", "library_version": "0.1.0", "built_at": built_at}
+    library_version = _project_version(root)
+    meta = {"schema_version": "1", "dataset_version": "2026.07.20", "library_version": library_version, "built_at": built_at}
     con.executemany("INSERT INTO schema_meta VALUES (?,?)", sorted(meta.items()))
     sources = [
         ("geonames", "GeoNames", "https://www.geonames.org/", "2026-07-20", "2026-07-20", "CC BY 4.0", "https://creativecommons.org/licenses/by/4.0/", _sha(root / "build_data/raw/geonames/2026-07-20/manifest.json"), "Country metadata and populated places"),
-        ("reviewed-overrides", "PyWorldAtlas reviewed overrides", "https://jcari-dev.github.io/pyworldatlas-documentation/", "0.1.0", "2026-07-20", "MIT", None, _sha(root / "pipeline/config/overrides.json"), "Reviewed familiar names and aliases"),
+        ("reviewed-overrides", "PyWorldAtlas reviewed overrides", "https://jcari-dev.github.io/pyworldatlas-documentation/", library_version, "2026-07-20", "MIT", None, _sha(root / "pipeline/config/overrides.json"), "Reviewed familiar names and aliases"),
         ("un-m49", "United Nations M49", "https://unstats.un.org/unsd/methodology/m49/", "2026-07-20", "2026-07-20", None, None, _sha(root / "build_data/raw/un-m49/2026-07-20/manifest.json"), "Canonical identities and regions"),
     ]
     con.executemany("INSERT INTO source VALUES (?,?,?,?,?,?,?,?,?)", sources)
@@ -268,7 +278,7 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
         ("Stable offline atlas", "1.0.0"),
     ]:
         milestones.append({"name": name, "version": version, "status": "not_started", "functions": "—", "tests": "—", "dataset": "—", "docs": "—", "release": "—"})
-    status = {"library_version": "0.1.0", "schema_version": 1, "dataset_version": "2026.07.20", "milestones": milestones, "coverage": coverage, "legacy_preservation": "not_applicable_no_existing_commits"}
+    status = {"library_version": _project_version(root), "schema_version": 1, "dataset_version": "2026.07.20", "milestones": milestones, "coverage": coverage, "legacy_release": "0.0.12 retained on PyPI"}
     (reports / "status.json").write_text(json.dumps(status, indent=2) + "\n", encoding="utf-8")
 
 

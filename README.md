@@ -179,7 +179,7 @@ Release 0.1.0 uses:
 
 Raw snapshots are preserved with SHA-256 manifests. The separate builder emits
 inspectable normalized JSON Lines before generating SQLite. Missing values stay
-missing; country facts are never invented from model memory.
+missing; unsourced assumptions are never substituted for country facts.
 
 Seven areas have no usable primary-capital record in the current snapshot.
 Their `country.capital` value is `None`. GeoNames-only country rows that do
@@ -208,6 +208,7 @@ For this release they are `0.1.0`, `1`, and `2026.07.20` respectively.
 - Current implementation status: [ROADMAP_STATUS.md](ROADMAP_STATUS.md)
 - Migration from the legacy API: [MIGRATION_FROM_0.0.md](MIGRATION_FROM_0.0.md)
 - Milestone evidence: [MILESTONE_0_1_REPORT.md](MILESTONE_0_1_REPORT.md)
+- Maintainer release process: [RELEASING.md](RELEASING.md)
 
 The next feature release, 0.2.0, focuses on great-circle distances, bearings,
 midpoints, antipodes, destination points, and nearby-capital searches.

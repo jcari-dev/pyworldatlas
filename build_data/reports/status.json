@@ -123,5 +123,5 @@
     "database_sha256": "4a61ad6ec44acd1fe535cac36b1130f5687586ecbb2071477ef5869c2b4c4cc8",
     "validation": "PASS"
   },
-  "legacy_preservation": "not_applicable_no_existing_commits"
+  "legacy_release": "0.0.12 retained on PyPI"
 }

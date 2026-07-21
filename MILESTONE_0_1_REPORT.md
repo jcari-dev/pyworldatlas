@@ -3,9 +3,9 @@
 ## Outcome
 
 Release 0.1.0 is implemented and locally release-ready, but not published. The
-repository was empty (no commits or remotes), so the required legacy tag and
-branch could not be created. The two untracked legacy data files were removed
-and replaced with newly downloaded, checksummed official snapshots.
+new runtime and database were built from captured, checksummed official source
+snapshots. Legacy 0.0.x releases remain available through PyPI's release
+history.
 
 ## Implemented
 
@@ -48,8 +48,7 @@ bundled SQLite databases: 1
 
 - Run CI across Python 3.10 through 3.14; only Python 3.12 was exercised locally.
 - Configure a package remote, PyPI Trusted Publishing, and documentation deployment.
-- Preserve or migrate the external legacy documentation repository, which was not
-  available in this empty local repository.
+- Deploy the canonical Sphinx output to the external documentation repository.
 - Publish the validated documentation to the existing public URL.
 
 The later 0.2.0 through 1.0.0 roadmap milestones have not started and are not
