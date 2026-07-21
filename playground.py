@@ -47,13 +47,14 @@ def number(value: int | float | None) -> str:
 
 
 def audit_every_record(atlas: Atlas) -> dict[str, int]:
-    """Validate every country, capital, and city exposed by the runtime API."""
+    """Validate every country and every stored capital and city record."""
     countries = tuple(atlas)
     alpha2_codes: set[str] = set()
     alpha3_codes: set[str] = set()
     numeric_codes: set[str] = set()
     geonames_ids: set[int] = set()
     capital_count = 0
+    missing_capital_count = 0
     city_count = 0
 
     assert countries, "The dataset must contain at least one country"
@@ -79,7 +80,8 @@ def audit_every_record(atlas: Atlas) -> dict[str, int]:
 
         assert country.names, f"{country.name} has no sourced names"
         assert country.sources, f"{country.name} has no source references"
-        assert country.capital is not None, f"{country.name} has no primary capital"
+        if country.capital is None:
+            missing_capital_count += 1
 
         for capital in country.capitals:
             capital_count += 1
@@ -104,6 +106,7 @@ def audit_every_record(atlas: Atlas) -> dict[str, int]:
     return {
         "countries": len(countries),
         "capitals": capital_count,
+        "missing_capitals": missing_capital_count,
         "major_cities": city_count,
         "unique_geonames_ids": len(geonames_ids),
     }
@@ -119,6 +122,7 @@ def print_dataset_overview(atlas: Atlas, audit: dict[str, int]) -> None:
     print(f"Dataset built   : {info.built_at}")
     print(f"Countries tested: {audit['countries']}")
     print(f"Capitals tested : {audit['capitals']}")
+    print(f"Without capital : {audit['missing_capitals']} explicit missing values")
     print(f"Cities tested   : {audit['major_cities']}")
     print(f"GeoNames IDs    : {audit['unique_geonames_ids']} unique")
     print("Result          : PASS — every currently exposed record was checked")
@@ -238,9 +242,10 @@ def print_coverage(atlas: Atlas) -> None:
         print(f"  {name:<24}: {count}")
     print("\nHonest milestone boundary:")
     print("  Implemented now : identity, aliases, codes, regions, capitals, coordinates,")
-    print("                    area fallback, major cities, sources, search, serialization")
+    print("                    area, major cities, sources, search, serialization,")
+    print("                    and full UN M49 country-and-area coverage")
     print("  Coming later    : distances, borders, geometry, statistics, leaders,")
-    print("                    rich culture, quizzes, exports, and full-world coverage")
+    print("                    rich culture, quizzes, exports, and release hardening")
 
 
 def parse_args() -> argparse.Namespace:

@@ -44,9 +44,12 @@ Use it like a Python collection
    >>> "Atlantis" in atlas
    False
    >>> len(atlas)
-   12
-   >>> [country.alpha2 for country in atlas.countries(continent="Europe")]
-   ['FR', 'DE', 'VA']
+   248
+   >>> europe = atlas.countries(continent="Europe")
+   >>> len(europe)
+   51
+   >>> {"FR", "DE", "VA"}.issubset({country.alpha2 for country in europe})
+   True
 
 Inspect the dataset version
 ---------------------------
@@ -66,4 +69,3 @@ Executable example
 .. literalinclude:: ../../examples/quick_start.py
    :language: python
    :linenos:
-

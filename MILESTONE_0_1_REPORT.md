@@ -13,7 +13,7 @@ and replaced with newly downloaded, checksummed official snapshots.
 - Immutable country, code, coordinate, capital, city, geography, and source models.
 - Exact lookup by names, aliases, alpha-2, alpha-3, and M49 numeric code.
 - Accent-insensitive search, filtering, iteration, containment, and safe lookup.
-- Twelve representative countries, twelve capitals, and 1,429 major cities.
+- 248 UN M49 countries and areas, 241 capitals, and 6,265 major cities.
 - Separate standard-library pipeline with raw manifests, normalized JSON Lines,
   reviewed naming overrides, field provenance, validation, and deterministic builds.
 - Canonical Sphinx source, API reference, generated status page, and doctests.
@@ -23,9 +23,9 @@ and replaced with newly downloaded, checksummed official snapshots.
 
 ```text
 python maintain.py refresh --offline   PASS
-python maintain.py test                PASS (11 tests)
+python maintain.py test                PASS (13 tests)
 python maintain.py demo                PASS
-python maintain.py docs                PASS (HTML -W; 5 doctests)
+python maintain.py docs                PASS (HTML -W; 79 doctests)
 python maintain.py check               PASS
 ```
 
@@ -33,7 +33,7 @@ Wheel evidence:
 
 ```text
 pyworldatlas-0.1.0-py3-none-any.whl
-size: 91,600 bytes
+size: 375,396 bytes
 runtime dependencies: 0
 bundled SQLite databases: 1
 ```

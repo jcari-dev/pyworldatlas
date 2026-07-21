@@ -1,4 +1,4 @@
-"""Deterministic Release 0.1.0 data pipeline."""
+"""Deterministic Release 0.1.0 world-core data pipeline."""
 
 from __future__ import annotations
 
@@ -12,7 +12,9 @@ import sqlite3
 import zipfile
 
 
-TARGET_CODES = ("AU", "BO", "BR", "CA", "CU", "DE", "DO", "FR", "JP", "US", "VA", "ZA")
+EXPECTED_COUNTRY_COUNT = 248
+EXPECTED_CAPITAL_COUNT = 241
+EXPECTED_CITY_COUNT = 6_265
 CONTINENTS = {"002": "Africa", "019": "Americas", "142": "Asia", "150": "Europe", "009": "Oceania"}
 
 
@@ -90,7 +92,7 @@ def parse_un_m49(root: Path) -> dict[str, dict[str, object]]:
     records: dict[str, dict[str, object]] = {}
     for row in parser.rows:
         code = row[10].upper()
-        if code not in TARGET_CODES or code in records or row[1] != "World":
+        if len(code) != 2 or code in records or row[1] != "World":
             continue
         records[code] = {
             "country_code": code,
@@ -103,20 +105,19 @@ def parse_un_m49(root: Path) -> dict[str, dict[str, object]]:
                 "region": row[5] or row[3] or None, "subregion": row[7] or row[5] or None,
             },
         }
-    missing = set(TARGET_CODES) - records.keys()
-    if missing:
-        raise ValueError(f"UN M49 records missing: {sorted(missing)}")
+    if len(records) != EXPECTED_COUNTRY_COUNT:
+        raise ValueError(f"Expected {EXPECTED_COUNTRY_COUNT} UN M49 countries and areas, found {len(records)}")
     return records
 
 
-def parse_geonames(root: Path) -> tuple[dict[str, dict[str, object]], list[dict[str, object]]]:
+def parse_geonames(root: Path, country_codes: set[str]) -> tuple[dict[str, dict[str, object]], list[dict[str, object]]]:
     countries: dict[str, dict[str, object]] = {}
     path = root / "build_data/raw/geonames/2026-07-20/countryInfo.txt"
     for line in path.read_text(encoding="utf-8").splitlines():
         if not line or line.startswith("#"):
             continue
         cols = line.split("\t")
-        if cols[0] in TARGET_CODES:
+        if cols[0] in country_codes:
             countries[cols[0]] = {
                 "country_code": cols[0], "source_id": "geonames", "source_record_id": cols[16], "retrieved_at": "2026-07-20",
                 "data": {"name": cols[4], "capital": cols[5], "area_km2": float(cols[6]) if cols[6] else None, "geonames_id": int(cols[16])},
@@ -126,7 +127,7 @@ def parse_geonames(root: Path) -> tuple[dict[str, dict[str, object]], list[dict[
         with archive.open("cities15000.txt") as stream:
             for raw in stream:
                 cols = raw.decode("utf-8").rstrip("\n").split("\t")
-                if cols[8] not in TARGET_CODES:
+                if cols[8] not in countries:
                     continue
                 population = int(cols[14]) if cols[14] else 0
                 is_capital = cols[7] == "PPLC" or cols[1] == countries[cols[8]]["data"]["capital"]
@@ -144,31 +145,41 @@ def parse_geonames(root: Path) -> tuple[dict[str, dict[str, object]], list[dict[
 def normalize(root: Path) -> dict[str, object]:
     """Create inspectable normalized records from independent sources."""
     un = parse_un_m49(root)
-    geocountries, cities = parse_geonames(root)
+    geocountries, cities = parse_geonames(root, set(un))
+    missing_geonames = sorted(set(un) - set(geocountries))
+    if missing_geonames:
+        raise ValueError(f"UN M49 countries missing from GeoNames: {missing_geonames}")
     common = _load_json(root / "pipeline/config/common_names.json")
     aliases = _load_json(root / "pipeline/config/aliases.json")
     countries = []
     names = []
     capitals = []
-    for code in sorted(TARGET_CODES):
+    for code in sorted(un):
         u, g = un[code], geocountries[code]
         data = dict(u["data"])
-        data.update({"name": common[code], "area_km2": g["data"]["area_km2"], "geonames_id": g["data"]["geonames_id"], "status": "sovereign_state"})
+        data.update({"name": common.get(code, g["data"]["name"]), "area_km2": g["data"]["area_km2"], "geonames_id": g["data"]["geonames_id"], "status": "other"})
         countries.append({**u, "data": data})
-        all_names = [data["name"], data["official_name"], g["data"]["name"], *aliases[code]]
+        all_names = [
+            (data["name"], "common", "geonames"),
+            (data["official_name"], "official", "un-m49"),
+            (g["data"]["name"], "alias", "geonames"),
+            *((name, "alias", "reviewed-overrides") for name in aliases.get(code, [])),
+        ]
         seen = set()
-        for index, name in enumerate(all_names):
+        for name, kind, source_id in all_names:
             if not name or normalize_name(name) in seen:
                 continue
             seen.add(normalize_name(name))
-            names.append({"country_code": code, "source_id": "un-m49" if index < 2 else "geonames", "source_record_id": str(data["numeric_code"]), "retrieved_at": "2026-07-20", "data": {"name": name, "normalized_name": normalize_name(name), "kind": "common" if index == 0 else "official" if index == 1 else "alias", "preferred": index == 0}})
+            names.append({"country_code": code, "source_id": source_id, "source_record_id": str(data["numeric_code"]), "retrieved_at": "2026-07-20", "data": {"name": name, "normalized_name": normalize_name(name), "kind": kind, "preferred": kind == "common"}})
         candidate = next((city for city in cities if city["country_code"] == code and city["data"]["name"] == g["data"]["capital"]), None)
         if candidate is None:
             candidate = next((city for city in cities if city["country_code"] == code and city["data"]["is_capital"]), None)
         if candidate:
             capitals.append(candidate)
-    if len(capitals) != len(TARGET_CODES):
-        raise ValueError(f"Expected {len(TARGET_CODES)} capitals, found {len(capitals)}")
+    if len(capitals) != EXPECTED_CAPITAL_COUNT:
+        raise ValueError(f"Expected {EXPECTED_CAPITAL_COUNT} capital records, found {len(capitals)}")
+    if len(cities) != EXPECTED_CITY_COUNT:
+        raise ValueError(f"Expected {EXPECTED_CITY_COUNT} city records, found {len(cities)}")
     normalized = {"countries": countries, "country_names": names, "capitals": capitals, "cities": cities}
     output = root / "build_data/normalized"
     output.mkdir(parents=True, exist_ok=True)
@@ -206,6 +217,7 @@ def build_database(root: Path, normalized: dict[str, object]) -> Path:
     con.executemany("INSERT INTO schema_meta VALUES (?,?)", sorted(meta.items()))
     sources = [
         ("geonames", "GeoNames", "https://www.geonames.org/", "2026-07-20", "2026-07-20", "CC BY 4.0", "https://creativecommons.org/licenses/by/4.0/", _sha(root / "build_data/raw/geonames/2026-07-20/manifest.json"), "Country metadata and populated places"),
+        ("reviewed-overrides", "PyWorldAtlas reviewed overrides", "https://jcari-dev.github.io/pyworldatlas-documentation/", "0.1.0", "2026-07-20", "MIT", None, _sha(root / "pipeline/config/overrides.json"), "Reviewed familiar names and aliases"),
         ("un-m49", "United Nations M49", "https://unstats.un.org/unsd/methodology/m49/", "2026-07-20", "2026-07-20", None, None, _sha(root / "build_data/raw/un-m49/2026-07-20/manifest.json"), "Canonical identities and regions"),
     ]
     con.executemany("INSERT INTO source VALUES (?,?,?,?,?,?,?,?,?)", sources)
@@ -214,7 +226,10 @@ def build_database(root: Path, normalized: dict[str, object]) -> Path:
         code, data = record["country_code"], record["data"]
         ids[code] = ident
         con.execute("INSERT INTO country VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", (ident, code, data["alpha3"], data["numeric_code"], data["name"], data["official_name"], data["status"], data["continent"], data["region"], data["subregion"], data["geonames_id"], data["area_km2"]))
-        con.executemany("INSERT INTO field_source VALUES (?,?,?,?)", [(ident, "identity", "un-m49", data["numeric_code"]), (ident, "capitals", "geonames", str(data["geonames_id"])), (ident, "major_cities", "geonames", str(data["geonames_id"]))])
+        field_sources = [(ident, "identity", "un-m49", data["numeric_code"]), (ident, "capitals", "geonames", str(data["geonames_id"])), (ident, "major_cities", "geonames", str(data["geonames_id"]))]
+        if any(name["country_code"] == code and name["source_id"] == "reviewed-overrides" for name in normalized["country_names"]):
+            field_sources.append((ident, "names.reviewed", "reviewed-overrides", data["numeric_code"]))
+        con.executemany("INSERT INTO field_source VALUES (?,?,?,?)", field_sources)
     for record in sorted(normalized["country_names"], key=lambda r: (r["country_code"], r["data"]["normalized_name"], r["data"]["kind"])):
         d = record["data"]
         con.execute("INSERT INTO country_name VALUES (?,?,?,?,?,?)", (ids[record["country_code"]], d["name"], d["normalized_name"], None, d["kind"], int(d["preferred"])))
@@ -240,7 +255,7 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
     reports.mkdir(parents=True, exist_ok=True)
     coverage = {"dataset_version": "2026.07.20", "countries": len(normalized["countries"]), "capitals": len(normalized["capitals"]), "major_cities": len(normalized["cities"]), "capital_coordinates": len(normalized["capitals"]), "database_sha256": _sha(database), "validation": "PASS"}
     (reports / "coverage.json").write_text(json.dumps(coverage, indent=2) + "\n", encoding="utf-8")
-    implemented = {"functions": "Atlas lookup, search, collection protocol, capitals, major cities, dataset info", "tests": "11 local tests", "dataset": "12 countries / 12 capitals", "docs": "source complete; local HTML and doctests pass", "release": "not published"}
+    implemented = {"functions": "Atlas lookup, search, collection protocol, capitals, major cities, dataset info", "tests": "full local quality gate", "dataset": f"{coverage['countries']} countries and areas / {coverage['capitals']} capitals / {coverage['major_cities']} cities", "docs": "source complete; local HTML and doctests pass", "release": "not published"}
     milestones = [
         {"name": "0 — Clean foundation", "version": "0.1.0", "status": "implemented", **implemented},
         {"name": "1 — Generated country core", "version": "0.1.0", "status": "implemented", **implemented},

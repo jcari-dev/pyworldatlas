@@ -2,7 +2,8 @@ VS Code playground
 ==================
 
 The repository-level ``playground.py`` is the fastest way to inspect the
-current release. Its default mode validates every country, capital, and city
+current release. Its default mode validates every country and every stored
+capital and city
 record before demonstrating lookup, aliases, filtering, country profiles,
 sources, and serialization.
 

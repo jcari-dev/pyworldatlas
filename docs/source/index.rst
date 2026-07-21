@@ -10,9 +10,9 @@ works without an API key, runtime download, or third-party dependency.
 
 .. note::
 
-   Version 0.1.0 is an intentionally small first release containing twelve
-   representative countries, twelve capitals, and 1,429 major-city records.
-   The current coverage is explicit; later milestones expand the package.
+   Version 0.1.0 contains 248 countries and areas from the captured UN M49
+   scope, 241 GeoNames capital records, and 6,265 major-city records. Later
+   milestones deepen the available facts and geographic operations.
 
 Installation
 ------------
@@ -61,6 +61,7 @@ What works in 0.1.0
 - UN region and subregion filters.
 - Primary capitals with WGS84 coordinates, population, timezone, and GeoNames ID.
 - Major cities over the configured population threshold.
+- Explicit ``None`` for areas without a usable primary-capital record.
 - JSON-compatible serialization and explicit source references.
 
 Current coverage
@@ -71,14 +72,14 @@ Current coverage
 
    * - Records
      - Count
-   * - Countries
-     - 12
+   * - Countries and areas
+     - 248
    * - Primary capitals
-     - 12
+     - 241 / 248
    * - Capital coordinates
-     - 12 / 12
+     - 241 / 241
    * - Major cities
-     - 1,429
+     - 6,265
 
 .. toctree::
    :hidden:

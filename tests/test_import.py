@@ -16,8 +16,8 @@ class ImportTests(unittest.TestCase):
             text=True,
             check=True,
         )
-        self.assertIn("Countries tested: 12", result.stdout)
-        self.assertIn("Cities tested   : 1429", result.stdout)
+        self.assertIn("Countries tested: 248", result.stdout)
+        self.assertIn("Cities tested   : 6265", result.stdout)
         self.assertIn("every currently exposed record was checked", result.stdout)
 
 

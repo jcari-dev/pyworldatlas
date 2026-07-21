@@ -34,17 +34,22 @@ Ranked search
 .. doctest::
 
    >>> matches = atlas.search_countries("united")
-   >>> [(match.country.name, match.score) for match in matches]
-   [('United States', 80)]
+   >>> len(matches)
+   6
+   >>> {"GB", "US"}.issubset({match.country.alpha2 for match in matches})
+   True
 
 Filtering
 ---------
 
 .. doctest::
 
-   >>> [country.name for country in atlas.countries(continent="Americas")]
-   ['Bolivia', 'Brazil', 'Canada', 'Cuba', 'Dominican Republic', 'United States']
-   >>> [country.name for country in atlas.countries(region="Caribbean")]
-   ['Cuba', 'Dominican Republic']
+   >>> americas = atlas.countries(continent="Americas")
+   >>> len(americas)
+   57
+   >>> caribbean = atlas.countries(region="Caribbean")
+   >>> len(caribbean)
+   28
+   >>> {"CU", "DO"}.issubset({country.alpha2 for country in caribbean})
+   True
    >>> atlas.close()
-

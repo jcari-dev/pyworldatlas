@@ -8,8 +8,8 @@
       "version": "0.1.0",
       "status": "implemented",
       "functions": "Atlas lookup, search, collection protocol, capitals, major cities, dataset info",
-      "tests": "11 local tests",
-      "dataset": "12 countries / 12 capitals",
+      "tests": "full local quality gate",
+      "dataset": "248 countries and areas / 241 capitals / 6265 cities",
       "docs": "source complete; local HTML and doctests pass",
       "release": "not published"
     },
@@ -18,8 +18,8 @@
       "version": "0.1.0",
       "status": "implemented",
       "functions": "Atlas lookup, search, collection protocol, capitals, major cities, dataset info",
-      "tests": "11 local tests",
-      "dataset": "12 countries / 12 capitals",
+      "tests": "full local quality gate",
+      "dataset": "248 countries and areas / 241 capitals / 6265 cities",
       "docs": "source complete; local HTML and doctests pass",
       "release": "not published"
     },
@@ -116,11 +116,11 @@
   ],
   "coverage": {
     "dataset_version": "2026.07.20",
-    "countries": 12,
-    "capitals": 12,
-    "major_cities": 1429,
-    "capital_coordinates": 12,
-    "database_sha256": "1429c0108701930436e9d526dae88b3e96d29700f0c619ec4b146b3a51b05e90",
+    "countries": 248,
+    "capitals": 241,
+    "major_cities": 6265,
+    "capital_coordinates": 241,
+    "database_sha256": "4a61ad6ec44acd1fe535cac36b1130f5687586ecbb2071477ef5869c2b4c4cc8",
     "validation": "PASS"
   },
   "legacy_preservation": "not_applicable_no_existing_commits"

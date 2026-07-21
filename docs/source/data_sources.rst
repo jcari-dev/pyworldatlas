@@ -23,6 +23,10 @@ United Nations M49
    Formal statistical names are not always the most familiar English atlas
    names. Reviewed common-name mappings retain the formal source value.
 
+**Current scope**
+   248 country and area identities. GeoNames-only identities outside the
+   captured UN M49 scope are excluded rather than inferred.
+
 GeoNames
 --------
 
@@ -45,6 +49,10 @@ GeoNames
 **Known limitation**
    Capital feature codes do not express every multi-capital constitutional
    arrangement. Those roles are reviewed in later milestones.
+
+**Current coverage**
+   241 usable primary capitals and 6,265 populated places at the configured
+   threshold.
 
 Source priority in 0.1.0
 ------------------------
@@ -82,4 +90,3 @@ Inspect sources in Python
    ...     sources = atlas.country("Japan").sources
    >>> [source.id for source in sources]
    ['geonames', 'un-m49']
-

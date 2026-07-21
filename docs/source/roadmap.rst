@@ -14,7 +14,7 @@ coverage. Later features are not merged into the README before they work.
      - Release state
    * - 0.1.0
      - Implemented
-     - Clean runtime, generated core, lookup, capitals, cities, documentation
+     - 248-country-and-area core, lookup, 241 capitals, 6,265 cities, documentation
      - Not published
    * - 0.2.0
      - Not started
@@ -46,7 +46,7 @@ coverage. Later features are not merged into the README before they work.
      - —
    * - 0.9.0
      - Not started
-     - Full-world build and release hardening
+     - Full-world validation, refresh automation, and release hardening
      - —
    * - 1.0.0
      - Not started
@@ -59,4 +59,3 @@ Current release boundary
 Release 0.1.0 is locally release-ready: tests, clean-wheel installation,
 examples, HTML documentation, doctests, and wheel-content auditing pass. Public
 GitHub, documentation, and PyPI deployment remain pending.
-

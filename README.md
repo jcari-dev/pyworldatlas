@@ -25,18 +25,20 @@ with Atlas() as atlas:
     print("France" in atlas)                   # True
 ```
 
-## An honest first release
+## World-scale core coverage
 
-Version 0.1.0 is the clean foundation of a larger atlas. It contains twelve
-representative countries generated from captured UN M49 and GeoNames sources.
-It is intentionally incomplete, fully usable, and explicit about that boundary.
+Version 0.1.0 contains every country and area in the captured UN M49 scope,
+cross-checked against GeoNames country metadata. It is broad in geographic
+coverage and intentionally focused in field depth: identity, codes, regions,
+area, capitals, and major cities are available now; richer data families arrive
+in later releases.
 
 | Current dataset | Coverage |
 |---|---:|
-| Countries | 12 |
-| Primary capitals | 12 |
-| Capital coordinates | 12 / 12 |
-| Major-city records | 1,429 |
+| Countries and areas | 248 |
+| Primary capitals | 241 / 248 |
+| Capital coordinates | 241 / 241 |
+| Major-city records | 6,265 |
 | Runtime dependencies | 0 |
 | Bundled databases | 1 SQLite file |
 
@@ -75,7 +77,7 @@ series. Python versions are only claimed as release-supported after CI passes.
 | Collection behavior | `atlas["DO"]`, `"France" in atlas`, `len(atlas)` |
 | Ranked search | `atlas.search_countries("united")` |
 | Geographic filtering | `atlas.countries(continent="Americas")` |
-| Capital records | `country.capital.name`, `.coordinates`, `.timezone_id` |
+| Capital records | `country.capital`, `.coordinates`, `.timezone_id` |
 | Major cities | `atlas.major_cities("Japan", limit=5)` |
 | Source inspection | `country.sources` |
 | Serialization | `country.to_dict()`, `country.to_json()` |
@@ -103,11 +105,11 @@ with Atlas() as atlas:
     print(country.subregion)
     print(country.area_km2)
 
-    capital = country.capital
-    print(capital.name)
-    print(capital.coordinates.as_tuple())
-    print(capital.population)
-    print(capital.timezone_id)
+    if country.capital is not None:
+        print(country.capital.name)
+        print(country.capital.coordinates.as_tuple())
+        print(country.capital.population)
+        print(country.capital.timezone_id)
 ```
 
 ## Search and filter
@@ -118,7 +120,8 @@ with Atlas() as atlas:
         print(match.country.name, match.matched_name, match.score)
 
     for country in atlas.countries(continent="Europe"):
-        print(country.name, country.capital.name)
+        capital = country.capital.name if country.capital else "not available"
+        print(country.name, capital)
 ```
 
 Search is case- and accent-insensitive. Exact country lookup accepts common
@@ -177,6 +180,11 @@ Release 0.1.0 uses:
 Raw snapshots are preserved with SHA-256 manifests. The separate builder emits
 inspectable normalized JSON Lines before generating SQLite. Missing values stay
 missing; country facts are never invented from model memory.
+
+Seven areas have no usable primary-capital record in the current snapshot.
+Their `country.capital` value is `None`. GeoNames-only country rows that do
+not have a matching identity in the captured UN M49 scope are excluded rather
+than inferred.
 
 See [DATA_SOURCES.md](DATA_SOURCES.md), [DATA_QUALITY.md](DATA_QUALITY.md), and
 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

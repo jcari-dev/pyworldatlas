@@ -61,8 +61,8 @@ def status(*, write: bool = True) -> None:
     lines = [
         "PyWorldAtlas project status", "", f"Library version: {data['library_version']}",
         f"Dataset version: {data['dataset_version']}", f"Schema version: {data['schema_version']}", "",
-        f"Countries: {coverage['countries']} / 12 (Release 0.1.0 scope)",
-        f"Capitals: {coverage['capitals']}", f"Capital coordinates: {coverage['capital_coordinates']} / {coverage['capitals']}",
+        f"Countries and areas: {coverage['countries']} (UN M49 scope)",
+        f"Capitals: {coverage['capitals']} / {coverage['countries']}", f"Capital coordinates: {coverage['capital_coordinates']} / {coverage['capitals']}",
         f"Major cities: {coverage['major_cities']}", f"Last validation: {coverage['validation']}",
     ]
     print("\n".join(lines))
