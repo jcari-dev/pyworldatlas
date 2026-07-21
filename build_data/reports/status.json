@@ -1,7 +1,7 @@
 {
-  "library_version": "0.2.1",
-  "schema_version": 2,
-  "dataset_version": "2026.07.20.1",
+  "library_version": "0.3.0",
+  "schema_version": 3,
+  "dataset_version": "2026.07.21.1",
   "milestones": [
     {
       "name": "0 \u2014 Clean foundation",
@@ -34,14 +34,14 @@
       "release": "Publication state is tracked on GitHub Releases and PyPI"
     },
     {
-      "name": "3 \u2014 Borders",
+      "name": "3 \u2014 Reviewed land borders",
       "version": "0.3.0",
-      "status": "planned",
-      "functions": "\u2014",
-      "tests": "\u2014",
-      "dataset": "\u2014",
-      "docs": "\u2014",
-      "release": "\u2014"
+      "status": "complete",
+      "functions": "Neighbors, shared borders, shortest land paths, crossings, components, and borderless entities",
+      "tests": "Source-difference review gate, graph invariants, API tests, and complete release gate",
+      "dataset": "319 reviewed undirected land-border relationships",
+      "docs": "Border API, data policy, exceptions, and examples",
+      "release": "Publication state is tracked on GitHub Releases and PyPI"
     },
     {
       "name": "4 \u2014 Geometry",
@@ -115,7 +115,7 @@
     }
   ],
   "coverage": {
-    "dataset_version": "2026.07.20.1",
+    "dataset_version": "2026.07.21.1",
     "countries": 248,
     "capitals": 241,
     "major_cities": 6265,
@@ -128,7 +128,10 @@
     "observed_timezone_profiles": 242,
     "local_names": 5,
     "local_name_countries": 2,
-    "database_sha256": "880175500d6b3195e458848641ad9c048167e21467db59b680671809e962efba",
+    "reviewed_land_borders": 319,
+    "countries_with_land_borders": 163,
+    "countries_with_no_land_borders": 85,
+    "database_sha256": "97d5fb7fd1824314d24ad8ae6dbc49370e28c70d82d93b40b736497141bb58ba",
     "validation": "PASS"
   }
 }

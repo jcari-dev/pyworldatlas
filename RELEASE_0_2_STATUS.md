@@ -77,7 +77,7 @@ print(Coordinate(51.5074, -0.1278).distance_to(Coordinate(48.8566, 2.3522)))
 ## Local release checks
 
 The current checkout passes deterministic database rebuilds, 25 unit tests, the
-complete playground audit, Sphinx warnings-as-errors, 157 doctests, five
+complete data audit, Sphinx warnings-as-errors, 157 doctests, five
 isolated wheel examples, and the wheel-content audit. The release build also writes
 SHA-256 checksums and a machine-readable manifest.
 
@@ -92,7 +92,6 @@ Before production publication:
 
 ## Next release
 
-Version 0.3.0 will add reviewed border relationships, neighbors, shared
-neighbors, deterministic shortest border paths, dispute-policy documentation,
-and graph-level validation. It will not infer borders from the unreviewed
-GeoNames neighbor column.
+Version 0.3.0 adds reviewed border relationships, neighbors, shared neighbors,
+deterministic shortest border paths, dispute-policy documentation, and
+graph-level validation. It does not expose the raw GeoNames neighbor column.

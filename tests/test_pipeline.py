@@ -3,6 +3,7 @@ from pathlib import Path
 import unittest
 
 from pyworldatlas_builder.core import (
+    EXPECTED_BORDER_COUNT,
     EXPECTED_CAPITAL_COUNT,
     EXPECTED_CITY_COUNT,
     EXPECTED_COUNTRY_COUNT,
@@ -31,11 +32,25 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(len(records["capitals"]), EXPECTED_CAPITAL_COUNT)
         self.assertEqual(len(records["cities"]), EXPECTED_CITY_COUNT)
         self.assertEqual(len(records["local_names"]), EXPECTED_LOCAL_NAME_COUNT)
+        self.assertEqual(len(records["borders"]), EXPECTED_BORDER_COUNT)
         self.assertTrue(all(record["data"]["population"] is None or record["data"]["population"] >= 0 for record in records["countries"]))
         self.assertTrue(all(isinstance(record["data"]["calling_codes"], list) for record in records["countries"]))
         self.assertTrue(all(isinstance(record["data"]["language_codes"], list) for record in records["countries"]))
         self.assertTrue(all(record["source_id"] for rows in records.values() for record in rows))
         self.assertTrue(all(-90 <= c["data"]["latitude"] <= 90 and -180 <= c["data"]["longitude"] <= 180 for c in records["cities"]))
+
+    def test_reviewed_border_graph_is_canonical(self):
+        records = normalize(ROOT)
+        edges = {
+            (record["country_code"], record["neighbor_code"])
+            for record in records["borders"]
+        }
+        self.assertEqual(len(edges), EXPECTED_BORDER_COUNT)
+        self.assertTrue(all(first < second for first, second in edges))
+        self.assertIn(("CN", "HK"), edges)
+        self.assertIn(("ES", "GI"), edges)
+        self.assertNotIn(("AL", "RS"), edges)
+        self.assertNotIn(("CU", "US"), edges)
 
     def test_country_local_name_pilot_is_exact(self):
         records = parse_country_local_names(ROOT, {"BR", "CH"})

@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.3.0 — 2026-07-21
+
+- Added 319 reviewed, undirected land-border relationships across the existing
+  248-country-and-area scope.
+- Added neighbor lookup, shared-border tests, shared neighbors, deterministic
+  shortest border paths, minimum crossing counts, land-connected components,
+  and borderless-entity discovery.
+- Added the immutable, serializable `BorderPathResult` model.
+- Added a strict source review gate: 315 GeoNames/Natural Earth agreements plus
+  explicit decisions for all six differences between the pinned snapshots.
+- Added Natural Earth source captures, checksums, public-domain terms, graph
+  validation, executable examples, and complete border documentation.
+- Upgraded the generated dataset to schema 3 and consolidated validation into
+  focused examples and automated tests.
+
 ## 0.2.1 — 2026-07-21
 
 - First production candidate for the complete 0.2 country-profile, coordinate,

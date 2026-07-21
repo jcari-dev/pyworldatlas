@@ -31,7 +31,7 @@ dataset forward as the production candidate.
 |---|---:|
 | Unit tests | 25 passing |
 | Sphinx doctests | 157 passing |
-| Complete playground data audit | Passing |
+| Complete data audit | Passing |
 | Deterministic database rebuild | Passing |
 | Fresh wheel and source distribution | Passing |
 | Five isolated offline wheel examples | Passing |

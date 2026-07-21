@@ -1,5 +1,5 @@
 {
-  "dataset_version": "2026.07.20.1",
+  "dataset_version": "2026.07.21.1",
   "countries": 248,
   "capitals": 241,
   "major_cities": 6265,
@@ -12,6 +12,9 @@
   "observed_timezone_profiles": 242,
   "local_names": 5,
   "local_name_countries": 2,
-  "database_sha256": "880175500d6b3195e458848641ad9c048167e21467db59b680671809e962efba",
+  "reviewed_land_borders": 319,
+  "countries_with_land_borders": 163,
+  "countries_with_no_land_borders": 85,
+  "database_sha256": "97d5fb7fd1824314d24ad8ae6dbc49370e28c70d82d93b40b736497141bb58ba",
   "validation": "PASS"
 }

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections import deque
 from functools import lru_cache
 from hashlib import sha256
 import json
@@ -13,9 +14,10 @@ from ._version import SCHEMA_VERSION, __version__
 from .database import Database
 from .exceptions import (AmbiguousPlaceError, AtlasClosedError, CapitalNotFoundError,
                          CountryNotFoundError, DatasetVersionError, PlaceNotFoundError)
-from .models import (Area, Capital, City, Coordinate, Country, CountryCodes,
-                     CountryMatch, CountryStatus, Currency, DatasetInfo, Flashcard,
-                     Geography, Language, LocalizedName, SourceReference)
+from .models import (Area, BorderPathResult, Capital, City, Coordinate, Country,
+                     CountryCodes, CountryMatch, CountryStatus, Currency,
+                     DatasetInfo, Flashcard, Geography, Language, LocalizedName,
+                     SourceReference)
 
 
 def _flag(alpha2: str) -> str:
@@ -138,6 +140,117 @@ class Atlas:
         where = f" WHERE {' AND '.join(clauses)}" if clauses else ""
         rows = self._db.connection.execute(f"SELECT id FROM country{where} ORDER BY name", params).fetchall()
         return tuple(self._load_country(int(row[0])) for row in rows)
+
+    @lru_cache(maxsize=1)
+    def _border_adjacency(self) -> dict[int, tuple[int, ...]]:
+        """Load the undirected border graph once for graph operations."""
+        self._ensure_open()
+        country_rows = self._db.connection.execute(
+            "SELECT id, name FROM country ORDER BY name"
+        ).fetchall()
+        names = {int(row["id"]): str(row["name"]) for row in country_rows}
+        graph: dict[int, list[int]] = {country_id: [] for country_id in names}
+        rows = self._db.connection.execute(
+            "SELECT country1_id, country2_id FROM country_border"
+        ).fetchall()
+        for row in rows:
+            first, second = int(row["country1_id"]), int(row["country2_id"])
+            graph[first].append(second)
+            graph[second].append(first)
+        return {
+            country_id: tuple(sorted(neighbors, key=lambda item: names[item]))
+            for country_id, neighbors in graph.items()
+        }
+
+    def _border_country_id(self, query: str) -> int:
+        """Resolve a public country query for an internal graph operation."""
+        country = self.country(query)
+        country_id = self._country_id(country.alpha2)
+        if country_id is None:  # pragma: no cover - guarded by the loaded profile
+            raise CountryNotFoundError(f"No unambiguous country matches {query!r}")
+        return country_id
+
+    def neighbors(self, country: str) -> tuple[Country, ...]:
+        """Return countries sharing a reviewed land border with ``country``.
+
+        Results are alphabetized and immutable. Maritime neighbors, proximity,
+        and mere point contacts are excluded. Countries and areas without an
+        accepted land-border relationship return an empty tuple.
+        """
+        country_id = self._border_country_id(country)
+        return tuple(self._load_country(item) for item in self._border_adjacency()[country_id])
+
+    def shares_border(self, country1: str, country2: str) -> bool:
+        """Return whether two countries share a reviewed land border."""
+        first = self._border_country_id(country1)
+        second = self._border_country_id(country2)
+        return second in self._border_adjacency()[first]
+
+    def shared_neighbors(self, country1: str, country2: str) -> tuple[Country, ...]:
+        """Return alphabetized land neighbors shared by two countries."""
+        first = self._border_country_id(country1)
+        second = self._border_country_id(country2)
+        common = set(self._border_adjacency()[first]) & set(self._border_adjacency()[second])
+        return tuple(sorted((self._load_country(item) for item in common), key=lambda item: item.name))
+
+    def border_path(self, origin: str, destination: str) -> BorderPathResult | None:
+        """Return a deterministic shortest land-border path, or ``None``.
+
+        The path uses breadth-first search over the reviewed undirected graph.
+        Both endpoints are included. Equal-length alternatives are resolved by
+        alphabetic neighbor order. ``None`` means the two entities have no path
+        through accepted land-border relationships; it is not an error.
+        """
+        start = self._border_country_id(origin)
+        finish = self._border_country_id(destination)
+        parents: dict[int, int | None] = {start: None}
+        queue = deque([start])
+        graph = self._border_adjacency()
+        while queue and finish not in parents:
+            current = queue.popleft()
+            for neighbor in graph[current]:
+                if neighbor not in parents:
+                    parents[neighbor] = current
+                    queue.append(neighbor)
+        if finish not in parents:
+            return None
+        path = [finish]
+        while parents[path[-1]] is not None:
+            path.append(parents[path[-1]])
+        path.reverse()
+        references = tuple(self._load_country(item).reference() for item in path)
+        return BorderPathResult(references, len(references) - 1)
+
+    def border_crossings(self, origin: str, destination: str) -> int | None:
+        """Return the fewest land-border crossings, or ``None`` if unreachable."""
+        path = self.border_path(origin, destination)
+        return path.crossings if path else None
+
+    def countries_reachable_by_land(self, country: str) -> tuple[Country, ...]:
+        """Return every other entity in ``country``'s land-connected component.
+
+        The starting country is excluded. Results are alphabetized; an island
+        or otherwise borderless entity returns an empty tuple.
+        """
+        start = self._border_country_id(country)
+        graph = self._border_adjacency()
+        reached = {start}
+        queue = deque([start])
+        while queue:
+            for neighbor in graph[queue.popleft()]:
+                if neighbor not in reached:
+                    reached.add(neighbor)
+                    queue.append(neighbor)
+        reached.remove(start)
+        return tuple(sorted((self._load_country(item) for item in reached), key=lambda item: item.name))
+
+    def countries_with_no_land_borders(self) -> tuple[Country, ...]:
+        """Return all bundled entities with no accepted land-border relation."""
+        return tuple(
+            self._load_country(country_id)
+            for country_id, neighbors in self._border_adjacency().items()
+            if not neighbors
+        )
 
     def sample_countries(
         self,
@@ -407,6 +520,7 @@ class Atlas:
             self._closed = True
             self._load_country.cache_clear()
             self._load_local_names.cache_clear()
+            self._border_adjacency.cache_clear()
 
     def __enter__(self) -> "Atlas":
         return self

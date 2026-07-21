@@ -22,7 +22,7 @@ The measurements use Python 3.12.13 and seven runs per timing. They are local re
 ## Quality gate
 
 - All 13 unit tests passed.
-- `playground.py` audited every exposed country, capital, and city record.
+- The automated audit covered every exposed country, capital, and city record.
 - Fresh wheel and source distributions built successfully.
 - Both packaged examples passed in an isolated, offline environment.
 - Sphinx HTML passed with warnings treated as errors.

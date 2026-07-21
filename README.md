@@ -2,7 +2,7 @@
 
 > A compact, source-aware world atlas for Python that works completely offline.
 
-[![Source 0.2.1](https://img.shields.io/badge/source-0.2.1-1677be)](CHANGELOG.md)
+[![Source 0.3.0](https://img.shields.io/badge/source-0.3.0-1677be)](CHANGELOG.md)
 [![PyPI](https://img.shields.io/pypi/v/pyworldatlas.svg?label=PyPI)](https://pypi.org/project/pyworldatlas/)
 [![Python 3.10–3.14](https://img.shields.io/badge/python-3.10%E2%80%933.14-10233d)](https://www.python.org/)
 [![Runtime dependencies: 0](https://img.shields.io/badge/runtime%20dependencies-0-1b8a6b)](#small-by-design)
@@ -30,9 +30,9 @@ with Atlas() as atlas:
 ## Dataset coverage
 
 The bundled dataset contains every country and area in the captured UN M49
-scope, cross-checked against GeoNames country metadata. Version 0.2.1 adds core
-profile metadata and coordinate calculations to the identity, region, capital,
-and populated-place records established for 0.1.0.
+scope, cross-checked against GeoNames country metadata. Version 0.3.0 adds a
+reviewed land-border graph to the profile, coordinate, capital, and
+populated-place records established in earlier releases.
 
 | Current dataset | Coverage |
 |---|---:|
@@ -40,13 +40,16 @@ and populated-place records established for 0.1.0.
 | Primary capitals | 241 / 248 |
 | Capital coordinates | 241 / 241 |
 | Populated-place records | 6,265, including retained capitals |
+| Reviewed land borders | 319 undirected relationships |
+| Countries and areas without an accepted land border | 85 |
 | Runtime dependencies | 0 |
 | Bundled databases | 1 SQLite file |
 
-The 0.2.1 checkout adds richer country profiles, dependency-free coordinate
-calculations, flag emoji, discovery cards, reproducible sampling, and structured
-flashcards. Borders, boundary geometry, historical statistics, national
-leaders, interactive learning applications, and exports remain later work.
+The 0.3.0 checkout includes richer country profiles, dependency-free coordinate
+calculations, flag emoji, discovery cards, reproducible sampling, structured
+flashcards, reviewed neighbors, and shortest land-border paths. Boundary
+geometry, historical statistics, national leaders, interactive learning
+applications, and exports remain later work.
 
 ## Installation
 
@@ -66,7 +69,7 @@ python -m pip install -e . -e pipeline
 You can also test the exact local wheel after running the release build:
 
 ```console
-python -m pip install --no-index --no-deps dist/pyworldatlas-0.2.1-py3-none-any.whl
+python -m pip install --no-index --no-deps dist/pyworldatlas-0.3.0-py3-none-any.whl
 ```
 
 The package runtime supports Python 3.10 through 3.14 during the 0.x release
@@ -92,6 +95,10 @@ series. Python versions are only claimed as release-supported after CI passes.
 | City coordinates | `atlas.coordinates("Tokyo", country="JP")` |
 | Distance | `atlas.distance_between("Tokyo", "Paris", first_country="JP", second_country="FR")` |
 | Bearing and midpoint | `coordinate.bearing_to(other)`, `.midpoint_to(other)` |
+| Land neighbors | `atlas.neighbors("France")`, `atlas.shares_border("ES", "MA")` |
+| Border paths | `atlas.border_path("Portugal", "China")`, `atlas.border_crossings(...)` |
+| Land components | `atlas.countries_reachable_by_land("Portugal")` |
+| Borderless entities | `atlas.countries_with_no_land_borders()` |
 | Source inspection | `country.sources` |
 | Official local names | `country.local_names`, `country.name_in("pt")` |
 | Serialization | `country.to_dict()`, `country.to_json()` |
@@ -198,28 +205,29 @@ with Atlas() as atlas:
 Search is case- and accent-insensitive. Exact country lookup accepts common
 names, reviewed aliases, alpha-2, alpha-3, and M49 numeric codes.
 
-## Test every current record
+## Land borders and shortest paths
 
-The repository includes [playground.py](playground.py), which checks every
-current country, capital, and city record before demonstrating the public API.
+The 0.3.0 graph contains 319 reviewed undirected relationships. Neighbor results
+are alphabetical, and equal-length shortest paths are deterministic.
 
-Run from the repository root:
+```python
+from pyworldatlas import Atlas
 
-```console
-python playground.py
+with Atlas() as atlas:
+    print([country.name for country in atlas.neighbors("France")])
+    print(atlas.shares_border("Spain", "Morocco"))
+
+    path = atlas.border_path("Portugal", "China")
+    print(path.crossings)
+    print(" -> ".join(country.name for country in path.countries))
+
+    print(atlas.border_path("Japan", "China"))  # None
 ```
 
-Focused modes:
-
-```console
-python playground.py --audit-only
-python playground.py --country Japan
-python playground.py --json "Dominican Republic"
-python playground.py --country "United States" --all-cities
-```
-
-The playground runs directly from a repository checkout even before an editable
-installation. Normal applications should install the package.
+`border_path()` uses breadth-first search and returns an immutable,
+JSON-serializable `BorderPathResult`. A missing route is `None`, not an error.
+Maritime proximity, border geometry, border length, and road routing are not
+represented.
 
 ## Small by design
 
@@ -240,13 +248,15 @@ At runtime PyWorldAtlas does not:
 
 ## Data you can trace
 
-The 0.2.1 checkout uses:
+The 0.3.0 checkout uses:
 
 - **United Nations M49** for canonical identities, standard codes, regions, and
   subregions.
 - **GeoNames** for capitals, populated places, WGS84 coordinates, population
   snapshots, currencies, language and calling codes, country-code domains,
-  timezone identifiers, and GeoNames IDs.
+  timezone identifiers, GeoNames IDs, and one input to border review.
+- **Natural Earth** public-domain 1:50m map units as an independent land-border
+  topology check.
 
 The reviewed local-name records use the **UNGEGN List of Country Names**
 (``E/CONF.105/13/CRP.13``) for national official short and formal names. Current
@@ -260,6 +270,11 @@ missing; unsourced assumptions are never substituted for country facts.
 Flag emoji are derived from alpha-2 codes, population density is a transparent
 ratio of sourced values, and discovery/learning tools only rearrange existing
 profile data. They introduce no additional country claims or third-party data.
+
+The two border inputs agree on 315 relationships. Six differences have explicit
+decisions in `build_data/reviewed/border_decisions.csv`: four relationships are
+included and two are excluded. Any unreviewed source difference fails the data
+build.
 
 Seven areas have no usable primary-capital record in the current snapshot.
 Their `country.capital` value is `None`. GeoNames-only country rows that do
@@ -280,7 +295,7 @@ with Atlas() as atlas:
 - **Schema version** describes compatibility with the bundled SQLite structure.
 - **Dataset version** identifies the captured source snapshot.
 
-For this development checkout they are `0.2.1`, `2`, and `2026.07.20.1`.
+For this development checkout they are `0.3.0`, `3`, and `2026.07.21.1`.
 
 ## Documentation and roadmap
 
@@ -290,15 +305,15 @@ For this development checkout they are `0.2.1`, `2`, and `2026.07.20.1`.
 - Current implementation status: [ROADMAP_STATUS.md](ROADMAP_STATUS.md)
 - Milestone evidence: [MILESTONE_0_1_REPORT.md](MILESTONE_0_1_REPORT.md)
 - 0.2.1 execution status: [RELEASE_0_2_STATUS.md](RELEASE_0_2_STATUS.md)
+- 0.3.0 release status: [RELEASE_0_3_STATUS.md](RELEASE_0_3_STATUS.md)
 - Maintainer release process: [RELEASING.md](RELEASING.md)
 
-Version 0.2.1 is the country-profile, coordinate, and discovery release. After
-it is published, 0.3.0 will add reviewed border relationships, neighbors,
-shared neighbors, and border paths. Later releases extend boundary geometry,
-historical statistics, institutions, culture, and exports.
+Version 0.3.0 is the reviewed land-border release. Later releases extend
+boundary geometry, historical statistics, institutions, culture, and exports.
 
 ## License and attribution
 
 PyWorldAtlas code is available under the [MIT License](LICENSE). GeoNames data
-is provided under CC BY 4.0. Other source terms and required notices are recorded
-in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+is provided under CC BY 4.0, and Natural Earth data is public domain. Other
+source terms and notices are recorded in
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

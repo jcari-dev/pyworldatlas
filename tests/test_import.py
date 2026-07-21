@@ -9,17 +9,5 @@ class ImportTests(unittest.TestCase):
         self.assertEqual(result.stdout, "")
         self.assertEqual(result.stderr, "")
 
-    def test_playground_audits_every_record(self):
-        result = subprocess.run(
-            [sys.executable, "-O", "playground.py", "--audit-only"],
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-        self.assertIn("Countries tested: 248", result.stdout)
-        self.assertIn("Cities tested   : 6265", result.stdout)
-        self.assertIn("every currently exposed record was checked", result.stdout)
-
-
 if __name__ == "__main__":
     unittest.main()

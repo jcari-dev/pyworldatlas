@@ -13,7 +13,7 @@ From an activated development environment:
 
 ```console
 python -m pip install -r docs/requirements.txt -e . -e pipeline
-python playground.py
+python maintain.py test
 python maintain.py preview
 python maintain.py check
 ```

@@ -11,3 +11,9 @@ Reviewed official local-language country names are transcribed from the United
 Nations Group of Experts on Geographical Names document
 `E/CONF.105/13/CRP.13`. The captured artifact, checksum, and record locators are
 kept with the data-building inputs.
+
+Natural Earth 1:50m Admin 0 data is used to cross-check land-border topology.
+Natural Earth states that its raster and vector data is in the public domain and
+may be used for personal, educational, and commercial purposes. Source archives,
+embedded versions, URLs, and checksums are retained in the raw-data manifest.
+See https://www.naturalearthdata.com/about/terms-of-use/.

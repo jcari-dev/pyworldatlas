@@ -251,6 +251,44 @@ class CountryReference:
 
 
 @dataclass(frozen=True, slots=True)
+class BorderPathResult:
+    """A shortest path through the reviewed land-border graph.
+
+    ``countries`` includes both endpoints in travel order. ``crossings`` is
+    therefore one fewer than the number of country references. The value is
+    detached from the database and remains usable after its :class:`Atlas`
+    closes.
+    """
+
+    countries: tuple[CountryReference, ...]
+    crossings: int
+
+    def __post_init__(self) -> None:
+        if not self.countries:
+            raise ValueError("a border path must contain at least one country")
+        if self.crossings != len(self.countries) - 1:
+            raise ValueError("crossings must be one fewer than the country count")
+
+    @property
+    def origin(self) -> CountryReference:
+        """Return the first country in the path."""
+        return self.countries[0]
+
+    @property
+    def destination(self) -> CountryReference:
+        """Return the last country in the path."""
+        return self.countries[-1]
+
+    def to_dict(self) -> dict[str, Any]:
+        """Return JSON-compatible primitives for this path."""
+        return _jsonable(self)
+
+    def to_json(self, indent: int | None = None) -> str:
+        """Serialize this path as JSON without escaping Unicode text."""
+        return json.dumps(self.to_dict(), ensure_ascii=False, indent=indent)
+
+
+@dataclass(frozen=True, slots=True)
 class Flashcard:
     """A deterministic geography study prompt and answer.
 
