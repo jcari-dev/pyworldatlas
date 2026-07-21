@@ -11,7 +11,7 @@ Requirements
 Install from PyPI
 -----------------
 
-After release 0.1.0 is published:
+Install the current public release:
 
 .. code-block:: console
 
@@ -19,9 +19,8 @@ After release 0.1.0 is published:
 
 .. important::
 
-   PyPI currently serves the legacy 0.0.12 package until the new 0.1.0 release
-   is published. Contributors testing this checkout should use the local wheel
-   or editable installation below.
+   PyPI currently serves 0.1.0. Contributors testing the unreleased 0.2.0
+   checkout should use the local wheel or editable installation below.
 
 Install this checkout in VS Code
 --------------------------------
@@ -50,7 +49,7 @@ The strongest local installation test uses the exact wheel:
 
 .. code-block:: console
 
-   python -m pip install --no-index --no-deps dist/pyworldatlas-0.1.0-py3-none-any.whl
+   python -m pip install --no-index --no-deps dist/pyworldatlas-0.2.0-py3-none-any.whl
 
 Verify the installation
 -----------------------
@@ -59,9 +58,8 @@ Verify the installation
 
    >>> import pyworldatlas
    >>> pyworldatlas.__version__
-   '0.1.0'
+   '0.2.0'
    >>> from pyworldatlas import Atlas
    >>> with Atlas() as atlas:
    ...     print(atlas.country("DO").capital.name)
    Santo Domingo
-

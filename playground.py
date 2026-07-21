@@ -1,4 +1,4 @@
-"""Explore and validate everything currently shipped by PyWorldAtlas 0.1.0.
+"""Explore and validate everything in the current PyWorldAtlas checkout.
 
 Run this file with VS Code's "Run Python File" button or press F5 and choose
 "PyWorldAtlas: Full Playground". The default run validates every country,
@@ -56,6 +56,8 @@ def audit_every_record(atlas: Atlas) -> dict[str, int]:
     capital_count = 0
     missing_capital_count = 0
     city_count = 0
+    local_name_count = 0
+    population_profile_count = 0
 
     assert countries, "The dataset must contain at least one country"
     assert tuple(country.name for country in countries) == tuple(
@@ -80,6 +82,21 @@ def audit_every_record(atlas: Atlas) -> dict[str, int]:
 
         assert country.names, f"{country.name} has no sourced names"
         assert country.sources, f"{country.name} has no source references"
+        assert country.population is None or country.population >= 0
+        if country.population is not None:
+            population_profile_count += 1
+        assert country.currency is None or len(country.currency.code) == 3
+        assert country.top_level_domain is None or country.top_level_domain.startswith(".")
+        assert all(code.startswith("+") for code in country.calling_codes)
+        assert all(language.code for language in country.languages)
+        for local_name in country.local_names:
+            local_name_count += 1
+            assert local_name.language_code
+            assert local_name.language_name
+            assert local_name.script_code
+            assert local_name.short_name
+            assert local_name.official_name
+            assert local_name.source is not None
         if country.capital is None:
             missing_capital_count += 1
 
@@ -109,13 +126,15 @@ def audit_every_record(atlas: Atlas) -> dict[str, int]:
         "missing_capitals": missing_capital_count,
         "major_cities": city_count,
         "unique_geonames_ids": len(geonames_ids),
+        "local_names": local_name_count,
+        "population_profiles": population_profile_count,
     }
 
 
 def print_dataset_overview(atlas: Atlas, audit: dict[str, int]) -> None:
     """Show version metadata and full-record audit results."""
     info = atlas.dataset_info()
-    heading("PYWORLDATLAS 0.1.0 — DATASET AND FULL-RECORD AUDIT")
+    heading(f"PYWORLDATLAS {info.library_version} — DATASET AND FULL-RECORD AUDIT")
     print(f"Library version : {info.library_version}")
     print(f"Schema version  : {info.schema_version}")
     print(f"Dataset version : {info.dataset_version}")
@@ -125,6 +144,8 @@ def print_dataset_overview(atlas: Atlas, audit: dict[str, int]) -> None:
     print(f"Without capital : {audit['missing_capitals']} explicit missing values")
     print(f"Cities tested   : {audit['major_cities']}")
     print(f"GeoNames IDs    : {audit['unique_geonames_ids']} unique")
+    print(f"Local names     : {audit['local_names']} sourced records")
+    print(f"Rich profiles   : {audit['population_profiles']} with population snapshots")
     print("Result          : PASS — every currently exposed record was checked")
 
 
@@ -171,6 +192,22 @@ def print_lookup_showcase(atlas: Atlas) -> None:
         print(f"  {continent:<10}: {names}")
 
 
+def print_coordinate_showcase(atlas: Atlas) -> None:
+    """Demonstrate city lookup and great-circle calculations."""
+    heading("LATITUDE, LONGITUDE, DISTANCE, BEARING, AND MIDPOINTS")
+    tokyo = atlas.city("Tokyo", country="Japan")
+    paris = atlas.city("Paris", country="France")
+    distance_km = atlas.distance_between(tokyo, paris)
+    distance_mi = atlas.distance_between(tokyo, paris, unit="mi")
+    midpoint = tokyo.coordinates.midpoint_to(paris.coordinates)
+    print(f"Tokyo coordinates : {tokyo.coordinates.as_tuple()}")
+    print(f"Paris coordinates : {paris.coordinates.as_tuple()}")
+    print(f"Great-circle route: {distance_km:,.1f} km / {distance_mi:,.1f} mi")
+    print(f"Initial bearing   : {tokyo.coordinates.bearing_to(paris.coordinates):.1f}°")
+    print(f"Spherical midpoint: {midpoint.as_tuple()}")
+    print(f"Named-place API   : atlas.distance_between('Tokyo', 'Paris', first_country='JP', second_country='FR')")
+
+
 def print_country_profile(country: Country, *, all_cities: bool = False) -> None:
     """Print every field currently available on one country profile."""
     heading(f"{country.flag}  {country.name.upper()} — COMPLETE CURRENT PROFILE")
@@ -185,12 +222,30 @@ def print_country_profile(country: Country, *, all_cities: bool = False) -> None
     print(f"Region        : {country.region or 'unknown'}")
     print(f"Subregion     : {country.subregion or 'unknown'}")
     print(f"Area          : {number(country.area_km2)} km²")
+    print(f"Population    : {number(country.population)} (source snapshot)")
+    currency = f"{country.currency.code} — {country.currency.name or 'name unavailable'}" if country.currency else "unknown"
+    print(f"Currency      : {currency}")
+    print(f"Languages     : {', '.join(language.code for language in country.languages) or 'unknown'}")
+    print(f"Calling codes : {', '.join(country.calling_codes) or 'unknown'}")
+    print(f"Internet TLD  : {country.top_level_domain or 'unknown'}")
+    print(f"Timezones seen: {', '.join(country.observed_timezones) or 'none in stored cities'}")
+    print(f"Capital lat/lon: {country.capital_coordinates.as_tuple() if country.capital_coordinates else 'unknown'}")
     print(f"Aliases       : {', '.join(country.aliases) if country.aliases else 'none'}")
 
     print("\nSourced names:")
     for name in country.names:
         marker = "preferred" if name.preferred else name.kind
         print(f"  - {name.text} [{marker}]")
+
+    print("\nOfficial local names:")
+    if not country.local_names:
+        print("  - not yet covered by the Country Discovery data family")
+    for name in country.local_names:
+        print(
+            f"  - {name.language_name} ({name.language_code}, {name.script_code}): "
+            f"{name.short_name} — {name.official_name}"
+        )
+        print(f"    source: {name.source.name} ({name.source.id})")
 
     print("\nCapital records:")
     for capital in country.capitals:
@@ -242,9 +297,11 @@ def print_coverage(atlas: Atlas) -> None:
         print(f"  {name:<24}: {count}")
     print("\nHonest milestone boundary:")
     print("  Implemented now : identity, aliases, codes, regions, capitals, coordinates,")
-    print("                    area, major cities, sources, search, serialization,")
+    print("                    area, population, currency, language/calling codes,")
+    print("                    major cities, distance, bearing, midpoint, serialization,")
+    print("                    and a Brazil/Switzerland official-local-name pilot,")
     print("                    and full UN M49 country-and-area coverage")
-    print("  Coming later    : distances, borders, geometry, statistics, leaders,")
+    print("  Coming later    : borders, boundary geometry, historical statistics, leaders,")
     print("                    rich culture, quizzes, exports, and release hardening")
 
 
@@ -276,6 +333,7 @@ def main() -> int:
         countries = tuple(atlas)
         print_country_directory(countries)
         print_lookup_showcase(atlas)
+        print_coordinate_showcase(atlas)
 
         if args.country:
             print_country_profile(atlas.country(args.country), all_cities=args.all_cities)
@@ -287,7 +345,7 @@ def main() -> int:
         print_coverage(atlas)
 
     heading("PLAYGROUND COMPLETE")
-    print("Everything currently available through the 0.1.0 public API ran successfully.")
+    print("Everything currently available through the checkout's public API ran successfully.")
     print("Tip: run `playground.py --help` for focused country, JSON, and all-city modes.")
     return 0
 

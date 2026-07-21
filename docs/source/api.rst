@@ -27,6 +27,12 @@ Country models
 .. autoclass:: pyworldatlas.LocalizedName
    :members:
 
+.. autoclass:: pyworldatlas.Currency
+   :members:
+
+.. autoclass:: pyworldatlas.Language
+   :members:
+
 Geographic models
 -----------------
 

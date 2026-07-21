@@ -4,8 +4,13 @@ PyWorldAtlas advances through installable, documented releases. Release 0.1.0
 establishes the dependency-free runtime, generated database, and captured
 248-country-and-area UN M49 scope.
 
-The planned sequence is geographic calculations (0.2), borders (0.3), geometry
-(0.4), historical statistics (0.5), national leaders (0.6), richer profiles
-(0.7), educational tools and exports (0.8), release hardening (0.9), and a
-stable API (1.0). `ROADMAP_STATUS.md` records the current evidence for each
-milestone.
+Release 0.2.0 is the rich-profile and coordinate milestone: population and
+currency context, language and calling-code metadata, direct city coordinates,
+and dependency-free distance, bearing, and midpoint calculations. The verified
+official-local-name pilot remains included without blocking the useful profile
+and geodesic APIs. Release 0.3.0 follows with reviewed borders, neighbors, and
+border paths. Later releases deepen geometry, statistics, leaders, and
+full-world hardening.
+
+`ROADMAP_STATUS.md` records generated evidence. The detailed execution boundary
+and release gate live in `RELEASE_0_2_STATUS.md`.

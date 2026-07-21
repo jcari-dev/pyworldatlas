@@ -17,9 +17,9 @@ coverage. Later features are not merged into the README before they work.
      - 248-country-and-area core, lookup, 241 capitals, 6,265 cities, documentation
      - PyPI, GitHub Release, and public documentation
    * - 0.2.0
-     - Not started
-     - Distances, bearings, midpoints, antipodes, nearby capitals
-     - —
+     - In progress
+     - Rich profiles, city coordinates, distances, bearings, midpoints, local-name pilot
+     - Runtime and dataset implementation complete; release gate in progress
    * - 0.3.0
      - Not started
      - Borders, neighbors, shared neighbors, border paths
@@ -60,3 +60,9 @@ Release 0.1.0 is public. Tests, clean-wheel installation, examples, HTML
 documentation, doctests, and wheel-content auditing pass. CI covers Python 3.10
 through 3.14, and the wheel, source distribution, checksums, release manifest,
 PyPI page, GitHub Release, and public documentation are available.
+
+The unreleased 0.2.0 checkout now exposes population and currency context,
+language and calling-code metadata, top-level domains, observed timezones,
+capital coordinates, exact city lookup, and great-circle distance, bearing, and
+midpoint calculations. It also retains the verified Brazil/Switzerland UNGEGN
+local-name pilot. Borders and border paths are reserved for 0.3.0.

@@ -75,6 +75,10 @@ def status(*, write: bool = True) -> None:
         f"Capitals: {coverage['capitals']} / {coverage['countries']}", f"Capital coordinates: {coverage['capital_coordinates']} / {coverage['capitals']}",
         f"Major cities: {coverage['major_cities']}", f"Last validation: {coverage['validation']}",
     ]
+    if "local_names" in coverage:
+        lines.insert(-1, f"Official local names: {coverage['local_names']} across {coverage['local_name_countries']} pilot countries")
+    if "population_profiles" in coverage:
+        lines.insert(-1, f"Rich profiles: {coverage['population_profiles']} population / {coverage['currency_profiles']} currency / {coverage['language_profiles']} language-code records")
     print("\n".join(lines))
     if write:
         table = ["| Milestone | Version | Status | Implemented functions | Tests | Dataset coverage | Documentation | Release |", "|---|---:|---|---|---|---|---|---|"]

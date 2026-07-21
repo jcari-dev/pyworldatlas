@@ -1,9 +1,16 @@
 {
-  "dataset_version": "2026.07.20",
+  "dataset_version": "2026.07.20.1",
   "countries": 248,
   "capitals": 241,
   "major_cities": 6265,
   "capital_coordinates": 241,
-  "database_sha256": "4a61ad6ec44acd1fe535cac36b1130f5687586ecbb2071477ef5869c2b4c4cc8",
+  "population_profiles": 248,
+  "currency_profiles": 247,
+  "calling_code_profiles": 243,
+  "language_profiles": 245,
+  "top_level_domain_profiles": 248,
+  "local_names": 5,
+  "local_name_countries": 2,
+  "database_sha256": "05ef445b53d7e0863837db55752896d0d693911790025d6878422d5b78120495",
   "validation": "PASS"
 }

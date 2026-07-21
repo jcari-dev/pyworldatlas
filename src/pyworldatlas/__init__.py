@@ -6,17 +6,16 @@ from .exceptions import (AmbiguousCountryError, AmbiguousPlaceError, AtlasClosed
                          AtlasError, CapitalNotFoundError, CountryNotFoundError,
                          DatasetError, DatasetIntegrityError, DatasetNotFoundError,
                          DatasetVersionError, PlaceNotFoundError)
-from .models import (Area, Capital, City, Coordinate, Country, CountryCodes,
+from .models import (Area, Capital, City, Coordinate, Country, CountryCodes, Currency, Language,
                      CountryMatch, CountryStatus, DatasetInfo, Geography,
                      LocalizedName, SourceReference)
 
 __all__ = [
     "Atlas", "Country", "CountryCodes", "CountryStatus", "LocalizedName",
-    "Coordinate", "Area", "Geography", "Capital", "City", "CountryMatch",
+    "Coordinate", "Area", "Geography", "Capital", "City", "Currency", "Language", "CountryMatch",
     "DatasetInfo", "SourceReference", "AtlasError", "AtlasClosedError",
     "DatasetError", "DatasetNotFoundError", "DatasetVersionError",
     "DatasetIntegrityError", "CountryNotFoundError", "AmbiguousCountryError",
     "PlaceNotFoundError", "AmbiguousPlaceError", "CapitalNotFoundError",
     "SCHEMA_VERSION", "__version__",
 ]
-

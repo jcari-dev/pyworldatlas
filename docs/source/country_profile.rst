@@ -29,6 +29,18 @@ A complete current example
    'Eastern Asia'
    >>> japan.area_km2
    377835.0
+   >>> japan.population
+   126529100
+   >>> (japan.currency.code, japan.currency.name)
+   ('JPY', 'Yen')
+   >>> japan.calling_codes
+   ('+81',)
+   >>> japan.top_level_domain
+   '.jp'
+   >>> [language.code for language in japan.languages]
+   ['ja']
+   >>> japan.observed_timezones
+   ('Asia/Tokyo',)
 
 Names and aliases
 -----------------
@@ -56,7 +68,8 @@ Sources
 -------
 
 ``country.sources`` lists the source snapshots supporting the fields exposed in
-the current profile. Release 0.1.0 profiles reference UN M49 and GeoNames.
+the current profile. Core profiles reference UN M49 and GeoNames; countries in
+the official-local-name pilot additionally reference UNGEGN.
 
 Immutability
 ------------
@@ -67,6 +80,7 @@ from silently changing a shared geographic record. Use :meth:`Country.to_dict
 
 .. note::
 
-   Government, leaders, historical statistics, languages, currencies, and
-   culture belong to later releases. Their absence in 0.1.0 is intentional.
-
+   Population is a source snapshot rather than a live estimate. Language values
+   are source codes, and ``observed_timezones`` contains zones seen on bundled
+   capital/major-city records rather than claiming exhaustive legal coverage.
+   Government, leaders, historical statistics, and culture remain later work.

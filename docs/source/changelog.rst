@@ -1,6 +1,20 @@
 Changelog
 =========
 
+0.2.0 — Unreleased
+------------------
+
+- Added rich profile fields for population snapshots, currency, language codes,
+  calling codes, top-level domains, observed timezones, and capital coordinates.
+- Added exact city lookup, coordinate validation, great-circle distance, initial
+  bearing, spherical midpoint, and named-place distance helpers.
+- Added the first Country Discovery vertical slice with five sourced official
+  local-name records across Brazil and Switzerland.
+- Added language and script metadata, formal names, explicit romanization
+  fields, provenance, and no-fallback convenience methods.
+- Upgraded the generated dataset to schema 2 while retaining the 0.1.0 country,
+  capital, city, lookup, and collection behaviors.
+
 0.1.0 — 2026-07-20
 ------------------
 

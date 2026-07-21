@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass, fields, is_dataclass
 from enum import Enum
 import json
+from math import asin, atan2, cos, degrees, radians, sin, sqrt
 from typing import Any
 
 
@@ -43,12 +44,24 @@ class CountryCodes:
 
 @dataclass(frozen=True, slots=True)
 class LocalizedName:
-    """A sourced country name or alias."""
+    """A sourced country name, alias, or official local-language form."""
 
     text: str
     language_code: str | None
     kind: str
     preferred: bool
+    language_name: str | None = None
+    script_code: str | None = None
+    official_name: str | None = None
+    romanized_short_name: str | None = None
+    romanized_official_name: str | None = None
+    is_official_language: bool = False
+    source: SourceReference | None = None
+
+    @property
+    def short_name(self) -> str:
+        """Return the short local-language form."""
+        return self.text
 
 
 @dataclass(frozen=True, slots=True)
@@ -58,9 +71,44 @@ class Coordinate:
     latitude: float
     longitude: float
 
+    def __post_init__(self) -> None:
+        if not -90 <= self.latitude <= 90:
+            raise ValueError("latitude must be between -90 and 90")
+        if not -180 <= self.longitude <= 180:
+            raise ValueError("longitude must be between -180 and 180")
+
     def as_tuple(self) -> tuple[float, float]:
         """Return ``(latitude, longitude)``."""
         return (self.latitude, self.longitude)
+
+    def distance_to(self, other: Coordinate, *, unit: str = "km") -> float:
+        """Return the great-circle distance to ``other`` using WGS84 mean radius."""
+        lat1, lon1, lat2, lon2 = map(radians, (self.latitude, self.longitude, other.latitude, other.longitude))
+        delta_lat, delta_lon = lat2 - lat1, lon2 - lon1
+        haversine = sin(delta_lat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(delta_lon / 2) ** 2
+        kilometers = 2 * 6371.0088 * asin(min(1.0, sqrt(haversine)))
+        factors = {"km": 1.0, "mi": 0.621371192237334, "nmi": 0.539956803455724}
+        if unit not in factors:
+            raise ValueError("unit must be 'km', 'mi', or 'nmi'")
+        return kilometers * factors[unit]
+
+    def bearing_to(self, other: Coordinate) -> float:
+        """Return the initial bearing to ``other`` in degrees from true north."""
+        lat1, lat2 = radians(self.latitude), radians(other.latitude)
+        delta_lon = radians(other.longitude - self.longitude)
+        y = sin(delta_lon) * cos(lat2)
+        x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(delta_lon)
+        return (degrees(atan2(y, x)) + 360.0) % 360.0
+
+    def midpoint_to(self, other: Coordinate) -> Coordinate:
+        """Return the spherical midpoint on the great-circle route to ``other``."""
+        lat1, lon1, lat2 = map(radians, (self.latitude, self.longitude, other.latitude))
+        delta_lon = radians(other.longitude - self.longitude)
+        bx, by = cos(lat2) * cos(delta_lon), cos(lat2) * sin(delta_lon)
+        latitude = atan2(sin(lat1) + sin(lat2), sqrt((cos(lat1) + bx) ** 2 + by**2))
+        longitude = lon1 + atan2(by, cos(lat1) + bx)
+        normalized_longitude = (degrees(longitude) + 540.0) % 360.0 - 180.0
+        return Coordinate(degrees(latitude), normalized_longitude)
 
 
 @dataclass(frozen=True, slots=True)
@@ -131,6 +179,21 @@ class SourceReference:
     retrieved_at: str
 
 
+@dataclass(frozen=True, slots=True)
+class Currency:
+    """A country's currency as identified by the captured source snapshot."""
+
+    code: str
+    name: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class Language:
+    """A language code associated with a country in the captured source."""
+
+    code: str
+
+
 def _jsonable(value: Any) -> Any:
     if isinstance(value, Enum):
         return value.value
@@ -156,6 +219,13 @@ class Country:
     capitals: tuple[Capital, ...]
     major_cities: tuple[City, ...]
     sources: tuple[SourceReference, ...]
+    local_names: tuple[LocalizedName, ...] = ()
+    population: int | None = None
+    currency: Currency | None = None
+    languages: tuple[Language, ...] = ()
+    calling_codes: tuple[str, ...] = ()
+    top_level_domain: str | None = None
+    observed_timezones: tuple[str, ...] = ()
 
     @property
     def alpha2(self) -> str:
@@ -192,6 +262,26 @@ class Country:
         """Return the primary capital, or ``None`` when unavailable."""
         return next((capital for capital in self.capitals if capital.primary), None)
 
+    @property
+    def capital_coordinates(self) -> Coordinate | None:
+        """Return the primary capital's coordinates, when a capital is available."""
+        return self.capital.coordinates if self.capital else None
+
+    def name_in(self, language_code: str) -> str | None:
+        """Return the short local name for ``language_code``, without fallback."""
+        match = next((name for name in self.local_names if name.language_code == language_code.casefold()), None)
+        return match.short_name if match else None
+
+    def official_name_in(self, language_code: str) -> str | None:
+        """Return the formal local name for ``language_code``, without fallback."""
+        match = next((name for name in self.local_names if name.language_code == language_code.casefold()), None)
+        return match.official_name if match else None
+
+    def romanized_name_in(self, language_code: str) -> str | None:
+        """Return a source-provided romanized short name, without generating one."""
+        match = next((name for name in self.local_names if name.language_code == language_code.casefold()), None)
+        return match.romanized_short_name if match else None
+
     def to_dict(self, include_history: bool = False) -> dict[str, Any]:
         """Serialize this profile to JSON-compatible primitives."""
         del include_history
@@ -215,4 +305,3 @@ class CountryMatch:
     country: Country
     matched_name: str
     score: int
-

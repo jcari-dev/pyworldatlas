@@ -4,7 +4,7 @@ Data quality and limitations
 Validation layers
 -----------------
 
-The 0.1.0 build checks:
+The current build checks:
 
 - Required country identifiers and canonical names.
 - Latitude from -90 through 90 and longitude from -180 through 180.
@@ -15,11 +15,15 @@ The 0.1.0 build checks:
 - Source references for every profile.
 - SQLite ``integrity_check`` and foreign-key consistency.
 - Reproducible database checksums from identical snapshots.
+- Required language/script metadata and source locators for every local name.
+- Unique country/language pairs and explicit romanization values.
+- Non-negative population snapshots and validated profile collection types.
+- Coordinate constructor bounds and known-route geodesic reference checks.
 
 Coverage
 --------
 
-.. list-table:: Current 0.1.0 coverage
+.. list-table:: Current checkout coverage
    :header-rows: 1
    :widths: 50 25 25
 
@@ -41,6 +45,12 @@ Coverage
    * - Country source references
      - 248
      - 248
+   * - Official local names
+     - 5
+     - Brazil/Switzerland pilot
+   * - Coordinate-bearing cities
+     - 6,265
+     - Bundled capitals and major-city extract
 
 Missing data is a valid value
 -----------------------------

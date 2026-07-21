@@ -1,7 +1,7 @@
 {
-  "library_version": "0.1.0",
-  "schema_version": 1,
-  "dataset_version": "2026.07.20",
+  "library_version": "0.2.0",
+  "schema_version": 2,
+  "dataset_version": "2026.07.20.1",
   "milestones": [
     {
       "name": "0 \u2014 Clean foundation",
@@ -24,14 +24,14 @@
       "release": "published to PyPI and GitHub as v0.1.0"
     },
     {
-      "name": "2 \u2014 Geographic calculations",
+      "name": "2 \u2014 Rich profiles and coordinates",
       "version": "0.2.0",
-      "status": "not_started",
-      "functions": "\u2014",
-      "tests": "\u2014",
-      "dataset": "\u2014",
-      "docs": "\u2014",
-      "release": "\u2014"
+      "status": "in_progress",
+      "functions": "Rich profiles, city lookup, lat/long distance, bearing, midpoint, local-name pilot",
+      "tests": "20 tests; complete local release gate passed",
+      "dataset": "248 profiles / 6,265 coordinate-bearing cities / 5 pilot local names",
+      "docs": "rich-profile and coordinate guides; 114 doctests pass",
+      "release": "release artifacts ready; unpublished"
     },
     {
       "name": "3 \u2014 Borders",
@@ -115,12 +115,19 @@
     }
   ],
   "coverage": {
-    "dataset_version": "2026.07.20",
+    "dataset_version": "2026.07.20.1",
     "countries": 248,
     "capitals": 241,
     "major_cities": 6265,
     "capital_coordinates": 241,
-    "database_sha256": "4a61ad6ec44acd1fe535cac36b1130f5687586ecbb2071477ef5869c2b4c4cc8",
+    "population_profiles": 248,
+    "currency_profiles": 247,
+    "calling_code_profiles": 243,
+    "language_profiles": 245,
+    "top_level_domain_profiles": 248,
+    "local_names": 5,
+    "local_name_countries": 2,
+    "database_sha256": "05ef445b53d7e0863837db55752896d0d693911790025d6878422d5b78120495",
     "validation": "PASS"
   },
   "legacy_release": "0.0.12 retained on PyPI"

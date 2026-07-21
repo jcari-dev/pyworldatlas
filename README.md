@@ -13,6 +13,10 @@ country by name or code, inspect immutable country and capital objects, explore
 major cities, search aliases, and serialize profiles—without an API key,
 runtime download, database server, or third-party dependency.
 
+> **Development checkout:** Work toward 0.2.0 is in progress. The first Country
+> Discovery slice adds reviewed official local names for Brazil and Switzerland;
+> the latest published PyPI release remains 0.1.0 until the release gate passes.
+
 ```python
 from pyworldatlas import Atlas
 
@@ -42,9 +46,9 @@ in later releases.
 | Runtime dependencies | 0 |
 | Bundled databases | 1 SQLite file |
 
-Later releases add geographic calculations, borders, geometry, historical
-statistics, national leaders, richer country profiles, quizzes, and exports.
-Those features are not presented as implemented today.
+The 0.2.0 checkout adds richer country profiles and dependency-free coordinate
+calculations. Borders, boundary geometry, historical statistics, national
+leaders, quizzes, and exports remain later work.
 
 ## Installation
 
@@ -78,7 +82,12 @@ series. Python versions are only claimed as release-supported after CI passes.
 | Geographic filtering | `atlas.countries(continent="Americas")` |
 | Capital records | `country.capital`, `.coordinates`, `.timezone_id` |
 | Major cities | `atlas.major_cities("Japan", limit=5)` |
+| Rich profile | `country.population`, `.currency`, `.languages`, `.calling_codes` |
+| City coordinates | `atlas.coordinates("Tokyo", country="JP")` |
+| Distance | `atlas.distance_between("Tokyo", "Paris", first_country="JP", second_country="FR")` |
+| Bearing and midpoint | `coordinate.bearing_to(other)`, `.midpoint_to(other)` |
 | Source inspection | `country.sources` |
+| Official local names | `country.local_names`, `country.name_in("pt")` |
 | Serialization | `country.to_dict()`, `country.to_json()` |
 | Version inspection | `atlas.dataset_info()` |
 
@@ -103,6 +112,12 @@ with Atlas() as atlas:
     print(country.region)
     print(country.subregion)
     print(country.area_km2)
+    print(country.population)
+    print(country.currency)
+    print(country.languages)
+    print(country.calling_codes)
+    print(country.top_level_domain)
+    print(country.observed_timezones)
 
     if country.capital is not None:
         print(country.capital.name)
@@ -110,6 +125,29 @@ with Atlas() as atlas:
         print(country.capital.population)
         print(country.capital.timezone_id)
 ```
+
+## Latitude, longitude, and distance
+
+```python
+from pyworldatlas import Atlas, Coordinate
+
+with Atlas() as atlas:
+    tokyo = atlas.city("Tokyo", country="Japan")
+    paris = atlas.city("Paris", country="France")
+
+    print(tokyo.coordinates.latitude, tokyo.coordinates.longitude)
+    print(atlas.distance_between(tokyo, paris))             # kilometres
+    print(atlas.distance_between(tokyo, paris, unit="mi")) # miles
+    print(tokyo.coordinates.bearing_to(paris.coordinates))
+    print(tokyo.coordinates.midpoint_to(paris.coordinates))
+
+london = Coordinate(51.5074, -0.1278)
+paris_center = Coordinate(48.8566, 2.3522)
+print(london.distance_to(paris_center))
+```
+
+Distances use the haversine formula and WGS84 mean Earth radius. They are
+surface great-circle distances, not road or flight-routing distances.
 
 ## Search and filter
 
@@ -176,6 +214,11 @@ Release 0.1.0 uses:
 - **GeoNames** for capitals, major cities, WGS84 coordinates, population
   snapshots, timezone identifiers, and GeoNames IDs.
 
+The 0.2.0 development pilot additionally uses the approved **UNGEGN List of
+Country Names** (``E/CONF.105/13/CRP.13``) for national official short and
+formal names. The captured source artifact and reviewed rows include checksums
+and exact entry/page locators.
+
 Raw snapshots are preserved with SHA-256 manifests. The separate builder emits
 inspectable normalized JSON Lines before generating SQLite. Missing values stay
 missing; unsourced assumptions are never substituted for country facts.
@@ -199,7 +242,7 @@ with Atlas() as atlas:
 - **Schema version** describes compatibility with the bundled SQLite structure.
 - **Dataset version** identifies the captured source snapshot.
 
-For this release they are `0.1.0`, `1`, and `2026.07.20` respectively.
+For this development checkout they are `0.2.0`, `2`, and `2026.07.20.1`.
 
 ## Documentation and roadmap
 
@@ -207,11 +250,12 @@ For this release they are `0.1.0`, `1`, and `2026.07.20` respectively.
 - Current implementation status: [ROADMAP_STATUS.md](ROADMAP_STATUS.md)
 - Migration from the legacy API: [MIGRATION_FROM_0.0.md](MIGRATION_FROM_0.0.md)
 - Milestone evidence: [MILESTONE_0_1_REPORT.md](MILESTONE_0_1_REPORT.md)
-- Maintainer handoff and completion plan: [PROJECT_STATUS_AND_NEXT_STEPS.md](PROJECT_STATUS_AND_NEXT_STEPS.md)
+- 0.2.0 execution status: [RELEASE_0_2_STATUS.md](RELEASE_0_2_STATUS.md)
 - Maintainer release process: [RELEASING.md](RELEASING.md)
 
-The next feature release, 0.2.0, focuses on great-circle distances, bearings,
-midpoints, antipodes, destination points, and nearby-capital searches.
+The next feature release, 0.2.0, follows the Country Discovery sequence:
+official local names, deterministic sampling and flags, reviewed borders and
+paths, then sourced discovery cards and flashcards.
 
 ## License and attribution
 
