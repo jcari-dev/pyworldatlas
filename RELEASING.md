@@ -20,30 +20,6 @@ git remote -v
 Pushes and pull requests to `main` run CI on Python 3.10 through 3.14 and the
 complete wheel, example, and documentation gate on Python 3.12.
 
-## TestPyPI publisher
-
-TestPyPI uses a separate account from PyPI. In TestPyPI's publishing settings,
-register a pending GitHub publisher with:
-
-| Setting | Value |
-|---|---|
-| PyPI project name | `pyworldatlas` |
-| Owner | `jcari-dev` |
-| Repository | `pyworldatlas` |
-| Workflow | `test-release.yml` |
-| Environment | `testpypi` |
-
-Create a GitHub environment named `testpypi`. Run the **TestPyPI release**
-workflow manually from the repository's Actions page.
-
-Verify the uploaded wheel in a disposable environment without activating it:
-
-```console
-py -3.10 -m venv .venv-testpypi
-.venv-testpypi\Scripts\python -m pip install --index-url https://test.pypi.org/simple/ --no-deps pyworldatlas==0.2.0
-.venv-testpypi\Scripts\python -c "from pyworldatlas import Atlas; a=Atlas(); print(len(a), a.country('Japan').capital.name); a.close()"
-```
-
 ## Production PyPI publisher
 
 On the existing PyPI project's **Publishing** page, add a GitHub Actions trusted
@@ -89,8 +65,9 @@ python maintain.py prepare-release 0.2.0 --output-dir build/release-dist
 ```
 
 Review `release-manifest.json` and `SHA256SUMS` in the selected output directory.
-Merge the release candidate to `main`, confirm that CI is green and the working
-tree is clean, then create and push the release tag:
+Install that wheel into a disposable local environment if a final manual smoke
+test is useful. Merge the release candidate to `main`, confirm that CI is green
+and the working tree is clean, then create and push the release tag:
 
 ```console
 git status

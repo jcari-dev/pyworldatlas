@@ -54,6 +54,6 @@ values are regression indicators, not universal performance promises.
 ## Publication boundary
 
 The package is not yet published. The remaining external sequence is merge and
-push, CI across supported Python versions, TestPyPI smoke installation, GitHub
-Release publication, production PyPI trusted publishing, and documentation
-deployment. Borders and border paths begin in 0.3.0 after 0.2.0 is published.
+push, CI across supported Python versions, production PyPI trusted publishing,
+GitHub Release publication, and documentation deployment. Borders and border
+paths begin in 0.3.0 after 0.2.0 is published.

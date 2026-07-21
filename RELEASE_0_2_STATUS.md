@@ -86,9 +86,8 @@ SHA-256 checksums and a machine-readable manifest.
 Before production publication:
 
 - Confirm supported-Python CI on the release commit.
-- Install and smoke-test 0.2.0 from TestPyPI in a clean environment.
 - Verify the protected `pypi` environment and trusted publisher.
-- Push `v0.2.0` only after the TestPyPI package matches the local artifact.
+- Review the local release manifest and checksums before pushing `v0.2.0`.
 - Verify the PyPI page, GitHub Release assets, and deployed documentation.
 
 ## Next release
