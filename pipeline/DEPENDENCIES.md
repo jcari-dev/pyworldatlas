@@ -1,6 +1,7 @@
 # Builder dependencies
 
-Release 0.1.0 uses only the Python standard library. The UN M49 HTML is parsed
-with `html.parser`, and GeoNames is distributed as tab-separated text in a ZIP
-archive supported by `zipfile`.
-
+The builder uses only the Python standard library. UN M49 HTML is parsed with
+`html.parser`; GeoNames tab-separated files and ZIP archives use `csv` and
+`zipfile`; reviewed UNGEGN local-name rows are read from CSV. Source artifacts
+are checksummed with `hashlib`, normalized to JSON Lines, and written to SQLite
+with `sqlite3`.

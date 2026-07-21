@@ -2,26 +2,28 @@
 
 > This file is generated from `build_data/reports/status.json`.
 
-Library version: 0.1.0
-Dataset version: 2026.07.20
-Schema version: 1
+Library version: 0.2.1
+Dataset version: 2026.07.20.1
+Schema version: 2
 
 Countries and areas: 248 (UN M49 scope)
 Capitals: 241 / 248
 Capital coordinates: 241 / 241
-Major cities: 6265
+Populated places: 6265
+Official local names: 5 across 2 reviewed countries
+Profile fields: 248 population / 247 currency / 245 language-code records
 Last validation: PASS
 
 | Milestone | Version | Status | Implemented functions | Tests | Dataset coverage | Documentation | Release |
 |---|---:|---|---|---|---|---|---|
-| 0 — Clean foundation | 0.1.0 | released | Atlas lookup, search, collection protocol, capitals, major cities, dataset info | CI on Python 3.10-3.14; full release gate passed | 248 countries and areas / 241 capitals / 6265 cities | public Sphinx site deployed; 79 doctests pass | published to PyPI and GitHub as v0.1.0 |
-| 1 — Generated country core | 0.1.0 | released | Atlas lookup, search, collection protocol, capitals, major cities, dataset info | CI on Python 3.10-3.14; full release gate passed | 248 countries and areas / 241 capitals / 6265 cities | public Sphinx site deployed; 79 doctests pass | published to PyPI and GitHub as v0.1.0 |
-| 2 — Geographic calculations | 0.2.0 | not_started | — | — | — | — | — |
-| 3 — Borders | 0.3.0 | not_started | — | — | — | — | — |
-| 4 — Geometry | 0.4.0 | not_started | — | — | — | — | — |
-| 5 — Statistics | 0.5.0 | not_started | — | — | — | — | — |
-| 6 — Leaders | 0.6.0 | not_started | — | — | — | — | — |
-| 7 — Rich profile | 0.7.0 | not_started | — | — | — | — | — |
-| 8 — Education and export | 0.8.0 | not_started | — | — | — | — | — |
-| 9 — Full-world hardening | 0.9.0 | not_started | — | — | — | — | — |
-| Stable offline atlas | 1.0.0 | not_started | — | — | — | — | — |
+| 0 — Clean foundation | 0.1.0 | complete | Standard package layout, generated database, release automation | Local 0.1.0 release gate passed | Captured and checksummed source snapshots | Sphinx source and maintainer instructions | Rebuilt baseline tagged v0.1.0 |
+| 1 — Generated country core | 0.1.0 | complete | Lookup, search, collection protocol, capitals, populated places, dataset info | Python 3.10-3.14 CI and local release gate passed | 248 countries and areas / 241 capitals / 6265 places | Core usage and data guides | Included in the v0.1.0 rebuilt baseline |
+| 2 — Country profiles, coordinates, and discovery | 0.2.1 | complete | Profiles, coordinate tools, flags, discovery cards, stable samples, flashcards | Unit tests and complete local release gate pass | 248 profiles / 6,265 coordinate-bearing places / 5 reviewed local names | Profile, local-name, coordinate, and discovery guides | Publication state is tracked on GitHub Releases and PyPI |
+| 3 — Borders | 0.3.0 | planned | — | — | — | — | — |
+| 4 — Geometry | 0.4.0 | planned | — | — | — | — | — |
+| 5 — Statistics | 0.5.0 | planned | — | — | — | — | — |
+| 6 — Leaders | 0.6.0 | planned | — | — | — | — | — |
+| 7 — Culture and institutions | 0.7.0 | planned | — | — | — | — | — |
+| 8 — Advanced education and export | 0.8.0 | planned | — | — | — | — | — |
+| 9 — Full-world hardening | 0.9.0 | planned | — | — | — | — | — |
+| Stable offline atlas | 1.0.0 | planned | — | — | — | — | — |

@@ -21,7 +21,7 @@ jobs:
           python-version: "3.12"
           cache: pip
       - name: Install release toolchain
-        run: python -m pip install -r docs/requirements.txt "build>=1.2,<2" -e . -e pipeline
+        run: python -m pip install -r docs/requirements.txt "build>=1.2,<2" "setuptools>=77" -e . -e pipeline
       - name: Prepare release artifacts
         run: |
           VERSION="${GITHUB_REF_NAME#v}"

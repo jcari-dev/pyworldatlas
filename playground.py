@@ -1,8 +1,7 @@
-"""Explore and validate everything currently shipped by PyWorldAtlas 0.1.0.
+"""Explore and validate everything in the current PyWorldAtlas checkout.
 
-Run this file with VS Code's "Run Python File" button or press F5 and choose
-"PyWorldAtlas: Full Playground". The default run validates every country,
-capital, and major-city record before showing each part of the public API.
+Run ``python playground.py`` from the repository root. The default run validates
+every country, capital, and major-city record before showing the public API.
 """
 
 from __future__ import annotations
@@ -15,8 +14,8 @@ import sys
 from typing import Iterable
 
 
-# A repository playground should work from VS Code immediately, even before the
-# project has been installed into the selected virtual environment. Installed
+# A repository playground should work immediately, even before the project has
+# been installed into the selected virtual environment. Installed
 # package usage remains unchanged; this fallback applies only to this script.
 try:
     from pyworldatlas import Atlas, Country
@@ -46,6 +45,12 @@ def number(value: int | float | None) -> str:
     return f"{value:,.0f}" if isinstance(value, (int, float)) else str(value)
 
 
+def check(condition: object, message: str) -> None:
+    """Raise an audit error even when Python optimization is enabled."""
+    if not condition:
+        raise RuntimeError(f"Dataset audit failed: {message}")
+
+
 def audit_every_record(atlas: Atlas) -> dict[str, int]:
     """Validate every country and every stored capital and city record."""
     countries = tuple(atlas)
@@ -56,50 +61,101 @@ def audit_every_record(atlas: Atlas) -> dict[str, int]:
     capital_count = 0
     missing_capital_count = 0
     city_count = 0
+    local_name_count = 0
+    population_profile_count = 0
 
-    assert countries, "The dataset must contain at least one country"
-    assert tuple(country.name for country in countries) == tuple(
-        sorted(country.name for country in countries)
-    ), "Country iteration must be alphabetical"
+    check(bool(countries), "the dataset contains no countries")
+    check(
+        tuple(country.name for country in countries)
+        == tuple(sorted(country.name for country in countries)),
+        "country iteration is not alphabetical",
+    )
 
     for country in countries:
-        assert country.name.strip(), f"Blank country name: {country!r}"
-        assert len(country.alpha2) == 2 and country.alpha2.isupper()
-        assert country.alpha2 not in alpha2_codes, f"Duplicate alpha-2 code: {country.alpha2}"
+        check(bool(country.name.strip()), f"blank country name: {country!r}")
+        check(
+            len(country.alpha2) == 2 and country.alpha2.isupper(),
+            f"invalid alpha-2 code for {country.name}: {country.alpha2!r}",
+        )
+        check(country.alpha2 not in alpha2_codes, f"duplicate alpha-2 code: {country.alpha2}")
         alpha2_codes.add(country.alpha2)
+        expected_flag = "".join(chr(0x1F1E6 + ord(letter) - ord("A")) for letter in country.alpha2)
+        check(country.flag == expected_flag, f"incorrect flag emoji for {country.name}")
+        check(country.flag_emoji == expected_flag, f"incorrect flag_emoji property for {country.name}")
 
         if country.alpha3 is not None:
-            assert len(country.alpha3) == 3 and country.alpha3.isupper()
-            assert country.alpha3 not in alpha3_codes, f"Duplicate alpha-3 code: {country.alpha3}"
+            check(
+                len(country.alpha3) == 3 and country.alpha3.isupper(),
+                f"invalid alpha-3 code for {country.name}: {country.alpha3!r}",
+            )
+            check(country.alpha3 not in alpha3_codes, f"duplicate alpha-3 code: {country.alpha3}")
             alpha3_codes.add(country.alpha3)
 
         if country.codes.numeric is not None:
-            assert len(country.codes.numeric) == 3 and country.codes.numeric.isdigit()
-            assert country.codes.numeric not in numeric_codes
+            check(
+                len(country.codes.numeric) == 3 and country.codes.numeric.isdigit(),
+                f"invalid M49 code for {country.name}: {country.codes.numeric!r}",
+            )
+            check(country.codes.numeric not in numeric_codes, f"duplicate M49 code: {country.codes.numeric}")
             numeric_codes.add(country.codes.numeric)
 
-        assert country.names, f"{country.name} has no sourced names"
-        assert country.sources, f"{country.name} has no source references"
+        check(bool(country.names), f"{country.name} has no sourced names")
+        check(bool(country.sources), f"{country.name} has no source references")
+        check(
+            country.population is None or country.population >= 0,
+            f"{country.name} has a negative population",
+        )
+        if country.population is not None:
+            population_profile_count += 1
+        check(
+            country.population_density is None or country.population_density >= 0,
+            f"{country.name} has an invalid calculated population density",
+        )
+        check(
+            country.currency is None or len(country.currency.code) == 3,
+            f"{country.name} has an invalid currency code",
+        )
+        check(
+            country.top_level_domain is None or country.top_level_domain.startswith("."),
+            f"{country.name} has an invalid top-level domain",
+        )
+        check(
+            all(code.startswith("+") for code in country.calling_codes),
+            f"{country.name} has an invalid calling code",
+        )
+        check(
+            all(language.code for language in country.languages),
+            f"{country.name} has a blank language code",
+        )
+        for local_name in country.local_names:
+            local_name_count += 1
+            check(bool(local_name.language_code), f"{country.name} has a local name without a language code")
+            check(bool(local_name.language_name), f"{country.name} has a local name without a language name")
+            check(bool(local_name.script_code), f"{country.name} has a local name without a script code")
+            check(bool(local_name.short_name), f"{country.name} has a blank local short name")
+            check(bool(local_name.official_name), f"{country.name} has a blank local formal name")
+            check(local_name.source is not None, f"{country.name} has an unsourced local name")
         if country.capital is None:
             missing_capital_count += 1
 
         for capital in country.capitals:
             capital_count += 1
-            assert capital.country_code == country.alpha2
-            assert -90 <= capital.coordinates.latitude <= 90
-            assert -180 <= capital.coordinates.longitude <= 180
-            assert capital.name.strip()
+            check(capital.country_code == country.alpha2, f"{capital.name} has the wrong country code")
+            check(-90 <= capital.coordinates.latitude <= 90, f"{capital.name} has invalid latitude")
+            check(-180 <= capital.coordinates.longitude <= 180, f"{capital.name} has invalid longitude")
+            check(bool(capital.name.strip()), f"{country.name} has a blank capital name")
 
         for city in country.major_cities:
             city_count += 1
-            assert city.country_code == country.alpha2
-            assert city.name.strip()
-            assert -90 <= city.coordinates.latitude <= 90
-            assert -180 <= city.coordinates.longitude <= 180
-            assert city.population is None or city.population >= 0
+            check(city.country_code == country.alpha2, f"{city.name} has the wrong country code")
+            check(bool(city.name.strip()), f"{country.name} has a blank city name")
+            check(-90 <= city.coordinates.latitude <= 90, f"{city.name} has invalid latitude")
+            check(-180 <= city.coordinates.longitude <= 180, f"{city.name} has invalid longitude")
+            check(city.population is None or city.population >= 0, f"{city.name} has negative population")
             if city.geonames_id is not None:
-                assert city.geonames_id not in geonames_ids, (
-                    f"Duplicate GeoNames ID: {city.geonames_id}"
+                check(
+                    city.geonames_id not in geonames_ids,
+                    f"duplicate GeoNames ID: {city.geonames_id}",
                 )
                 geonames_ids.add(city.geonames_id)
 
@@ -109,13 +165,15 @@ def audit_every_record(atlas: Atlas) -> dict[str, int]:
         "missing_capitals": missing_capital_count,
         "major_cities": city_count,
         "unique_geonames_ids": len(geonames_ids),
+        "local_names": local_name_count,
+        "population_profiles": population_profile_count,
     }
 
 
 def print_dataset_overview(atlas: Atlas, audit: dict[str, int]) -> None:
     """Show version metadata and full-record audit results."""
     info = atlas.dataset_info()
-    heading("PYWORLDATLAS 0.1.0 — DATASET AND FULL-RECORD AUDIT")
+    heading(f"PYWORLDATLAS {info.library_version} — DATASET AND FULL-RECORD AUDIT")
     print(f"Library version : {info.library_version}")
     print(f"Schema version  : {info.schema_version}")
     print(f"Dataset version : {info.dataset_version}")
@@ -125,6 +183,8 @@ def print_dataset_overview(atlas: Atlas, audit: dict[str, int]) -> None:
     print(f"Without capital : {audit['missing_capitals']} explicit missing values")
     print(f"Cities tested   : {audit['major_cities']}")
     print(f"GeoNames IDs    : {audit['unique_geonames_ids']} unique")
+    print(f"Local names     : {audit['local_names']} sourced records")
+    print(f"Rich profiles   : {audit['population_profiles']} with population snapshots")
     print("Result          : PASS — every currently exposed record was checked")
 
 
@@ -171,9 +231,54 @@ def print_lookup_showcase(atlas: Atlas) -> None:
         print(f"  {continent:<10}: {names}")
 
 
+def print_coordinate_showcase(atlas: Atlas) -> None:
+    """Demonstrate city lookup and great-circle calculations."""
+    heading("LATITUDE, LONGITUDE, DISTANCE, BEARING, AND MIDPOINTS")
+    tokyo = atlas.city("Tokyo", country="Japan")
+    paris = atlas.city("Paris", country="France")
+    distance_km = atlas.distance_between(tokyo, paris)
+    distance_mi = atlas.distance_between(tokyo, paris, unit="mi")
+    midpoint = tokyo.coordinates.midpoint_to(paris.coordinates)
+    print(f"Tokyo coordinates : {tokyo.coordinates.as_tuple()}")
+    print(f"Paris coordinates : {paris.coordinates.as_tuple()}")
+    print(f"Great-circle distance: {distance_km:,.1f} km / {distance_mi:,.1f} mi")
+    print(f"Initial bearing   : {tokyo.coordinates.bearing_to(paris.coordinates):.1f}°")
+    print(f"Spherical midpoint: {midpoint.as_tuple()}")
+    print(f"Named-place API   : atlas.distance_between('Tokyo', 'Paris', first_country='JP', second_country='FR')")
+
+
+def print_discovery_showcase(atlas: Atlas) -> None:
+    """Demonstrate reproducible samples, discovery cards, and flashcards."""
+    heading("COUNTRY DISCOVERY, REPRODUCIBLE SAMPLES, AND FLASHCARDS")
+    sample = atlas.sample_countries(count=5, continent="Africa", seed="playground")
+    print("Stable Africa sample:")
+    for country in sample:
+        print(f"  {country.flag_emoji} {country.name:<24} {country.alpha2}/{country.alpha3}")
+
+    japan = atlas.country("Japan")
+    card = japan.discovery_card()
+    print("\nJapan discovery card:")
+    print(f"  capital            : {card.capital}")
+    print(f"  population density : {number(card.population_density)} people/km²")
+    print(f"  currency            : {card.currency.code if card.currency else 'unknown'}")
+    print(f"  language codes      : {', '.join(card.language_codes) or 'unknown'}")
+    print(f"  bundled major cities: {card.major_city_count}")
+    print(f"  source identifiers  : {', '.join(card.source_ids)}")
+
+    print("\nReproducible capital flashcards:")
+    for flashcard in atlas.flashcards(topic="capitals", count=3, seed=42):
+        print(f"  Q: {flashcard.prompt}")
+        print(f"  A: {flashcard.answer}")
+
+    print("\nFlag and currency flashcards:")
+    for topic in ("flags", "currencies"):
+        flashcard = atlas.flashcards(topic=topic, count=1, seed="playground")[0]
+        print(f"  [{topic}] {flashcard.prompt}  Answer: {flashcard.answer}")
+
+
 def print_country_profile(country: Country, *, all_cities: bool = False) -> None:
     """Print every field currently available on one country profile."""
-    heading(f"{country.flag}  {country.name.upper()} — COMPLETE CURRENT PROFILE")
+    heading(f"{country.flag}  {country.name.upper()} — CURRENT PROFILE")
     print(f"Python object : {country!r}")
     print(f"Official name : {country.official_name or 'unknown'}")
     print(f"Status        : {country.status.value}")
@@ -185,12 +290,31 @@ def print_country_profile(country: Country, *, all_cities: bool = False) -> None
     print(f"Region        : {country.region or 'unknown'}")
     print(f"Subregion     : {country.subregion or 'unknown'}")
     print(f"Area          : {number(country.area_km2)} km²")
+    print(f"Population    : {number(country.population)} (source snapshot)")
+    print(f"Pop. density  : {number(country.population_density)} people/km² (calculated)")
+    currency = f"{country.currency.code} — {country.currency.name or 'name unavailable'}" if country.currency else "unknown"
+    print(f"Currency      : {currency}")
+    print(f"Languages     : {', '.join(language.code for language in country.languages) or 'unknown'}")
+    print(f"Calling codes : {', '.join(country.calling_codes) or 'unknown'}")
+    print(f"Internet TLD  : {country.top_level_domain or 'unknown'}")
+    print(f"Timezones seen: {', '.join(country.observed_timezones) or 'none in stored cities'}")
+    print(f"Capital lat/lon: {country.capital_coordinates.as_tuple() if country.capital_coordinates else 'unknown'}")
     print(f"Aliases       : {', '.join(country.aliases) if country.aliases else 'none'}")
 
     print("\nSourced names:")
     for name in country.names:
         marker = "preferred" if name.preferred else name.kind
         print(f"  - {name.text} [{marker}]")
+
+    print("\nOfficial local names:")
+    if not country.local_names:
+        print("  - no official local-name record is bundled for this country")
+    for name in country.local_names:
+        print(
+            f"  - {name.language_name} ({name.language_code}, {name.script_code}): "
+            f"{name.short_name} — {name.official_name}"
+        )
+        print(f"    source: {name.source.name} ({name.source.id})")
 
     print("\nCapital records:")
     for capital in country.capitals:
@@ -240,12 +364,15 @@ def print_coverage(atlas: Atlas) -> None:
     print("\nCountry profiles referencing each source:")
     for name, count in sorted(source_counts.items()):
         print(f"  {name:<24}: {count}")
-    print("\nHonest milestone boundary:")
+    print("\nCurrent scope:")
     print("  Implemented now : identity, aliases, codes, regions, capitals, coordinates,")
-    print("                    area, major cities, sources, search, serialization,")
-    print("                    and full UN M49 country-and-area coverage")
-    print("  Coming later    : distances, borders, geometry, statistics, leaders,")
-    print("                    rich culture, quizzes, exports, and release hardening")
+    print("                    area, population, currency, language/calling codes,")
+    print("                    major cities, distance, bearing, midpoint, serialization,")
+    print("                    derived density, discovery cards, stable sampling,")
+    print("                    structured flashcards, flag emoji, a Brazil/Switzerland")
+    print("                    official-local-name pilot, and full M49 coverage")
+    print("  Coming later    : borders, boundary geometry, historical statistics, leaders,")
+    print("                    expanded local names, culture, and exports")
 
 
 def parse_args() -> argparse.Namespace:
@@ -276,6 +403,8 @@ def main() -> int:
         countries = tuple(atlas)
         print_country_directory(countries)
         print_lookup_showcase(atlas)
+        print_coordinate_showcase(atlas)
+        print_discovery_showcase(atlas)
 
         if args.country:
             print_country_profile(atlas.country(args.country), all_cities=args.all_cities)
@@ -287,8 +416,8 @@ def main() -> int:
         print_coverage(atlas)
 
     heading("PLAYGROUND COMPLETE")
-    print("Everything currently available through the 0.1.0 public API ran successfully.")
-    print("Tip: run `playground.py --help` for focused country, JSON, and all-city modes.")
+    print("The record audit and public API examples completed without errors.")
+    print("Tip: run `python playground.py --help` for focused country, JSON, and all-city modes.")
     return 0
 
 

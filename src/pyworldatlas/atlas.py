@@ -3,20 +3,60 @@
 from __future__ import annotations
 
 from functools import lru_cache
+from hashlib import sha256
+import json
 from pathlib import Path
 from typing import Iterator
 
 from ._normalization import normalize_name
 from ._version import SCHEMA_VERSION, __version__
 from .database import Database
-from .exceptions import AtlasClosedError, CountryNotFoundError, DatasetVersionError
+from .exceptions import (AmbiguousPlaceError, AtlasClosedError, CapitalNotFoundError,
+                         CountryNotFoundError, DatasetVersionError, PlaceNotFoundError)
 from .models import (Area, Capital, City, Coordinate, Country, CountryCodes,
-                     CountryMatch, CountryStatus, DatasetInfo, Geography,
-                     LocalizedName, SourceReference)
+                     CountryMatch, CountryStatus, Currency, DatasetInfo, Flashcard,
+                     Geography, Language, LocalizedName, SourceReference)
 
 
 def _flag(alpha2: str) -> str:
     return "".join(chr(0x1F1E6 + ord(letter) - ord("A")) for letter in alpha2)
+
+
+def _stable_country_sample(
+    candidates: tuple[Country, ...], count: int, seed: int | str
+) -> tuple[Country, ...]:
+    """Select countries by a versioned SHA-256 ranking, independent of row order."""
+    if isinstance(count, bool) or not isinstance(count, int) or count <= 0:
+        raise ValueError("count must be a positive integer")
+    if count > len(candidates):
+        raise ValueError(f"count {count} exceeds the {len(candidates)} available countries")
+
+    def rank(country: Country) -> tuple[bytes, str]:
+        identifier = country.codes.numeric or country.alpha3 or country.alpha2
+        payload = f"pyworldatlas:0.2:{seed}:{identifier}".encode("utf-8")
+        return sha256(payload).digest(), identifier
+
+    return tuple(sorted(candidates, key=rank)[:count])
+
+
+_FLASHCARD_TOPICS = (
+    "alpha_2_codes",
+    "alpha_3_codes",
+    "areas",
+    "calling_codes",
+    "capitals",
+    "continents",
+    "countries_from_capitals",
+    "currencies",
+    "flags",
+    "language_codes",
+    "local_names",
+    "m49_codes",
+    "population_density",
+    "populations",
+    "regions",
+    "top_level_domains",
+)
 
 
 class Atlas:
@@ -99,10 +139,214 @@ class Atlas:
         rows = self._db.connection.execute(f"SELECT id FROM country{where} ORDER BY name", params).fetchall()
         return tuple(self._load_country(int(row[0])) for row in rows)
 
+    def sample_countries(
+        self,
+        *,
+        count: int,
+        continent: str | None = None,
+        region: str | None = None,
+        seed: int | str = 0,
+    ) -> tuple[Country, ...]:
+        """Return a reproducible educational sample of country profiles.
+
+        Candidates are ranked with a versioned SHA-256 algorithm using their
+        stable M49 identifiers. Results therefore do not depend on SQLite row
+        order, global random state, or implementation details of
+        ``random.sample()``. The same dataset, filters, count, and seed produce the
+        same ordered result across supported Python versions.
+
+        ``count`` must be positive and cannot exceed the filtered population.
+        ``continent`` and ``region`` follow :meth:`countries` semantics.
+        """
+        return _stable_country_sample(
+            self.countries(continent=continent, region=region), count, seed
+        )
+
+    def flashcards(
+        self,
+        *,
+        topic: str,
+        count: int,
+        continent: str | None = None,
+        region: str | None = None,
+        seed: int | str = 0,
+    ) -> tuple[Flashcard, ...]:
+        """Return deterministic, immutable geography flashcards.
+
+        Supported topics are ``alpha_2_codes``, ``alpha_3_codes``, ``areas``,
+        ``calling_codes``, ``capitals``, ``continents``,
+        ``countries_from_capitals``, ``currencies``, ``flags``,
+        ``language_codes``, ``local_names``, ``m49_codes``,
+        ``population_density``, ``populations``, ``regions``, and
+        ``top_level_domains``. Countries missing the answer required by a topic
+        are excluded before sampling. An impossible count raises
+        :class:`ValueError` rather than silently returning fewer cards.
+
+        Population, area, and density answers describe the captured source
+        snapshot. Flashcards are structured values, not an interactive game.
+        """
+        if topic not in _FLASHCARD_TOPICS:
+            allowed = ", ".join(_FLASHCARD_TOPICS)
+            raise ValueError(f"unsupported flashcard topic {topic!r}; choose from {allowed}")
+        candidates = tuple(
+            country
+            for country in self.countries(continent=continent, region=region)
+            if self._has_flashcard_answer(country, topic)
+        )
+        selected = _stable_country_sample(candidates, count, seed)
+        return tuple(self._flashcard(country, topic) for country in selected)
+
+    @staticmethod
+    def _has_flashcard_answer(country: Country, topic: str) -> bool:
+        if topic in {"capitals", "countries_from_capitals"}:
+            return country.capital is not None
+        if topic == "alpha_3_codes":
+            return country.alpha3 is not None
+        if topic == "areas":
+            return country.area_km2 is not None
+        if topic == "calling_codes":
+            return bool(country.calling_codes)
+        if topic == "continents":
+            return country.continent is not None
+        if topic == "currencies":
+            return country.currency is not None
+        if topic == "flags":
+            return country.flag_emoji is not None
+        if topic == "language_codes":
+            return bool(country.language_codes)
+        if topic == "local_names":
+            return bool(country.local_names)
+        if topic == "m49_codes":
+            return country.codes.numeric is not None
+        if topic == "population_density":
+            return country.population_density is not None
+        if topic == "populations":
+            return country.population is not None
+        if topic == "regions":
+            return country.region is not None
+        if topic == "top_level_domains":
+            return country.top_level_domain is not None
+        return True
+
+    @staticmethod
+    def _flashcard(country: Country, topic: str) -> Flashcard:
+        reference = country.reference()
+        if topic == "capitals":
+            prompt, answer = f"What is the capital of {country.name}?", country.capital.name
+        elif topic == "countries_from_capitals":
+            prompt, answer = (
+                f"{country.capital.name} is the capital of which country or area?",
+                country.name,
+            )
+        elif topic == "flags":
+            prompt, answer = f"Which country or area uses the flag {country.flag_emoji}?", country.name
+        elif topic == "alpha_2_codes":
+            prompt, answer = f"What is the alpha-2 code for {country.name}?", country.alpha2
+        elif topic == "alpha_3_codes":
+            prompt, answer = f"What is the alpha-3 code for {country.name}?", country.alpha3
+        elif topic == "m49_codes":
+            prompt, answer = f"What is the M49 code for {country.name}?", country.codes.numeric
+        elif topic == "currencies":
+            label = country.currency.name or country.currency.code
+            answer = f"{label} ({country.currency.code})" if label != country.currency.code else label
+            prompt = f"Which currency is listed for {country.name}?"
+        elif topic == "calling_codes":
+            prompt, answer = f"Which calling code is listed for {country.name}?", ", ".join(country.calling_codes)
+        elif topic == "top_level_domains":
+            prompt, answer = f"What is the country-code top-level domain for {country.name}?", country.top_level_domain
+        elif topic == "language_codes":
+            prompt, answer = f"Which language codes are listed for {country.name}?", ", ".join(country.language_codes)
+        elif topic == "continents":
+            prompt, answer = f"Which continent contains {country.name}?", country.continent
+        elif topic == "regions":
+            prompt, answer = f"Which UN region contains {country.name}?", country.region
+        elif topic == "local_names":
+            local_name = country.local_names[0]
+            prompt = f"What is a locally official short name for {country.name} in {local_name.language_name}?"
+            answer = local_name.short_name
+        elif topic == "areas":
+            prompt, answer = f"What area is listed for {country.name}?", f"{country.area_km2:g} km²"
+        elif topic == "populations":
+            prompt, answer = f"What snapshot population is listed for {country.name}?", f"{country.population:,}"
+        else:
+            prompt = f"What snapshot population density is calculated for {country.name}?"
+            answer = f"{country.population_density:.2f} people per km²"
+        return Flashcard(topic, prompt, str(answer), reference)
+
     def major_cities(self, country: str, *, limit: int | None = None) -> tuple[City, ...]:
         """Return major cities for a country, ordered by population and name."""
         result = self.country(country).major_cities
         return result if limit is None else result[:limit]
+
+    def city(self, query: str, *, country: str | None = None) -> City:
+        """Resolve an exact city name, optionally constrained to a country."""
+        self._ensure_open()
+        normalized = normalize_name(query)
+        params: list[object] = [normalized]
+        where = "c.normalized_name=?"
+        if country is not None:
+            country_id = self._country_id(country)
+            if country_id is None:
+                raise CountryNotFoundError(f"No unambiguous country matches {country!r}")
+            where += " AND c.country_id=?"
+            params.append(country_id)
+        rows = self._db.connection.execute(
+            f"""SELECT c.*, co.alpha2 FROM city c JOIN country co ON co.id=c.country_id
+                WHERE {where} ORDER BY c.population DESC, c.geonames_id""", params,
+        ).fetchall()
+        if not rows:
+            suffix = f" in {country!r}" if country else ""
+            raise PlaceNotFoundError(f"No city matches {query!r}{suffix}")
+        if len(rows) > 1:
+            options = ", ".join(f"{row['name']} ({row['alpha2']})" for row in rows[:5])
+            raise AmbiguousPlaceError(f"City {query!r} is ambiguous. Specify country; matches include {options}")
+        return self._city_from_row(rows[0])
+
+    def coordinates(self, query: str, *, country: str | None = None) -> Coordinate:
+        """Return coordinates for an exact city lookup."""
+        return self.city(query, country=country).coordinates
+
+    def distance_between(
+        self,
+        first: str | Country | Capital | City | Coordinate | tuple[float, float],
+        second: str | Country | Capital | City | Coordinate | tuple[float, float],
+        *,
+        unit: str = "km",
+        first_country: str | None = None,
+        second_country: str | None = None,
+    ) -> float:
+        """Return great-circle distance between city, model, or coordinate inputs.
+
+        String inputs are exact bundled-city names. Pass :class:`Country`
+        objects for capital-to-capital country distance.
+        """
+        start = self._coordinates_of(first, country=first_country)
+        finish = self._coordinates_of(second, country=second_country)
+        return start.distance_to(finish, unit=unit)
+
+    def _coordinates_of(
+        self,
+        value: str | Country | Capital | City | Coordinate | tuple[float, float],
+        *,
+        country: str | None,
+    ) -> Coordinate:
+        if isinstance(value, Coordinate):
+            return value
+        if isinstance(value, (Capital, City)):
+            return value.coordinates
+        if isinstance(value, Country):
+            if value.capital_coordinates is None:
+                raise CapitalNotFoundError(f"{value.name} has no primary-capital coordinates")
+            return value.capital_coordinates
+        if isinstance(value, str):
+            return self.coordinates(value, country=country)
+        if isinstance(value, tuple) and len(value) == 2:
+            return Coordinate(float(value[0]), float(value[1]))
+        raise TypeError("place must be a city name, country/place model, Coordinate, or (latitude, longitude) tuple")
+
+    @staticmethod
+    def _city_from_row(row: object) -> City:
+        return City(row["name"], row["alpha2"], Coordinate(row["latitude"], row["longitude"]), row["population"], row["elevation_m"], row["timezone_id"], ("official",) if row["is_capital"] else (), (), row["geonames_id"])
 
     @lru_cache(maxsize=64)
     def _load_country(self, country_id: int) -> Country:
@@ -116,8 +360,32 @@ class Atlas:
         cities = tuple(City(c["name"], row["alpha2"], Coordinate(c["latitude"], c["longitude"]), c["population"], c["elevation_m"], c["timezone_id"], ("official",) if c["is_capital"] else (), (), c["geonames_id"]) for c in city_rows)
         source_rows = self._db.connection.execute("SELECT DISTINCT s.* FROM source s JOIN field_source f ON f.source_id=s.id WHERE f.country_id=? ORDER BY s.id", (country_id,)).fetchall()
         sources = tuple(SourceReference(s["id"], s["name"], s["homepage"], s["retrieved_at"]) for s in source_rows)
+        local_names = self._load_local_names().get(country_id, ())
         geography = Geography(row["continent"], row["region"], row["subregion"], Area(row["total_area_km2"]))
-        return Country(row["name"], row["official_name"], names, aliases, CountryCodes(row["alpha2"], row["alpha3"], row["numeric_code"], None, row["geonames_id"]), _flag(row["alpha2"]), CountryStatus(row["status"]), geography, capitals, cities, sources)
+        currency = Currency(row["currency_code"], row["currency_name"]) if row["currency_code"] else None
+        languages = tuple(Language(code) for code in json.loads(row["language_codes"]))
+        calling_codes = tuple(json.loads(row["calling_codes"]))
+        observed_timezones = tuple(sorted({city.timezone_id for city in cities if city.timezone_id}))
+        return Country(row["name"], row["official_name"], names, aliases, CountryCodes(row["alpha2"], row["alpha3"], row["numeric_code"], None, row["geonames_id"]), _flag(row["alpha2"]), CountryStatus(row["status"]), geography, capitals, cities, sources, local_names, row["population"], currency, languages, calling_codes, row["top_level_domain"], observed_timezones)
+
+    @lru_cache(maxsize=1)
+    def _load_local_names(self) -> dict[int, tuple[LocalizedName, ...]]:
+        """Load local names once so collection iteration never creates an N+1 query."""
+        rows = self._db.connection.execute(
+            """SELECT n.*, s.name AS source_name, s.homepage, s.retrieved_at
+               FROM country_local_name n JOIN source s ON s.id=n.source_id
+               ORDER BY n.country_id, n.language_code"""
+        ).fetchall()
+        grouped: dict[int, list[LocalizedName]] = {}
+        for row in rows:
+            source = SourceReference(row["source_id"], row["source_name"], row["homepage"], row["retrieved_at"])
+            grouped.setdefault(int(row["country_id"]), []).append(LocalizedName(
+                row["short_name"], row["language_code"], "local_official", True,
+                row["language_name"], row["script_code"], row["official_name"],
+                row["romanized_short_name"], row["romanized_official_name"],
+                bool(row["is_official_language"]), source,
+            ))
+        return {country_id: tuple(names) for country_id, names in grouped.items()}
 
     def __getitem__(self, query: str) -> Country:
         return self.country(query)
@@ -138,6 +406,7 @@ class Atlas:
             self._db.close()
             self._closed = True
             self._load_country.cache_clear()
+            self._load_local_names.cache_clear()
 
     def __enter__(self) -> "Atlas":
         return self

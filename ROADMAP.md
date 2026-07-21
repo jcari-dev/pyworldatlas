@@ -1,11 +1,17 @@
 # Roadmap
 
-PyWorldAtlas advances through installable, documented releases. Release 0.1.0
-establishes the dependency-free runtime, generated database, and captured
+PyWorldAtlas advances through installable, documented releases. Version 0.1.0
+established the dependency-free runtime, generated database, and captured
 248-country-and-area UN M49 scope.
 
-The planned sequence is geographic calculations (0.2), borders (0.3), geometry
-(0.4), historical statistics (0.5), national leaders (0.6), richer profiles
-(0.7), educational tools and exports (0.8), release hardening (0.9), and a
-stable API (1.0). `ROADMAP_STATUS.md` records the current evidence for each
-milestone.
+Release 0.2.1 is the rich-profile and coordinate milestone: population and
+currency context, language and calling-code metadata, direct city coordinates,
+dependency-free distance, bearing, and midpoint calculations, flag emoji,
+discovery cards, stable sampling, and structured flashcards. It also includes
+five reviewed official local names for Brazil and Switzerland. Version 0.3.0
+follows with reviewed borders, neighbors, and border paths. Later releases add
+geometry, time-series statistics, institutions, culture, exports, and
+full-world hardening.
+
+`ROADMAP_STATUS.md` records generated evidence. The detailed execution boundary
+and release gate live in `RELEASE_0_2_STATUS.md`.

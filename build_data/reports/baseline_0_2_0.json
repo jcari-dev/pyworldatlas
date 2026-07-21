@@ -1,0 +1,24 @@
+{
+  "captured_at": "2026-07-20",
+  "baseline_version": "0.1.0",
+  "python": "3.12.13",
+  "test_count": 13,
+  "country_count": 248,
+  "city_count": 6265,
+  "wheel_bytes": 375654,
+  "sqlite_bytes": 757760,
+  "median_ms": {
+    "fresh_process_import": 94.179,
+    "first_atlas_open": 0.712,
+    "country_lookup": 1.29,
+    "iterate_all_countries": 33.115,
+    "serialize_all_countries": 26.915
+  },
+  "quality_gate": "PASS",
+  "notes": [
+    "All 13 unit tests passed.",
+    "The playground audited all 248 countries and areas and all 6265 cities.",
+    "The full build, offline wheel demo, Sphinx HTML build, 79 doctests, and wheel-content audit passed.",
+    "Timing values are medians of seven runs on the development machine and are intended for regression comparison, not as universal benchmarks."
+  ]
+}

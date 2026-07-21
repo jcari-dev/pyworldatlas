@@ -1,0 +1,13 @@
+{
+  "source_id": "ungegn-country-names",
+  "source_version": "2017-07-17",
+  "retrieved_at": "2026-07-20T00:00:00Z",
+  "files": [
+    {
+      "url": "https://unstats.un.org/unsd/geoinfo/ungegn/docs/11th-uncsgn-docs/E_Conf.105_13_CRP.13_15_UNGEGN%20WG%20Country%20Names%20Document.pdf",
+      "path": "E_CONF.105_13_CRP.13-EN.pdf",
+      "sha256": "a74510091e6720d6fe505a4c7d6d2ce1b18a0527f0cfd8318cb99cce16b65d1c",
+      "size_bytes": 2700524
+    }
+  ]
+}

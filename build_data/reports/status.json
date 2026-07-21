@@ -1,42 +1,42 @@
 {
-  "library_version": "0.1.0",
-  "schema_version": 1,
-  "dataset_version": "2026.07.20",
+  "library_version": "0.2.1",
+  "schema_version": 2,
+  "dataset_version": "2026.07.20.1",
   "milestones": [
     {
       "name": "0 \u2014 Clean foundation",
       "version": "0.1.0",
-      "status": "released",
-      "functions": "Atlas lookup, search, collection protocol, capitals, major cities, dataset info",
-      "tests": "CI on Python 3.10-3.14; full release gate passed",
-      "dataset": "248 countries and areas / 241 capitals / 6265 cities",
-      "docs": "public Sphinx site deployed; 79 doctests pass",
-      "release": "published to PyPI and GitHub as v0.1.0"
+      "status": "complete",
+      "functions": "Standard package layout, generated database, release automation",
+      "tests": "Local 0.1.0 release gate passed",
+      "dataset": "Captured and checksummed source snapshots",
+      "docs": "Sphinx source and maintainer instructions",
+      "release": "Rebuilt baseline tagged v0.1.0"
     },
     {
       "name": "1 \u2014 Generated country core",
       "version": "0.1.0",
-      "status": "released",
-      "functions": "Atlas lookup, search, collection protocol, capitals, major cities, dataset info",
-      "tests": "CI on Python 3.10-3.14; full release gate passed",
-      "dataset": "248 countries and areas / 241 capitals / 6265 cities",
-      "docs": "public Sphinx site deployed; 79 doctests pass",
-      "release": "published to PyPI and GitHub as v0.1.0"
+      "status": "complete",
+      "functions": "Lookup, search, collection protocol, capitals, populated places, dataset info",
+      "tests": "Python 3.10-3.14 CI and local release gate passed",
+      "dataset": "248 countries and areas / 241 capitals / 6265 places",
+      "docs": "Core usage and data guides",
+      "release": "Included in the v0.1.0 rebuilt baseline"
     },
     {
-      "name": "2 \u2014 Geographic calculations",
-      "version": "0.2.0",
-      "status": "not_started",
-      "functions": "\u2014",
-      "tests": "\u2014",
-      "dataset": "\u2014",
-      "docs": "\u2014",
-      "release": "\u2014"
+      "name": "2 \u2014 Country profiles, coordinates, and discovery",
+      "version": "0.2.1",
+      "status": "complete",
+      "functions": "Profiles, coordinate tools, flags, discovery cards, stable samples, flashcards",
+      "tests": "Unit tests and complete local release gate pass",
+      "dataset": "248 profiles / 6,265 coordinate-bearing places / 5 reviewed local names",
+      "docs": "Profile, local-name, coordinate, and discovery guides",
+      "release": "Publication state is tracked on GitHub Releases and PyPI"
     },
     {
       "name": "3 \u2014 Borders",
       "version": "0.3.0",
-      "status": "not_started",
+      "status": "planned",
       "functions": "\u2014",
       "tests": "\u2014",
       "dataset": "\u2014",
@@ -46,7 +46,7 @@
     {
       "name": "4 \u2014 Geometry",
       "version": "0.4.0",
-      "status": "not_started",
+      "status": "planned",
       "functions": "\u2014",
       "tests": "\u2014",
       "dataset": "\u2014",
@@ -56,7 +56,7 @@
     {
       "name": "5 \u2014 Statistics",
       "version": "0.5.0",
-      "status": "not_started",
+      "status": "planned",
       "functions": "\u2014",
       "tests": "\u2014",
       "dataset": "\u2014",
@@ -66,7 +66,7 @@
     {
       "name": "6 \u2014 Leaders",
       "version": "0.6.0",
-      "status": "not_started",
+      "status": "planned",
       "functions": "\u2014",
       "tests": "\u2014",
       "dataset": "\u2014",
@@ -74,9 +74,9 @@
       "release": "\u2014"
     },
     {
-      "name": "7 \u2014 Rich profile",
+      "name": "7 \u2014 Culture and institutions",
       "version": "0.7.0",
-      "status": "not_started",
+      "status": "planned",
       "functions": "\u2014",
       "tests": "\u2014",
       "dataset": "\u2014",
@@ -84,9 +84,9 @@
       "release": "\u2014"
     },
     {
-      "name": "8 \u2014 Education and export",
+      "name": "8 \u2014 Advanced education and export",
       "version": "0.8.0",
-      "status": "not_started",
+      "status": "planned",
       "functions": "\u2014",
       "tests": "\u2014",
       "dataset": "\u2014",
@@ -96,7 +96,7 @@
     {
       "name": "9 \u2014 Full-world hardening",
       "version": "0.9.0",
-      "status": "not_started",
+      "status": "planned",
       "functions": "\u2014",
       "tests": "\u2014",
       "dataset": "\u2014",
@@ -106,7 +106,7 @@
     {
       "name": "Stable offline atlas",
       "version": "1.0.0",
-      "status": "not_started",
+      "status": "planned",
       "functions": "\u2014",
       "tests": "\u2014",
       "dataset": "\u2014",
@@ -115,13 +115,20 @@
     }
   ],
   "coverage": {
-    "dataset_version": "2026.07.20",
+    "dataset_version": "2026.07.20.1",
     "countries": 248,
     "capitals": 241,
     "major_cities": 6265,
     "capital_coordinates": 241,
-    "database_sha256": "4a61ad6ec44acd1fe535cac36b1130f5687586ecbb2071477ef5869c2b4c4cc8",
+    "population_profiles": 248,
+    "currency_profiles": 247,
+    "calling_code_profiles": 243,
+    "language_profiles": 245,
+    "top_level_domain_profiles": 248,
+    "observed_timezone_profiles": 242,
+    "local_names": 5,
+    "local_name_countries": 2,
+    "database_sha256": "880175500d6b3195e458848641ad9c048167e21467db59b680671809e962efba",
     "validation": "PASS"
-  },
-  "legacy_release": "0.0.12 retained on PyPI"
+  }
 }

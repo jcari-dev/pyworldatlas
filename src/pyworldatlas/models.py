@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, fields, is_dataclass
+from dataclasses import dataclass, fields, is_dataclass
 from enum import Enum
 import json
+from math import asin, atan2, cos, degrees, isclose, radians, sin, sqrt
 from typing import Any
 
 
@@ -43,12 +44,24 @@ class CountryCodes:
 
 @dataclass(frozen=True, slots=True)
 class LocalizedName:
-    """A sourced country name or alias."""
+    """A sourced country name, alias, or official local-language form."""
 
     text: str
     language_code: str | None
     kind: str
     preferred: bool
+    language_name: str | None = None
+    script_code: str | None = None
+    official_name: str | None = None
+    romanized_short_name: str | None = None
+    romanized_official_name: str | None = None
+    is_official_language: bool = False
+    source: SourceReference | None = None
+
+    @property
+    def short_name(self) -> str:
+        """Return the short local-language form."""
+        return self.text
 
 
 @dataclass(frozen=True, slots=True)
@@ -58,9 +71,75 @@ class Coordinate:
     latitude: float
     longitude: float
 
+    def __post_init__(self) -> None:
+        if not -90 <= self.latitude <= 90:
+            raise ValueError("latitude must be between -90 and 90")
+        if not -180 <= self.longitude <= 180:
+            raise ValueError("longitude must be between -180 and 180")
+
     def as_tuple(self) -> tuple[float, float]:
         """Return ``(latitude, longitude)``."""
         return (self.latitude, self.longitude)
+
+    def distance_to(self, other: Coordinate, *, unit: str = "km") -> float:
+        """Return the great-circle distance to ``other`` using WGS84 mean radius."""
+        lat1, lon1, lat2, lon2 = map(radians, (self.latitude, self.longitude, other.latitude, other.longitude))
+        delta_lat, delta_lon = lat2 - lat1, lon2 - lon1
+        haversine = sin(delta_lat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(delta_lon / 2) ** 2
+        kilometers = 2 * 6371.0088 * asin(min(1.0, sqrt(haversine)))
+        factors = {"km": 1.0, "mi": 0.621371192237334, "nmi": 0.539956803455724}
+        if unit not in factors:
+            raise ValueError("unit must be 'km', 'mi', or 'nmi'")
+        return kilometers * factors[unit]
+
+    def _relative_position(self, other: Coordinate) -> tuple[bool, bool]:
+        """Return whether two coordinates are coincident or antipodal."""
+        def unit_vector(coordinate: Coordinate) -> tuple[float, float, float]:
+            latitude = radians(coordinate.latitude)
+            longitude = radians(coordinate.longitude)
+            return (
+                cos(latitude) * cos(longitude),
+                cos(latitude) * sin(longitude),
+                sin(latitude),
+            )
+
+        first = unit_vector(self)
+        second = unit_vector(other)
+        coincident = all(
+            isclose(left, right, rel_tol=0.0, abs_tol=1e-12)
+            for left, right in zip(first, second)
+        )
+        antipodal = all(
+            isclose(left, -right, rel_tol=0.0, abs_tol=1e-12)
+            for left, right in zip(first, second)
+        )
+        return coincident, antipodal
+
+    def bearing_to(self, other: Coordinate) -> float:
+        """Return the initial bearing to ``other`` in degrees from true north."""
+        coincident, antipodal = self._relative_position(other)
+        if coincident:
+            raise ValueError("initial bearing is undefined for coincident coordinates")
+        if antipodal:
+            raise ValueError("initial bearing is undefined for antipodal coordinates")
+        lat1, lat2 = radians(self.latitude), radians(other.latitude)
+        delta_lon = radians(other.longitude - self.longitude)
+        y = sin(delta_lon) * cos(lat2)
+        x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(delta_lon)
+        return (degrees(atan2(y, x)) + 360.0) % 360.0
+
+    def midpoint_to(self, other: Coordinate) -> Coordinate:
+        """Return the spherical midpoint on the great-circle path to ``other``."""
+        _, antipodal = self._relative_position(other)
+        if antipodal:
+            raise ValueError("great-circle midpoint is undefined for antipodal coordinates")
+        lat1, lon1, lat2 = map(radians, (self.latitude, self.longitude, other.latitude))
+        delta_lon = radians(other.longitude - self.longitude)
+        bx, by = cos(lat2) * cos(delta_lon), cos(lat2) * sin(delta_lon)
+        latitude = atan2(sin(lat1) + sin(lat2), sqrt((cos(lat1) + bx) ** 2 + by**2))
+        longitude = lon1 + atan2(by, cos(lat1) + bx)
+        normalized_longitude = (degrees(longitude) + 540.0) % 360.0 - 180.0
+        return Coordinate(degrees(latitude), normalized_longitude)
 
 
 @dataclass(frozen=True, slots=True)
@@ -131,6 +210,21 @@ class SourceReference:
     retrieved_at: str
 
 
+@dataclass(frozen=True, slots=True)
+class Currency:
+    """A country's currency as identified by the captured source snapshot."""
+
+    code: str
+    name: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class Language:
+    """A language code associated with a country in the captured source."""
+
+    code: str
+
+
 def _jsonable(value: Any) -> Any:
     if isinstance(value, Enum):
         return value.value
@@ -139,6 +233,81 @@ def _jsonable(value: Any) -> Any:
     if isinstance(value, tuple):
         return [_jsonable(item) for item in value]
     return value
+
+
+@dataclass(frozen=True, slots=True)
+class CountryReference:
+    """A compact, immutable country identifier used in educational results.
+
+    The reference contains display and lookup identifiers only. It deliberately
+    avoids nesting a complete :class:`Country` profile inside flashcards and
+    discovery results.
+    """
+
+    name: str
+    alpha2: str
+    alpha3: str | None
+    numeric: str | None
+
+
+@dataclass(frozen=True, slots=True)
+class Flashcard:
+    """A deterministic geography study prompt and answer.
+
+    Flashcards contain no scoring, session state, or hidden random state. The
+    ``topic`` value identifies the documented generator used by
+    :meth:`pyworldatlas.Atlas.flashcards`.
+    """
+
+    topic: str
+    prompt: str
+    answer: str
+    country: CountryReference
+
+    def to_dict(self) -> dict[str, Any]:
+        """Return JSON-compatible primitives for this flashcard."""
+        return _jsonable(self)
+
+    def to_json(self, indent: int | None = None) -> str:
+        """Serialize this flashcard as JSON without escaping Unicode text."""
+        return json.dumps(self.to_dict(), ensure_ascii=False, indent=indent)
+
+
+@dataclass(frozen=True, slots=True)
+class CountryDiscoveryCard:
+    """A compact, serializable teaching view of one materialized country.
+
+    Every value is copied from, or calculated directly from, an existing
+    :class:`Country`. Creating a card never queries the database or network.
+    """
+
+    country: CountryReference
+    flag_emoji: str | None
+    official_name: str | None
+    capital: str | None
+    capital_coordinates: Coordinate | None
+    continent: str | None
+    region: str | None
+    subregion: str | None
+    population: int | None
+    area_km2: float | None
+    population_density: float | None
+    currency: Currency | None
+    language_codes: tuple[str, ...]
+    calling_codes: tuple[str, ...]
+    top_level_domain: str | None
+    observed_timezones: tuple[str, ...]
+    local_names: tuple[LocalizedName, ...]
+    major_city_count: int
+    source_ids: tuple[str, ...]
+
+    def to_dict(self) -> dict[str, Any]:
+        """Return JSON-compatible primitives for this discovery card."""
+        return _jsonable(self)
+
+    def to_json(self, indent: int | None = None) -> str:
+        """Serialize this discovery card as JSON without escaping Unicode text."""
+        return json.dumps(self.to_dict(), ensure_ascii=False, indent=indent)
 
 
 @dataclass(frozen=True, slots=True)
@@ -156,6 +325,13 @@ class Country:
     capitals: tuple[Capital, ...]
     major_cities: tuple[City, ...]
     sources: tuple[SourceReference, ...]
+    local_names: tuple[LocalizedName, ...] = ()
+    population: int | None = None
+    currency: Currency | None = None
+    languages: tuple[Language, ...] = ()
+    calling_codes: tuple[str, ...] = ()
+    top_level_domain: str | None = None
+    observed_timezones: tuple[str, ...] = ()
 
     @property
     def alpha2(self) -> str:
@@ -188,17 +364,117 @@ class Country:
         return self.geography.area.total_km2
 
     @property
+    def flag_emoji(self) -> str | None:
+        """Return the regional-indicator flag derived from the alpha-2 code.
+
+        Emoji appearance depends on the operating system, font, and application.
+        ``None`` is returned if a profile ever lacks a valid two-letter code.
+        The existing ``flag`` attribute is the same value.
+        """
+        return self.flag if len(self.alpha2) == 2 and self.alpha2.isalpha() else None
+
+    @property
+    def population_density(self) -> float | None:
+        """Return snapshot population per square kilometre when calculable.
+
+        This is a transparent ratio of ``population`` to ``area_km2``,
+        not a separately sourced official statistic. ``None`` represents a
+        missing population, missing area, or non-positive area.
+        """
+        area = self.area_km2
+        if self.population is None or area is None or area <= 0:
+            return None
+        return self.population / area
+
+    @property
+    def language_codes(self) -> tuple[str, ...]:
+        """Return the captured country language codes as an immutable tuple."""
+        return tuple(language.code for language in self.languages)
+
+    @property
+    def currency_code(self) -> str | None:
+        """Return the captured currency code, or ``None`` when unavailable."""
+        return self.currency.code if self.currency else None
+
+    @property
+    def major_city_count(self) -> int:
+        """Return the number of populated-place records bundled for this profile."""
+        return len(self.major_cities)
+
+    @property
     def capital(self) -> Capital | None:
         """Return the primary capital, or ``None`` when unavailable."""
         return next((capital for capital in self.capitals if capital.primary), None)
 
+    @property
+    def capital_coordinates(self) -> Coordinate | None:
+        """Return the primary capital's coordinates, when a capital is available."""
+        return self.capital.coordinates if self.capital else None
+
+    def name_in(self, language_code: str) -> str | None:
+        """Return the short local name for ``language_code``, without fallback."""
+        match = next((name for name in self.local_names if name.language_code == language_code.casefold()), None)
+        return match.short_name if match else None
+
+    def official_name_in(self, language_code: str) -> str | None:
+        """Return the formal local name for ``language_code``, without fallback."""
+        match = next((name for name in self.local_names if name.language_code == language_code.casefold()), None)
+        return match.official_name if match else None
+
+    def romanized_name_in(self, language_code: str) -> str | None:
+        """Return a source-provided romanized short name, without generating one."""
+        match = next((name for name in self.local_names if name.language_code == language_code.casefold()), None)
+        return match.romanized_short_name if match else None
+
+    def reference(self) -> CountryReference:
+        """Return a compact immutable reference suitable for results and prompts."""
+        return CountryReference(self.name, self.alpha2, self.alpha3, self.codes.numeric)
+
+    def discovery_card(self) -> CountryDiscoveryCard:
+        """Return a compact educational view built entirely from this profile.
+
+        The card is safe to retain after the originating :class:`Atlas` closes
+        and can be serialized with :meth:`CountryDiscoveryCard.to_dict` or
+        :meth:`CountryDiscoveryCard.to_json`.
+        """
+        capital = self.capital
+        return CountryDiscoveryCard(
+            country=self.reference(),
+            flag_emoji=self.flag_emoji,
+            official_name=self.official_name,
+            capital=capital.name if capital else None,
+            capital_coordinates=capital.coordinates if capital else None,
+            continent=self.continent,
+            region=self.region,
+            subregion=self.subregion,
+            population=self.population,
+            area_km2=self.area_km2,
+            population_density=self.population_density,
+            currency=self.currency,
+            language_codes=self.language_codes,
+            calling_codes=self.calling_codes,
+            top_level_domain=self.top_level_domain,
+            observed_timezones=self.observed_timezones,
+            local_names=self.local_names,
+            major_city_count=self.major_city_count,
+            source_ids=tuple(source.id for source in self.sources),
+        )
+
     def to_dict(self, include_history: bool = False) -> dict[str, Any]:
-        """Serialize this profile to JSON-compatible primitives."""
+        """Serialize this profile to JSON-compatible primitives.
+
+        ``include_history`` is reserved for compatibility and currently has no
+        effect because the bundled dataset has no historical series.
+        """
         del include_history
         return _jsonable(self)
 
     def to_json(self, indent: int | None = None, include_history: bool = False) -> str:
-        """Serialize this profile as JSON."""
+        """Serialize this profile as JSON.
+
+        ``include_history`` is reserved for compatibility and currently has no
+        effect because the bundled dataset has no historical series.
+        """
         return json.dumps(self.to_dict(include_history), ensure_ascii=False, indent=indent)
 
     def __str__(self) -> str:
@@ -215,4 +491,3 @@ class CountryMatch:
     country: Country
     matched_name: str
     score: int
-

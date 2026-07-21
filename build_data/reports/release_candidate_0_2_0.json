@@ -1,0 +1,42 @@
+{
+  "captured_at": "2026-07-20",
+  "version": "0.2.0",
+  "schema_version": 2,
+  "dataset_version": "2026.07.20.1",
+  "python": "3.12.13",
+  "coverage": {
+    "countries": 248,
+    "population_profiles": 248,
+    "currency_profiles": 247,
+    "calling_code_profiles": 243,
+    "language_profiles": 245,
+    "top_level_domain_profiles": 248,
+    "capital_coordinates": 241,
+    "coordinate_bearing_cities": 6265,
+    "official_local_names": 5,
+    "official_local_name_countries": 2
+  },
+  "test_count": 25,
+  "doctest_count": 157,
+  "wheel_bytes": 390329,
+  "sqlite_bytes": 778240,
+  "median_ms": {
+    "fresh_process_import": 75.577,
+    "first_atlas_open": 0.594,
+    "country_lookup": 1.258,
+    "iterate_all_countries": 32.63,
+    "serialize_all_countries": 26.63,
+    "named_place_distance": 0.299
+  },
+  "change_from_0_1_0": {
+    "wheel_bytes": 14675,
+    "wheel_percent": 3.907,
+    "sqlite_bytes": 20480,
+    "sqlite_percent": 2.703,
+    "unit_tests": 12,
+    "doctests": 78,
+    "timing_regression_detected": false
+  },
+  "quality_gate": "PASS",
+  "publication_state": "UNPUBLISHED"
+}

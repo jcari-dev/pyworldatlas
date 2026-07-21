@@ -1,0 +1,6 @@
+country_code,language_code,language_name,script_code,short_name,official_name,romanized_short_name,romanized_official_name,is_official_language,source_id,source_locator
+BR,pt,Portuguese,Latn,Brasil,República Federativa do Brasil,,,true,ungegn-country-names-2017,"BR entry, PDF page 17 (printed page 16)"
+CH,de,German,Latn,Schweiz,Schweizerische Eidgenossenschaft,,,true,ungegn-country-names-2017,"CH entry, PDF page 92 (printed page 91)"
+CH,fr,French,Latn,Suisse,Confédération suisse,,,true,ungegn-country-names-2017,"CH entry, PDF page 92 (printed page 91)"
+CH,it,Italian,Latn,Svizzera,Confederazione Svizzera,,,true,ungegn-country-names-2017,"CH entry, PDF page 92 (printed page 91)"
+CH,rm,Romansh,Latn,Svizra,Confederaziun svizra,,,true,ungegn-country-names-2017,"CH entry and note 1, PDF page 92 (printed page 91)"
