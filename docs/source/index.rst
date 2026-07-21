@@ -21,8 +21,8 @@ installable, but intentionally does not claim later roadmap features.
 
    installation
    quickstart
+   playground
    data_sources
    migration
    api
    _generated/project_status
-

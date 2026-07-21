@@ -31,3 +31,17 @@ and `ROADMAP_STATUS.md` for precise status.
 Data sources: UN M49 for canonical identities/regions and GeoNames (CC BY 4.0)
 for populated places. See `DATA_SOURCES.md` and `THIRD_PARTY_NOTICES.md`.
 
+## VS Code playground
+
+Open this repository in VS Code, select the project virtual environment, and
+press `F5`. Choose **PyWorldAtlas: Full Playground** to validate every current
+country, capital, and major-city record and then see every implemented API
+feature in action. Focused terminal modes are also available:
+
+```console
+python playground.py --audit-only
+python playground.py --country Japan
+python playground.py --json "Dominican Republic"
+python playground.py --country "United States" --all-cities
+```
+
