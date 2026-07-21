@@ -9,4 +9,5 @@ docs/_build/
 build_data/normalized/
 build_data/output/
 build_data/reports/logs/
-
+/.agents/
+/.vscode/
