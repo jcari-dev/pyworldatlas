@@ -6,6 +6,10 @@ current release. Its default mode validates every country, capital, and city
 record before demonstrating lookup, aliases, filtering, country profiles,
 sources, and serialization.
 
+The playground can run directly from a repository checkout before the package
+is installed into the selected virtual environment. This convenience is limited
+to the playground; normal applications should install the package first.
+
 In VS Code, press ``F5`` and select **PyWorldAtlas: Full Playground**.
 
 Focused modes are available from any VS Code terminal:
@@ -19,4 +23,3 @@ Focused modes are available from any VS Code terminal:
 
 The full run intentionally prints a substantial report. Use ``--audit-only``
 for the fastest all-record integrity check.
-

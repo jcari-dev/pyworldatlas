@@ -36,7 +36,8 @@ for populated places. See `DATA_SOURCES.md` and `THIRD_PARTY_NOTICES.md`.
 Open this repository in VS Code, select the project virtual environment, and
 press `F5`. Choose **PyWorldAtlas: Full Playground** to validate every current
 country, capital, and major-city record and then see every implemented API
-feature in action. Focused terminal modes are also available:
+feature in action. The repository playground runs directly from ``src/`` when
+the package has not yet been installed. Focused terminal modes are also available:
 
 ```console
 python playground.py --audit-only
@@ -45,3 +46,6 @@ python playground.py --json "Dominican Republic"
 python playground.py --country "United States" --all-cities
 ```
 
+The `0.x` runtime targets Python 3.10 through 3.14. Documentation setup selects
+Sphinx 8.1.3 on Python 3.10 and Sphinx 8.2.3 on newer Python versions; this keeps
+the developer setup compatible without adding any runtime dependency.

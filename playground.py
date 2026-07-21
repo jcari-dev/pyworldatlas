@@ -10,10 +10,21 @@ from __future__ import annotations
 import argparse
 from collections import Counter
 import json
+from pathlib import Path
 import sys
 from typing import Iterable
 
-from pyworldatlas import Atlas, Country
+
+# A repository playground should work from VS Code immediately, even before the
+# project has been installed into the selected virtual environment. Installed
+# package usage remains unchanged; this fallback applies only to this script.
+try:
+    from pyworldatlas import Atlas, Country
+except ModuleNotFoundError as error:
+    if error.name != "pyworldatlas":
+        raise
+    sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
+    from pyworldatlas import Atlas, Country
 
 
 LINE = "=" * 88
