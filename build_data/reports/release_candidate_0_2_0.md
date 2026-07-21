@@ -1,7 +1,8 @@
 # PyWorldAtlas 0.2.0 release-candidate evidence
 
-Version 0.2.0 is locally release-ready as the rich-profile and coordinate
-milestone. Production publication remains a separate maintainer action.
+Version 0.2.0 was the verified rich-profile and coordinate candidate. It was
+not published to production; version 0.2.1 carries the same public API and
+dataset forward as the production candidate.
 
 ## Shipped capability
 
@@ -53,7 +54,6 @@ values are regression indicators, not universal performance promises.
 
 ## Publication boundary
 
-The package is not yet published. The remaining external sequence is merge and
-push, CI across supported Python versions, production PyPI trusted publishing,
-GitHub Release publication, and documentation deployment. Borders and border
-paths begin in 0.3.0 after 0.2.0 is published.
+This report is retained as historical candidate evidence. Version 0.2.1 is the
+production publication target. Borders and border paths begin in 0.3.0 after
+the 0.2 series is published.

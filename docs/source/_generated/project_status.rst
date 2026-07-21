@@ -3,7 +3,7 @@ Project status
 
 .. THIS FILE IS GENERATED. DO NOT EDIT DIRECTLY.
 
-Library version: 0.2.0
+Library version: 0.2.1
 Dataset version: 2026.07.20.1
 Schema version: 2
 

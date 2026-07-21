@@ -395,7 +395,7 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
         },
         {
             "name": "2 — Country profiles, coordinates, and discovery",
-            "version": "0.2.0",
+            "version": "0.2.1",
             "status": "complete",
             "functions": "Profiles, coordinate tools, flags, discovery cards, stable samples, flashcards",
             "tests": "Unit tests and complete local release gate pass",

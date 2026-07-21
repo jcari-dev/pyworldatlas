@@ -6,14 +6,14 @@ Raw snapshots are immutable and checksummed. Familiar common-name overrides
 retain the official UN M49 value and are reviewed in
 `pipeline/config/overrides.json`.
 
-The 0.2.0 checkout includes 248 countries and areas from the captured UN M49
+The 0.2.1 checkout includes 248 countries and areas from the captured UN M49
 scope, 241 primary-capital records, and 6,265 populated-place records. The
 place table contains records at or above 100,000 population plus retained
 capitals. Seven areas expose a missing capital as `None`. GeoNames-only
 identities outside the UN M49 snapshot are excluded; this source-priority rule
 is not a statement about sovereignty.
 
-Version 0.2.0 includes five official local-name records for Brazil and
+Version 0.2.1 includes five official local-name records for Brazil and
 Switzerland. Validation requires a unique country/language pair, language
 and ISO 15924 script metadata, short and formal forms, an official-language
 flag, a captured-source identifier, and an exact entry/page locator. Countries

@@ -5,12 +5,12 @@ PyWorldAtlas is a compact, source-aware world atlas for Python. It provides
 typed country, capital, and city records from one bundled SQLite database and
 works without an API key, runtime download, or third-party dependency.
 
-**Documented version:** 0.2.0 | **Dataset:** 2026.07.20.1 | **Python:** 3.10–3.14 |
+**Documented version:** 0.2.1 | **Dataset:** 2026.07.20.1 | **Python:** 3.10–3.14 |
 **Runtime dependencies:** 0
 
 .. note::
 
-   The 0.2.0 checkout contains 248 countries and areas from the captured UN M49
+   The 0.2.1 checkout contains 248 countries and areas from the captured UN M49
    scope, 241 GeoNames capital records, and 6,265 populated-place records. Later
    milestones deepen the available facts and geographic operations. Official
    local names currently have pilot coverage for Brazil and Switzerland.

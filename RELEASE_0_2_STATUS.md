@@ -1,6 +1,6 @@
-# PyWorldAtlas 0.2.0 release status
+# PyWorldAtlas 0.2.1 release status
 
-Version 0.2.0 adds country profile metadata, coordinate tools, and reproducible
+Version 0.2.1 adds country profile metadata, coordinate tools, and reproducible
 country-discovery features to the 0.1.0 world core. It keeps the
 standard-library-only runtime, bundled SQLite database, deterministic builder,
 immutable models, and offline behavior.
@@ -87,7 +87,7 @@ Before production publication:
 
 - Confirm supported-Python CI on the release commit.
 - Verify the protected `pypi` environment and trusted publisher.
-- Review the local release manifest and checksums before pushing `v0.2.0`.
+- Review the local release manifest and checksums before pushing `v0.2.1`.
 - Verify the PyPI page, GitHub Release assets, and deployed documentation.
 
 ## Next release

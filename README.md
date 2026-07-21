@@ -2,7 +2,7 @@
 
 > A compact, source-aware world atlas for Python that works completely offline.
 
-[![Source 0.2.0](https://img.shields.io/badge/source-0.2.0-1677be)](CHANGELOG.md)
+[![Source 0.2.1](https://img.shields.io/badge/source-0.2.1-1677be)](CHANGELOG.md)
 [![PyPI](https://img.shields.io/pypi/v/pyworldatlas.svg?label=PyPI)](https://pypi.org/project/pyworldatlas/)
 [![Python 3.10–3.14](https://img.shields.io/badge/python-3.10%E2%80%933.14-10233d)](https://www.python.org/)
 [![Runtime dependencies: 0](https://img.shields.io/badge/runtime%20dependencies-0-1b8a6b)](#small-by-design)
@@ -30,7 +30,7 @@ with Atlas() as atlas:
 ## Dataset coverage
 
 The bundled dataset contains every country and area in the captured UN M49
-scope, cross-checked against GeoNames country metadata. Version 0.2.0 adds core
+scope, cross-checked against GeoNames country metadata. Version 0.2.1 adds core
 profile metadata and coordinate calculations to the identity, region, capital,
 and populated-place records established for 0.1.0.
 
@@ -43,7 +43,7 @@ and populated-place records established for 0.1.0.
 | Runtime dependencies | 0 |
 | Bundled databases | 1 SQLite file |
 
-The 0.2.0 checkout adds richer country profiles, dependency-free coordinate
+The 0.2.1 checkout adds richer country profiles, dependency-free coordinate
 calculations, flag emoji, discovery cards, reproducible sampling, and structured
 flashcards. Borders, boundary geometry, historical statistics, national
 leaders, interactive learning applications, and exports remain later work.
@@ -66,7 +66,7 @@ python -m pip install -e . -e pipeline
 You can also test the exact local wheel after running the release build:
 
 ```console
-python -m pip install --no-index --no-deps dist/pyworldatlas-0.2.0-py3-none-any.whl
+python -m pip install --no-index --no-deps dist/pyworldatlas-0.2.1-py3-none-any.whl
 ```
 
 The package runtime supports Python 3.10 through 3.14 during the 0.x release
@@ -240,7 +240,7 @@ At runtime PyWorldAtlas does not:
 
 ## Data you can trace
 
-The 0.2.0 checkout uses:
+The 0.2.1 checkout uses:
 
 - **United Nations M49** for canonical identities, standard codes, regions, and
   subregions.
@@ -280,7 +280,7 @@ with Atlas() as atlas:
 - **Schema version** describes compatibility with the bundled SQLite structure.
 - **Dataset version** identifies the captured source snapshot.
 
-For this development checkout they are `0.2.0`, `2`, and `2026.07.20.1`.
+For this development checkout they are `0.2.1`, `2`, and `2026.07.20.1`.
 
 ## Documentation and roadmap
 
@@ -289,10 +289,10 @@ For this development checkout they are `0.2.0`, `2`, and `2026.07.20.1`.
   https://jcari-dev.github.io/pyworldatlas-documentation/
 - Current implementation status: [ROADMAP_STATUS.md](ROADMAP_STATUS.md)
 - Milestone evidence: [MILESTONE_0_1_REPORT.md](MILESTONE_0_1_REPORT.md)
-- 0.2.0 execution status: [RELEASE_0_2_STATUS.md](RELEASE_0_2_STATUS.md)
+- 0.2.1 execution status: [RELEASE_0_2_STATUS.md](RELEASE_0_2_STATUS.md)
 - Maintainer release process: [RELEASING.md](RELEASING.md)
 
-Version 0.2.0 is the country-profile, coordinate, and discovery release. After
+Version 0.2.1 is the country-profile, coordinate, and discovery release. After
 it is published, 0.3.0 will add reviewed border relationships, neighbors,
 shared neighbors, and border paths. Later releases extend boundary geometry,
 historical statistics, institutions, culture, and exports.

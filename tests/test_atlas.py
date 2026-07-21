@@ -201,7 +201,7 @@ class AtlasTests(unittest.TestCase):
 
     def test_dataset_versions(self):
         info = self.atlas.dataset_info()
-        self.assertEqual((info.library_version, info.schema_version, info.dataset_version), ("0.2.0", 2, "2026.07.20.1"))
+        self.assertEqual((info.library_version, info.schema_version, info.dataset_version), ("0.2.1", 2, "2026.07.20.1"))
         self.assertEqual(info.country_count, 248)
 
     def test_official_local_names_pilot(self):

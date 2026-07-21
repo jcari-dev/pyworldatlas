@@ -83,7 +83,7 @@ The sampling algorithm ranks M49 identifiers with SHA-256 and never calls a
 remote service. Flashcard wording is package code; answers retain the
 provenance, coverage, and freshness limits of their underlying profile fields.
 
-Source priority in the 0.2.0 checkout
+Source priority in the 0.2.1 checkout
 -------------------------------------
 
 .. list-table::

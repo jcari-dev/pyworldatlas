@@ -16,7 +16,7 @@ documentation update.
      - Complete
      - 248-country-and-area core, lookup, 241 capitals, 6,265 cities, documentation
      - Rebuilt baseline tagged
-   * - 0.2.0
+   * - 0.2.1
      - Release candidate
      - Rich profiles, coordinate tools, flags, discovery cards, stable samples, flashcards
      - Local release gate complete; external publication pending
@@ -58,7 +58,7 @@ Release boundary
 
 The 0.1.0 source state established the rebuilt runtime and dataset baseline.
 
-Version 0.2.0 exposes population and currency context,
+Version 0.2.1 exposes population and currency context,
 language and calling-code metadata, top-level domains, observed timezones,
 capital coordinates, exact city lookup, and great-circle distance, bearing, and
 midpoint calculations. It also retains the verified Brazil/Switzerland UNGEGN

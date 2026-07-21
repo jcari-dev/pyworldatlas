@@ -1,6 +1,6 @@
 # Boundaries and disputes
 
-Versions 0.1.0 and 0.2.0 contain no boundary geometry and make no
+Versions 0.1.0 and 0.2.1 contain no boundary geometry and make no
 point-in-country, adjacency, or border claims. UN M49 supplies the current
 country and area scope. Familiar English display names come from reviewed name
 mappings while the formal source names remain available.

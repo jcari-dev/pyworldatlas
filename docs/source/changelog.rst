@@ -1,8 +1,16 @@
 Changelog
 =========
 
-0.2.0 — Unreleased
+0.2.1 — 2026-07-21
 ------------------
+
+- First production candidate for the complete 0.2 country-profile, coordinate,
+  and discovery feature set.
+- Supersedes the unpublished 0.2.0 candidate without changing its public API or
+  bundled dataset.
+
+0.2.0 — Unpublished candidate
+-----------------------------
 
 - Added rich profile fields for population snapshots, currency, language codes,
   calling codes, top-level domains, observed timezones, and capital coordinates.

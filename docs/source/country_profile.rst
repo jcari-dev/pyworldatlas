@@ -53,7 +53,7 @@ Profile example
 Current field coverage
 ----------------------
 
-.. list-table:: Version 0.2.0 profile availability
+.. list-table:: Version 0.2.1 profile availability
    :header-rows: 1
    :widths: 44 18 38
 

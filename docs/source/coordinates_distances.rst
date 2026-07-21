@@ -2,7 +2,7 @@ Coordinates and distances
 =========================
 
 PyWorldAtlas stores signed WGS84 latitude and longitude on every bundled
-capital and populated-place record. Version 0.2.0 adds exact lookup within the
+capital and populated-place record. Version 0.2.1 adds exact lookup within the
 6,265 bundled place records and dependency-free great-circle calculations.
 
 Look up coordinates

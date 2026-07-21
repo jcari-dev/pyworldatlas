@@ -1,7 +1,7 @@
 Official local names
 ====================
 
-Version 0.2.0 includes reviewed official short and formal country names for
+Version 0.2.1 includes reviewed official short and formal country names for
 Brazil and Switzerland. These records are bundled in SQLite, remain available
 after an :class:`~pyworldatlas.Atlas` closes, and require no network access.
 
