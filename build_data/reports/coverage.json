@@ -9,6 +9,7 @@
   "calling_code_profiles": 243,
   "language_profiles": 245,
   "top_level_domain_profiles": 248,
+  "observed_timezone_profiles": 242,
   "local_names": 5,
   "local_name_countries": 2,
   "database_sha256": "05ef445b53d7e0863837db55752896d0d693911790025d6878422d5b78120495",

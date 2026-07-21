@@ -1,9 +1,9 @@
-# Country Discovery pilot result
+# Official local-name pilot checkpoint
 
-The Brazil/Switzerland official-local-name vertical slice passes its acceptance
-gate. It is built from the captured UNGEGN artifact through reviewed normalized
-records, schema 2, the bundled SQLite database, immutable runtime models,
-serialization, playground output, documentation, and the installed wheel.
+This checkpoint records the Brazil/Switzerland official-local-name pilot before
+the remaining 0.2.0 profile and coordinate work. The records pass from the
+captured UNGEGN artifact through reviewed normalized data, schema 2, the bundled
+SQLite database, runtime models, serialization, documentation, and the wheel.
 
 ## Coverage and verification
 
@@ -31,8 +31,8 @@ serialization, playground output, documentation, and the installed wheel.
 
 Median local timings were lower in this run for import, first open, lookup,
 complete iteration, and complete serialization. Because these are short,
-machine-local measurements, the defensible conclusion is that no regression
-was detected—not that the new version is universally faster.
+machine-local measurements, they show that no regression was detected; they do
+not establish performance on other systems.
 
 ## Contract conclusions
 
@@ -44,6 +44,5 @@ was detected—not that the new version is universally faster.
 - Collection iteration performs one bulk local-name query.
 - Existing 0.1.0 lookup, collection, capital, city, and missing-value tests pass.
 
-The pilot stop rule is satisfied. The next safe work item is reviewed expansion
-of official local-name coverage; border and educational features should remain
-deferred until that batch strategy is established.
+This is a historical checkpoint. The later 0.2.0 release candidate kept the
+five reviewed records and added country profile metadata and coordinate tools.

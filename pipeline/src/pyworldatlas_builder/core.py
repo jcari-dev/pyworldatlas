@@ -350,23 +350,75 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
     reports = root / "build_data/reports"
     reports.mkdir(parents=True, exist_ok=True)
     countries = normalized["countries"]
-    coverage = {"dataset_version": "2026.07.20.1", "countries": len(countries), "capitals": len(normalized["capitals"]), "major_cities": len(normalized["cities"]), "capital_coordinates": len(normalized["capitals"]), "population_profiles": sum(record["data"]["population"] is not None for record in countries), "currency_profiles": sum(record["data"]["currency_code"] is not None for record in countries), "calling_code_profiles": sum(bool(record["data"]["calling_codes"]) for record in countries), "language_profiles": sum(bool(record["data"]["language_codes"]) for record in countries), "top_level_domain_profiles": sum(record["data"]["top_level_domain"] is not None for record in countries), "local_names": len(normalized["local_names"]), "local_name_countries": len({record["country_code"] for record in normalized["local_names"]}), "database_sha256": _sha(database), "validation": "PASS"}
+    coverage = {
+        "dataset_version": "2026.07.20.1",
+        "countries": len(countries),
+        "capitals": len(normalized["capitals"]),
+        "major_cities": len(normalized["cities"]),
+        "capital_coordinates": len(normalized["capitals"]),
+        "population_profiles": sum(record["data"]["population"] is not None for record in countries),
+        "currency_profiles": sum(record["data"]["currency_code"] is not None for record in countries),
+        "calling_code_profiles": sum(bool(record["data"]["calling_codes"]) for record in countries),
+        "language_profiles": sum(bool(record["data"]["language_codes"]) for record in countries),
+        "top_level_domain_profiles": sum(record["data"]["top_level_domain"] is not None for record in countries),
+        "observed_timezone_profiles": len({
+            record["country_code"]
+            for record in normalized["cities"]
+            if record["data"]["timezone_id"]
+        }),
+        "local_names": len(normalized["local_names"]),
+        "local_name_countries": len({record["country_code"] for record in normalized["local_names"]}),
+        "database_sha256": _sha(database),
+        "validation": "PASS",
+    }
     (reports / "coverage.json").write_text(json.dumps(coverage, indent=2) + "\n", encoding="utf-8")
-    implemented = {"functions": "Atlas lookup, search, collection protocol, capitals, major cities, dataset info", "tests": "CI on Python 3.10-3.14; full release gate passed", "dataset": f"{coverage['countries']} countries and areas / {coverage['capitals']} capitals / {coverage['major_cities']} cities", "docs": "public Sphinx site deployed; 79 doctests pass", "release": "published to PyPI and GitHub as v0.1.0"}
     milestones = [
-        {"name": "0 — Clean foundation", "version": "0.1.0", "status": "released", **implemented},
-        {"name": "1 — Generated country core", "version": "0.1.0", "status": "released", **implemented},
-        {"name": "2 — Rich profiles and coordinates", "version": "0.2.0", "status": "in_progress", "functions": "Rich profiles, city lookup, lat/long distance, bearing, midpoint, local-name pilot", "tests": "20 tests; complete local release gate passed", "dataset": "248 profiles / 6,265 coordinate-bearing cities / 5 pilot local names", "docs": "rich-profile and coordinate guides; 114 doctests pass", "release": "release artifacts ready; unpublished"},
+        {
+            "name": "0 — Clean foundation",
+            "version": "0.1.0",
+            "status": "complete",
+            "functions": "Standard package layout, generated database, release automation",
+            "tests": "Local 0.1.0 release gate passed",
+            "dataset": "Captured and checksummed source snapshots",
+            "docs": "Sphinx source and maintainer instructions",
+            "release": "Tagged v0.1.0; PyPI publication not completed",
+        },
+        {
+            "name": "1 — Generated country core",
+            "version": "0.1.0",
+            "status": "complete",
+            "functions": "Lookup, search, collection protocol, capitals, populated places, dataset info",
+            "tests": "Python 3.10-3.14 CI and local release gate passed",
+            "dataset": f"{coverage['countries']} countries and areas / {coverage['capitals']} capitals / {coverage['major_cities']} places",
+            "docs": "Core usage and data guides",
+            "release": "Included in tag v0.1.0; PyPI publication not completed",
+        },
+        {
+            "name": "2 — Country profiles and coordinates",
+            "version": "0.2.0",
+            "status": "complete",
+            "functions": "Profile metadata, exact city lookup, distance, bearing, midpoint, local-name pilot",
+            "tests": "Unit tests and complete local release gate pass",
+            "dataset": "248 profiles / 6,265 coordinate-bearing places / 5 reviewed local names",
+            "docs": "Profile, local-name, and coordinate guides",
+            "release": "Publication state is tracked on GitHub Releases and PyPI",
+        },
     ]
     for name, version in [
         ("3 — Borders", "0.3.0"),
         ("4 — Geometry", "0.4.0"), ("5 — Statistics", "0.5.0"),
-        ("6 — Leaders", "0.6.0"), ("7 — Rich profile", "0.7.0"),
+        ("6 — Leaders", "0.6.0"), ("7 — Culture and institutions", "0.7.0"),
         ("8 — Education and export", "0.8.0"), ("9 — Full-world hardening", "0.9.0"),
         ("Stable offline atlas", "1.0.0"),
     ]:
-        milestones.append({"name": name, "version": version, "status": "not_started", "functions": "—", "tests": "—", "dataset": "—", "docs": "—", "release": "—"})
-    status = {"library_version": _project_version(root), "schema_version": 2, "dataset_version": "2026.07.20.1", "milestones": milestones, "coverage": coverage, "legacy_release": "0.0.12 retained on PyPI"}
+        milestones.append({"name": name, "version": version, "status": "planned", "functions": "—", "tests": "—", "dataset": "—", "docs": "—", "release": "—"})
+    status = {
+        "library_version": _project_version(root),
+        "schema_version": 2,
+        "dataset_version": "2026.07.20.1",
+        "milestones": milestones,
+        "coverage": coverage,
+    }
     (reports / "status.json").write_text(json.dumps(status, indent=2) + "\n", encoding="utf-8")
 
 

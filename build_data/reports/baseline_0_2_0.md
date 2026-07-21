@@ -1,6 +1,8 @@
 # 0.2.0 development baseline
 
-This snapshot records the released 0.1.0 implementation before Country Discovery work begins. It is the comparison point for package size, database size, performance, and compatibility.
+This snapshot records the tagged 0.1.0 source state before 0.2.0 work began. It
+is the comparison point for package size, database size, performance, and
+compatibility.
 
 | Check | Baseline |
 |---|---:|
@@ -26,7 +28,3 @@ The measurements use Python 3.12.13 and seven runs per timing. They are local re
 - Sphinx HTML passed with warnings treated as errors.
 - All 79 documentation tests passed.
 - The wheel-content audit passed.
-
-## Development environment note
-
-The repository's existing `.venv` launcher points to a Python 3.10 installation that is no longer present. The baseline used the maintained Python 3.12 runtime. Recreating `.venv` is an environment repair task and is deliberately separate from the dataset and API changes.

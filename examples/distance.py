@@ -1,4 +1,4 @@
-"""Measure a great-circle route between two bundled cities."""
+"""Measure great-circle distance between two bundled cities."""
 
 from pyworldatlas import Atlas
 

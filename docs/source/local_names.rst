@@ -1,14 +1,13 @@
 Official local names
 ====================
 
-The 0.2.0 Country Discovery work begins with official short and formal country
-names in languages used by the country itself. These records are bundled in the
-SQLite dataset, remain available after an :class:`~pyworldatlas.Atlas` closes,
-and never require a network request.
+Version 0.2.0 includes reviewed official short and formal country names for
+Brazil and Switzerland. These records are bundled in SQLite, remain available
+after an :class:`~pyworldatlas.Atlas` closes, and require no network access.
 
-The first reviewed vertical slice covers Brazil and Switzerland. Countries not
-yet covered return an empty tuple and the convenience methods return ``None``.
-There is deliberately no English fallback and no generated romanization.
+Countries without bundled records return an empty tuple, and the convenience
+methods return ``None``. No English fallback is supplied. Romanized forms are
+returned only when the source provides them.
 
 .. doctest::
 
@@ -30,7 +29,7 @@ There is deliberately no English fallback and no generated romanization.
    >>> swiss.official_name_in("rm")
    'Confederaziun svizra'
 
-Each :class:`~pyworldatlas.LocalizedName` includes a language code and display
+Each record in ``country.local_names`` includes a language code and display
 name, ISO 15924 script code, short and formal forms, explicit romanization
 fields, an official-language flag, and a :class:`~pyworldatlas.SourceReference`.
 
@@ -45,7 +44,6 @@ page locator.
 Coverage boundary
 -----------------
 
-This is intentionally a two-country pilot. It proves the source-to-wheel path,
-Unicode handling, provenance, serialization, lifecycle behavior, and bounded
-query strategy before expanding coverage. Empty results for other countries
-mean “not yet covered by this data family,” not “the country has no local name.”
+Coverage is currently limited to two countries and five records. An empty result
+means that this dataset does not yet contain a reviewed record for the requested
+country and language; it does not mean that no local name exists.

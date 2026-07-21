@@ -5,21 +5,25 @@ PyWorldAtlas is a compact, source-aware world atlas for Python. It provides
 typed country, capital, and city records from one bundled SQLite database and
 works without an API key, runtime download, or third-party dependency.
 
-**Development version:** 0.2.0 | **Dataset:** 2026.07.20.1 | **Python:** 3.10–3.14 |
+**Documented version:** 0.2.0 | **Dataset:** 2026.07.20.1 | **Python:** 3.10–3.14 |
 **Runtime dependencies:** 0
 
 .. note::
 
    The 0.2.0 checkout contains 248 countries and areas from the captured UN M49
-   scope, 241 GeoNames capital records, and 6,265 major-city records. Later
+   scope, 241 GeoNames capital records, and 6,265 populated-place records. Later
    milestones deepen the available facts and geographic operations. Official
    local names currently have pilot coverage for Brazil and Switzerland.
+
+.. note::
+
+   PyPI releases earlier than 0.2.0 belong to the legacy prototype. The
+   examples on this site require 0.2.0 or a current source checkout.
 
 Installation
 ------------
 
-Install the current source checkout while the rebuilt release is being
-prepared for PyPI:
+Install the current source checkout from the repository root:
 
 .. code-block:: console
 
@@ -49,7 +53,7 @@ Documentation
 - Follow the :doc:`quickstart` for a guided first session.
 - Use the :doc:`playground` to audit and explore every bundled record in VS Code.
 - Read :doc:`country_profile` for the complete current data model.
-- Explore the reviewed :doc:`local_names` Country Discovery pilot.
+- Explore the reviewed :doc:`local_names` records and coverage boundary.
 - See :doc:`data_sources` and :doc:`data_quality` for provenance and limitations.
 - Consult the :doc:`api` for the generated public reference.
 
@@ -62,7 +66,7 @@ What works in this checkout
 - Country collection behavior: indexing, membership, length, and iteration.
 - UN region and subregion filters.
 - Primary capitals with WGS84 coordinates, population, timezone, and GeoNames ID.
-- Major cities over the configured population threshold.
+- Populated places at or above 100,000 population, plus retained capitals.
 - Explicit ``None`` for areas without a usable primary-capital record.
 - JSON-compatible serialization and explicit source references.
 - Official local short and formal names for the Brazil/Switzerland pilot.
@@ -84,8 +88,8 @@ Current coverage
      - 241 / 248
    * - Capital coordinates
      - 241 / 241
-   * - Major cities
-     - 6,265
+   * - Populated places
+     - 6,265, including retained capitals
 
 .. toctree::
    :hidden:

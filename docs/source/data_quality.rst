@@ -39,18 +39,36 @@ Coverage
    * - Capital coordinates
      - 241
      - 241 stored capitals
-   * - Major-city records
+   * - Populated-place records
      - 6,265
-     - Population-threshold extract
+     - At least 100,000 population, plus retained capitals
    * - Country source references
      - 248
      - 248
    * - Official local names
      - 5
-     - Brazil/Switzerland pilot
+     - 2 reviewed countries
    * - Coordinate-bearing cities
      - 6,265
-     - Bundled capitals and major-city extract
+     - Bundled populated-place records
+   * - Population snapshots
+     - 248
+     - 248 profiles
+   * - Currency records
+     - 247
+     - 248 profiles
+   * - Language-code collections
+     - 245
+     - 248 profiles
+   * - Calling-code collections
+     - 243
+     - 248 profiles
+   * - Country-code top-level domains
+     - 248
+     - 248 profiles
+   * - Profiles with observed timezones
+     - 242
+     - Zones found on bundled places
 
 Missing data is a valid value
 -----------------------------
@@ -71,6 +89,8 @@ Interpretation cautions
   intersection, so their capital is ``None``.
 - GeoNames-only identities outside the captured UN M49 scope are excluded.
   This is a source-priority rule, not a statement about sovereignty.
+- Political entity type is not classified by the current source model. Every
+  profile therefore uses ``CountryStatus.OTHER``.
 - No boundary geometry, point-in-country, or border claim exists yet.
 - Political names and classifications follow documented source conventions and
   do not imply a position on disputed sovereignty.

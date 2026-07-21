@@ -4,29 +4,24 @@ This repository builds, tests, publishes, and deploys each release from one Git
 tag. PyPI publishing uses short-lived Trusted Publishing credentials; no PyPI
 API token is stored in GitHub.
 
-Release 0.1.0 is public and the repository, TestPyPI, PyPI, and documentation
-deployment are configured. The one-time sections below are retained for
-recovery and maintainer onboarding; do not recreate working publishers or
-secrets for a normal release.
+A `v0.1.0` tag and release artifacts preserve the rebuilt baseline. PyPI
+releases earlier than 0.2.0 belong to the legacy prototype. Verify that the
+intended version appears in the package index before running its installation
+smoke test.
 
-## One-time repository setup (complete)
+## Repository setup
 
-Create an empty public repository named `pyworldatlas` under `jcari-dev`. Do not
-initialize it with a README, license, or `.gitignore`; those files already exist
-in this checkout.
-
-From the VS Code terminal:
+The canonical source repository is `jcari-dev/pyworldatlas`. Verify the remote
+from the VS Code terminal:
 
 ```console
-git remote add origin https://github.com/jcari-dev/pyworldatlas.git
 git remote -v
-git push -u origin main
 ```
 
-The first push runs CI on Python 3.10 through 3.14 and runs the complete wheel,
-example, and documentation quality gate on Python 3.12.
+Pushes and pull requests to `main` run CI on Python 3.10 through 3.14 and the
+complete wheel, example, and documentation gate on Python 3.12.
 
-## Configure TestPyPI (complete)
+## TestPyPI publisher
 
 TestPyPI uses a separate account from PyPI. In TestPyPI's publishing settings,
 register a pending GitHub publisher with:
@@ -46,11 +41,11 @@ Verify the uploaded wheel in a disposable environment without activating it:
 
 ```console
 py -3.10 -m venv .venv-testpypi
-.venv-testpypi\Scripts\python -m pip install --index-url https://test.pypi.org/simple/ --no-deps pyworldatlas==0.1.0
+.venv-testpypi\Scripts\python -m pip install --index-url https://test.pypi.org/simple/ --no-deps pyworldatlas==0.2.0
 .venv-testpypi\Scripts\python -c "from pyworldatlas import Atlas; a=Atlas(); print(len(a), a.country('Japan').capital.name); a.close()"
 ```
 
-## Configure production PyPI (complete)
+## Production PyPI publisher
 
 On the existing PyPI project's **Publishing** page, add a GitHub Actions trusted
 publisher with:
@@ -65,7 +60,7 @@ publisher with:
 Create a protected GitHub environment named `pypi` and require your approval
 before deployment.
 
-## Configure documentation deployment (complete)
+## Documentation deployment
 
 Create a fine-grained GitHub personal access token restricted to
 `jcari-dev/pyworldatlas-documentation` with **Contents: Read and write**. Add it
@@ -86,8 +81,17 @@ python maintain.py bootstrap
 python maintain.py prepare-release 0.2.0
 ```
 
-Review `dist/release-manifest.json` and `dist/SHA256SUMS`, then create and push
-the release tag:
+If Windows reports that an existing file under `dist` is in use, close the
+terminal, upload dialog, or file preview holding it. To run the same release
+gate without replacing that directory, choose another ignored output path:
+
+```console
+python maintain.py prepare-release 0.2.0 --output-dir build/release-dist
+```
+
+Review `release-manifest.json` and `SHA256SUMS` in the selected output directory.
+Merge the release candidate to `main`, confirm that CI is green and the working
+tree is clean, then create and push the release tag:
 
 ```console
 git status
@@ -124,6 +128,6 @@ Regenerate the data/status artifacts when coverage changes, run
 tag only after CI is green.
 
 Never reuse, delete, or move a published version tag. If publication fails
-before PyPI accepts the version, repair the workflow and rerun deliberately. If
-PyPI has accepted the version, preserve it and use a patch release for any code
-or metadata correction.
+before PyPI accepts the version, repair the workflow and rerun it. If PyPI has
+accepted the version, preserve it and use a patch release for any code or
+metadata correction.

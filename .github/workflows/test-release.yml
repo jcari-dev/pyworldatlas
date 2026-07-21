@@ -6,7 +6,7 @@ on:
       version:
         description: Version to build and publish
         required: true
-        default: 0.1.0
+        default: 0.2.0
         type: string
 
 permissions:
@@ -26,7 +26,7 @@ jobs:
           python-version: "3.12"
           cache: pip
       - name: Install release toolchain
-        run: python -m pip install -r docs/requirements.txt "build>=1.2,<2" -e . -e pipeline
+        run: python -m pip install -r docs/requirements.txt "build>=1.2,<2" "setuptools>=77" -e . -e pipeline
       - name: Prepare release artifacts
         run: python maintain.py prepare-release "${{ inputs.version }}"
       - uses: actions/upload-artifact@v5

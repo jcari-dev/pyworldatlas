@@ -23,8 +23,8 @@ milestone. Production publication remains a separate maintainer action.
 
 | Check | Result |
 |---|---:|
-| Unit tests | 20 passing |
-| Sphinx doctests | 114 passing |
+| Unit tests | 22 passing |
+| Sphinx doctests | 126 passing |
 | Complete playground data audit | Passing |
 | Deterministic database rebuild | Passing |
 | Fresh wheel and source distribution | Passing |
@@ -36,10 +36,10 @@ milestone. Production publication remains a separate maintainer action.
 
 | Measure | 0.1.0 | 0.2.0 | Change |
 |---|---:|---:|---:|
-| Wheel | 375,654 B | 386,174 B | +10,520 B (+2.800%) |
+| Wheel | 375,654 B | 386,790 B | +11,136 B (+2.964%) |
 | SQLite | 757,760 B | 778,240 B | +20,480 B (+2.703%) |
-| Unit tests | 13 | 20 | +7 |
-| Doctests | 79 | 114 | +35 |
+| Unit tests | 13 | 22 | +9 |
+| Doctests | 79 | 126 | +47 |
 
 No local timing regression was detected for import, atlas open, country lookup,
 complete iteration, or complete serialization. Named Tokyo-to-Paris lookup and
@@ -48,7 +48,7 @@ values are regression indicators, not universal performance promises.
 
 ## Publication boundary
 
-The package is not yet published. The remaining external sequence is commit,
+The package is not yet published. The remaining external sequence is merge and
 push, CI across supported Python versions, TestPyPI smoke installation, GitHub
 Release publication, production PyPI trusted publishing, and documentation
 deployment. Borders and border paths begin in 0.3.0 after 0.2.0 is published.

@@ -36,7 +36,7 @@ def bootstrap() -> None:
     """Install the runtime, builder, release, and documentation toolchain."""
     run([
         sys.executable, "-m", "pip", "install", "-r", "docs/requirements.txt",
-        "build>=1.2,<2", "-e", ".", "-e", "pipeline",
+        "build>=1.2,<2", "setuptools>=77", "-e", ".", "-e", "pipeline",
     ])
 
 
@@ -70,15 +70,16 @@ def status(*, write: bool = True) -> None:
     coverage = data["coverage"]
     lines = [
         "PyWorldAtlas project status", "", f"Library version: {data['library_version']}",
-        f"Dataset version: {data['dataset_version']}", f"Schema version: {data['schema_version']}", "",
+        f"Dataset version: {data['dataset_version']}", f"Schema version: {data['schema_version']}",
+        "",
         f"Countries and areas: {coverage['countries']} (UN M49 scope)",
         f"Capitals: {coverage['capitals']} / {coverage['countries']}", f"Capital coordinates: {coverage['capital_coordinates']} / {coverage['capitals']}",
-        f"Major cities: {coverage['major_cities']}", f"Last validation: {coverage['validation']}",
+        f"Populated places: {coverage['major_cities']}", f"Last validation: {coverage['validation']}",
     ]
     if "local_names" in coverage:
-        lines.insert(-1, f"Official local names: {coverage['local_names']} across {coverage['local_name_countries']} pilot countries")
+        lines.insert(-1, f"Official local names: {coverage['local_names']} across {coverage['local_name_countries']} reviewed countries")
     if "population_profiles" in coverage:
-        lines.insert(-1, f"Rich profiles: {coverage['population_profiles']} population / {coverage['currency_profiles']} currency / {coverage['language_profiles']} language-code records")
+        lines.insert(-1, f"Profile fields: {coverage['population_profiles']} population / {coverage['currency_profiles']} currency / {coverage['language_profiles']} language-code records")
     print("\n".join(lines))
     if write:
         table = ["| Milestone | Version | Status | Implemented functions | Tests | Dataset coverage | Documentation | Release |", "|---|---:|---|---|---|---|---|---|"]
@@ -119,12 +120,17 @@ def file_sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def build_distributions() -> tuple[Path, Path]:
+def build_distributions(output_dir: Path | None = None) -> tuple[Path, Path]:
     """Build one wheel and one source distribution with the standard frontend."""
-    dist = ROOT / "dist"
+    dist = output_dir or ROOT / "dist"
     if dist.exists():
-        shutil.rmtree(dist)
-    run([sys.executable, "-m", "build"])
+        try:
+            shutil.rmtree(dist)
+        except PermissionError as error:
+            raise RuntimeError(
+                f"Could not replace {dist}; close any process using its release artifacts"
+            ) from error
+    run([sys.executable, "-m", "build", "--no-isolation", "--outdir", str(dist)])
     wheels = sorted(dist.glob("*.whl"))
     sdists = sorted(dist.glob("*.tar.gz"))
     if len(wheels) != 1 or len(sdists) != 1:
@@ -138,9 +144,14 @@ def demo(wheel: Path | None = None) -> Path:
         environment = Path(folder) / "venv"
         venv.EnvBuilder(with_pip=True).create(environment)
         python = environment / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
-        run([str(python), "-m", "pip", "install", "--no-index", "--no-deps", str(wheel)])
+        clean_env = os.environ.copy()
+        clean_env.pop("PYTHONPATH", None)
+        run([
+            str(python), "-m", "pip", "install", "--force-reinstall",
+            "--no-index", "--no-deps", str(wheel),
+        ], env=clean_env)
         for example in sorted((ROOT / "examples").glob("*.py")):
-            run([str(python), str(example)])
+            run([str(python), str(example)], env=clean_env)
     return wheel
 
 
@@ -154,9 +165,12 @@ def docs(wheel: Path | None = None) -> None:
         environment = Path(temporary.name) / "venv"
         venv.EnvBuilder(with_pip=True, system_site_packages=True).create(environment)
         python = environment / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
-        run([str(python), "-m", "pip", "install", "--no-index", "--no-deps", str(wheel)])
         env = os.environ.copy()
         env.pop("PYTHONPATH", None)
+        run([
+            str(python), "-m", "pip", "install", "--force-reinstall",
+            "--no-index", "--no-deps", str(wheel),
+        ], env=env)
     try:
         run([str(python), "-m", "sphinx", "-W", "--keep-going", "-b", "html", "docs/source", "docs/_build/html"], env=env)
         run([str(python), "-m", "sphinx", "-W", "--keep-going", "-b", "doctest", "docs/source", "docs/_build/doctest"], env=env)
@@ -165,8 +179,26 @@ def docs(wheel: Path | None = None) -> None:
             temporary.cleanup()
 
 
-def prepare_release(version: str) -> None:
+def prepare_release(version: str, output_dir: Path | None = None) -> None:
     """Validate and build a release with checksums and a machine-readable manifest."""
+    requested = (output_dir or ROOT / "dist").absolute()
+    root = ROOT.resolve()
+    dist_dir = (ROOT / "dist").absolute()
+    build_dir = (ROOT / "build").absolute()
+    if requested != dist_dir and build_dir not in requested.parents:
+        raise RuntimeError(
+            "Release output directory must be dist or a subdirectory of build"
+        )
+    relative_parts = requested.relative_to(ROOT.absolute()).parts
+    current_path = ROOT.absolute()
+    for part in relative_parts:
+        current_path /= part
+        is_junction = getattr(current_path, "is_junction", lambda: False)
+        if current_path.is_symlink() or is_junction():
+            raise RuntimeError("Release output directory cannot contain links or junctions")
+    output_dir = requested.resolve()
+    if output_dir == root or root not in output_dir.parents:
+        raise RuntimeError("Release output directory must remain inside the repository")
     current = project_version()
     if version != current:
         raise RuntimeError(f"Requested release {version}, but pyproject.toml contains {current}")
@@ -182,7 +214,7 @@ def prepare_release(version: str) -> None:
     print("[1/5] Runtime and pipeline tests")
     run_tests()
     print("[2/5] Build wheel and source distribution")
-    wheel, sdist = build_distributions()
+    wheel, sdist = build_distributions(output_dir)
     print("[3/5] Clean installation and examples from release wheel")
     demo(wheel)
     print("[4/5] Documentation from release wheel")
@@ -204,7 +236,7 @@ def prepare_release(version: str) -> None:
         "git_commit": git_result.stdout.strip(),
         "country_count": status_data["coverage"]["countries"],
         "capital_count": status_data["coverage"]["capitals"],
-        "major_city_count": status_data["coverage"]["major_cities"],
+        "populated_place_count": status_data["coverage"]["major_cities"],
         "artifacts": {
             path.name: {"sha256": file_sha256(path), "size_bytes": path.stat().st_size}
             for path in artifacts
@@ -215,14 +247,14 @@ def prepare_release(version: str) -> None:
         "docs_doctest": "passed",
         "wheel_audit": "passed",
     }
-    (ROOT / "dist/release-manifest.json").write_text(
+    (output_dir / "release-manifest.json").write_text(
         json.dumps(manifest, indent=2) + "\n", encoding="utf-8",
     )
-    (ROOT / "dist/SHA256SUMS").write_text(
+    (output_dir / "SHA256SUMS").write_text(
         "".join(f"{file_sha256(path)}  {path.name}\n" for path in artifacts),
         encoding="utf-8",
     )
-    print(f"Release {version} prepared in {ROOT / 'dist'}")
+    print(f"Release {version} prepared in {output_dir}")
 
 
 def preview(*, host: str = "127.0.0.1", port: int = 8000) -> None:
@@ -246,13 +278,14 @@ def preview(*, host: str = "127.0.0.1", port: int = 8000) -> None:
 def check() -> None:
     print("[1/4] Runtime and pipeline tests")
     run_tests()
-    print("[2/4] Build distributions and run offline wheel demo")
-    wheel, _ = build_distributions()
-    demo(wheel)
-    print("[3/4] Documentation")
-    docs(wheel)
-    print("[4/4] Wheel content audit")
-    audit_wheel(wheel)
+    with tempfile.TemporaryDirectory(prefix="pyworldatlas-check-") as folder:
+        print("[2/4] Build distributions and run offline wheel demo")
+        wheel, _ = build_distributions(Path(folder) / "dist")
+        demo(wheel)
+        print("[3/4] Documentation")
+        docs(wheel)
+        print("[4/4] Wheel content audit")
+        audit_wheel(wheel)
 
 
 def audit_wheel(wheel: Path) -> None:
@@ -283,13 +316,14 @@ def main() -> int:
     preview_parser.add_argument("--port", default=8000, type=int)
     release_parser = sub.add_parser("prepare-release")
     release_parser.add_argument("version")
+    release_parser.add_argument("--output-dir", type=Path, default=Path("dist"))
     sub.add_parser("check")
     args = parser.parse_args()
     if args.command == "bootstrap":
         bootstrap()
     elif args.command == "refresh":
         if not args.offline:
-            parser.error("Release 0.1.0 currently requires --offline; fetch is intentionally separate from the deterministic build")
+            parser.error("Refresh requires --offline; update captured source snapshots separately")
         refresh()
     elif args.command == "status":
         status()
@@ -302,7 +336,8 @@ def main() -> int:
     elif args.command == "preview":
         preview(host=args.host, port=args.port)
     elif args.command == "prepare-release":
-        prepare_release(args.version)
+        output_dir = args.output_dir if args.output_dir.is_absolute() else ROOT / args.output_dir
+        prepare_release(args.version, output_dir)
     else:
         check()
     return 0

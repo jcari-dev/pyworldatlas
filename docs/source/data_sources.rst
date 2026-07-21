@@ -52,8 +52,8 @@ GeoNames
    arrangement. Those roles are reviewed in later milestones.
 
 **Current coverage**
-   241 usable primary capitals and 6,265 populated places at the configured
-   threshold.
+   241 usable primary capitals and 6,265 populated places: records at or above
+   100,000 population, plus retained capitals.
 
 UNGEGN List of Country Names
 ----------------------------
@@ -69,8 +69,7 @@ UNGEGN List of Country Names
    SHA-256 manifest. Reviewed rows retain entry and page locators.
 
 **Current coverage**
-   Five names across the Brazil and Switzerland pilot. This is intentionally
-   not presented as full-world coverage.
+   Five names across Brazil and Switzerland. This is not full-world coverage.
 
 Source priority in the 0.2.0 checkout
 -------------------------------------
@@ -90,8 +89,8 @@ Source priority in the 0.2.0 checkout
      - None
    * - Capital and coordinates
      - GeoNames
-     - None in 0.1.0
-   * - Major cities
+     - None
+   * - Populated places
      - GeoNames
      - None
    * - Total area

@@ -1,6 +1,5 @@
 {
   "captured_at": "2026-07-20",
-  "branch": "codex/0.2-country-discovery",
   "baseline_version": "0.1.0",
   "python": "3.12.13",
   "test_count": 13,
@@ -20,7 +19,6 @@
     "All 13 unit tests passed.",
     "The playground audited all 248 countries and areas and all 6265 cities.",
     "The full build, offline wheel demo, Sphinx HTML build, 79 doctests, and wheel-content audit passed.",
-    "Timing values are medians of seven runs on the development machine and are intended for regression comparison, not as universal benchmarks.",
-    "The existing .venv launcher points to a removed Python 3.10 installation; baseline commands used the maintained Python 3.12 runtime."
+    "Timing values are medians of seven runs on the development machine and are intended for regression comparison, not as universal benchmarks."
   ]
 }

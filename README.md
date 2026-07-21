@@ -2,7 +2,8 @@
 
 > A compact, source-aware world atlas for Python that works completely offline.
 
-[![Release 0.1.0](https://img.shields.io/badge/release-0.1.0-1677be)](https://pypi.org/project/pyworldatlas/)
+[![Source 0.2.0](https://img.shields.io/badge/source-0.2.0-1677be)](CHANGELOG.md)
+[![PyPI](https://img.shields.io/pypi/v/pyworldatlas.svg?label=PyPI)](https://pypi.org/project/pyworldatlas/)
 [![Python 3.10–3.14](https://img.shields.io/badge/python-3.10%E2%80%933.14-10233d)](https://www.python.org/)
 [![Runtime dependencies: 0](https://img.shields.io/badge/runtime%20dependencies-0-1b8a6b)](#small-by-design)
 [![Offline: yes](https://img.shields.io/badge/offline-yes-f2b84b)](#small-by-design)
@@ -13,9 +14,9 @@ country by name or code, inspect immutable country and capital objects, explore
 major cities, search aliases, and serialize profiles—without an API key,
 runtime download, database server, or third-party dependency.
 
-> **Development checkout:** Work toward 0.2.0 is in progress. The first Country
-> Discovery slice adds reviewed official local names for Brazil and Switzerland;
-> the latest published PyPI release remains 0.1.0 until the release gate passes.
+> **Version note:** This checkout documents 0.2.0. PyPI releases earlier than
+> 0.2.0 belong to the legacy prototype and expose a different API. The examples
+> below require 0.2.0 or a current source checkout.
 
 ```python
 from pyworldatlas import Atlas
@@ -29,20 +30,19 @@ with Atlas() as atlas:
     print("France" in atlas)                   # True
 ```
 
-## World-scale core coverage
+## Dataset coverage
 
-Version 0.1.0 contains every country and area in the captured UN M49 scope,
-cross-checked against GeoNames country metadata. It is broad in geographic
-coverage and intentionally focused in field depth: identity, codes, regions,
-area, capitals, and major cities are available now; richer data families arrive
-in later releases.
+The bundled dataset contains every country and area in the captured UN M49
+scope, cross-checked against GeoNames country metadata. Version 0.2.0 adds core
+profile metadata and coordinate calculations to the identity, region, capital,
+and populated-place records established for 0.1.0.
 
 | Current dataset | Coverage |
 |---|---:|
 | Countries and areas | 248 |
 | Primary capitals | 241 / 248 |
 | Capital coordinates | 241 / 241 |
-| Major-city records | 6,265 |
+| Populated-place records | 6,265, including retained capitals |
 | Runtime dependencies | 0 |
 | Bundled databases | 1 SQLite file |
 
@@ -52,25 +52,37 @@ leaders, quizzes, and exports remain later work.
 
 ## Installation
 
-Install the current release from PyPI:
+Install the 0.2.0 source checkout from the repository root:
 
 ```console
-python -m pip install pyworldatlas
+python -m pip install -e .
+
+# Once 0.2.0 is listed in the PyPI release history:
+python -m pip install pyworldatlas==0.2.0
 ```
 
-For the current source checkout:
+Install the separate data builder only when working on source refreshes:
 
 ```console
-python -m pip install -e . -e pipeline
+python -m pip install -e pipeline
+```
+
+You can also test the exact local wheel after running the release build:
+
+```console
+python -m pip install --no-index --no-deps dist/pyworldatlas-0.2.0-py3-none-any.whl
+```
+
+After 0.2.0 is listed on PyPI, the public install command will be:
+
+```console
+python -m pip install pyworldatlas==0.2.0
 ```
 
 The package runtime supports Python 3.10 through 3.14 during the 0.x release
 series. Python versions are only claimed as release-supported after CI passes.
 
-> **Release status:** Version 0.1.0 is published on PyPI. Legacy 0.0.x releases
-> remain available in the PyPI release history for users of the former API.
-
-## What works today
+## What works in this checkout
 
 | Capability | Example |
 |---|---|
@@ -91,7 +103,7 @@ series. Python versions are only claimed as release-supported after CI passes.
 | Serialization | `country.to_dict()`, `country.to_json()` |
 | Version inspection | `atlas.dataset_info()` |
 
-## Country profiles with autocomplete
+## Typed country profiles
 
 Public results are frozen typed dataclasses rather than loosely structured
 dictionaries:
@@ -137,7 +149,7 @@ with Atlas() as atlas:
 
     print(tokyo.coordinates.latitude, tokyo.coordinates.longitude)
     print(atlas.distance_between(tokyo, paris))             # kilometres
-    print(atlas.distance_between(tokyo, paris, unit="mi")) # miles
+    print(atlas.distance_between(tokyo, paris, unit="mi"))  # miles
     print(tokyo.coordinates.bearing_to(paris.coordinates))
     print(tokyo.coordinates.midpoint_to(paris.coordinates))
 
@@ -166,9 +178,8 @@ names, reviewed aliases, alpha-2, alpha-3, and M49 numeric codes.
 
 ## Test every current record in VS Code
 
-The repository includes a deliberately rich [playground.py](playground.py). It
-validates every current country, capital, and city record before demonstrating
-the complete implemented API.
+The repository includes [playground.py](playground.py), which checks every
+current country, capital, and city record before demonstrating the public API.
 
 Press `F5` in VS Code and select **PyWorldAtlas: Full Playground**, or run:
 
@@ -207,17 +218,18 @@ At runtime PyWorldAtlas does not:
 
 ## Data you can trace
 
-Release 0.1.0 uses:
+The 0.2.0 checkout uses:
 
 - **United Nations M49** for canonical identities, standard codes, regions, and
   subregions.
-- **GeoNames** for capitals, major cities, WGS84 coordinates, population
-  snapshots, timezone identifiers, and GeoNames IDs.
+- **GeoNames** for capitals, populated places, WGS84 coordinates, population
+  snapshots, currencies, language and calling codes, country-code domains,
+  timezone identifiers, and GeoNames IDs.
 
-The 0.2.0 development pilot additionally uses the approved **UNGEGN List of
-Country Names** (``E/CONF.105/13/CRP.13``) for national official short and
-formal names. The captured source artifact and reviewed rows include checksums
-and exact entry/page locators.
+The reviewed local-name records use the **UNGEGN List of Country Names**
+(``E/CONF.105/13/CRP.13``) for national official short and formal names. Current
+coverage is five records across Brazil and Switzerland. The captured source
+artifact and reviewed rows include checksums and exact entry/page locators.
 
 Raw snapshots are preserved with SHA-256 manifests. The separate builder emits
 inspectable normalized JSON Lines before generating SQLite. Missing values stay
@@ -246,16 +258,19 @@ For this development checkout they are `0.2.0`, `2`, and `2026.07.20.1`.
 
 ## Documentation and roadmap
 
-- Documentation: https://jcari-dev.github.io/pyworldatlas-documentation/
+- Documentation source for this checkout: [docs/source](docs/source)
+- Published documentation (updated by the release workflow):
+  https://jcari-dev.github.io/pyworldatlas-documentation/
 - Current implementation status: [ROADMAP_STATUS.md](ROADMAP_STATUS.md)
 - Migration from the legacy API: [MIGRATION_FROM_0.0.md](MIGRATION_FROM_0.0.md)
 - Milestone evidence: [MILESTONE_0_1_REPORT.md](MILESTONE_0_1_REPORT.md)
 - 0.2.0 execution status: [RELEASE_0_2_STATUS.md](RELEASE_0_2_STATUS.md)
 - Maintainer release process: [RELEASING.md](RELEASING.md)
 
-The next feature release, 0.2.0, follows the Country Discovery sequence:
-official local names, deterministic sampling and flags, reviewed borders and
-paths, then sourced discovery cards and flashcards.
+Version 0.2.0 is the country-profile and coordinate release. After it is
+published, 0.3.0 will add reviewed border relationships, neighbors, shared
+neighbors, and border paths. Later releases extend boundary geometry,
+historical statistics, institutions, culture, education tools, and exports.
 
 ## License and attribution
 

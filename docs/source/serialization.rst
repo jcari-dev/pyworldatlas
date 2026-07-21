@@ -28,7 +28,6 @@ JSON output
    >>> json.loads(payload)["name"]
    'Japan'
 
-Tuples become JSON arrays and enums become their string values. Historical
-indicator series are not part of 0.1.0; future releases will continue to omit
-full histories unless explicitly requested.
-
+Tuples become JSON arrays and enums become their string values.
+``include_history`` is accepted for compatibility but currently has no effect
+because historical series are not bundled.

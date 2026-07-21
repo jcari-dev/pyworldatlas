@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, fields, is_dataclass
+from dataclasses import dataclass, fields, is_dataclass
 from enum import Enum
 import json
-from math import asin, atan2, cos, degrees, radians, sin, sqrt
+from math import asin, atan2, cos, degrees, isclose, radians, sin, sqrt
 from typing import Any
 
 
@@ -92,8 +92,36 @@ class Coordinate:
             raise ValueError("unit must be 'km', 'mi', or 'nmi'")
         return kilometers * factors[unit]
 
+    def _relative_position(self, other: Coordinate) -> tuple[bool, bool]:
+        """Return whether two coordinates are coincident or antipodal."""
+        def unit_vector(coordinate: Coordinate) -> tuple[float, float, float]:
+            latitude = radians(coordinate.latitude)
+            longitude = radians(coordinate.longitude)
+            return (
+                cos(latitude) * cos(longitude),
+                cos(latitude) * sin(longitude),
+                sin(latitude),
+            )
+
+        first = unit_vector(self)
+        second = unit_vector(other)
+        coincident = all(
+            isclose(left, right, rel_tol=0.0, abs_tol=1e-12)
+            for left, right in zip(first, second)
+        )
+        antipodal = all(
+            isclose(left, -right, rel_tol=0.0, abs_tol=1e-12)
+            for left, right in zip(first, second)
+        )
+        return coincident, antipodal
+
     def bearing_to(self, other: Coordinate) -> float:
         """Return the initial bearing to ``other`` in degrees from true north."""
+        coincident, antipodal = self._relative_position(other)
+        if coincident:
+            raise ValueError("initial bearing is undefined for coincident coordinates")
+        if antipodal:
+            raise ValueError("initial bearing is undefined for antipodal coordinates")
         lat1, lat2 = radians(self.latitude), radians(other.latitude)
         delta_lon = radians(other.longitude - self.longitude)
         y = sin(delta_lon) * cos(lat2)
@@ -101,7 +129,10 @@ class Coordinate:
         return (degrees(atan2(y, x)) + 360.0) % 360.0
 
     def midpoint_to(self, other: Coordinate) -> Coordinate:
-        """Return the spherical midpoint on the great-circle route to ``other``."""
+        """Return the spherical midpoint on the great-circle path to ``other``."""
+        _, antipodal = self._relative_position(other)
+        if antipodal:
+            raise ValueError("great-circle midpoint is undefined for antipodal coordinates")
         lat1, lon1, lat2 = map(radians, (self.latitude, self.longitude, other.latitude))
         delta_lon = radians(other.longitude - self.longitude)
         bx, by = cos(lat2) * cos(delta_lon), cos(lat2) * sin(delta_lon)
@@ -283,12 +314,20 @@ class Country:
         return match.romanized_short_name if match else None
 
     def to_dict(self, include_history: bool = False) -> dict[str, Any]:
-        """Serialize this profile to JSON-compatible primitives."""
+        """Serialize this profile to JSON-compatible primitives.
+
+        ``include_history`` is reserved for compatibility and currently has no
+        effect because the bundled dataset has no historical series.
+        """
         del include_history
         return _jsonable(self)
 
     def to_json(self, indent: int | None = None, include_history: bool = False) -> str:
-        """Serialize this profile as JSON."""
+        """Serialize this profile as JSON.
+
+        ``include_history`` is reserved for compatibility and currently has no
+        effect because the bundled dataset has no historical series.
+        """
         return json.dumps(self.to_dict(include_history), ensure_ascii=False, indent=indent)
 
     def __str__(self) -> str:

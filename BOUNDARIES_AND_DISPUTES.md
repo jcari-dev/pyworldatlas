@@ -1,7 +1,11 @@
 # Boundaries and disputes
 
-Release 0.1.0 contains no boundary geometry and makes no point-in-country or
-border claims. UN M49 classifications and familiar display names are used for
-the limited fixture scope. Natural Earth geometry and documented worldview
-conventions begin in a later milestone.
+Versions 0.1.0 and 0.2.0 contain no boundary geometry and make no
+point-in-country, adjacency, or border claims. UN M49 supplies the current
+country and area scope. Familiar English display names come from reviewed name
+mappings while the formal source names remain available.
 
+Boundary relationships begin in 0.3.0. Geometry, point-in-boundary operations,
+and an explicit worldview policy are later work. Current country distance is
+capital-to-capital distance and must not be interpreted as a boundary or
+centroid measurement.

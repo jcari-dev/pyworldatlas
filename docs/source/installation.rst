@@ -8,19 +8,16 @@ Requirements
 - No third-party runtime packages.
 - No API key or network access after installation.
 
-Install from PyPI
+Published package
 -----------------
 
-Install the current public release:
+PyPI releases earlier than 0.2.0 belong to the legacy prototype and are not
+compatible with the examples in this documentation. Confirm that 0.2.0 is in
+the release history, then install the exact version:
 
 .. code-block:: console
 
-   python -m pip install pyworldatlas
-
-.. important::
-
-   PyPI currently serves 0.1.0. Contributors testing the unreleased 0.2.0
-   checkout should use the local wheel or editable installation below.
+   python -m pip install pyworldatlas==0.2.0
 
 Install this checkout in VS Code
 --------------------------------
@@ -45,7 +42,7 @@ no Sphinx dependency.
 Install the built wheel offline
 -------------------------------
 
-The strongest local installation test uses the exact wheel:
+Test the exact release artifact without consulting a package index:
 
 .. code-block:: console
 

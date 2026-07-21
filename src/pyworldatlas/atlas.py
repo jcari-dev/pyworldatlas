@@ -10,8 +10,8 @@ from typing import Iterator
 from ._normalization import normalize_name
 from ._version import SCHEMA_VERSION, __version__
 from .database import Database
-from .exceptions import (AmbiguousPlaceError, AtlasClosedError, CountryNotFoundError,
-                         DatasetVersionError, PlaceNotFoundError)
+from .exceptions import (AmbiguousPlaceError, AtlasClosedError, CapitalNotFoundError,
+                         CountryNotFoundError, DatasetVersionError, PlaceNotFoundError)
 from .models import (Area, Capital, City, Coordinate, Country, CountryCodes,
                      CountryMatch, CountryStatus, Currency, DatasetInfo, Geography,
                      Language, LocalizedName, SourceReference)
@@ -143,7 +143,11 @@ class Atlas:
         first_country: str | None = None,
         second_country: str | None = None,
     ) -> float:
-        """Return great-circle distance between places, countries, or coordinates."""
+        """Return great-circle distance between city, model, or coordinate inputs.
+
+        String inputs are exact bundled-city names. Pass :class:`Country`
+        objects for capital-to-capital country distance.
+        """
         start = self._coordinates_of(first, country=first_country)
         finish = self._coordinates_of(second, country=second_country)
         return start.distance_to(finish, unit=unit)
@@ -160,7 +164,7 @@ class Atlas:
             return value.coordinates
         if isinstance(value, Country):
             if value.capital_coordinates is None:
-                raise PlaceNotFoundError(f"{value.name} has no primary-capital coordinates")
+                raise CapitalNotFoundError(f"{value.name} has no primary-capital coordinates")
             return value.capital_coordinates
         if isinstance(value, str):
             return self.coordinates(value, country=country)

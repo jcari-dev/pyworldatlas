@@ -63,6 +63,38 @@ Library, schema, and data versions change independently:
    ('0.2.0', 2, '2026.07.20.1')
    >>> atlas.close()
 
+Read profile metadata
+---------------------
+
+Profile fields are typed and may be absent when the captured sources do not
+provide a value:
+
+.. doctest::
+
+   >>> with Atlas() as atlas:
+   ...     japan = atlas.country("Japan")
+   ...     print(japan.population)
+   ...     print(japan.currency.code if japan.currency else None)
+   ...     print([language.code for language in japan.languages])
+   126529100
+   JPY
+   ['ja']
+
+Measure city-to-city distance
+-----------------------------
+
+String inputs to :meth:`~pyworldatlas.Atlas.distance_between` are exact bundled
+city names. Country arguments disambiguate cities with shared names.
+
+.. doctest::
+
+   >>> with Atlas() as atlas:
+   ...     distance = atlas.distance_between(
+   ...         "Tokyo", "Paris", first_country="JP", second_country="FR"
+   ...     )
+   >>> round(distance)
+   9713
+
 Executable example
 ------------------
 

@@ -1,8 +1,10 @@
 import dataclasses
+import math
 import unittest
 
-from pyworldatlas import (AmbiguousPlaceError, Atlas, AtlasClosedError, Coordinate,
-                          CountryNotFoundError)
+from pyworldatlas import (AmbiguousPlaceError, Atlas, AtlasClosedError,
+                          CapitalNotFoundError, Coordinate, CountryNotFoundError,
+                          PlaceNotFoundError)
 
 
 class AtlasTests(unittest.TestCase):
@@ -42,6 +44,7 @@ class AtlasTests(unittest.TestCase):
         paris = Coordinate(48.8566, 2.3522)
         self.assertAlmostEqual(london.distance_to(paris), 343.6, delta=0.5)
         self.assertAlmostEqual(london.distance_to(paris, unit="mi"), 213.5, delta=0.5)
+        self.assertAlmostEqual(london.distance_to(paris, unit="nmi"), 185.5, delta=0.5)
         self.assertAlmostEqual(london.bearing_to(paris), 148.1, delta=0.5)
         midpoint = london.midpoint_to(paris)
         self.assertAlmostEqual(midpoint.latitude, 50.1886, delta=0.01)
@@ -49,7 +52,30 @@ class AtlasTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             Coordinate(91, 0)
         with self.assertRaises(ValueError):
+            Coordinate(math.nan, 0)
+        with self.assertRaises(ValueError):
+            Coordinate(0, math.inf)
+        with self.assertRaises(ValueError):
             london.distance_to(paris, unit="lightyears")
+
+    def test_undefined_geodesic_operations(self):
+        point = Coordinate(0, 0)
+        antipode = Coordinate(0, 180)
+        north_pole = Coordinate(90, 0)
+        same_north_pole = Coordinate(90, 90)
+        south_pole = Coordinate(-90, 20)
+        with self.assertRaisesRegex(ValueError, "coincident"):
+            point.bearing_to(point)
+        with self.assertRaisesRegex(ValueError, "antipodal"):
+            point.bearing_to(antipode)
+        with self.assertRaisesRegex(ValueError, "antipodal"):
+            point.midpoint_to(antipode)
+        with self.assertRaisesRegex(ValueError, "coincident"):
+            north_pole.bearing_to(same_north_pole)
+        with self.assertRaisesRegex(ValueError, "antipodal"):
+            north_pole.bearing_to(south_pole)
+        with self.assertRaisesRegex(ValueError, "antipodal"):
+            north_pole.midpoint_to(south_pole)
 
     def test_city_lookup_and_distance_between_places(self):
         tokyo = self.atlas.city("Tokyo", country="Japan")
@@ -64,6 +90,19 @@ class AtlasTests(unittest.TestCase):
         self.assertAlmostEqual(self.atlas.distance_between((51.5074, -0.1278), (48.8566, 2.3522)), 343.6, delta=0.5)
         with self.assertRaises(AmbiguousPlaceError):
             self.atlas.city("London")
+
+    def test_country_and_capital_distance_inputs(self):
+        japan = self.atlas.country("Japan")
+        france = self.atlas.country("France")
+        expected = japan.capital.coordinates.distance_to(france.capital.coordinates)
+        self.assertAlmostEqual(self.atlas.distance_between(japan, france), expected)
+        self.assertAlmostEqual(
+            self.atlas.distance_between(japan.capital, france.capital), expected
+        )
+        with self.assertRaises(PlaceNotFoundError):
+            self.atlas.distance_between("Japan", "France")
+        with self.assertRaises(CapitalNotFoundError):
+            self.atlas.distance_between(self.atlas.country("Antarctica"), france)
 
     def test_collection_protocol(self):
         self.assertEqual(len(self.atlas), 248)

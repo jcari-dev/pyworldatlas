@@ -2,10 +2,10 @@
 
 ## Outcome
 
-Release 0.1.0 is implemented and publicly released through PyPI, GitHub, and the
-existing documentation URL. The new runtime and database were built from
-captured, checksummed official source snapshots. Legacy 0.0.x releases remain
-available through PyPI's release history.
+Version 0.1.0 established the rebuilt runtime and generated dataset and was
+tagged in the repository. The runtime and database were built from captured,
+checksummed source snapshots. At this checkpoint on 2026-07-20, production PyPI
+publication had not completed and the public project remained on legacy 0.0.12.
 
 ## Implemented
 
@@ -33,7 +33,7 @@ Wheel evidence:
 
 ```text
 pyworldatlas-0.1.0-py3-none-any.whl
-size: 359,011 bytes
+size: 375,654 bytes
 runtime dependencies: 0
 bundled SQLite databases: 1
 ```
@@ -44,21 +44,21 @@ bundled SQLite databases: 1
 - GeoNames `countryInfo.txt` and `cities15000.zip` captured 2026-07-20.
 - Each raw directory contains a SHA-256 manifest.
 
-## Published release evidence
+## Release evidence
 
 - CI passed on Python 3.10 through 3.14.
-- TestPyPI and production PyPI Trusted Publishing succeeded.
-- The GitHub release contains the wheel, source distribution, release manifest,
-  and SHA-256 checksums.
-- The canonical Sphinx output is deployed to the existing documentation URL.
-- A fresh production installation returned 248 records and dataset version
+- The repository contains the `v0.1.0` tag and prepared release artifacts.
+- Local wheel installation returned 248 records and dataset version
   `2026.07.20`.
+- Production PyPI verification failed because the public project remained on
+  legacy version 0.0.12.
 
-Release pages:
+Reference pages:
 
-- <https://pypi.org/project/pyworldatlas/>
+- PyPI state checked on 2026-07-20: <https://pypi.org/project/pyworldatlas/>
 - <https://github.com/jcari-dev/pyworldatlas/releases/tag/v0.1.0>
-- <https://jcari-dev.github.io/pyworldatlas-documentation/>
+- Documentation deployment target:
+  <https://jcari-dev.github.io/pyworldatlas-documentation/>
 
-The later 0.2.0 through 1.0.0 roadmap milestones have not started and are not
-claimed by the README or current API.
+This report records the 0.1.0 baseline. Development continued in 0.2.0 with
+country profile metadata, official local names, and coordinate tools.

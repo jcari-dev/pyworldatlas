@@ -1,6 +1,5 @@
 {
   "captured_at": "2026-07-20",
-  "branch": "codex/0.2-country-discovery",
   "version": "0.2.0",
   "schema_version": 2,
   "dataset_version": "2026.07.20.1",
@@ -17,9 +16,9 @@
     "official_local_names": 5,
     "official_local_name_countries": 2
   },
-  "test_count": 20,
-  "doctest_count": 114,
-  "wheel_bytes": 386174,
+  "test_count": 22,
+  "doctest_count": 126,
+  "wheel_bytes": 386790,
   "sqlite_bytes": 778240,
   "median_ms": {
     "fresh_process_import": 75.577,
@@ -30,12 +29,12 @@
     "named_place_distance": 0.299
   },
   "change_from_0_1_0": {
-    "wheel_bytes": 10520,
-    "wheel_percent": 2.8,
+    "wheel_bytes": 11136,
+    "wheel_percent": 2.964,
     "sqlite_bytes": 20480,
     "sqlite_percent": 2.703,
-    "unit_tests": 7,
-    "doctests": 35,
+    "unit_tests": 9,
+    "doctests": 47,
     "timing_regression_detected": false
   },
   "quality_gate": "PASS",

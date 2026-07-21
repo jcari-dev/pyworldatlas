@@ -2,11 +2,11 @@ Country profiles
 ================
 
 A :class:`~pyworldatlas.Country` is an immutable, typed view of one country in
-the bundled dataset. Autocomplete exposes the current model directly; callers
-do not need to remember nested dictionary keys.
+the bundled dataset. Fields are regular Python attributes rather than nested
+dictionary keys.
 
-A complete current example
---------------------------
+Profile example
+---------------
 
 .. doctest::
 
@@ -23,9 +23,13 @@ A complete current example
    'JPN'
    >>> japan.codes.numeric
    '392'
+   >>> japan.flag
+   '🇯🇵'
    >>> japan.continent
    'Asia'
    >>> japan.region
+   'Eastern Asia'
+   >>> japan.subregion
    'Eastern Asia'
    >>> japan.area_km2
    377835.0
@@ -41,6 +45,44 @@ A complete current example
    ['ja']
    >>> japan.observed_timezones
    ('Asia/Tokyo',)
+
+Current field coverage
+----------------------
+
+.. list-table:: Version 0.2.0 profile availability
+   :header-rows: 1
+   :widths: 44 18 38
+
+   * - Field family
+     - Profiles
+     - Meaning
+   * - Population snapshot
+     - 248 / 248
+     - Captured GeoNames country value
+   * - Currency
+     - 247 / 248
+     - Source code and name when present
+   * - Language codes
+     - 245 / 248
+     - Source codes; no display-name expansion
+   * - Calling codes
+     - 243 / 248
+     - International dialing prefixes
+   * - Country-code top-level domain
+     - 248 / 248
+     - Source internet-domain value
+   * - Observed timezones
+     - 242 / 248
+     - Zones found on bundled capital and city records
+   * - Primary-capital coordinates
+     - 241 / 248
+     - WGS84 location of the selected primary capital
+   * - Official local names
+     - 2 / 248
+     - Five reviewed records for Brazil and Switzerland
+
+Availability is field-specific. Code should handle optional scalar fields and
+empty collection fields even when a familiar country currently has values.
 
 Names and aliases
 -----------------
@@ -67,9 +109,10 @@ Capital and cities
 Sources
 -------
 
-``country.sources`` lists the source snapshots supporting the fields exposed in
-the current profile. Core profiles reference UN M49 and GeoNames; countries in
-the official-local-name pilot additionally reference UNGEGN.
+``country.sources`` lists the source snapshots that contributed somewhere in
+the profile. It does not currently map each returned value to one source. Core
+profiles reference UN M49 and GeoNames; the reviewed local-name records carry a
+separate UNGEGN source reference on each record.
 
 Immutability
 ------------
@@ -83,4 +126,6 @@ from silently changing a shared geographic record. Use :meth:`Country.to_dict
    Population is a source snapshot rather than a live estimate. Language values
    are source codes, and ``observed_timezones`` contains zones seen on bundled
    capital/major-city records rather than claiming exhaustive legal coverage.
-   Government, leaders, historical statistics, and culture remain later work.
+   The current sources do not classify political entity type, so every
+   ``Country.status`` is ``CountryStatus.OTHER``. Government, leaders,
+   historical statistics, and culture remain later work.

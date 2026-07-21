@@ -11,7 +11,7 @@ class ImportTests(unittest.TestCase):
 
     def test_playground_audits_every_record(self):
         result = subprocess.run(
-            [sys.executable, "playground.py", "--audit-only"],
+            [sys.executable, "-O", "playground.py", "--audit-only"],
             capture_output=True,
             text=True,
             check=True,

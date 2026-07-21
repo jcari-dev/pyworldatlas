@@ -6,8 +6,8 @@
 - Official URL: https://unstats.un.org/unsd/methodology/m49/
 - Snapshot: captured 2026-07-20 as raw HTML with SHA-256 manifest.
 - License/terms: United Nations website terms apply.
-- Refresh cadence: monthly review.
-- Weaknesses: formal names are not always the most familiar English atlas names.
+- Refresh: reviewed before each dataset release.
+- Limitations: formal names are not always the most familiar English atlas names.
 
 The current source-priority scope contains 248 UN M49 countries and areas.
 GeoNames-only identity rows outside that scope are excluded rather than inferred.
@@ -20,11 +20,12 @@ GeoNames-only identity rows outside that scope are excluded rather than inferred
 - Official URL: https://download.geonames.org/export/dump/
 - Snapshot: `countryInfo.txt` and `cities15000.zip`, captured 2026-07-20 with SHA-256 manifests.
 - License: Creative Commons Attribution 4.0.
-- Refresh cadence: weekly review, monthly release as appropriate.
-- Weaknesses: capital feature codes do not model every multi-capital political nuance.
+- Refresh: reviewed before each dataset release.
+- Limitations: capital feature codes do not model every multi-capital political nuance.
 
 The captured intersection provides 241 usable primary-capital records and 6,265
-populated-place records at the configured threshold.
+populated-place records: places at or above the configured 100,000-person
+threshold, plus retained capitals.
 
 ## UNGEGN List of Country Names
 
@@ -35,5 +36,5 @@ populated-place records at the configured threshold.
 - Review layer: `build_data/reviewed/country_local_names.csv`, with exact entry
   and page locators for every row.
 - Current scope: five records across Brazil and Switzerland.
-- Weaknesses: the pilot is deliberately narrow and does not imply full-world
-  local-name coverage.
+- Limitations: the five reviewed records do not imply full-world local-name
+  coverage.
