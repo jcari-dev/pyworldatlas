@@ -1,5 +1,6 @@
 project = "PyWorldAtlas"
 author = "PyWorldAtlas maintainers"
+copyright = "2026, PyWorldAtlas maintainers"
 release = "0.1.0"
 version = "0.1"
 extensions = [
@@ -13,4 +14,24 @@ nitpicky = True
 nitpick_ignore = [("py:class", "pathlib.Path")]
 html_theme = "sphinx_rtd_theme"
 html_title = "PyWorldAtlas 0.1.0"
+html_short_title = "PyWorldAtlas"
+html_logo = "_static/logo.svg"
+html_favicon = "_static/favicon.svg"
+html_static_path = ["_static"]
+html_css_files = ["custom.css"]
+html_theme_options = {
+    "logo_only": False,
+    "prev_next_buttons_location": "bottom",
+    "style_external_links": True,
+    "navigation_depth": 3,
+    "collapse_navigation": False,
+    "sticky_navigation": True,
+    "includehidden": True,
+    "titles_only": False,
+}
+html_context = {
+    "display_github": False,
+    "current_version": release,
+}
+pygments_style = "friendly"
 exclude_patterns = ["_build"]

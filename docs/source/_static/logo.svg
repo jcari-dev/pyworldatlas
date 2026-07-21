@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title desc">
+  <title id="title">PyWorldAtlas globe</title>
+  <desc id="desc">A stylized globe surrounded by a compass ring</desc>
+  <defs>
+    <linearGradient id="ocean" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#49c6e5"/>
+      <stop offset="1" stop-color="#1967d2"/>
+    </linearGradient>
+  </defs>
+  <circle cx="80" cy="80" r="67" fill="#071a2f" stroke="#7dd3fc" stroke-width="4"/>
+  <circle cx="80" cy="80" r="49" fill="url(#ocean)" stroke="#dff7ff" stroke-width="3"/>
+  <path d="M31 80h98M80 31c17 15 25 31 25 49s-8 34-25 49M80 31C63 46 55 62 55 80s8 34 25 49M39 57h82M39 103h82" fill="none" stroke="#dff7ff" stroke-width="2.5" opacity=".9"/>
+  <path d="M80 5l7 19H73zM155 80l-19 7V73zM80 155l-7-19h14zM5 80l19-7v14z" fill="#fbbf24"/>
+  <circle cx="80" cy="80" r="5" fill="#fbbf24"/>
+</svg>
