@@ -25,6 +25,8 @@ Profile example
    '392'
    >>> japan.flag
    '🇯🇵'
+   >>> japan.flag_emoji
+   '🇯🇵'
    >>> japan.continent
    'Asia'
    >>> japan.region
@@ -35,6 +37,8 @@ Profile example
    377835.0
    >>> japan.population
    126529100
+   >>> round(japan.population_density, 2)
+   334.88
    >>> (japan.currency.code, japan.currency.name)
    ('JPY', 'Yen')
    >>> japan.calling_codes
@@ -83,6 +87,15 @@ Current field coverage
 
 Availability is field-specific. Code should handle optional scalar fields and
 empty collection fields even when a familiar country currently has values.
+
+Convenience and discovery views
+-------------------------------
+
+``language_codes``, ``currency_code``, and ``major_city_count`` provide common
+read-only projections without changing the underlying typed values.
+``population_density`` is calculated from the captured population and area
+snapshots. :meth:`Country.discovery_card <pyworldatlas.Country.discovery_card>`
+creates a compact serializable teaching view; see :doc:`discovery`.
 
 Names and aliases
 -----------------

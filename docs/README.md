@@ -19,7 +19,7 @@ python maintain.py check
 ```
 
 `python maintain.py preview` builds the HTML and doctests, then serves the site
-at `http://127.0.0.1:8000/`. Press Ctrl+C in the VS Code terminal to stop it.
+at `http://127.0.0.1:8000/`. Press Ctrl+C in the terminal to stop it.
 
 Python versions are not claimed as release-supported until the CI matrix has
 passed on that version.

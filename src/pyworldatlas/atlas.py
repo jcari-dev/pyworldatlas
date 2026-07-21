@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from functools import lru_cache
+from hashlib import sha256
 import json
 from pathlib import Path
 from typing import Iterator
@@ -13,12 +14,49 @@ from .database import Database
 from .exceptions import (AmbiguousPlaceError, AtlasClosedError, CapitalNotFoundError,
                          CountryNotFoundError, DatasetVersionError, PlaceNotFoundError)
 from .models import (Area, Capital, City, Coordinate, Country, CountryCodes,
-                     CountryMatch, CountryStatus, Currency, DatasetInfo, Geography,
-                     Language, LocalizedName, SourceReference)
+                     CountryMatch, CountryStatus, Currency, DatasetInfo, Flashcard,
+                     Geography, Language, LocalizedName, SourceReference)
 
 
 def _flag(alpha2: str) -> str:
     return "".join(chr(0x1F1E6 + ord(letter) - ord("A")) for letter in alpha2)
+
+
+def _stable_country_sample(
+    candidates: tuple[Country, ...], count: int, seed: int | str
+) -> tuple[Country, ...]:
+    """Select countries by a versioned SHA-256 ranking, independent of row order."""
+    if isinstance(count, bool) or not isinstance(count, int) or count <= 0:
+        raise ValueError("count must be a positive integer")
+    if count > len(candidates):
+        raise ValueError(f"count {count} exceeds the {len(candidates)} available countries")
+
+    def rank(country: Country) -> tuple[bytes, str]:
+        identifier = country.codes.numeric or country.alpha3 or country.alpha2
+        payload = f"pyworldatlas:0.2:{seed}:{identifier}".encode("utf-8")
+        return sha256(payload).digest(), identifier
+
+    return tuple(sorted(candidates, key=rank)[:count])
+
+
+_FLASHCARD_TOPICS = (
+    "alpha_2_codes",
+    "alpha_3_codes",
+    "areas",
+    "calling_codes",
+    "capitals",
+    "continents",
+    "countries_from_capitals",
+    "currencies",
+    "flags",
+    "language_codes",
+    "local_names",
+    "m49_codes",
+    "population_density",
+    "populations",
+    "regions",
+    "top_level_domains",
+)
 
 
 class Atlas:
@@ -100,6 +138,140 @@ class Atlas:
         where = f" WHERE {' AND '.join(clauses)}" if clauses else ""
         rows = self._db.connection.execute(f"SELECT id FROM country{where} ORDER BY name", params).fetchall()
         return tuple(self._load_country(int(row[0])) for row in rows)
+
+    def sample_countries(
+        self,
+        *,
+        count: int,
+        continent: str | None = None,
+        region: str | None = None,
+        seed: int | str = 0,
+    ) -> tuple[Country, ...]:
+        """Return a reproducible educational sample of country profiles.
+
+        Candidates are ranked with a versioned SHA-256 algorithm using their
+        stable M49 identifiers. Results therefore do not depend on SQLite row
+        order, global random state, or implementation details of
+        ``random.sample()``. The same dataset, filters, count, and seed produce the
+        same ordered result across supported Python versions.
+
+        ``count`` must be positive and cannot exceed the filtered population.
+        ``continent`` and ``region`` follow :meth:`countries` semantics.
+        """
+        return _stable_country_sample(
+            self.countries(continent=continent, region=region), count, seed
+        )
+
+    def flashcards(
+        self,
+        *,
+        topic: str,
+        count: int,
+        continent: str | None = None,
+        region: str | None = None,
+        seed: int | str = 0,
+    ) -> tuple[Flashcard, ...]:
+        """Return deterministic, immutable geography flashcards.
+
+        Supported topics are ``alpha_2_codes``, ``alpha_3_codes``, ``areas``,
+        ``calling_codes``, ``capitals``, ``continents``,
+        ``countries_from_capitals``, ``currencies``, ``flags``,
+        ``language_codes``, ``local_names``, ``m49_codes``,
+        ``population_density``, ``populations``, ``regions``, and
+        ``top_level_domains``. Countries missing the answer required by a topic
+        are excluded before sampling. An impossible count raises
+        :class:`ValueError` rather than silently returning fewer cards.
+
+        Population, area, and density answers describe the captured source
+        snapshot. Flashcards are structured values, not an interactive game.
+        """
+        if topic not in _FLASHCARD_TOPICS:
+            allowed = ", ".join(_FLASHCARD_TOPICS)
+            raise ValueError(f"unsupported flashcard topic {topic!r}; choose from {allowed}")
+        candidates = tuple(
+            country
+            for country in self.countries(continent=continent, region=region)
+            if self._has_flashcard_answer(country, topic)
+        )
+        selected = _stable_country_sample(candidates, count, seed)
+        return tuple(self._flashcard(country, topic) for country in selected)
+
+    @staticmethod
+    def _has_flashcard_answer(country: Country, topic: str) -> bool:
+        if topic in {"capitals", "countries_from_capitals"}:
+            return country.capital is not None
+        if topic == "alpha_3_codes":
+            return country.alpha3 is not None
+        if topic == "areas":
+            return country.area_km2 is not None
+        if topic == "calling_codes":
+            return bool(country.calling_codes)
+        if topic == "continents":
+            return country.continent is not None
+        if topic == "currencies":
+            return country.currency is not None
+        if topic == "flags":
+            return country.flag_emoji is not None
+        if topic == "language_codes":
+            return bool(country.language_codes)
+        if topic == "local_names":
+            return bool(country.local_names)
+        if topic == "m49_codes":
+            return country.codes.numeric is not None
+        if topic == "population_density":
+            return country.population_density is not None
+        if topic == "populations":
+            return country.population is not None
+        if topic == "regions":
+            return country.region is not None
+        if topic == "top_level_domains":
+            return country.top_level_domain is not None
+        return True
+
+    @staticmethod
+    def _flashcard(country: Country, topic: str) -> Flashcard:
+        reference = country.reference()
+        if topic == "capitals":
+            prompt, answer = f"What is the capital of {country.name}?", country.capital.name
+        elif topic == "countries_from_capitals":
+            prompt, answer = (
+                f"{country.capital.name} is the capital of which country or area?",
+                country.name,
+            )
+        elif topic == "flags":
+            prompt, answer = f"Which country or area uses the flag {country.flag_emoji}?", country.name
+        elif topic == "alpha_2_codes":
+            prompt, answer = f"What is the alpha-2 code for {country.name}?", country.alpha2
+        elif topic == "alpha_3_codes":
+            prompt, answer = f"What is the alpha-3 code for {country.name}?", country.alpha3
+        elif topic == "m49_codes":
+            prompt, answer = f"What is the M49 code for {country.name}?", country.codes.numeric
+        elif topic == "currencies":
+            label = country.currency.name or country.currency.code
+            answer = f"{label} ({country.currency.code})" if label != country.currency.code else label
+            prompt = f"Which currency is listed for {country.name}?"
+        elif topic == "calling_codes":
+            prompt, answer = f"Which calling code is listed for {country.name}?", ", ".join(country.calling_codes)
+        elif topic == "top_level_domains":
+            prompt, answer = f"What is the country-code top-level domain for {country.name}?", country.top_level_domain
+        elif topic == "language_codes":
+            prompt, answer = f"Which language codes are listed for {country.name}?", ", ".join(country.language_codes)
+        elif topic == "continents":
+            prompt, answer = f"Which continent contains {country.name}?", country.continent
+        elif topic == "regions":
+            prompt, answer = f"Which UN region contains {country.name}?", country.region
+        elif topic == "local_names":
+            local_name = country.local_names[0]
+            prompt = f"What is a locally official short name for {country.name} in {local_name.language_name}?"
+            answer = local_name.short_name
+        elif topic == "areas":
+            prompt, answer = f"What area is listed for {country.name}?", f"{country.area_km2:g} km²"
+        elif topic == "populations":
+            prompt, answer = f"What snapshot population is listed for {country.name}?", f"{country.population:,}"
+        else:
+            prompt = f"What snapshot population density is calculated for {country.name}?"
+            answer = f"{country.population_density:.2f} people per km²"
+        return Flashcard(topic, prompt, str(answer), reference)
 
     def major_cities(self, country: str, *, limit: int | None = None) -> tuple[City, ...]:
         """Return major cities for a country, ordered by population and name."""

@@ -146,6 +146,7 @@ def demo(wheel: Path | None = None) -> Path:
         python = environment / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
         clean_env = os.environ.copy()
         clean_env.pop("PYTHONPATH", None)
+        clean_env["PYTHONUTF8"] = "1"
         run([
             str(python), "-m", "pip", "install", "--force-reinstall",
             "--no-index", "--no-deps", str(wheel),

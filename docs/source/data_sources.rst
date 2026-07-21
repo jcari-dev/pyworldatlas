@@ -71,6 +71,18 @@ UNGEGN List of Country Names
 **Current coverage**
    Five names across Brazil and Switzerland. This is not full-world coverage.
 
+Derived discovery values
+------------------------
+
+Flag emoji are calculated from the UN/ISO alpha-2 code. Population density is
+the captured GeoNames population divided by the captured area value. Discovery
+cards, deterministic samples, and flashcards only select, arrange, or calculate
+from already attributed profile fields; they add no external country facts.
+
+The sampling algorithm ranks M49 identifiers with SHA-256 and never calls a
+remote service. Flashcard wording is package code; answers retain the
+provenance, coverage, and freshness limits of their underlying profile fields.
+
 Source priority in the 0.2.0 checkout
 -------------------------------------
 

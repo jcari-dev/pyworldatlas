@@ -1,8 +1,7 @@
 """Explore and validate everything in the current PyWorldAtlas checkout.
 
-Run this file with VS Code's "Run Python File" button or press F5 and choose
-"PyWorldAtlas: Full Playground". The default run validates every country,
-capital, and major-city record before showing each part of the public API.
+Run ``python playground.py`` from the repository root. The default run validates
+every country, capital, and major-city record before showing the public API.
 """
 
 from __future__ import annotations
@@ -15,8 +14,8 @@ import sys
 from typing import Iterable
 
 
-# A repository playground should work from VS Code immediately, even before the
-# project has been installed into the selected virtual environment. Installed
+# A repository playground should work immediately, even before the project has
+# been installed into the selected virtual environment. Installed
 # package usage remains unchanged; this fallback applies only to this script.
 try:
     from pyworldatlas import Atlas, Country
@@ -80,6 +79,9 @@ def audit_every_record(atlas: Atlas) -> dict[str, int]:
         )
         check(country.alpha2 not in alpha2_codes, f"duplicate alpha-2 code: {country.alpha2}")
         alpha2_codes.add(country.alpha2)
+        expected_flag = "".join(chr(0x1F1E6 + ord(letter) - ord("A")) for letter in country.alpha2)
+        check(country.flag == expected_flag, f"incorrect flag emoji for {country.name}")
+        check(country.flag_emoji == expected_flag, f"incorrect flag_emoji property for {country.name}")
 
         if country.alpha3 is not None:
             check(
@@ -105,6 +107,10 @@ def audit_every_record(atlas: Atlas) -> dict[str, int]:
         )
         if country.population is not None:
             population_profile_count += 1
+        check(
+            country.population_density is None or country.population_density >= 0,
+            f"{country.name} has an invalid calculated population density",
+        )
         check(
             country.currency is None or len(country.currency.code) == 3,
             f"{country.name} has an invalid currency code",
@@ -241,6 +247,35 @@ def print_coordinate_showcase(atlas: Atlas) -> None:
     print(f"Named-place API   : atlas.distance_between('Tokyo', 'Paris', first_country='JP', second_country='FR')")
 
 
+def print_discovery_showcase(atlas: Atlas) -> None:
+    """Demonstrate reproducible samples, discovery cards, and flashcards."""
+    heading("COUNTRY DISCOVERY, REPRODUCIBLE SAMPLES, AND FLASHCARDS")
+    sample = atlas.sample_countries(count=5, continent="Africa", seed="playground")
+    print("Stable Africa sample:")
+    for country in sample:
+        print(f"  {country.flag_emoji} {country.name:<24} {country.alpha2}/{country.alpha3}")
+
+    japan = atlas.country("Japan")
+    card = japan.discovery_card()
+    print("\nJapan discovery card:")
+    print(f"  capital            : {card.capital}")
+    print(f"  population density : {number(card.population_density)} people/km²")
+    print(f"  currency            : {card.currency.code if card.currency else 'unknown'}")
+    print(f"  language codes      : {', '.join(card.language_codes) or 'unknown'}")
+    print(f"  bundled major cities: {card.major_city_count}")
+    print(f"  source identifiers  : {', '.join(card.source_ids)}")
+
+    print("\nReproducible capital flashcards:")
+    for flashcard in atlas.flashcards(topic="capitals", count=3, seed=42):
+        print(f"  Q: {flashcard.prompt}")
+        print(f"  A: {flashcard.answer}")
+
+    print("\nFlag and currency flashcards:")
+    for topic in ("flags", "currencies"):
+        flashcard = atlas.flashcards(topic=topic, count=1, seed="playground")[0]
+        print(f"  [{topic}] {flashcard.prompt}  Answer: {flashcard.answer}")
+
+
 def print_country_profile(country: Country, *, all_cities: bool = False) -> None:
     """Print every field currently available on one country profile."""
     heading(f"{country.flag}  {country.name.upper()} — CURRENT PROFILE")
@@ -256,6 +291,7 @@ def print_country_profile(country: Country, *, all_cities: bool = False) -> None
     print(f"Subregion     : {country.subregion or 'unknown'}")
     print(f"Area          : {number(country.area_km2)} km²")
     print(f"Population    : {number(country.population)} (source snapshot)")
+    print(f"Pop. density  : {number(country.population_density)} people/km² (calculated)")
     currency = f"{country.currency.code} — {country.currency.name or 'name unavailable'}" if country.currency else "unknown"
     print(f"Currency      : {currency}")
     print(f"Languages     : {', '.join(language.code for language in country.languages) or 'unknown'}")
@@ -332,10 +368,11 @@ def print_coverage(atlas: Atlas) -> None:
     print("  Implemented now : identity, aliases, codes, regions, capitals, coordinates,")
     print("                    area, population, currency, language/calling codes,")
     print("                    major cities, distance, bearing, midpoint, serialization,")
-    print("                    a Brazil/Switzerland official-local-name pilot, and")
-    print("                    full UN M49 country-and-area coverage")
+    print("                    derived density, discovery cards, stable sampling,")
+    print("                    structured flashcards, flag emoji, a Brazil/Switzerland")
+    print("                    official-local-name pilot, and full M49 coverage")
     print("  Coming later    : borders, boundary geometry, historical statistics, leaders,")
-    print("                    rich culture, quizzes, exports, and release hardening")
+    print("                    expanded local names, culture, and exports")
 
 
 def parse_args() -> argparse.Namespace:
@@ -367,6 +404,7 @@ def main() -> int:
         print_country_directory(countries)
         print_lookup_showcase(atlas)
         print_coordinate_showcase(atlas)
+        print_discovery_showcase(atlas)
 
         if args.country:
             print_country_profile(atlas.country(args.country), all_cities=args.all_cities)
@@ -379,7 +417,7 @@ def main() -> int:
 
     heading("PLAYGROUND COMPLETE")
     print("The record audit and public API examples completed without errors.")
-    print("Tip: run `playground.py --help` for focused country, JSON, and all-city modes.")
+    print("Tip: run `python playground.py --help` for focused country, JSON, and all-city modes.")
     return 0
 
 

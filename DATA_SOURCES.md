@@ -38,3 +38,14 @@ threshold, plus retained capitals.
 - Current scope: five records across Brazil and Switzerland.
 - Limitations: the five reviewed records do not imply full-world local-name
   coverage.
+
+## Derived discovery values
+
+Flag emoji are calculated from the UN/ISO alpha-2 code. Population density is
+the captured GeoNames population divided by the captured area value. Discovery
+cards, deterministic samples, and flashcards only select, arrange, or calculate
+from already attributed profile fields; they add no external country facts.
+
+The sampling algorithm ranks M49 identifiers with SHA-256 and never calls a
+remote service. Flashcard wording is package code under the project license;
+answers retain the provenance and freshness limits of their underlying fields.

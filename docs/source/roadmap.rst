@@ -15,10 +15,10 @@ documentation update.
    * - 0.1.0
      - Complete
      - 248-country-and-area core, lookup, 241 capitals, 6,265 cities, documentation
-     - Tagged; rebuilt package not published to PyPI
+     - Rebuilt baseline tagged
    * - 0.2.0
      - Release candidate
-     - Rich profiles, city coordinates, distances, bearings, midpoints, local-name pilot
+     - Rich profiles, coordinate tools, flags, discovery cards, stable samples, flashcards
      - Local release gate complete; external publication pending
    * - 0.3.0
      - Planned
@@ -42,7 +42,7 @@ documentation update.
      - —
    * - 0.8.0
      - Planned
-     - Quizzes, calculated facts, exports, expanded CLI
+     - Advanced learning utilities, exports, expanded CLI
      - —
    * - 0.9.0
      - Planned
@@ -57,10 +57,11 @@ Release boundary
 ----------------
 
 The 0.1.0 source state established the rebuilt runtime and dataset baseline.
-Releases earlier than 0.2.0 on PyPI belong to the legacy prototype.
 
 Version 0.2.0 exposes population and currency context,
 language and calling-code metadata, top-level domains, observed timezones,
 capital coordinates, exact city lookup, and great-circle distance, bearing, and
 midpoint calculations. It also retains the verified Brazil/Switzerland UNGEGN
-local-name pilot. Borders and border paths are reserved for 0.3.0.
+local-name pilot and adds flag emoji, calculated density, discovery cards,
+stable sampling, and structured flashcards. Borders and border paths are
+reserved for 0.3.0.

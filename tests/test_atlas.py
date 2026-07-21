@@ -39,6 +39,72 @@ class AtlasTests(unittest.TestCase):
         self.assertIn("Asia/Tokyo", japan.observed_timezones)
         self.assertEqual(japan.capital_coordinates, japan.capital.coordinates)
 
+    def test_discovery_properties_and_card(self):
+        japan = self.atlas.country("Japan")
+        self.assertEqual((japan.flag, japan.flag_emoji), ("🇯🇵", "🇯🇵"))
+        self.assertEqual(japan.language_codes, ("ja",))
+        self.assertEqual(japan.currency_code, "JPY")
+        self.assertEqual(japan.major_city_count, len(japan.major_cities))
+        self.assertAlmostEqual(japan.population_density, 334.879, places=3)
+
+        card = japan.discovery_card()
+        self.assertEqual(card.country, japan.reference())
+        self.assertEqual(card.country.numeric, "392")
+        self.assertEqual(card.capital, "Tokyo")
+        self.assertEqual(card.flag_emoji, "🇯🇵")
+        self.assertEqual(card.language_codes, ("ja",))
+        self.assertEqual(card.to_dict()["country"]["alpha2"], "JP")
+        self.atlas.close()
+        self.assertIn('"flag_emoji": "🇯🇵"', card.to_json())
+
+    def test_deterministic_country_sampling(self):
+        sample = self.atlas.sample_countries(count=5, seed=42)
+        self.assertEqual(
+            [country.codes.numeric for country in sample],
+            ["414", "044", "108", "784", "788"],
+        )
+        self.assertEqual(sample, self.atlas.sample_countries(count=5, seed=42))
+        self.assertEqual(
+            [country.alpha2 for country in self.atlas.sample_countries(
+                count=4, continent="Africa", seed="class"
+            )],
+            ["BJ", "MW", "CV", "DZ"],
+        )
+        with self.assertRaisesRegex(ValueError, "positive integer"):
+            self.atlas.sample_countries(count=0)
+        with self.assertRaisesRegex(ValueError, "positive integer"):
+            self.atlas.sample_countries(count=True)
+        with self.assertRaisesRegex(ValueError, "exceeds"):
+            self.atlas.sample_countries(count=999)
+
+    def test_structured_flashcards(self):
+        cards = self.atlas.flashcards(topic="capitals", count=3, seed=42)
+        self.assertEqual(
+            [(card.country.alpha2, card.answer) for card in cards],
+            [("KW", "Kuwait City"), ("BS", "Nassau"), ("BI", "Gitega")],
+        )
+        self.assertEqual(cards[0].to_dict()["topic"], "capitals")
+        topics = (
+            "alpha_2_codes", "alpha_3_codes", "areas", "calling_codes",
+            "continents", "countries_from_capitals", "currencies", "flags",
+            "language_codes", "local_names", "m49_codes", "population_density",
+            "populations", "regions", "top_level_domains",
+        )
+        for topic in topics:
+            card = self.atlas.flashcards(topic=topic, count=1, seed="lesson")[0]
+            self.assertEqual(card.topic, topic)
+            self.assertTrue(card.prompt)
+            self.assertTrue(card.answer)
+        local_names = self.atlas.flashcards(topic="local_names", count=2, seed=42)
+        self.assertEqual(
+            [(card.country.alpha2, card.answer) for card in local_names],
+            [("CH", "Schweiz"), ("BR", "Brasil")],
+        )
+        with self.assertRaisesRegex(ValueError, "unsupported flashcard topic"):
+            self.atlas.flashcards(topic="trivia", count=1)
+        with self.assertRaisesRegex(ValueError, "exceeds"):
+            self.atlas.flashcards(topic="local_names", count=3)
+
     def test_coordinate_calculations(self):
         london = Coordinate(51.5074, -0.1278)
         paris = Coordinate(48.8566, 2.3522)

@@ -15,11 +15,6 @@ works without an API key, runtime download, or third-party dependency.
    milestones deepen the available facts and geographic operations. Official
    local names currently have pilot coverage for Brazil and Switzerland.
 
-.. note::
-
-   PyPI releases earlier than 0.2.0 belong to the legacy prototype. The
-   examples on this site require 0.2.0 or a current source checkout.
-
 Installation
 ------------
 
@@ -51,8 +46,9 @@ Documentation
 -------------
 
 - Follow the :doc:`quickstart` for a guided first session.
-- Use the :doc:`playground` to audit and explore every bundled record in VS Code.
+- Use the :doc:`playground` to audit and explore every bundled record.
 - Read :doc:`country_profile` for the complete current data model.
+- Build lessons with :doc:`discovery` cards, stable samples, and flashcards.
 - Explore the reviewed :doc:`local_names` records and coverage boundary.
 - See :doc:`data_sources` and :doc:`data_quality` for provenance and limitations.
 - Consult the :doc:`api` for the generated public reference.
@@ -73,6 +69,8 @@ What works in this checkout
 - Rich profile fields including population snapshot, currency, calling codes,
   language codes, internet domain, observed timezones, and capital coordinates.
 - Exact city lookup plus latitude/longitude distance, bearing, and midpoint calculations.
+- Flag emoji, calculated density, compact discovery cards, deterministic country
+  sampling, and structured geography flashcards.
 
 Current coverage
 ----------------
@@ -107,6 +105,7 @@ Current coverage
    :caption: Explore the atlas
 
    country_profile
+   discovery
    local_names
    capitals_cities
    coordinates_distances
@@ -129,5 +128,4 @@ Current coverage
    :caption: Reference
 
    api
-   migration
    changelog

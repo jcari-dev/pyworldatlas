@@ -11,7 +11,7 @@
       "tests": "Local 0.1.0 release gate passed",
       "dataset": "Captured and checksummed source snapshots",
       "docs": "Sphinx source and maintainer instructions",
-      "release": "Tagged v0.1.0; PyPI publication not completed"
+      "release": "Rebuilt baseline tagged v0.1.0"
     },
     {
       "name": "1 \u2014 Generated country core",
@@ -21,16 +21,16 @@
       "tests": "Python 3.10-3.14 CI and local release gate passed",
       "dataset": "248 countries and areas / 241 capitals / 6265 places",
       "docs": "Core usage and data guides",
-      "release": "Included in tag v0.1.0; PyPI publication not completed"
+      "release": "Included in the v0.1.0 rebuilt baseline"
     },
     {
-      "name": "2 \u2014 Country profiles and coordinates",
+      "name": "2 \u2014 Country profiles, coordinates, and discovery",
       "version": "0.2.0",
       "status": "complete",
-      "functions": "Profile metadata, exact city lookup, distance, bearing, midpoint, local-name pilot",
+      "functions": "Profiles, coordinate tools, flags, discovery cards, stable samples, flashcards",
       "tests": "Unit tests and complete local release gate pass",
       "dataset": "248 profiles / 6,265 coordinate-bearing places / 5 reviewed local names",
-      "docs": "Profile, local-name, and coordinate guides",
+      "docs": "Profile, local-name, coordinate, and discovery guides",
       "release": "Publication state is tracked on GitHub Releases and PyPI"
     },
     {
@@ -84,7 +84,7 @@
       "release": "\u2014"
     },
     {
-      "name": "8 \u2014 Education and export",
+      "name": "8 \u2014 Advanced education and export",
       "version": "0.8.0",
       "status": "planned",
       "functions": "\u2014",

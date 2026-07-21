@@ -34,6 +34,10 @@ Profile field notes
      - Meaning
    * - ``Country.population``
      - Country population value from the captured GeoNames snapshot
+   * - ``Country.population_density``
+     - Population divided by sourced total area; ``None`` when unavailable
+   * - ``Country.flag`` / ``Country.flag_emoji``
+     - Regional-indicator Unicode sequence derived from the alpha-2 code
    * - ``Currency.code`` / ``Currency.name``
      - Source currency identifier and name; the whole value may be ``None``
    * - ``Language.code``
@@ -74,6 +78,12 @@ Country models
 .. autoclass:: pyworldatlas.Language
    :members:
 
+.. autoclass:: pyworldatlas.CountryReference
+   :members:
+
+.. autoclass:: pyworldatlas.CountryDiscoveryCard
+   :members:
+
 Geographic models
 -----------------
 
@@ -96,6 +106,9 @@ Results and metadata
 --------------------
 
 .. autoclass:: pyworldatlas.CountryMatch
+   :members:
+
+.. autoclass:: pyworldatlas.Flashcard
    :members:
 
 .. autoclass:: pyworldatlas.DatasetInfo

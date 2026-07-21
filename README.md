@@ -11,12 +11,9 @@
 
 PyWorldAtlas makes real geographic data feel like ordinary Python. Look up a
 country by name or code, inspect immutable country and capital objects, explore
-major cities, search aliases, and serialize profiles—without an API key,
-runtime download, database server, or third-party dependency.
-
-> **Version note:** This checkout documents 0.2.0. PyPI releases earlier than
-> 0.2.0 belong to the legacy prototype and expose a different API. The examples
-> below require 0.2.0 or a current source checkout.
+major cities, calculate geographic relationships, and build reproducible
+learning material—without an API key, runtime download, database server, or
+third-party dependency.
 
 ```python
 from pyworldatlas import Atlas
@@ -46,37 +43,30 @@ and populated-place records established for 0.1.0.
 | Runtime dependencies | 0 |
 | Bundled databases | 1 SQLite file |
 
-The 0.2.0 checkout adds richer country profiles and dependency-free coordinate
-calculations. Borders, boundary geometry, historical statistics, national
-leaders, quizzes, and exports remain later work.
+The 0.2.0 checkout adds richer country profiles, dependency-free coordinate
+calculations, flag emoji, discovery cards, reproducible sampling, and structured
+flashcards. Borders, boundary geometry, historical statistics, national
+leaders, interactive learning applications, and exports remain later work.
 
 ## Installation
 
-Install the 0.2.0 source checkout from the repository root:
+Install the latest published release:
 
 ```console
-python -m pip install -e .
-
-# Once 0.2.0 is listed in the PyPI release history:
-python -m pip install pyworldatlas==0.2.0
+python -m pip install --upgrade pyworldatlas
 ```
 
-Install the separate data builder only when working on source refreshes:
+Install the current source checkout and its separate data builder when
+contributing:
 
 ```console
-python -m pip install -e pipeline
+python -m pip install -e . -e pipeline
 ```
 
 You can also test the exact local wheel after running the release build:
 
 ```console
 python -m pip install --no-index --no-deps dist/pyworldatlas-0.2.0-py3-none-any.whl
-```
-
-After 0.2.0 is listed on PyPI, the public install command will be:
-
-```console
-python -m pip install pyworldatlas==0.2.0
 ```
 
 The package runtime supports Python 3.10 through 3.14 during the 0.x release
@@ -95,6 +85,10 @@ series. Python versions are only claimed as release-supported after CI passes.
 | Capital records | `country.capital`, `.coordinates`, `.timezone_id` |
 | Major cities | `atlas.major_cities("Japan", limit=5)` |
 | Rich profile | `country.population`, `.currency`, `.languages`, `.calling_codes` |
+| Flags and calculated facts | `country.flag_emoji`, `.population_density` |
+| Discovery cards | `country.discovery_card()` |
+| Stable country samples | `atlas.sample_countries(count=5, seed=42)` |
+| Structured flashcards | `atlas.flashcards(topic="capitals", count=10, seed=42)` |
 | City coordinates | `atlas.coordinates("Tokyo", country="JP")` |
 | Distance | `atlas.distance_between("Tokyo", "Paris", first_country="JP", second_country="FR")` |
 | Bearing and midpoint | `coordinate.bearing_to(other)`, `.midpoint_to(other)` |
@@ -117,6 +111,7 @@ with Atlas() as atlas:
     print(country.name)
     print(country.official_name)
     print(country.flag)
+    print(country.flag_emoji)
     print(country.codes.alpha2)
     print(country.codes.alpha3)
     print(country.codes.numeric)
@@ -125,6 +120,7 @@ with Atlas() as atlas:
     print(country.subregion)
     print(country.area_km2)
     print(country.population)
+    print(country.population_density)
     print(country.currency)
     print(country.languages)
     print(country.calling_codes)
@@ -137,6 +133,32 @@ with Atlas() as atlas:
         print(country.capital.population)
         print(country.capital.timezone_id)
 ```
+
+## Country discovery and education
+
+```python
+from pyworldatlas import Atlas
+
+with Atlas() as atlas:
+    japan = atlas.country("Japan")
+    card = japan.discovery_card()
+
+    print(card.flag_emoji, card.capital, card.population_density)
+
+    for country in atlas.sample_countries(count=5, continent="Africa", seed=42):
+        print(country.flag_emoji, country.name)
+
+    for flashcard in atlas.flashcards(topic="capitals", count=3, seed=42):
+        print(flashcard.prompt)
+        print(flashcard.answer)
+```
+
+Sampling uses a versioned SHA-256 ranking over stable M49 identifiers, so the
+same dataset, filters, and seed produce the same ordered lesson across supported
+Python versions. Flashcards are immutable structured values rather than an
+interactive game. Supported topics cover capitals, flags, country codes,
+currencies, calling codes, domains, language codes, regions, local names,
+population, area, and calculated density.
 
 ## Latitude, longitude, and distance
 
@@ -176,12 +198,12 @@ with Atlas() as atlas:
 Search is case- and accent-insensitive. Exact country lookup accepts common
 names, reviewed aliases, alpha-2, alpha-3, and M49 numeric codes.
 
-## Test every current record in VS Code
+## Test every current record
 
 The repository includes [playground.py](playground.py), which checks every
 current country, capital, and city record before demonstrating the public API.
 
-Press `F5` in VS Code and select **PyWorldAtlas: Full Playground**, or run:
+Run from the repository root:
 
 ```console
 python playground.py
@@ -235,6 +257,10 @@ Raw snapshots are preserved with SHA-256 manifests. The separate builder emits
 inspectable normalized JSON Lines before generating SQLite. Missing values stay
 missing; unsourced assumptions are never substituted for country facts.
 
+Flag emoji are derived from alpha-2 codes, population density is a transparent
+ratio of sourced values, and discovery/learning tools only rearrange existing
+profile data. They introduce no additional country claims or third-party data.
+
 Seven areas have no usable primary-capital record in the current snapshot.
 Their `country.capital` value is `None`. GeoNames-only country rows that do
 not have a matching identity in the captured UN M49 scope are excluded rather
@@ -262,15 +288,14 @@ For this development checkout they are `0.2.0`, `2`, and `2026.07.20.1`.
 - Published documentation (updated by the release workflow):
   https://jcari-dev.github.io/pyworldatlas-documentation/
 - Current implementation status: [ROADMAP_STATUS.md](ROADMAP_STATUS.md)
-- Migration from the legacy API: [MIGRATION_FROM_0.0.md](MIGRATION_FROM_0.0.md)
 - Milestone evidence: [MILESTONE_0_1_REPORT.md](MILESTONE_0_1_REPORT.md)
 - 0.2.0 execution status: [RELEASE_0_2_STATUS.md](RELEASE_0_2_STATUS.md)
 - Maintainer release process: [RELEASING.md](RELEASING.md)
 
-Version 0.2.0 is the country-profile and coordinate release. After it is
-published, 0.3.0 will add reviewed border relationships, neighbors, shared
-neighbors, and border paths. Later releases extend boundary geometry,
-historical statistics, institutions, culture, education tools, and exports.
+Version 0.2.0 is the country-profile, coordinate, and discovery release. After
+it is published, 0.3.0 will add reviewed border relationships, neighbors,
+shared neighbors, and border paths. Later releases extend boundary geometry,
+historical statistics, institutions, culture, and exports.
 
 ## License and attribution
 

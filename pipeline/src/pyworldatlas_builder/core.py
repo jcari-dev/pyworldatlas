@@ -381,7 +381,7 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
             "tests": "Local 0.1.0 release gate passed",
             "dataset": "Captured and checksummed source snapshots",
             "docs": "Sphinx source and maintainer instructions",
-            "release": "Tagged v0.1.0; PyPI publication not completed",
+            "release": "Rebuilt baseline tagged v0.1.0",
         },
         {
             "name": "1 — Generated country core",
@@ -391,16 +391,16 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
             "tests": "Python 3.10-3.14 CI and local release gate passed",
             "dataset": f"{coverage['countries']} countries and areas / {coverage['capitals']} capitals / {coverage['major_cities']} places",
             "docs": "Core usage and data guides",
-            "release": "Included in tag v0.1.0; PyPI publication not completed",
+            "release": "Included in the v0.1.0 rebuilt baseline",
         },
         {
-            "name": "2 — Country profiles and coordinates",
+            "name": "2 — Country profiles, coordinates, and discovery",
             "version": "0.2.0",
             "status": "complete",
-            "functions": "Profile metadata, exact city lookup, distance, bearing, midpoint, local-name pilot",
+            "functions": "Profiles, coordinate tools, flags, discovery cards, stable samples, flashcards",
             "tests": "Unit tests and complete local release gate pass",
             "dataset": "248 profiles / 6,265 coordinate-bearing places / 5 reviewed local names",
-            "docs": "Profile, local-name, and coordinate guides",
+            "docs": "Profile, local-name, coordinate, and discovery guides",
             "release": "Publication state is tracked on GitHub Releases and PyPI",
         },
     ]
@@ -408,7 +408,7 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
         ("3 — Borders", "0.3.0"),
         ("4 — Geometry", "0.4.0"), ("5 — Statistics", "0.5.0"),
         ("6 — Leaders", "0.6.0"), ("7 — Culture and institutions", "0.7.0"),
-        ("8 — Education and export", "0.8.0"), ("9 — Full-world hardening", "0.9.0"),
+        ("8 — Advanced education and export", "0.8.0"), ("9 — Full-world hardening", "0.9.0"),
         ("Stable offline atlas", "1.0.0"),
     ]:
         milestones.append({"name": name, "version": version, "status": "planned", "functions": "—", "tests": "—", "dataset": "—", "docs": "—", "release": "—"})

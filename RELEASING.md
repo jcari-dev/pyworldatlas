@@ -4,15 +4,14 @@ This repository builds, tests, publishes, and deploys each release from one Git
 tag. PyPI publishing uses short-lived Trusted Publishing credentials; no PyPI
 API token is stored in GitHub.
 
-A `v0.1.0` tag and release artifacts preserve the rebuilt baseline. PyPI
-releases earlier than 0.2.0 belong to the legacy prototype. Verify that the
-intended version appears in the package index before running its installation
-smoke test.
+A `v0.1.0` tag and release artifacts preserve the rebuilt baseline. Verify that
+the intended version appears in the package index before running its
+installation smoke test.
 
 ## Repository setup
 
 The canonical source repository is `jcari-dev/pyworldatlas`. Verify the remote
-from the VS Code terminal:
+from a terminal in the repository root:
 
 ```console
 git remote -v

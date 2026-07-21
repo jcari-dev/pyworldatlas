@@ -80,6 +80,23 @@ provide a value:
    JPY
    ['ja']
 
+Build reproducible learning material
+------------------------------------
+
+Country samples and flashcards use a stable seed-based ordering:
+
+.. doctest::
+
+   >>> with Atlas() as atlas:
+   ...     japan = atlas.country("Japan")
+   ...     print(japan.flag_emoji, round(japan.population_density, 2))
+   ...     print([country.alpha2 for country in atlas.sample_countries(count=3, seed=42)])
+   ...     card = atlas.flashcards(topic="capitals", count=1, seed=42)[0]
+   ...     print(card.prompt, card.answer)
+   🇯🇵 334.88
+   ['KW', 'BS', 'BI']
+   What is the capital of Kuwait? Kuwait City
+
 Measure city-to-city distance
 -----------------------------
 

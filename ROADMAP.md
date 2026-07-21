@@ -6,11 +6,12 @@ established the dependency-free runtime, generated database, and captured
 
 Release 0.2.0 is the rich-profile and coordinate milestone: population and
 currency context, language and calling-code metadata, direct city coordinates,
-and dependency-free distance, bearing, and midpoint calculations. It also
-includes five reviewed official local names for Brazil and Switzerland. Version
-0.3.0 follows with reviewed borders, neighbors, and border paths. Later releases
-add geometry, time-series statistics, institutions, culture, education tools,
-exports, and full-world hardening.
+dependency-free distance, bearing, and midpoint calculations, flag emoji,
+discovery cards, stable sampling, and structured flashcards. It also includes
+five reviewed official local names for Brazil and Switzerland. Version 0.3.0
+follows with reviewed borders, neighbors, and border paths. Later releases add
+geometry, time-series statistics, institutions, culture, exports, and
+full-world hardening.
 
 `ROADMAP_STATUS.md` records generated evidence. The detailed execution boundary
 and release gate live in `RELEASE_0_2_STATUS.md`.

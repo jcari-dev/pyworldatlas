@@ -11,19 +11,17 @@ Requirements
 Published package
 -----------------
 
-PyPI releases earlier than 0.2.0 belong to the legacy prototype and are not
-compatible with the examples in this documentation. Confirm that 0.2.0 is in
-the release history, then install the exact version:
+Install the latest published release from PyPI:
 
 .. code-block:: console
 
-   python -m pip install pyworldatlas==0.2.0
+   python -m pip install --upgrade pyworldatlas
 
-Install this checkout in VS Code
---------------------------------
+Install a source checkout
+-------------------------
 
-Open the project folder, select a Python interpreter, create a ``.venv``, and
-run this in VS Code's integrated terminal:
+Create or activate a virtual environment, open a terminal in the repository
+root, and install the runtime and builder projects:
 
 .. code-block:: console
 

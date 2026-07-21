@@ -12,6 +12,11 @@
   Switzerland.
 - Added language/script metadata, explicit romanization fields, per-record
   provenance, serialization, and no-fallback lookup helpers.
+- Added `flag_emoji`, calculated population density, compact country
+  references, and serializable discovery cards.
+- Added deterministic country sampling and structured flashcards for capitals,
+  flags, codes, currencies, communications, regions, local names, and snapshot
+  population/area facts.
 - Upgraded the generated dataset to schema 2 while preserving 0.1.0 lookup,
   country, capital, city, and collection behavior.
 

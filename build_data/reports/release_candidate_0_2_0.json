@@ -16,9 +16,9 @@
     "official_local_names": 5,
     "official_local_name_countries": 2
   },
-  "test_count": 22,
-  "doctest_count": 126,
-  "wheel_bytes": 386790,
+  "test_count": 25,
+  "doctest_count": 157,
+  "wheel_bytes": 390329,
   "sqlite_bytes": 778240,
   "median_ms": {
     "fresh_process_import": 75.577,
@@ -29,12 +29,12 @@
     "named_place_distance": 0.299
   },
   "change_from_0_1_0": {
-    "wheel_bytes": 11136,
-    "wheel_percent": 2.964,
+    "wheel_bytes": 14675,
+    "wheel_percent": 3.907,
     "sqlite_bytes": 20480,
     "sqlite_percent": 2.703,
-    "unit_tests": 9,
-    "doctests": 47,
+    "unit_tests": 12,
+    "doctests": 78,
     "timing_regression_detected": false
   },
   "quality_gate": "PASS",

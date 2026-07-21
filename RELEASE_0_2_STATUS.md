@@ -1,8 +1,9 @@
 # PyWorldAtlas 0.2.0 release status
 
-Version 0.2.0 adds country profile metadata and coordinate tools to the 0.1.0
-world core. It keeps the standard-library-only runtime, bundled SQLite database,
-deterministic builder, immutable models, and offline behavior.
+Version 0.2.0 adds country profile metadata, coordinate tools, and reproducible
+country-discovery features to the 0.1.0 world core. It keeps the
+standard-library-only runtime, bundled SQLite database, deterministic builder,
+immutable models, and offline behavior.
 
 ## Implemented scope
 
@@ -21,6 +22,11 @@ deterministic builder, immutable models, and offline behavior.
 | Great-circle kilometres, miles, and nautical miles | Implemented |
 | Initial bearing and spherical midpoint | Implemented with undefined-case errors |
 | Named-place, model, and raw-coordinate distance inputs | Implemented |
+| Flag emoji derived from alpha-2 codes | 248 / 248 |
+| Calculated population density | Available when population and area are usable |
+| Immutable discovery cards and country references | Implemented |
+| Deterministic filtered country sampling | Implemented |
+| Structured educational flashcards | 16 documented topics |
 | Official local names | 5 records across Brazil and Switzerland |
 | Borders and border paths | Reserved for 0.3.0 |
 
@@ -36,6 +42,12 @@ with Atlas() as atlas:
     print(japan.languages)
     print(japan.calling_codes)
     print(japan.capital_coordinates)
+    print(japan.flag_emoji)
+    print(japan.population_density)
+    print(japan.discovery_card().to_dict())
+
+    print(atlas.sample_countries(count=5, continent="Africa", seed=42))
+    print(atlas.flashcards(topic="capitals", count=3, seed=42))
 
     tokyo = atlas.city("Tokyo", country="JP")
     paris = atlas.city("Paris", country="FR")
@@ -59,12 +71,14 @@ print(Coordinate(51.5074, -0.1278).distance_to(Coordinate(48.8566, 2.3522)))
 - Great-circle distance is a spherical surface calculation, not a road or
   flight-routing result.
 - Official local names retain the narrow, visually verified two-country pilot.
+- Flag emoji, density, discovery cards, samples, and flashcards are derived from
+  existing sourced profile values and introduce no new country-data authority.
 
 ## Local release checks
 
-The current checkout passes deterministic database rebuilds, 22 unit tests, the
-complete playground audit, Sphinx warnings-as-errors, 126 doctests, isolated
-wheel examples, and the wheel-content audit. The release build also writes
+The current checkout passes deterministic database rebuilds, 25 unit tests, the
+complete playground audit, Sphinx warnings-as-errors, 157 doctests, five
+isolated wheel examples, and the wheel-content audit. The release build also writes
 SHA-256 checksums and a machine-readable manifest.
 
 ## External publication checks

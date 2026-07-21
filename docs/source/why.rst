@@ -29,6 +29,11 @@ Traceable to sources
    capital, and populated-place records come from GeoNames. Reviewed official
    local names come from UNGEGN. Source references are exposed on profiles.
 
+Useful for learning
+   Flag emoji, compact discovery cards, reproducible samples, and structured
+   flashcards turn the same attributed profiles into reusable lesson material
+   without adding a game framework or hidden data source.
+
 Who is it for?
 --------------
 

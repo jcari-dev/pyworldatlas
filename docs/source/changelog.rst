@@ -11,6 +11,11 @@ Changelog
 - Added five sourced official local-name records across Brazil and Switzerland.
 - Added language and script metadata, formal names, explicit romanization
   fields, provenance, and no-fallback convenience methods.
+- Added flag emoji, calculated population density, compact country references,
+  and serializable discovery cards.
+- Added deterministic country sampling and structured flashcards covering
+  capitals, flags, codes, currencies, communications, regions, local names,
+  and snapshot population/area facts.
 - Upgraded the generated dataset to schema 2 while retaining the 0.1.0 country,
   capital, city, lookup, and collection behaviors.
 
@@ -27,11 +32,5 @@ Changelog
   normalized records, provenance, validation, and reproducibility checks.
 - Added clean-wheel installation tests, executable examples, and documentation
   generated from the installed wheel.
-- Added a VS Code playground with all-record audits.
+- Added a repository playground with all-record audits.
 - Added Sphinx documentation with executable doctests.
-
-Legacy releases
----------------
-
-Versions 0.0.1 through 0.0.12 belong to the legacy prototype and remain on PyPI.
-Version 0.1.0 begins the rebuilt source-aware architecture in the repository.
