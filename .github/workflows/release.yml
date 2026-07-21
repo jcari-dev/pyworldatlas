@@ -73,6 +73,7 @@ jobs:
       - name: Publish GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         run: gh release create "$GITHUB_REF_NAME" dist/* metadata/* --generate-notes --verify-tag
 
   deploy-docs:
@@ -114,4 +115,3 @@ jobs:
             git -C documentation-site commit -m "Deploy PyWorldAtlas ${GITHUB_REF_NAME}"
             git -C documentation-site push
           fi
-
