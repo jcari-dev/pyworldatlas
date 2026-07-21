@@ -80,6 +80,8 @@ def status(*, write: bool = True) -> None:
         lines.insert(-1, f"Official local names: {coverage['local_names']} across {coverage['local_name_countries']} reviewed countries")
     if "population_profiles" in coverage:
         lines.insert(-1, f"Profile fields: {coverage['population_profiles']} population / {coverage['currency_profiles']} currency / {coverage['language_profiles']} language-code records")
+    if "reviewed_land_borders" in coverage:
+        lines.insert(-1, f"Reviewed land borders: {coverage['reviewed_land_borders']} / borderless entities: {coverage['countries_with_no_land_borders']}")
     print("\n".join(lines))
     if write:
         table = ["| Milestone | Version | Status | Implemented functions | Tests | Dataset coverage | Documentation | Release |", "|---|---:|---|---|---|---|---|---|"]

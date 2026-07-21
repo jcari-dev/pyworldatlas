@@ -184,11 +184,60 @@ class AtlasTests(unittest.TestCase):
         self.assertEqual(self.atlas.search_countries("vatican")[0].country.alpha2, "VA")
         self.assertIn("Japan", [c.name for c in self.atlas.countries(continent="Asia")])
 
+    def test_reviewed_neighbors_and_shared_neighbors(self):
+        self.assertEqual(
+            tuple(country.name for country in self.atlas.neighbors("France")),
+            ("Andorra", "Belgium", "Germany", "Italy", "Luxembourg", "Monaco", "Spain", "Switzerland"),
+        )
+        self.assertTrue(self.atlas.shares_border("Spain", "Morocco"))
+        self.assertTrue(self.atlas.shares_border("China", "Hong Kong"))
+        self.assertFalse(self.atlas.shares_border("United States", "Cuba"))
+        self.assertFalse(self.atlas.shares_border("France", "France"))
+        self.assertEqual(
+            tuple(country.name for country in self.atlas.shared_neighbors("Germany", "Italy")),
+            ("Austria", "France", "Switzerland"),
+        )
+
+    def test_shortest_border_paths_and_components(self):
+        path = self.atlas.border_path("Portugal", "China")
+        self.assertIsNotNone(path)
+        self.assertEqual(path.origin.alpha2, "PT")
+        self.assertEqual(path.destination.alpha2, "CN")
+        self.assertEqual(path.crossings, len(path.countries) - 1)
+        self.assertEqual(path.crossings, self.atlas.border_crossings("Portugal", "China"))
+        for first, second in zip(path.countries, path.countries[1:]):
+            self.assertTrue(self.atlas.shares_border(first.alpha2, second.alpha2))
+
+        same = self.atlas.border_path("Japan", "JP")
+        self.assertEqual(same.crossings, 0)
+        self.assertEqual(tuple(country.alpha2 for country in same.countries), ("JP",))
+        self.assertIsNone(self.atlas.border_path("Japan", "China"))
+        self.assertIsNone(self.atlas.border_crossings("Japan", "China"))
+        self.assertEqual(self.atlas.countries_reachable_by_land("Japan"), ())
+        reachable = {country.name for country in self.atlas.countries_reachable_by_land("Portugal")}
+        self.assertIn("China", reachable)
+
+    def test_borderless_entities_and_graph_symmetry(self):
+        borderless = self.atlas.countries_with_no_land_borders()
+        borderless_codes = {country.alpha2 for country in borderless}
+        self.assertEqual(len(borderless), 85)
+        self.assertIn("JP", borderless_codes)
+        self.assertIn("CU", borderless_codes)
+        self.assertNotIn("BR", borderless_codes)
+        for country in self.atlas:
+            for neighbor in self.atlas.neighbors(country.alpha2):
+                self.assertTrue(self.atlas.shares_border(neighbor.alpha2, country.alpha2))
+
     def test_models_are_immutable_and_serializable(self):
         country = self.atlas.country("DO")
         with self.assertRaises(dataclasses.FrozenInstanceError):
             country.name = "x"
         self.assertEqual(country.to_dict()["codes"]["alpha2"], "DO")
+        path = self.atlas.border_path("Portugal", "Spain")
+        with self.assertRaises(dataclasses.FrozenInstanceError):
+            path.crossings = 9
+        self.assertEqual(path.to_dict()["countries"][0]["alpha2"], "PT")
+        self.assertIn('"crossings": 1', path.to_json())
 
     def test_missing_and_closed_behavior(self):
         with self.assertRaises(CountryNotFoundError):
@@ -201,7 +250,7 @@ class AtlasTests(unittest.TestCase):
 
     def test_dataset_versions(self):
         info = self.atlas.dataset_info()
-        self.assertEqual((info.library_version, info.schema_version, info.dataset_version), ("0.2.1", 2, "2026.07.20.1"))
+        self.assertEqual((info.library_version, info.schema_version, info.dataset_version), ("0.3.0", 3, "2026.07.21.1"))
         self.assertEqual(info.country_count, 248)
 
     def test_official_local_names_pilot(self):

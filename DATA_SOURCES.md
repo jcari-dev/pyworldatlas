@@ -39,6 +39,25 @@ threshold, plus retained capitals.
 - Limitations: the five reviewed records do not imply full-world local-name
   coverage.
 
+## Natural Earth
+
+- Purpose: independent land-border topology from shared segments in the 1:50m
+  Admin 0 map-unit polygons.
+- Official URL: https://www.naturalearthdata.com/downloads/50m-cultural-vectors/
+- Snapshot: boundary lines 5.1.0 and country/map-unit archives 5.1.1, captured
+  2026-07-21 with SHA-256 manifests.
+- Terms: public domain; personal, educational, and commercial use is permitted.
+- Review role: cross-check GeoNames neighbor records. The 315 agreements are
+  accepted automatically, while every source difference requires a recorded
+  decision in `build_data/reviewed/border_decisions.csv`.
+- Limitations: generalized 1:50m geometry may omit shared segments for small
+  territories and enclaves, and Natural Earth applies a documented de facto
+  worldview.
+
+The reviewed 0.3.0 graph contains 319 canonical undirected relationships: 315
+cross-source agreements and four explicit inclusions. Two source-only
+relationships are explicitly excluded.
+
 ## Derived discovery values
 
 Flag emoji are calculated from the UN/ISO alpha-2 code. Population density is

@@ -1,0 +1,25 @@
+{
+  "source_id": "natural-earth",
+  "source_version": "2026-07-21",
+  "retrieved_at": "2026-07-21T00:00:00Z",
+  "files": [
+    {
+      "url": "https://naturalearth.s3.amazonaws.com/50m_cultural/ne_50m_admin_0_boundary_lines_land.zip",
+      "path": "ne_50m_admin_0_boundary_lines_land.zip",
+      "sha256": "02f369ae10578c4ce33fc4a08f8cdd69ea11eb39b44d7923e88eb7199aaff8ea",
+      "size_bytes": 309389
+    },
+    {
+      "url": "https://naturalearth.s3.amazonaws.com/50m_cultural/ne_50m_admin_0_countries.zip",
+      "path": "ne_50m_admin_0_countries.zip",
+      "sha256": "5fed433373581fa648920435f937d95f2d3c0200e067409c6478dcdf1b853139",
+      "size_bytes": 799734
+    },
+    {
+      "url": "https://naturalearth.s3.amazonaws.com/50m_cultural/ne_50m_admin_0_map_units.zip",
+      "path": "ne_50m_admin_0_map_units.zip",
+      "sha256": "f449ec126985e5aab30aea4b439c2d9eb0c5d40bd722fc1036ad3b6477e25cdd",
+      "size_bytes": 816908
+    }
+  ]
+}

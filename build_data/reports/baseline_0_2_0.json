@@ -17,7 +17,7 @@
   "quality_gate": "PASS",
   "notes": [
     "All 13 unit tests passed.",
-    "The playground audited all 248 countries and areas and all 6265 cities.",
+    "The automated audit covered all 248 countries and areas and all 6265 cities.",
     "The full build, offline wheel demo, Sphinx HTML build, 79 doctests, and wheel-content audit passed.",
     "Timing values are medians of seven runs on the development machine and are intended for regression comparison, not as universal benchmarks."
   ]

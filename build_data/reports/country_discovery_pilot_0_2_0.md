@@ -14,7 +14,7 @@ SQLite database, runtime models, serialization, documentation, and the wheel.
 | Pilot countries | 2 |
 | Unit tests | 17 passing |
 | Documentation tests | 90 passing |
-| Full playground audit | Passing |
+| Full data audit | Passing |
 | Fresh wheel and source distribution | Passing |
 | Isolated offline wheel examples | Passing |
 | Sphinx warnings-as-errors build | Passing |

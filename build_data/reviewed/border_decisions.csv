@@ -1,0 +1,7 @@
+country_code,neighbor_code,decision,evidence_sources,reason
+AL,RS,exclude,natural-earth|geonames,Natural Earth topology separates Albania and Serbia at Kosovo; no direct land segment exists in the selected map-unit worldview.
+CN,HK,include,natural-earth,Natural Earth map-unit polygons share a land segment; the GeoNames neighbor field omits this relationship.
+CN,MO,include,natural-earth,Natural Earth map-unit polygons share a land segment; the GeoNames neighbor field omits this relationship.
+CU,US,exclude,natural-earth|geonames,Natural Earth contains no shared land segment; the GeoNames relationship is not a land border.
+ES,GI,include,geonames,GeoNames records the land border; the 1:50m map-unit geometry does not retain a shared segment for this small territory.
+ES,MA,include,geonames,GeoNames records the land borders at Spain's North African enclaves; the 1:50m map-unit geometry does not retain those shared segments.
