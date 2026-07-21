@@ -6,22 +6,22 @@
     {
       "name": "0 \u2014 Clean foundation",
       "version": "0.1.0",
-      "status": "implemented",
+      "status": "released",
       "functions": "Atlas lookup, search, collection protocol, capitals, major cities, dataset info",
-      "tests": "full local quality gate",
+      "tests": "CI on Python 3.10-3.14; full release gate passed",
       "dataset": "248 countries and areas / 241 capitals / 6265 cities",
-      "docs": "source complete; local HTML and doctests pass",
-      "release": "not published"
+      "docs": "public Sphinx site deployed; 79 doctests pass",
+      "release": "published to PyPI and GitHub as v0.1.0"
     },
     {
       "name": "1 \u2014 Generated country core",
       "version": "0.1.0",
-      "status": "implemented",
+      "status": "released",
       "functions": "Atlas lookup, search, collection protocol, capitals, major cities, dataset info",
-      "tests": "full local quality gate",
+      "tests": "CI on Python 3.10-3.14; full release gate passed",
       "dataset": "248 countries and areas / 241 capitals / 6265 cities",
-      "docs": "source complete; local HTML and doctests pass",
-      "release": "not published"
+      "docs": "public Sphinx site deployed; 79 doctests pass",
+      "release": "published to PyPI and GitHub as v0.1.0"
     },
     {
       "name": "2 \u2014 Geographic calculations",

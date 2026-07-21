@@ -2,10 +2,10 @@
 
 ## Outcome
 
-Release 0.1.0 is implemented and locally release-ready, but not published. The
-new runtime and database were built from captured, checksummed official source
-snapshots. Legacy 0.0.x releases remain available through PyPI's release
-history.
+Release 0.1.0 is implemented and publicly released through PyPI, GitHub, and the
+existing documentation URL. The new runtime and database were built from
+captured, checksummed official source snapshots. Legacy 0.0.x releases remain
+available through PyPI's release history.
 
 ## Implemented
 
@@ -33,7 +33,7 @@ Wheel evidence:
 
 ```text
 pyworldatlas-0.1.0-py3-none-any.whl
-size: 375,396 bytes
+size: 359,011 bytes
 runtime dependencies: 0
 bundled SQLite databases: 1
 ```
@@ -44,12 +44,21 @@ bundled SQLite databases: 1
 - GeoNames `countryInfo.txt` and `cities15000.zip` captured 2026-07-20.
 - Each raw directory contains a SHA-256 manifest.
 
-## Remaining release work
+## Published release evidence
 
-- Run CI across Python 3.10 through 3.14; only Python 3.12 was exercised locally.
-- Configure a package remote, PyPI Trusted Publishing, and documentation deployment.
-- Deploy the canonical Sphinx output to the external documentation repository.
-- Publish the validated documentation to the existing public URL.
+- CI passed on Python 3.10 through 3.14.
+- TestPyPI and production PyPI Trusted Publishing succeeded.
+- The GitHub release contains the wheel, source distribution, release manifest,
+  and SHA-256 checksums.
+- The canonical Sphinx output is deployed to the existing documentation URL.
+- A fresh production installation returned 248 records and dataset version
+  `2026.07.20`.
+
+Release pages:
+
+- <https://pypi.org/project/pyworldatlas/>
+- <https://github.com/jcari-dev/pyworldatlas/releases/tag/v0.1.0>
+- <https://jcari-dev.github.io/pyworldatlas-documentation/>
 
 The later 0.2.0 through 1.0.0 roadmap milestones have not started and are not
 claimed by the README or current API.

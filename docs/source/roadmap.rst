@@ -13,9 +13,9 @@ coverage. Later features are not merged into the README before they work.
      - Visible improvement
      - Release state
    * - 0.1.0
-     - Implemented
+     - Released
      - 248-country-and-area core, lookup, 241 capitals, 6,265 cities, documentation
-     - Not published
+     - PyPI, GitHub Release, and public documentation
    * - 0.2.0
      - Not started
      - Distances, bearings, midpoints, antipodes, nearby capitals
@@ -56,6 +56,7 @@ coverage. Later features are not merged into the README before they work.
 Current release boundary
 ------------------------
 
-Release 0.1.0 is locally release-ready: tests, clean-wheel installation,
-examples, HTML documentation, doctests, and wheel-content auditing pass. Public
-GitHub, documentation, and PyPI deployment remain pending.
+Release 0.1.0 is public. Tests, clean-wheel installation, examples, HTML
+documentation, doctests, and wheel-content auditing pass. CI covers Python 3.10
+through 3.14, and the wheel, source distribution, checksums, release manifest,
+PyPI page, GitHub Release, and public documentation are available.

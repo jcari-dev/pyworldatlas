@@ -265,10 +265,10 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
     reports.mkdir(parents=True, exist_ok=True)
     coverage = {"dataset_version": "2026.07.20", "countries": len(normalized["countries"]), "capitals": len(normalized["capitals"]), "major_cities": len(normalized["cities"]), "capital_coordinates": len(normalized["capitals"]), "database_sha256": _sha(database), "validation": "PASS"}
     (reports / "coverage.json").write_text(json.dumps(coverage, indent=2) + "\n", encoding="utf-8")
-    implemented = {"functions": "Atlas lookup, search, collection protocol, capitals, major cities, dataset info", "tests": "full local quality gate", "dataset": f"{coverage['countries']} countries and areas / {coverage['capitals']} capitals / {coverage['major_cities']} cities", "docs": "source complete; local HTML and doctests pass", "release": "not published"}
+    implemented = {"functions": "Atlas lookup, search, collection protocol, capitals, major cities, dataset info", "tests": "CI on Python 3.10-3.14; full release gate passed", "dataset": f"{coverage['countries']} countries and areas / {coverage['capitals']} capitals / {coverage['major_cities']} cities", "docs": "public Sphinx site deployed; 79 doctests pass", "release": "published to PyPI and GitHub as v0.1.0"}
     milestones = [
-        {"name": "0 — Clean foundation", "version": "0.1.0", "status": "implemented", **implemented},
-        {"name": "1 — Generated country core", "version": "0.1.0", "status": "implemented", **implemented},
+        {"name": "0 — Clean foundation", "version": "0.1.0", "status": "released", **implemented},
+        {"name": "1 — Generated country core", "version": "0.1.0", "status": "released", **implemented},
     ]
     for name, version in [
         ("2 — Geographic calculations", "0.2.0"), ("3 — Borders", "0.3.0"),

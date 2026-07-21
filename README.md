@@ -48,7 +48,7 @@ Those features are not presented as implemented today.
 
 ## Installation
 
-After 0.1.0 is published to PyPI:
+Install the current release from PyPI:
 
 ```console
 python -m pip install pyworldatlas
@@ -63,9 +63,8 @@ python -m pip install -e . -e pipeline
 The package runtime supports Python 3.10 through 3.14 during the 0.x release
 series. Python versions are only claimed as release-supported after CI passes.
 
-> **Release status:** PyPI currently serves legacy version 0.0.12. Until the
-> public 0.1.0 release is completed, test this rebuild from its source checkout
-> or built wheel.
+> **Release status:** Version 0.1.0 is published on PyPI. Legacy 0.0.x releases
+> remain available in the PyPI release history for users of the former API.
 
 ## What works today
 
@@ -208,6 +207,7 @@ For this release they are `0.1.0`, `1`, and `2026.07.20` respectively.
 - Current implementation status: [ROADMAP_STATUS.md](ROADMAP_STATUS.md)
 - Migration from the legacy API: [MIGRATION_FROM_0.0.md](MIGRATION_FROM_0.0.md)
 - Milestone evidence: [MILESTONE_0_1_REPORT.md](MILESTONE_0_1_REPORT.md)
+- Maintainer handoff and completion plan: [PROJECT_STATUS_AND_NEXT_STEPS.md](PROJECT_STATUS_AND_NEXT_STEPS.md)
 - Maintainer release process: [RELEASING.md](RELEASING.md)
 
 The next feature release, 0.2.0, focuses on great-circle distances, bearings,
