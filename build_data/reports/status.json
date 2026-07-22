@@ -61,7 +61,7 @@
       "tests": "30 unit/pipeline tests, 221 doctests, clean-wheel examples, and release audit passed",
       "dataset": "248 local identities / 240 English formal names / 10 reviewed local official forms",
       "docs": "Identity guide, fun multilingual examples, evidence levels, source rules, and complete coverage metrics",
-      "release": "Merged to main; included in the 0.5.0 production candidate"
+      "release": "Included in published v0.5.0"
     },
     {
       "name": "5 \u2014 Educational scope and publication safety",
@@ -91,7 +91,7 @@
       "tests": "Pinned-source coverage, typed-model, physical discovery, ranking, serialization, documentation, and release gates",
       "dataset": "240 physical profiles / 188 rivers / 187 lakes / 241 K\u00f6ppen-Geiger profiles",
       "docs": "Physical profile guide, climate methodology, coverage rules, rankings, API reference, and runnable examples",
-      "release": "Complete 0.7.0 release candidate; publication pending"
+      "release": "Published as v0.7.0"
     },
     {
       "name": "8 \u2014 Boundary geometry and spatial queries",

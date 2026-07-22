@@ -23,7 +23,7 @@ The published 0.6 release adds:
 
 ## 0.7.0 — Physical geography
 
-The 0.7 release candidate adds:
+The published 0.7 release adds:
 
 - Sourced total, land, and water area plus calculated water percentage.
 - Coastline, mean elevation, and named highest and lowest points.

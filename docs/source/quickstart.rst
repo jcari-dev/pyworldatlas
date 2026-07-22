@@ -1,6 +1,9 @@
 60-second quickstart
 ====================
 
+Open one atlas, look up a country, and combine profile facts with geographic
+tools. Every example below runs from the installed package without an API key.
+
 .. container:: atlas-card-grid
 
    .. container:: atlas-card atlas-card-blue

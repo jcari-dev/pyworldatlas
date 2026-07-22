@@ -15,6 +15,35 @@
   color: var(--atlas-ink);
 }
 
+.rst-content .document > div > section > h1 {
+  margin-bottom: 1rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid var(--atlas-line);
+  color: #2c4858;
+}
+
+.rst-content .document > div > section > h1 + p {
+  margin: -0.15rem 0 1.35rem;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(90deg, var(--atlas-blue-soft), #f9fbfc);
+  border-left: 3px solid #79abc3;
+  border-radius: 0 7px 7px 0;
+  color: #405663;
+  font-size: 1.01rem;
+  line-height: 1.65;
+}
+
+.rst-content h2 {
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid #e6edf1;
+  color: #31596d;
+}
+
+.rst-content h3,
+.rst-content .rubric {
+  color: #3f6d79;
+}
+
 .rst-content a,
 .wy-menu-vertical a:active {
   color: var(--atlas-blue);
@@ -104,6 +133,10 @@
   margin: 0 0 0.45rem;
   color: #31596d;
   font-size: 1rem;
+}
+
+.atlas-card strong {
+  color: #31596d;
 }
 
 .atlas-card-blue {
