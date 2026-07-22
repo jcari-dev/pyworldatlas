@@ -24,6 +24,10 @@ EXPECTED_REVIEWED_LOCAL_NAME_COUNT = 14
 EXPECTED_LOCAL_NAME_COUNT = 248
 EXPECTED_ENGLISH_FORMAL_NAME_COUNT = 240
 EXPECTED_FORMAL_NAME_OVERRIDE_COUNT = 8
+EXPECTED_ANTHEM_COUNT = 234
+EXPECTED_DEMONYM_COUNT = 227
+EXPECTED_MOTTO_COUNT = 32
+EXPECTED_TIMEZONE_COUNTRY_COUNT = 246
 EXPECTED_ENGLISH_FORMAL_NAME_GAPS = {
     "AX", "BQ", "GF", "GP", "MQ", "RE", "UM", "YT",
 }
@@ -138,8 +142,11 @@ def write_manifests(root: Path) -> None:
 
     cldr_folder = root / "build_data" / "raw" / "unicode-cldr" / "48.2"
     cldr_snapshot_path = cldr_folder / "country_identity.json"
+    cldr_reference_path = cldr_folder / "country_reference.json"
     if not cldr_snapshot_path.is_file():
         raise FileNotFoundError(f"Missing raw snapshot: {cldr_snapshot_path}")
+    if not cldr_reference_path.is_file():
+        raise FileNotFoundError(f"Missing raw snapshot: {cldr_reference_path}")
     cldr_snapshot = _load_json(cldr_snapshot_path)
     cldr_manifest = {
         "source_id": "unicode-cldr-48.2",
@@ -154,7 +161,13 @@ def write_manifests(root: Path) -> None:
             "sha256": _sha(cldr_snapshot_path),
             "size_bytes": cldr_snapshot_path.stat().st_size,
         },
+        "reference_file": {
+            "path": "country_reference.json",
+            "sha256": _sha(cldr_reference_path),
+            "size_bytes": cldr_reference_path.stat().st_size,
+        },
         "extractor": "pipeline/scripts/extract_cldr_country_identity.py",
+        "reference_extractor": "pipeline/scripts/extract_cldr_reference_data.py",
         "license_name": cldr_snapshot["license_name"],
         "license_url": cldr_snapshot["license_url"],
     }
@@ -163,6 +176,67 @@ def write_manifests(root: Path) -> None:
         encoding="utf-8",
         newline="\n",
     )
+
+    additional_manifests = [
+        (
+            root / "build_data/raw/geonames/2026-07-22",
+            {
+                "source_id": "geonames-timezones-2026-07-22",
+                "source_version": "2026-07-22",
+                "retrieved_at": "2026-07-22T00:00:00Z",
+                "license_name": "CC BY 4.0",
+                "license_url": "https://creativecommons.org/licenses/by/4.0/",
+                "files": [{
+                    "url": "https://download.geonames.org/export/dump/timeZones.txt",
+                    "path": "timeZones.txt",
+                    "sha256": _sha(root / "build_data/raw/geonames/2026-07-22/timeZones.txt"),
+                    "size_bytes": (root / "build_data/raw/geonames/2026-07-22/timeZones.txt").stat().st_size,
+                }],
+            },
+        ),
+        (
+            root / "build_data/raw/iana/2026-07-22",
+            {
+                "source_id": "iana-language-subtags-2026-06-14",
+                "source_version": "File-Date 2026-06-14",
+                "retrieved_at": "2026-07-22T00:00:00Z",
+                "license_name": "CC0 1.0",
+                "license_url": "https://www.iana.org/help/licensing-terms",
+                "files": [{
+                    "url": "https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry",
+                    "path": "language-subtag-registry.txt",
+                    "sha256": _sha(root / "build_data/raw/iana/2026-07-22/language-subtag-registry.txt"),
+                    "size_bytes": (root / "build_data/raw/iana/2026-07-22/language-subtag-registry.txt").stat().st_size,
+                }],
+            },
+        ),
+        (
+            root / "build_data/raw/wikidata/2026-07-22",
+            {
+                "source_id": "wikidata-national-mottos-2026-07-22",
+                "source_version": "2026-07-22 query snapshot",
+                "retrieved_at": "2026-07-22T00:00:00Z",
+                "endpoint": "https://query.wikidata.org/sparql",
+                "query": {
+                    "path": "pipeline/queries/wikidata_national_mottos.rq",
+                    "sha256": _sha(root / "pipeline/queries/wikidata_national_mottos.rq"),
+                },
+                "file": {
+                    "path": "national-mottos.json",
+                    "sha256": _sha(root / "build_data/raw/wikidata/2026-07-22/national-mottos.json"),
+                    "size_bytes": (root / "build_data/raw/wikidata/2026-07-22/national-mottos.json").stat().st_size,
+                },
+                "rights": "Creative Commons CC0 1.0",
+                "rights_url": "https://www.wikidata.org/wiki/Wikidata:Licensing",
+            },
+        ),
+    ]
+    for folder, manifest in additional_manifests:
+        (folder / "manifest.json").write_text(
+            json.dumps(manifest, indent=2) + "\n",
+            encoding="utf-8",
+            newline="\n",
+        )
 
 
 def parse_un_m49(root: Path) -> dict[str, dict[str, object]]:
@@ -207,6 +281,8 @@ def parse_geonames(root: Path, country_codes: set[str]) -> tuple[dict[str, dict[
                     "currency_code": cols[10] or None,
                     "currency_name": cols[11] or None,
                     "calling_codes": [f"+{value.strip().lstrip('+')}" for value in cols[12].split(",") if value.strip()],
+                    "postal_code_format": cols[13] or None,
+                    "postal_code_regex": cols[14] or None,
                     "language_codes": [value.strip() for value in cols[15].split(",") if value.strip()],
                     "geonames_id": int(cols[16]),
                     "neighbor_codes": [value for value in cols[17].split(",") if value in country_codes],
@@ -517,6 +593,220 @@ def parse_english_formal_names(
     return records
 
 
+def parse_factbook_reference_facts(
+    root: Path, country_codes: set[str]
+) -> tuple[list[dict[str, object]], list[dict[str, object]]]:
+    """Read anthem titles and English demonyms from the compact Factbook layer."""
+    path = root / "build_data/raw/cia-world-factbook/2025/country_identity.json"
+    snapshot = _load_json(path)
+    rows = snapshot.get("records")
+    if not isinstance(rows, list) or len(rows) != EXPECTED_ENGLISH_FORMAL_NAME_COUNT:
+        raise ValueError(f"Unexpected Factbook reference scope in {path}")
+    anthems: list[dict[str, object]] = []
+    demonyms: list[dict[str, object]] = []
+    for row in rows:
+        code = row["country_code"].upper()
+        if code not in country_codes:
+            raise ValueError(f"Unknown country code in {path}: {code}")
+        locators = row.get("source_locators", {})
+        anthem_title = row.get("anthem_title")
+        if anthem_title:
+            if unicodedata.normalize("NFC", anthem_title) != anthem_title:
+                raise ValueError(f"Anthem title is not Unicode NFC for {code}")
+            anthems.append({
+                "country_code": code,
+                "source_id": "cia-world-factbook-2025",
+                "source_record_id": row["source_path"],
+                "retrieved_at": "2026-07-21",
+                "data": {
+                    "title": anthem_title,
+                    "english_title": row.get("anthem_english_title"),
+                    "source_text": row.get("anthem_source_text"),
+                    "source_locator": locators.get(
+                        "anthem", "Government > National anthem(s) > title"
+                    ),
+                },
+            })
+        noun = row.get("demonym_noun")
+        adjective = row.get("demonym_adjective")
+        if noun or adjective:
+            demonyms.append({
+                "country_code": code,
+                "source_id": "cia-world-factbook-2025",
+                "source_record_id": row["source_path"],
+                "retrieved_at": "2026-07-21",
+                "data": {
+                    "noun": noun,
+                    "adjective": adjective,
+                    "language_code": "en",
+                    "source_locator": locators.get(
+                        "demonym", "People and Society > Nationality"
+                    ),
+                },
+            })
+    if len(anthems) != EXPECTED_ANTHEM_COUNT:
+        raise ValueError(
+            f"Expected {EXPECTED_ANTHEM_COUNT} anthem records, found {len(anthems)}"
+        )
+    if len(demonyms) != EXPECTED_DEMONYM_COUNT:
+        raise ValueError(
+            f"Expected {EXPECTED_DEMONYM_COUNT} demonym records, found {len(demonyms)}"
+        )
+    return anthems, demonyms
+
+
+def parse_reviewed_mottos(
+    root: Path, country_codes: set[str]
+) -> list[dict[str, object]]:
+    """Apply explicit decisions to the captured Wikidata motto statements."""
+    snapshot_path = root / "build_data/raw/wikidata/2026-07-22/national-mottos.json"
+    bindings = _load_json(snapshot_path)["results"]["bindings"]
+    statements: dict[str, dict[str, object]] = {}
+    for row in bindings:
+        code = row["alpha2"]["value"].upper()
+        if code not in country_codes or row["rank"]["value"].endswith("DeprecatedRank"):
+            continue
+        statement_id = row["statement"]["value"].rsplit("/", 1)[-1]
+        item_id = row["mottoItem"]["value"].rsplit("/", 1)[-1]
+        statement = statements.setdefault(statement_id, {
+            "country_code": code,
+            "item_id": item_id,
+            "rank": row["rank"]["value"].rsplit("#", 1)[-1],
+            "labels": {},
+        })
+        if statement["country_code"] != code or statement["item_id"] != item_id:
+            raise ValueError(f"Inconsistent Wikidata motto statement: {statement_id}")
+        language = row["motto"].get("xml:lang")
+        if language:
+            statement["labels"][language.casefold()] = row["motto"]["value"]
+
+    decision_path = root / "build_data/reviewed/national_motto_decisions.csv"
+    decisions: dict[str, dict[str, str]] = {}
+    with decision_path.open(encoding="utf-8", newline="") as stream:
+        for line_number, row in enumerate(csv.DictReader(stream), 2):
+            statement_id = row["statement_id"]
+            statement = statements.get(statement_id)
+            if statement is None:
+                raise ValueError(
+                    f"Unknown motto statement on {decision_path}:{line_number}"
+                )
+            if statement_id in decisions or row["decision"] not in {"include", "exclude"}:
+                raise ValueError(
+                    f"Duplicate or invalid motto decision on {decision_path}:{line_number}"
+                )
+            if (
+                statement["country_code"] != row["country_code"].upper()
+                or statement["item_id"] != row["motto_item_id"]
+                or not row["review_note"]
+            ):
+                raise ValueError(
+                    f"Motto decision mismatch on {decision_path}:{line_number}"
+                )
+            decisions[statement_id] = row
+    if set(decisions) != set(statements):
+        raise ValueError(
+            "Motto decisions do not cover the captured source statements; "
+            f"missing={sorted(set(statements) - set(decisions))}, "
+            f"stale={sorted(set(decisions) - set(statements))}"
+        )
+
+    records: list[dict[str, object]] = []
+    for statement_id, decision in sorted(decisions.items()):
+        if decision["decision"] == "exclude":
+            continue
+        statement = statements[statement_id]
+        language_code = decision["preferred_language_code"].casefold()
+        labels = statement["labels"]
+        text = labels.get(language_code)
+        if text is None:
+            raise ValueError(
+                f"Missing reviewed motto label {language_code!r} for {statement_id}"
+            )
+        records.append({
+            "country_code": statement["country_code"],
+            "source_id": "wikidata-national-mottos-2026-07-22",
+            "source_record_id": statement_id,
+            "retrieved_at": "2026-07-22",
+            "data": {
+                "text": text,
+                "english_text": labels.get("en"),
+                "language_code": language_code,
+                "motto_item_id": statement["item_id"],
+                "source_locator": f"Wikidata statement {statement_id}",
+            },
+        })
+    if len(records) != EXPECTED_MOTTO_COUNT:
+        raise ValueError(
+            f"Expected {EXPECTED_MOTTO_COUNT} reviewed mottos, found {len(records)}"
+        )
+    return records
+
+
+def parse_reference_metadata(
+    root: Path,
+    country_codes: set[str],
+    geonames_countries: dict[str, dict[str, object]],
+) -> tuple[dict[str, dict[str, object]], list[dict[str, object]], list[dict[str, object]]]:
+    """Read CLDR currency/language metadata and complete GeoNames timezones."""
+    reference_path = root / "build_data/raw/unicode-cldr/48.2/country_reference.json"
+    snapshot = _load_json(reference_path)
+    if snapshot.get("source_id") != "unicode-cldr-48.2-reference":
+        raise ValueError(f"Unexpected CLDR reference source in {reference_path}")
+    currencies = {row["code"]: row for row in snapshot["currencies"]}
+    languages = {row["code"]: row for row in snapshot["languages"]}
+
+    country_currencies: dict[str, dict[str, object]] = {}
+    language_records: list[dict[str, object]] = []
+    for code in sorted(country_codes):
+        country = geonames_countries[code]
+        currency_code = country["data"]["currency_code"]
+        if currency_code:
+            metadata = currencies.get(currency_code)
+            if metadata is None:
+                raise ValueError(f"Missing CLDR currency metadata for {currency_code}")
+            country_currencies[code] = metadata
+        for language_code in country["data"]["language_codes"]:
+            metadata = languages.get(language_code)
+            if metadata is None or metadata["name"] is None:
+                raise ValueError(
+                    f"Missing language metadata for {code}:{language_code}"
+                )
+            language_records.append({
+                "country_code": code,
+                "source_id": metadata["name_source_id"],
+                "source_record_id": metadata["primary_code"],
+                "retrieved_at": "2026-07-22",
+                "data": metadata,
+            })
+
+    timezone_path = root / "build_data/raw/geonames/2026-07-22/timeZones.txt"
+    timezone_records: list[dict[str, object]] = []
+    with timezone_path.open(encoding="utf-8", newline="") as stream:
+        for row in csv.DictReader(stream, delimiter="\t"):
+            code = row["CountryCode"].upper()
+            if code not in country_codes:
+                continue
+            timezone_records.append({
+                "country_code": code,
+                "source_id": "geonames-timezones-2026-07-22",
+                "source_record_id": row["TimeZoneId"],
+                "retrieved_at": "2026-07-22",
+                "data": {
+                    "timezone_id": row["TimeZoneId"],
+                    "january_utc_offset_hours": float(row["GMT offset 1. Jan 2026"]),
+                    "july_utc_offset_hours": float(row["DST offset 1. Jul 2026"]),
+                    "raw_utc_offset_hours": float(row["rawOffset (independant of DST)"]),
+                },
+            })
+    timezone_countries = {record["country_code"] for record in timezone_records}
+    if len(timezone_countries) != EXPECTED_TIMEZONE_COUNTRY_COUNT:
+        raise ValueError(
+            f"Expected {EXPECTED_TIMEZONE_COUNTRY_COUNT} timezone profiles, "
+            f"found {len(timezone_countries)}"
+        )
+    return country_currencies, language_records, timezone_records
+
+
 def _read_dbf_records(raw: bytes) -> list[dict[str, str]]:
     """Read the character fields needed from a dBASE file in a source archive."""
     record_count = struct.unpack("<I", raw[4:8])[0]
@@ -717,6 +1007,11 @@ def normalize(root: Path) -> dict[str, object]:
     aliases = _load_json(root / "pipeline/config/aliases.json")
     local_names = parse_country_local_names(root, set(un))
     formal_names = parse_english_formal_names(root, set(un))
+    anthems, demonyms = parse_factbook_reference_facts(root, set(un))
+    mottos = parse_reviewed_mottos(root, set(un))
+    currency_metadata, language_profiles, timezones = parse_reference_metadata(
+        root, set(un), geocountries
+    )
     formal_names_by_country = {
         record["country_code"]: record for record in formal_names
     }
@@ -733,8 +1028,24 @@ def normalize(root: Path) -> dict[str, object]:
             "population": g["data"]["population"],
             "top_level_domain": g["data"]["top_level_domain"],
             "currency_code": g["data"]["currency_code"],
-            "currency_name": g["data"]["currency_name"],
+            "currency_name": (
+                currency_metadata[code]["name"]
+                if code in currency_metadata
+                else g["data"]["currency_name"]
+            ),
+            "currency_symbol": (
+                currency_metadata[code]["symbol"]
+                if code in currency_metadata
+                else None
+            ),
+            "currency_minor_unit_digits": (
+                currency_metadata[code]["minor_unit_digits"]
+                if code in currency_metadata
+                else None
+            ),
             "calling_codes": g["data"]["calling_codes"],
+            "postal_code_format": g["data"]["postal_code_format"],
+            "postal_code_regex": g["data"]["postal_code_regex"],
             "language_codes": g["data"]["language_codes"],
             "geonames_id": g["data"]["geonames_id"],
         })
@@ -794,6 +1105,11 @@ def normalize(root: Path) -> dict[str, object]:
         "country_names": names,
         "local_names": local_names,
         "formal_names": formal_names,
+        "anthems": anthems,
+        "mottos": mottos,
+        "demonyms": demonyms,
+        "language_profiles": language_profiles,
+        "timezones": timezones,
         "capitals": capitals,
         "cities": cities,
         "borders": borders,
@@ -816,13 +1132,18 @@ SCHEMA = """
 PRAGMA foreign_keys=ON;
 CREATE TABLE schema_meta (key TEXT PRIMARY KEY, value TEXT NOT NULL) WITHOUT ROWID;
 CREATE TABLE source (id TEXT PRIMARY KEY, name TEXT NOT NULL, homepage TEXT NOT NULL, version TEXT, retrieved_at TEXT NOT NULL, license_name TEXT, license_url TEXT, checksum_sha256 TEXT, notes TEXT) WITHOUT ROWID;
-CREATE TABLE country (id INTEGER PRIMARY KEY, alpha2 TEXT NOT NULL UNIQUE, alpha3 TEXT UNIQUE, numeric_code TEXT UNIQUE, name TEXT NOT NULL, official_name TEXT, continent TEXT, region TEXT, subregion TEXT, geonames_id INTEGER, total_area_km2 REAL, population INTEGER, top_level_domain TEXT, currency_code TEXT, currency_name TEXT, calling_codes TEXT NOT NULL, language_codes TEXT NOT NULL);
+CREATE TABLE country (id INTEGER PRIMARY KEY, alpha2 TEXT NOT NULL UNIQUE, alpha3 TEXT UNIQUE, numeric_code TEXT UNIQUE, name TEXT NOT NULL, official_name TEXT, continent TEXT, region TEXT, subregion TEXT, geonames_id INTEGER, total_area_km2 REAL, population INTEGER, top_level_domain TEXT, currency_code TEXT, currency_name TEXT, currency_symbol TEXT, currency_minor_unit_digits INTEGER, postal_code_format TEXT, postal_code_regex TEXT, calling_codes TEXT NOT NULL, language_codes TEXT NOT NULL);
 CREATE TABLE country_border (country1_id INTEGER NOT NULL, country2_id INTEGER NOT NULL, review_status TEXT NOT NULL, evidence_sources TEXT NOT NULL, review_note TEXT, PRIMARY KEY(country1_id,country2_id), FOREIGN KEY(country1_id) REFERENCES country(id), FOREIGN KEY(country2_id) REFERENCES country(id), CHECK(country1_id < country2_id)) WITHOUT ROWID;
 CREATE INDEX idx_country_border_second ON country_border(country2_id);
 CREATE TABLE country_name (country_id INTEGER NOT NULL, name TEXT NOT NULL, normalized_name TEXT NOT NULL, language_code TEXT, kind TEXT NOT NULL, preferred INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(country_id,name,kind), FOREIGN KEY(country_id) REFERENCES country(id));
 CREATE INDEX idx_country_name_normalized ON country_name(normalized_name);
 CREATE TABLE country_local_name (country_id INTEGER NOT NULL, language_code TEXT NOT NULL, language_name TEXT NOT NULL, script_code TEXT NOT NULL, short_name TEXT NOT NULL, name_kind TEXT NOT NULL CHECK(name_kind IN ('national_official','locale_display')), official_name TEXT, romanized_short_name TEXT, romanized_official_name TEXT, is_official_language INTEGER NOT NULL, language_status TEXT NOT NULL, source_id TEXT NOT NULL, source_locator TEXT NOT NULL, PRIMARY KEY(country_id,language_code), FOREIGN KEY(country_id) REFERENCES country(id), FOREIGN KEY(source_id) REFERENCES source(id)) WITHOUT ROWID;
 CREATE INDEX idx_country_local_name_country ON country_local_name(country_id);
+CREATE TABLE country_anthem (country_id INTEGER NOT NULL, title TEXT NOT NULL, english_title TEXT, source_text TEXT, source_id TEXT NOT NULL, source_record_id TEXT NOT NULL, source_locator TEXT NOT NULL, PRIMARY KEY(country_id,title), FOREIGN KEY(country_id) REFERENCES country(id), FOREIGN KEY(source_id) REFERENCES source(id)) WITHOUT ROWID;
+CREATE TABLE country_motto (country_id INTEGER NOT NULL, text TEXT NOT NULL, english_text TEXT, language_code TEXT NOT NULL, motto_item_id TEXT NOT NULL, source_id TEXT NOT NULL, source_record_id TEXT NOT NULL, source_locator TEXT NOT NULL, PRIMARY KEY(country_id,source_record_id), FOREIGN KEY(country_id) REFERENCES country(id), FOREIGN KEY(source_id) REFERENCES source(id)) WITHOUT ROWID;
+CREATE TABLE country_demonym (country_id INTEGER NOT NULL, noun TEXT, adjective TEXT, language_code TEXT NOT NULL, source_id TEXT NOT NULL, source_record_id TEXT NOT NULL, source_locator TEXT NOT NULL, PRIMARY KEY(country_id,language_code), FOREIGN KEY(country_id) REFERENCES country(id), FOREIGN KEY(source_id) REFERENCES source(id)) WITHOUT ROWID;
+CREATE TABLE country_language (country_id INTEGER NOT NULL, code TEXT NOT NULL, primary_code TEXT NOT NULL, name TEXT NOT NULL, script_code TEXT, source_id TEXT NOT NULL, source_locator TEXT NOT NULL, PRIMARY KEY(country_id,code), FOREIGN KEY(country_id) REFERENCES country(id), FOREIGN KEY(source_id) REFERENCES source(id)) WITHOUT ROWID;
+CREATE TABLE country_timezone (country_id INTEGER NOT NULL, timezone_id TEXT NOT NULL, january_utc_offset_hours REAL NOT NULL, july_utc_offset_hours REAL NOT NULL, raw_utc_offset_hours REAL NOT NULL, source_id TEXT NOT NULL, PRIMARY KEY(country_id,timezone_id), FOREIGN KEY(country_id) REFERENCES country(id), FOREIGN KEY(source_id) REFERENCES source(id)) WITHOUT ROWID;
 CREATE TABLE capital (id INTEGER PRIMARY KEY, country_id INTEGER NOT NULL, name TEXT NOT NULL, normalized_name TEXT NOT NULL, role TEXT NOT NULL, is_primary INTEGER NOT NULL, latitude REAL NOT NULL, longitude REAL NOT NULL, population INTEGER, elevation_m REAL, timezone_id TEXT, geonames_id INTEGER UNIQUE, FOREIGN KEY(country_id) REFERENCES country(id));
 CREATE TABLE city (id INTEGER PRIMARY KEY, country_id INTEGER NOT NULL, name TEXT NOT NULL, normalized_name TEXT NOT NULL, latitude REAL NOT NULL, longitude REAL NOT NULL, population INTEGER, elevation_m REAL, timezone_id TEXT, geonames_id INTEGER UNIQUE, is_capital INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(country_id) REFERENCES country(id));
 CREATE INDEX idx_city_country ON city(country_id);
@@ -847,7 +1168,7 @@ def build_database(
     epoch = os.environ.get("SOURCE_DATE_EPOCH")
     built_at = datetime.fromtimestamp(int(epoch), timezone.utc).isoformat().replace("+00:00", "Z") if epoch else "2026-07-21T00:00:00Z"
     library_version = _project_version(root)
-    meta = {"schema_version": "5", "dataset_version": "2026.07.21.5", "library_version": library_version, "built_at": built_at}
+    meta = {"schema_version": "6", "dataset_version": "2026.07.22.6", "library_version": library_version, "built_at": built_at}
     con.executemany("INSERT INTO schema_meta VALUES (?,?)", sorted(meta.items()))
     sources = [
         ("geonames", "GeoNames", "https://www.geonames.org/", "2026-07-20", "2026-07-20", "CC BY 4.0", "https://creativecommons.org/licenses/by/4.0/", _sha(root / "build_data/raw/geonames/2026-07-20/manifest.json"), "Country metadata and populated places"),
@@ -857,16 +1178,29 @@ def build_database(
         ("un-m49", "United Nations M49", "https://unstats.un.org/unsd/methodology/m49/", "2026-07-20", "2026-07-20", None, None, _sha(root / "build_data/raw/un-m49/2026-07-20/manifest.json"), "Canonical identities and regions"),
         ("ungegn-country-names-2017", "UNGEGN List of Country Names", "https://unstats.un.org/unsd/ungegn/working_groups/wg1.cshtml", "E/CONF.105/13/CRP.13 (2017-07-17)", "2026-07-20", None, None, _sha(root / "build_data/raw/ungegn-country-names/2017-07-17/manifest.json"), "Approved national official short and formal country names; reviewed entries transcribed with page locators"),
         ("unicode-cldr-48.2", "Unicode Common Locale Data Repository", "https://cldr.unicode.org/", "48.2", "2026-07-21", "Unicode License v3", "https://www.unicode.org/license.txt", _sha(root / "build_data/raw/unicode-cldr/48.2/manifest.json"), "Localized territory display names and official-language metadata used for complete local identity coverage"),
-        ("cia-world-factbook-2025", "CIA World Factbook country-name profiles", "https://www.cia.gov/the-world-factbook/", "factbook.json@8662a8b17a784841ab4528631b04090eb2f183eb", "2026-07-21", "Public domain", "https://www.cia.gov/site-policies/", _sha(root / "build_data/raw/cia-world-factbook/2025/manifest.json"), "English conventional and local country-name fields from the final structured Factbook profiles"),
+        ("cia-world-factbook-2025", "CIA World Factbook structured country profiles", "https://www.cia.gov/the-world-factbook/", "factbook.json@8662a8b17a784841ab4528631b04090eb2f183eb", "2026-07-21", "Public domain", "https://www.cia.gov/site-policies/", _sha(root / "build_data/raw/cia-world-factbook/2025/manifest.json"), "Country names, anthem titles, and English nationality terms; no lyrics or narrative profile content"),
         ("wikidata-official-names-2026-07-21", "Wikidata official-name statements", "https://www.wikidata.org/", "2026-07-21 query snapshot", "2026-07-21", "CC0 1.0", "https://www.wikidata.org/wiki/Wikidata:Licensing", _sha(root / "build_data/raw/wikidata/2026-07-21/manifest.json"), "Three reviewed English formal-name statements used where the public-domain Factbook differs from current UN usage"),
         ("un-protocol-country-names-2025", "UN Protocol official names of United Nations membership", "https://www.un.org/dgacm/en/content/protocol", "2025-02-05", "2026-07-21", "Credited excerpts under UN reuse guidance", "https://shop.un.org/rights-permissions", _sha(root / "build_data/raw/un-protocol/2025-02-05/manifest.json"), "Five short English formal-name excerpts used to resolve current-name differences; source PDF is not redistributed"),
+        ("unicode-cldr-48.2-reference", "Unicode CLDR currency and language metadata", "https://cldr.unicode.org/", "48.2", "2026-07-22", "Unicode License v3", "https://www.unicode.org/license.txt", _sha(root / "build_data/raw/unicode-cldr/48.2/manifest.json"), "English currency names and symbols, minor-unit digits, language names, and likely scripts"),
+        ("iana-language-subtags-2026-06-14", "IANA Language Subtag Registry", "https://www.iana.org/assignments/language-subtag-registry/", "File-Date 2026-06-14", "2026-07-22", "CC0 1.0", "https://www.iana.org/help/licensing-terms", _sha(root / "build_data/raw/iana/2026-07-22/manifest.json"), "Fallback names for registered language subtags not labelled by CLDR"),
+        ("geonames-timezones-2026-07-22", "GeoNames timezone table", "https://download.geonames.org/export/dump/", "2026-07-22", "2026-07-22", "CC BY 4.0", "https://creativecommons.org/licenses/by/4.0/", _sha(root / "build_data/raw/geonames/2026-07-22/manifest.json"), "Country timezone identifiers and January, July, and raw UTC offsets"),
+        ("wikidata-national-mottos-2026-07-22", "Wikidata national-motto statements", "https://www.wikidata.org/", "2026-07-22 query snapshot", "2026-07-22", "CC0 1.0", "https://www.wikidata.org/wiki/Wikidata:Licensing", _sha(root / "build_data/raw/wikidata/2026-07-22/manifest.json"), "Reviewed national-motto item statements and selected labels"),
+        ("reviewed-national-mottos", "PyWorldAtlas reviewed motto decisions", "https://jcari-dev.github.io/pyworldatlas-documentation/country_reference.html", library_version, "2026-07-22", "MIT", None, _sha(root / "build_data/reviewed/national_motto_decisions.csv"), "Explicit inclusion and exclusion decisions for every captured motto statement"),
     ]
     con.executemany("INSERT INTO source VALUES (?,?,?,?,?,?,?,?,?)", sources)
+    anthem_codes = {record["country_code"] for record in normalized["anthems"]}
+    demonym_codes = {record["country_code"] for record in normalized["demonyms"]}
+    motto_codes = {record["country_code"] for record in normalized["mottos"]}
+    timezone_codes = {record["country_code"] for record in normalized["timezones"]}
+    language_sources: dict[str, set[str]] = defaultdict(set)
+    for record in normalized["language_profiles"]:
+        language_sources[record["country_code"]].add(record["source_id"])
+
     ids: dict[str, int] = {}
     for ident, record in enumerate(sorted(normalized["countries"], key=lambda r: r["country_code"]), 1):
         code, data = record["country_code"], record["data"]
         ids[code] = ident
-        con.execute("INSERT INTO country VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (ident, code, data["alpha3"], data["numeric_code"], data["name"], data["official_name"], data["continent"], data["region"], data["subregion"], data["geonames_id"], data["area_km2"], data["population"], data["top_level_domain"], data["currency_code"], data["currency_name"], json.dumps(data["calling_codes"], ensure_ascii=False), json.dumps(data["language_codes"], ensure_ascii=False)))
+        con.execute("INSERT INTO country VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (ident, code, data["alpha3"], data["numeric_code"], data["name"], data["official_name"], data["continent"], data["region"], data["subregion"], data["geonames_id"], data["area_km2"], data["population"], data["top_level_domain"], data["currency_code"], data["currency_name"], data["currency_symbol"], data["currency_minor_unit_digits"], data["postal_code_format"], data["postal_code_regex"], json.dumps(data["calling_codes"], ensure_ascii=False), json.dumps(data["language_codes"], ensure_ascii=False)))
         field_sources = [
             (ident, "identity", "un-m49", data["numeric_code"]),
             (ident, "capitals", "geonames", str(data["geonames_id"])),
@@ -884,6 +1218,23 @@ def build_database(
             ))
         if any(name["country_code"] == code and name["source_id"] == "reviewed-overrides" for name in normalized["country_names"]):
             field_sources.append((ident, "names.reviewed", "reviewed-overrides", data["numeric_code"]))
+        if data["postal_code_format"]:
+            field_sources.append((ident, "postal_code", "geonames", str(data["geonames_id"])))
+        if data["currency_code"]:
+            field_sources.append((ident, "currency.metadata", "unicode-cldr-48.2-reference", data["currency_code"]))
+        for language_source in sorted(language_sources[code]):
+            field_sources.append((ident, f"languages.metadata.{language_source}", language_source, code))
+        if code in timezone_codes:
+            field_sources.append((ident, "timezones", "geonames-timezones-2026-07-22", code))
+        if code in anthem_codes:
+            field_sources.append((ident, "anthem", "cia-world-factbook-2025", code))
+        if code in demonym_codes:
+            field_sources.append((ident, "demonyms", "cia-world-factbook-2025", code))
+        if code in motto_codes:
+            field_sources.extend([
+                (ident, "mottos", "wikidata-national-mottos-2026-07-22", code),
+                (ident, "mottos.review", "reviewed-national-mottos", code),
+            ])
         local_record = next(
             name for name in normalized["local_names"] if name["country_code"] == code
         )
@@ -917,6 +1268,36 @@ def build_database(
             "INSERT INTO country_local_name VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (ids[record["country_code"]], d["language_code"], d["language_name"], d["script_code"], d["short_name"], d["name_kind"], d["official_name"], d["romanized_short_name"], d["romanized_official_name"], int(d["is_official_language"]), d["language_status"], record["source_id"], d["source_locator"]),
         )
+    for record in sorted(normalized["anthems"], key=lambda r: r["country_code"]):
+        d = record["data"]
+        con.execute(
+            "INSERT INTO country_anthem VALUES (?,?,?,?,?,?,?)",
+            (ids[record["country_code"]], d["title"], d["english_title"], d["source_text"], record["source_id"], record["source_record_id"], d["source_locator"]),
+        )
+    for record in sorted(normalized["mottos"], key=lambda r: (r["country_code"], r["source_record_id"])):
+        d = record["data"]
+        con.execute(
+            "INSERT INTO country_motto VALUES (?,?,?,?,?,?,?,?)",
+            (ids[record["country_code"]], d["text"], d["english_text"], d["language_code"], d["motto_item_id"], record["source_id"], record["source_record_id"], d["source_locator"]),
+        )
+    for record in sorted(normalized["demonyms"], key=lambda r: r["country_code"]):
+        d = record["data"]
+        con.execute(
+            "INSERT INTO country_demonym VALUES (?,?,?,?,?,?,?)",
+            (ids[record["country_code"]], d["noun"], d["adjective"], d["language_code"], record["source_id"], record["source_record_id"], d["source_locator"]),
+        )
+    for record in sorted(normalized["language_profiles"], key=lambda r: (r["country_code"], r["data"]["code"])):
+        d = record["data"]
+        con.execute(
+            "INSERT INTO country_language VALUES (?,?,?,?,?,?,?)",
+            (ids[record["country_code"]], d["code"], d["primary_code"], d["name"], d["script_code"], record["source_id"], d["source_locator"]),
+        )
+    for record in sorted(normalized["timezones"], key=lambda r: (r["country_code"], r["data"]["timezone_id"])):
+        d = record["data"]
+        con.execute(
+            "INSERT INTO country_timezone VALUES (?,?,?,?,?,?)",
+            (ids[record["country_code"]], d["timezone_id"], d["january_utc_offset_hours"], d["july_utc_offset_hours"], d["raw_utc_offset_hours"], record["source_id"]),
+        )
     capital_ids = {record["data"]["geonames_id"] for record in normalized["capitals"]}
     for ident, record in enumerate(sorted(normalized["capitals"], key=lambda r: (r["country_code"], r["data"]["name"])), 1):
         d = record["data"]
@@ -941,7 +1322,7 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
     reports.mkdir(parents=True, exist_ok=True)
     countries = normalized["countries"]
     coverage = {
-        "dataset_version": "2026.07.21.5",
+        "dataset_version": "2026.07.22.6",
         "countries": len(countries),
         "capitals": len(normalized["capitals"]),
         "major_cities": len(normalized["cities"]),
@@ -956,6 +1337,20 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
             for record in normalized["cities"]
             if record["data"]["timezone_id"]
         }),
+        "timezone_profiles": len({record["country_code"] for record in normalized["timezones"]}),
+        "timezone_records": len(normalized["timezones"]),
+        "postal_code_formats": sum(record["data"]["postal_code_format"] is not None for record in countries),
+        "currency_symbols": sum(record["data"]["currency_symbol"] is not None for record in countries),
+        "currency_minor_units": sum(record["data"]["currency_minor_unit_digits"] is not None for record in countries),
+        "language_metadata_records": len(normalized["language_profiles"]),
+        "language_metadata_countries": len({record["country_code"] for record in normalized["language_profiles"]}),
+        "language_script_records": sum(record["data"]["script_code"] is not None for record in normalized["language_profiles"]),
+        "anthem_titles": len(normalized["anthems"]),
+        "anthem_countries": len({record["country_code"] for record in normalized["anthems"]}),
+        "mottos": len(normalized["mottos"]),
+        "motto_countries": len({record["country_code"] for record in normalized["mottos"]}),
+        "demonyms": len(normalized["demonyms"]),
+        "demonym_countries": len({record["country_code"] for record in normalized["demonyms"]}),
         "local_names": len(normalized["local_names"]),
         "local_name_countries": len({record["country_code"] for record in normalized["local_names"]}),
         "local_name_languages": len({record["data"]["language_code"] for record in normalized["local_names"]}),
@@ -1086,21 +1481,30 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
             "tests": "Policy-document integrity, public-model scope, source-role, example-language, documentation, and release audits",
             "dataset": "Reviewed geographic dataset with updated provenance and policy metadata; no new narrative fields",
             "docs": "Educational purpose, source scope, geographic conventions, community standards, and correction guidance",
-            "release": "Complete 0.5.0 release candidate; publication pending",
+            "release": "Published as v0.5.0",
+        },
+        {
+            "name": "6 — Country reference and discovery",
+            "version": "0.6.0",
+            "status": "complete",
+            "functions": "Anthem titles, reviewed mottos, demonyms, complete timezone profiles, postal formats, richer currency and language metadata, profile filters, rankings, and nearest capitals",
+            "tests": "Source-scope, review-decision, typed-model, ranking, filtering, serialization, documentation, and clean-wheel release gates",
+            "dataset": "234 anthem profiles / 32 reviewed mottos / 227 demonym profiles / 246 timezone profiles / 176 postal formats / 722 country-language records",
+            "docs": "Reference-facts guide, example gallery, rankings, filters, provenance, coverage boundaries, and runnable examples",
+            "release": "Complete 0.6.0 release candidate; publication pending",
         },
     ]
     for name, version in [
-        ("6 — National symbols and reference facts", "0.6.0"),
-        ("7 — Geometry", "0.7.0"),
-        ("8 — Statistics and institutions", "0.8.0"),
-        ("9 — Advanced education, export, and full-world hardening", "0.9.0"),
+        ("7 — Physical geography", "0.7.0"),
+        ("8 — Boundary geometry and spatial queries", "0.8.0"),
+        ("9 — Advanced education and full-world hardening", "0.9.0"),
         ("Stable offline atlas", "1.0.0"),
     ]:
         milestones.append({"name": name, "version": version, "status": "planned", "functions": "—", "tests": "—", "dataset": "—", "docs": "—", "release": "—"})
     status = {
         "library_version": _project_version(root),
-        "schema_version": 5,
-        "dataset_version": "2026.07.21.5",
+        "schema_version": 6,
+        "dataset_version": "2026.07.22.6",
         "milestones": milestones,
         "coverage": coverage,
     }

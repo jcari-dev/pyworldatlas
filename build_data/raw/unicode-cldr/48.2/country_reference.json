@@ -1,0 +1,5161 @@
+{
+  "archive_sha256": "d2844f9dbf6124d11a7b047f5381a467902d82a673be3d658f4c0791ffa0b83b",
+  "archive_url": "https://unicode.org/Public/cldr/48.2/cldr-common-48.2.zip",
+  "currencies": [
+    {
+      "code": "AED",
+      "minor_unit_digits": 2,
+      "name": "United Arab Emirates Dirham",
+      "source_locator": "common/main/en.xml currency[@type='AED']; supplementalData.xml fractions",
+      "symbol": "AED"
+    },
+    {
+      "code": "AFN",
+      "minor_unit_digits": 0,
+      "name": "Afghan Afghani",
+      "source_locator": "common/main/en.xml currency[@type='AFN']; supplementalData.xml fractions",
+      "symbol": "AFN"
+    },
+    {
+      "code": "ALL",
+      "minor_unit_digits": 0,
+      "name": "Albanian Lek",
+      "source_locator": "common/main/en.xml currency[@type='ALL']; supplementalData.xml fractions",
+      "symbol": "ALL"
+    },
+    {
+      "code": "AMD",
+      "minor_unit_digits": 2,
+      "name": "Armenian Dram",
+      "source_locator": "common/main/en.xml currency[@type='AMD']; supplementalData.xml fractions",
+      "symbol": "AMD"
+    },
+    {
+      "code": "ANG",
+      "minor_unit_digits": 2,
+      "name": "Netherlands Antillean Guilder",
+      "source_locator": "common/main/en.xml currency[@type='ANG']; supplementalData.xml fractions",
+      "symbol": "ANG"
+    },
+    {
+      "code": "AOA",
+      "minor_unit_digits": 2,
+      "name": "Angolan Kwanza",
+      "source_locator": "common/main/en.xml currency[@type='AOA']; supplementalData.xml fractions",
+      "symbol": "AOA"
+    },
+    {
+      "code": "ARS",
+      "minor_unit_digits": 2,
+      "name": "Argentine Peso",
+      "source_locator": "common/main/en.xml currency[@type='ARS']; supplementalData.xml fractions",
+      "symbol": "ARS"
+    },
+    {
+      "code": "AUD",
+      "minor_unit_digits": 2,
+      "name": "Australian Dollar",
+      "source_locator": "common/main/en.xml currency[@type='AUD']; supplementalData.xml fractions",
+      "symbol": "A$"
+    },
+    {
+      "code": "AWG",
+      "minor_unit_digits": 2,
+      "name": "Aruban Florin",
+      "source_locator": "common/main/en.xml currency[@type='AWG']; supplementalData.xml fractions",
+      "symbol": "AWG"
+    },
+    {
+      "code": "AZN",
+      "minor_unit_digits": 2,
+      "name": "Azerbaijani Manat",
+      "source_locator": "common/main/en.xml currency[@type='AZN']; supplementalData.xml fractions",
+      "symbol": "AZN"
+    },
+    {
+      "code": "BAM",
+      "minor_unit_digits": 2,
+      "name": "Bosnia-Herzegovina Convertible Mark",
+      "source_locator": "common/main/en.xml currency[@type='BAM']; supplementalData.xml fractions",
+      "symbol": "BAM"
+    },
+    {
+      "code": "BBD",
+      "minor_unit_digits": 2,
+      "name": "Barbadian Dollar",
+      "source_locator": "common/main/en.xml currency[@type='BBD']; supplementalData.xml fractions",
+      "symbol": "BBD"
+    },
+    {
+      "code": "BDT",
+      "minor_unit_digits": 2,
+      "name": "Bangladeshi Taka",
+      "source_locator": "common/main/en.xml currency[@type='BDT']; supplementalData.xml fractions",
+      "symbol": "BDT"
+    },
+    {
+      "code": "BGN",
+      "minor_unit_digits": 2,
+      "name": "Bulgarian Lev",
+      "source_locator": "common/main/en.xml currency[@type='BGN']; supplementalData.xml fractions",
+      "symbol": "BGN"
+    },
+    {
+      "code": "BHD",
+      "minor_unit_digits": 3,
+      "name": "Bahraini Dinar",
+      "source_locator": "common/main/en.xml currency[@type='BHD']; supplementalData.xml fractions",
+      "symbol": "BHD"
+    },
+    {
+      "code": "BIF",
+      "minor_unit_digits": 0,
+      "name": "Burundian Franc",
+      "source_locator": "common/main/en.xml currency[@type='BIF']; supplementalData.xml fractions",
+      "symbol": "BIF"
+    },
+    {
+      "code": "BMD",
+      "minor_unit_digits": 2,
+      "name": "Bermudan Dollar",
+      "source_locator": "common/main/en.xml currency[@type='BMD']; supplementalData.xml fractions",
+      "symbol": "BMD"
+    },
+    {
+      "code": "BND",
+      "minor_unit_digits": 2,
+      "name": "Brunei Dollar",
+      "source_locator": "common/main/en.xml currency[@type='BND']; supplementalData.xml fractions",
+      "symbol": "BND"
+    },
+    {
+      "code": "BOB",
+      "minor_unit_digits": 2,
+      "name": "Bolivian Boliviano",
+      "source_locator": "common/main/en.xml currency[@type='BOB']; supplementalData.xml fractions",
+      "symbol": "BOB"
+    },
+    {
+      "code": "BRL",
+      "minor_unit_digits": 2,
+      "name": "Brazilian Real",
+      "source_locator": "common/main/en.xml currency[@type='BRL']; supplementalData.xml fractions",
+      "symbol": "R$"
+    },
+    {
+      "code": "BSD",
+      "minor_unit_digits": 2,
+      "name": "Bahamian Dollar",
+      "source_locator": "common/main/en.xml currency[@type='BSD']; supplementalData.xml fractions",
+      "symbol": "BSD"
+    },
+    {
+      "code": "BTN",
+      "minor_unit_digits": 2,
+      "name": "Bhutanese Ngultrum",
+      "source_locator": "common/main/en.xml currency[@type='BTN']; supplementalData.xml fractions",
+      "symbol": "BTN"
+    },
+    {
+      "code": "BWP",
+      "minor_unit_digits": 2,
+      "name": "Botswanan Pula",
+      "source_locator": "common/main/en.xml currency[@type='BWP']; supplementalData.xml fractions",
+      "symbol": "BWP"
+    },
+    {
+      "code": "BYN",
+      "minor_unit_digits": 2,
+      "name": "Belarusian Ruble",
+      "source_locator": "common/main/en.xml currency[@type='BYN']; supplementalData.xml fractions",
+      "symbol": "BYN"
+    },
+    {
+      "code": "BZD",
+      "minor_unit_digits": 2,
+      "name": "Belize Dollar",
+      "source_locator": "common/main/en.xml currency[@type='BZD']; supplementalData.xml fractions",
+      "symbol": "BZD"
+    },
+    {
+      "code": "CAD",
+      "minor_unit_digits": 2,
+      "name": "Canadian Dollar",
+      "source_locator": "common/main/en.xml currency[@type='CAD']; supplementalData.xml fractions",
+      "symbol": "CA$"
+    },
+    {
+      "code": "CDF",
+      "minor_unit_digits": 2,
+      "name": "Congolese Franc",
+      "source_locator": "common/main/en.xml currency[@type='CDF']; supplementalData.xml fractions",
+      "symbol": "CDF"
+    },
+    {
+      "code": "CHF",
+      "minor_unit_digits": 2,
+      "name": "Swiss Franc",
+      "source_locator": "common/main/en.xml currency[@type='CHF']; supplementalData.xml fractions",
+      "symbol": "CHF"
+    },
+    {
+      "code": "CLP",
+      "minor_unit_digits": 0,
+      "name": "Chilean Peso",
+      "source_locator": "common/main/en.xml currency[@type='CLP']; supplementalData.xml fractions",
+      "symbol": "CLP"
+    },
+    {
+      "code": "CNY",
+      "minor_unit_digits": 2,
+      "name": "Chinese Yuan",
+      "source_locator": "common/main/en.xml currency[@type='CNY']; supplementalData.xml fractions",
+      "symbol": "CN¥"
+    },
+    {
+      "code": "COP",
+      "minor_unit_digits": 0,
+      "name": "Colombian Peso",
+      "source_locator": "common/main/en.xml currency[@type='COP']; supplementalData.xml fractions",
+      "symbol": "COP"
+    },
+    {
+      "code": "CRC",
+      "minor_unit_digits": 2,
+      "name": "Costa Rican Colón",
+      "source_locator": "common/main/en.xml currency[@type='CRC']; supplementalData.xml fractions",
+      "symbol": "CRC"
+    },
+    {
+      "code": "CUP",
+      "minor_unit_digits": 2,
+      "name": "Cuban Peso",
+      "source_locator": "common/main/en.xml currency[@type='CUP']; supplementalData.xml fractions",
+      "symbol": "CUP"
+    },
+    {
+      "code": "CVE",
+      "minor_unit_digits": 2,
+      "name": "Cape Verdean Escudo",
+      "source_locator": "common/main/en.xml currency[@type='CVE']; supplementalData.xml fractions",
+      "symbol": "CVE"
+    },
+    {
+      "code": "CZK",
+      "minor_unit_digits": 2,
+      "name": "Czech Koruna",
+      "source_locator": "common/main/en.xml currency[@type='CZK']; supplementalData.xml fractions",
+      "symbol": "CZK"
+    },
+    {
+      "code": "DJF",
+      "minor_unit_digits": 0,
+      "name": "Djiboutian Franc",
+      "source_locator": "common/main/en.xml currency[@type='DJF']; supplementalData.xml fractions",
+      "symbol": "DJF"
+    },
+    {
+      "code": "DKK",
+      "minor_unit_digits": 2,
+      "name": "Danish Krone",
+      "source_locator": "common/main/en.xml currency[@type='DKK']; supplementalData.xml fractions",
+      "symbol": "DKK"
+    },
+    {
+      "code": "DOP",
+      "minor_unit_digits": 2,
+      "name": "Dominican Peso",
+      "source_locator": "common/main/en.xml currency[@type='DOP']; supplementalData.xml fractions",
+      "symbol": "DOP"
+    },
+    {
+      "code": "DZD",
+      "minor_unit_digits": 2,
+      "name": "Algerian Dinar",
+      "source_locator": "common/main/en.xml currency[@type='DZD']; supplementalData.xml fractions",
+      "symbol": "DZD"
+    },
+    {
+      "code": "EGP",
+      "minor_unit_digits": 2,
+      "name": "Egyptian Pound",
+      "source_locator": "common/main/en.xml currency[@type='EGP']; supplementalData.xml fractions",
+      "symbol": "EGP"
+    },
+    {
+      "code": "ERN",
+      "minor_unit_digits": 2,
+      "name": "Eritrean Nakfa",
+      "source_locator": "common/main/en.xml currency[@type='ERN']; supplementalData.xml fractions",
+      "symbol": "ERN"
+    },
+    {
+      "code": "ETB",
+      "minor_unit_digits": 2,
+      "name": "Ethiopian Birr",
+      "source_locator": "common/main/en.xml currency[@type='ETB']; supplementalData.xml fractions",
+      "symbol": "ETB"
+    },
+    {
+      "code": "EUR",
+      "minor_unit_digits": 2,
+      "name": "Euro",
+      "source_locator": "common/main/en.xml currency[@type='EUR']; supplementalData.xml fractions",
+      "symbol": "€"
+    },
+    {
+      "code": "FJD",
+      "minor_unit_digits": 2,
+      "name": "Fijian Dollar",
+      "source_locator": "common/main/en.xml currency[@type='FJD']; supplementalData.xml fractions",
+      "symbol": "FJD"
+    },
+    {
+      "code": "FKP",
+      "minor_unit_digits": 2,
+      "name": "Falkland Islands Pound",
+      "source_locator": "common/main/en.xml currency[@type='FKP']; supplementalData.xml fractions",
+      "symbol": "FKP"
+    },
+    {
+      "code": "GBP",
+      "minor_unit_digits": 2,
+      "name": "British Pound",
+      "source_locator": "common/main/en.xml currency[@type='GBP']; supplementalData.xml fractions",
+      "symbol": "£"
+    },
+    {
+      "code": "GEL",
+      "minor_unit_digits": 2,
+      "name": "Georgian Lari",
+      "source_locator": "common/main/en.xml currency[@type='GEL']; supplementalData.xml fractions",
+      "symbol": "GEL"
+    },
+    {
+      "code": "GHS",
+      "minor_unit_digits": 2,
+      "name": "Ghanaian Cedi",
+      "source_locator": "common/main/en.xml currency[@type='GHS']; supplementalData.xml fractions",
+      "symbol": "GHS"
+    },
+    {
+      "code": "GIP",
+      "minor_unit_digits": 2,
+      "name": "Gibraltar Pound",
+      "source_locator": "common/main/en.xml currency[@type='GIP']; supplementalData.xml fractions",
+      "symbol": "GIP"
+    },
+    {
+      "code": "GMD",
+      "minor_unit_digits": 2,
+      "name": "Gambian Dalasi",
+      "source_locator": "common/main/en.xml currency[@type='GMD']; supplementalData.xml fractions",
+      "symbol": "GMD"
+    },
+    {
+      "code": "GNF",
+      "minor_unit_digits": 0,
+      "name": "Guinean Franc",
+      "source_locator": "common/main/en.xml currency[@type='GNF']; supplementalData.xml fractions",
+      "symbol": "GNF"
+    },
+    {
+      "code": "GTQ",
+      "minor_unit_digits": 2,
+      "name": "Guatemalan Quetzal",
+      "source_locator": "common/main/en.xml currency[@type='GTQ']; supplementalData.xml fractions",
+      "symbol": "GTQ"
+    },
+    {
+      "code": "GYD",
+      "minor_unit_digits": 2,
+      "name": "Guyanaese Dollar",
+      "source_locator": "common/main/en.xml currency[@type='GYD']; supplementalData.xml fractions",
+      "symbol": "GYD"
+    },
+    {
+      "code": "HKD",
+      "minor_unit_digits": 2,
+      "name": "Hong Kong Dollar",
+      "source_locator": "common/main/en.xml currency[@type='HKD']; supplementalData.xml fractions",
+      "symbol": "HK$"
+    },
+    {
+      "code": "HNL",
+      "minor_unit_digits": 2,
+      "name": "Honduran Lempira",
+      "source_locator": "common/main/en.xml currency[@type='HNL']; supplementalData.xml fractions",
+      "symbol": "HNL"
+    },
+    {
+      "code": "HTG",
+      "minor_unit_digits": 2,
+      "name": "Haitian Gourde",
+      "source_locator": "common/main/en.xml currency[@type='HTG']; supplementalData.xml fractions",
+      "symbol": "HTG"
+    },
+    {
+      "code": "HUF",
+      "minor_unit_digits": 0,
+      "name": "Hungarian Forint",
+      "source_locator": "common/main/en.xml currency[@type='HUF']; supplementalData.xml fractions",
+      "symbol": "HUF"
+    },
+    {
+      "code": "IDR",
+      "minor_unit_digits": 0,
+      "name": "Indonesian Rupiah",
+      "source_locator": "common/main/en.xml currency[@type='IDR']; supplementalData.xml fractions",
+      "symbol": "IDR"
+    },
+    {
+      "code": "ILS",
+      "minor_unit_digits": 2,
+      "name": "Israeli New Shekel",
+      "source_locator": "common/main/en.xml currency[@type='ILS']; supplementalData.xml fractions",
+      "symbol": "₪"
+    },
+    {
+      "code": "INR",
+      "minor_unit_digits": 2,
+      "name": "Indian Rupee",
+      "source_locator": "common/main/en.xml currency[@type='INR']; supplementalData.xml fractions",
+      "symbol": "₹"
+    },
+    {
+      "code": "IQD",
+      "minor_unit_digits": 0,
+      "name": "Iraqi Dinar",
+      "source_locator": "common/main/en.xml currency[@type='IQD']; supplementalData.xml fractions",
+      "symbol": "IQD"
+    },
+    {
+      "code": "IRR",
+      "minor_unit_digits": 0,
+      "name": "Iranian Rial",
+      "source_locator": "common/main/en.xml currency[@type='IRR']; supplementalData.xml fractions",
+      "symbol": "IRR"
+    },
+    {
+      "code": "ISK",
+      "minor_unit_digits": 0,
+      "name": "Icelandic Króna",
+      "source_locator": "common/main/en.xml currency[@type='ISK']; supplementalData.xml fractions",
+      "symbol": "ISK"
+    },
+    {
+      "code": "JMD",
+      "minor_unit_digits": 2,
+      "name": "Jamaican Dollar",
+      "source_locator": "common/main/en.xml currency[@type='JMD']; supplementalData.xml fractions",
+      "symbol": "JMD"
+    },
+    {
+      "code": "JOD",
+      "minor_unit_digits": 3,
+      "name": "Jordanian Dinar",
+      "source_locator": "common/main/en.xml currency[@type='JOD']; supplementalData.xml fractions",
+      "symbol": "JOD"
+    },
+    {
+      "code": "JPY",
+      "minor_unit_digits": 0,
+      "name": "Japanese Yen",
+      "source_locator": "common/main/en.xml currency[@type='JPY']; supplementalData.xml fractions",
+      "symbol": "¥"
+    },
+    {
+      "code": "KES",
+      "minor_unit_digits": 2,
+      "name": "Kenyan Shilling",
+      "source_locator": "common/main/en.xml currency[@type='KES']; supplementalData.xml fractions",
+      "symbol": "KES"
+    },
+    {
+      "code": "KGS",
+      "minor_unit_digits": 2,
+      "name": "Kyrgyz Som",
+      "source_locator": "common/main/en.xml currency[@type='KGS']; supplementalData.xml fractions",
+      "symbol": "KGS"
+    },
+    {
+      "code": "KHR",
+      "minor_unit_digits": 2,
+      "name": "Cambodian Riel",
+      "source_locator": "common/main/en.xml currency[@type='KHR']; supplementalData.xml fractions",
+      "symbol": "KHR"
+    },
+    {
+      "code": "KMF",
+      "minor_unit_digits": 0,
+      "name": "Comorian Franc",
+      "source_locator": "common/main/en.xml currency[@type='KMF']; supplementalData.xml fractions",
+      "symbol": "KMF"
+    },
+    {
+      "code": "KPW",
+      "minor_unit_digits": 0,
+      "name": "North Korean Won",
+      "source_locator": "common/main/en.xml currency[@type='KPW']; supplementalData.xml fractions",
+      "symbol": "KPW"
+    },
+    {
+      "code": "KRW",
+      "minor_unit_digits": 0,
+      "name": "South Korean Won",
+      "source_locator": "common/main/en.xml currency[@type='KRW']; supplementalData.xml fractions",
+      "symbol": "₩"
+    },
+    {
+      "code": "KWD",
+      "minor_unit_digits": 3,
+      "name": "Kuwaiti Dinar",
+      "source_locator": "common/main/en.xml currency[@type='KWD']; supplementalData.xml fractions",
+      "symbol": "KWD"
+    },
+    {
+      "code": "KYD",
+      "minor_unit_digits": 2,
+      "name": "Cayman Islands Dollar",
+      "source_locator": "common/main/en.xml currency[@type='KYD']; supplementalData.xml fractions",
+      "symbol": "KYD"
+    },
+    {
+      "code": "KZT",
+      "minor_unit_digits": 2,
+      "name": "Kazakhstani Tenge",
+      "source_locator": "common/main/en.xml currency[@type='KZT']; supplementalData.xml fractions",
+      "symbol": "KZT"
+    },
+    {
+      "code": "LAK",
+      "minor_unit_digits": 0,
+      "name": "Laotian Kip",
+      "source_locator": "common/main/en.xml currency[@type='LAK']; supplementalData.xml fractions",
+      "symbol": "LAK"
+    },
+    {
+      "code": "LBP",
+      "minor_unit_digits": 0,
+      "name": "Lebanese Pound",
+      "source_locator": "common/main/en.xml currency[@type='LBP']; supplementalData.xml fractions",
+      "symbol": "LBP"
+    },
+    {
+      "code": "LKR",
+      "minor_unit_digits": 2,
+      "name": "Sri Lankan Rupee",
+      "source_locator": "common/main/en.xml currency[@type='LKR']; supplementalData.xml fractions",
+      "symbol": "LKR"
+    },
+    {
+      "code": "LRD",
+      "minor_unit_digits": 2,
+      "name": "Liberian Dollar",
+      "source_locator": "common/main/en.xml currency[@type='LRD']; supplementalData.xml fractions",
+      "symbol": "LRD"
+    },
+    {
+      "code": "LSL",
+      "minor_unit_digits": 2,
+      "name": "Lesotho Loti",
+      "source_locator": "common/main/en.xml currency[@type='LSL']; supplementalData.xml fractions",
+      "symbol": "LSL"
+    },
+    {
+      "code": "LYD",
+      "minor_unit_digits": 3,
+      "name": "Libyan Dinar",
+      "source_locator": "common/main/en.xml currency[@type='LYD']; supplementalData.xml fractions",
+      "symbol": "LYD"
+    },
+    {
+      "code": "MAD",
+      "minor_unit_digits": 2,
+      "name": "Moroccan Dirham",
+      "source_locator": "common/main/en.xml currency[@type='MAD']; supplementalData.xml fractions",
+      "symbol": "MAD"
+    },
+    {
+      "code": "MDL",
+      "minor_unit_digits": 2,
+      "name": "Moldovan Leu",
+      "source_locator": "common/main/en.xml currency[@type='MDL']; supplementalData.xml fractions",
+      "symbol": "MDL"
+    },
+    {
+      "code": "MGA",
+      "minor_unit_digits": 0,
+      "name": "Malagasy Ariary",
+      "source_locator": "common/main/en.xml currency[@type='MGA']; supplementalData.xml fractions",
+      "symbol": "MGA"
+    },
+    {
+      "code": "MKD",
+      "minor_unit_digits": 2,
+      "name": "Macedonian Denar",
+      "source_locator": "common/main/en.xml currency[@type='MKD']; supplementalData.xml fractions",
+      "symbol": "MKD"
+    },
+    {
+      "code": "MMK",
+      "minor_unit_digits": 0,
+      "name": "Myanmar Kyat",
+      "source_locator": "common/main/en.xml currency[@type='MMK']; supplementalData.xml fractions",
+      "symbol": "MMK"
+    },
+    {
+      "code": "MNT",
+      "minor_unit_digits": 2,
+      "name": "Mongolian Tugrik",
+      "source_locator": "common/main/en.xml currency[@type='MNT']; supplementalData.xml fractions",
+      "symbol": "MNT"
+    },
+    {
+      "code": "MOP",
+      "minor_unit_digits": 2,
+      "name": "Macanese Pataca",
+      "source_locator": "common/main/en.xml currency[@type='MOP']; supplementalData.xml fractions",
+      "symbol": "MOP"
+    },
+    {
+      "code": "MRU",
+      "minor_unit_digits": 2,
+      "name": "Mauritanian Ouguiya",
+      "source_locator": "common/main/en.xml currency[@type='MRU']; supplementalData.xml fractions",
+      "symbol": "MRU"
+    },
+    {
+      "code": "MUR",
+      "minor_unit_digits": 2,
+      "name": "Mauritian Rupee",
+      "source_locator": "common/main/en.xml currency[@type='MUR']; supplementalData.xml fractions",
+      "symbol": "MUR"
+    },
+    {
+      "code": "MVR",
+      "minor_unit_digits": 2,
+      "name": "Maldivian Rufiyaa",
+      "source_locator": "common/main/en.xml currency[@type='MVR']; supplementalData.xml fractions",
+      "symbol": "MVR"
+    },
+    {
+      "code": "MWK",
+      "minor_unit_digits": 2,
+      "name": "Malawian Kwacha",
+      "source_locator": "common/main/en.xml currency[@type='MWK']; supplementalData.xml fractions",
+      "symbol": "MWK"
+    },
+    {
+      "code": "MXN",
+      "minor_unit_digits": 2,
+      "name": "Mexican Peso",
+      "source_locator": "common/main/en.xml currency[@type='MXN']; supplementalData.xml fractions",
+      "symbol": "MX$"
+    },
+    {
+      "code": "MYR",
+      "minor_unit_digits": 2,
+      "name": "Malaysian Ringgit",
+      "source_locator": "common/main/en.xml currency[@type='MYR']; supplementalData.xml fractions",
+      "symbol": "MYR"
+    },
+    {
+      "code": "MZN",
+      "minor_unit_digits": 2,
+      "name": "Mozambican Metical",
+      "source_locator": "common/main/en.xml currency[@type='MZN']; supplementalData.xml fractions",
+      "symbol": "MZN"
+    },
+    {
+      "code": "NAD",
+      "minor_unit_digits": 2,
+      "name": "Namibian Dollar",
+      "source_locator": "common/main/en.xml currency[@type='NAD']; supplementalData.xml fractions",
+      "symbol": "NAD"
+    },
+    {
+      "code": "NGN",
+      "minor_unit_digits": 2,
+      "name": "Nigerian Naira",
+      "source_locator": "common/main/en.xml currency[@type='NGN']; supplementalData.xml fractions",
+      "symbol": "NGN"
+    },
+    {
+      "code": "NIO",
+      "minor_unit_digits": 2,
+      "name": "Nicaraguan Córdoba",
+      "source_locator": "common/main/en.xml currency[@type='NIO']; supplementalData.xml fractions",
+      "symbol": "NIO"
+    },
+    {
+      "code": "NOK",
+      "minor_unit_digits": 2,
+      "name": "Norwegian Krone",
+      "source_locator": "common/main/en.xml currency[@type='NOK']; supplementalData.xml fractions",
+      "symbol": "NOK"
+    },
+    {
+      "code": "NPR",
+      "minor_unit_digits": 2,
+      "name": "Nepalese Rupee",
+      "source_locator": "common/main/en.xml currency[@type='NPR']; supplementalData.xml fractions",
+      "symbol": "NPR"
+    },
+    {
+      "code": "NZD",
+      "minor_unit_digits": 2,
+      "name": "New Zealand Dollar",
+      "source_locator": "common/main/en.xml currency[@type='NZD']; supplementalData.xml fractions",
+      "symbol": "NZ$"
+    },
+    {
+      "code": "OMR",
+      "minor_unit_digits": 3,
+      "name": "Omani Rial",
+      "source_locator": "common/main/en.xml currency[@type='OMR']; supplementalData.xml fractions",
+      "symbol": "OMR"
+    },
+    {
+      "code": "PAB",
+      "minor_unit_digits": 2,
+      "name": "Panamanian Balboa",
+      "source_locator": "common/main/en.xml currency[@type='PAB']; supplementalData.xml fractions",
+      "symbol": "PAB"
+    },
+    {
+      "code": "PEN",
+      "minor_unit_digits": 2,
+      "name": "Peruvian Sol",
+      "source_locator": "common/main/en.xml currency[@type='PEN']; supplementalData.xml fractions",
+      "symbol": "PEN"
+    },
+    {
+      "code": "PGK",
+      "minor_unit_digits": 2,
+      "name": "Papua New Guinean Kina",
+      "source_locator": "common/main/en.xml currency[@type='PGK']; supplementalData.xml fractions",
+      "symbol": "PGK"
+    },
+    {
+      "code": "PHP",
+      "minor_unit_digits": 2,
+      "name": "Philippine Peso",
+      "source_locator": "common/main/en.xml currency[@type='PHP']; supplementalData.xml fractions",
+      "symbol": "₱"
+    },
+    {
+      "code": "PKR",
+      "minor_unit_digits": 0,
+      "name": "Pakistani Rupee",
+      "source_locator": "common/main/en.xml currency[@type='PKR']; supplementalData.xml fractions",
+      "symbol": "PKR"
+    },
+    {
+      "code": "PLN",
+      "minor_unit_digits": 2,
+      "name": "Polish Zloty",
+      "source_locator": "common/main/en.xml currency[@type='PLN']; supplementalData.xml fractions",
+      "symbol": "PLN"
+    },
+    {
+      "code": "PYG",
+      "minor_unit_digits": 0,
+      "name": "Paraguayan Guarani",
+      "source_locator": "common/main/en.xml currency[@type='PYG']; supplementalData.xml fractions",
+      "symbol": "PYG"
+    },
+    {
+      "code": "QAR",
+      "minor_unit_digits": 2,
+      "name": "Qatari Riyal",
+      "source_locator": "common/main/en.xml currency[@type='QAR']; supplementalData.xml fractions",
+      "symbol": "QAR"
+    },
+    {
+      "code": "RON",
+      "minor_unit_digits": 2,
+      "name": "Romanian Leu",
+      "source_locator": "common/main/en.xml currency[@type='RON']; supplementalData.xml fractions",
+      "symbol": "RON"
+    },
+    {
+      "code": "RSD",
+      "minor_unit_digits": 2,
+      "name": "Serbian Dinar",
+      "source_locator": "common/main/en.xml currency[@type='RSD']; supplementalData.xml fractions",
+      "symbol": "RSD"
+    },
+    {
+      "code": "RUB",
+      "minor_unit_digits": 2,
+      "name": "Russian Ruble",
+      "source_locator": "common/main/en.xml currency[@type='RUB']; supplementalData.xml fractions",
+      "symbol": "RUB"
+    },
+    {
+      "code": "RWF",
+      "minor_unit_digits": 0,
+      "name": "Rwandan Franc",
+      "source_locator": "common/main/en.xml currency[@type='RWF']; supplementalData.xml fractions",
+      "symbol": "RWF"
+    },
+    {
+      "code": "SAR",
+      "minor_unit_digits": 2,
+      "name": "Saudi Riyal",
+      "source_locator": "common/main/en.xml currency[@type='SAR']; supplementalData.xml fractions",
+      "symbol": "SAR"
+    },
+    {
+      "code": "SBD",
+      "minor_unit_digits": 2,
+      "name": "Solomon Islands Dollar",
+      "source_locator": "common/main/en.xml currency[@type='SBD']; supplementalData.xml fractions",
+      "symbol": "SBD"
+    },
+    {
+      "code": "SCR",
+      "minor_unit_digits": 2,
+      "name": "Seychellois Rupee",
+      "source_locator": "common/main/en.xml currency[@type='SCR']; supplementalData.xml fractions",
+      "symbol": "SCR"
+    },
+    {
+      "code": "SDG",
+      "minor_unit_digits": 2,
+      "name": "Sudanese Pound",
+      "source_locator": "common/main/en.xml currency[@type='SDG']; supplementalData.xml fractions",
+      "symbol": "SDG"
+    },
+    {
+      "code": "SEK",
+      "minor_unit_digits": 2,
+      "name": "Swedish Krona",
+      "source_locator": "common/main/en.xml currency[@type='SEK']; supplementalData.xml fractions",
+      "symbol": "SEK"
+    },
+    {
+      "code": "SGD",
+      "minor_unit_digits": 2,
+      "name": "Singapore Dollar",
+      "source_locator": "common/main/en.xml currency[@type='SGD']; supplementalData.xml fractions",
+      "symbol": "SGD"
+    },
+    {
+      "code": "SHP",
+      "minor_unit_digits": 2,
+      "name": "St. Helena Pound",
+      "source_locator": "common/main/en.xml currency[@type='SHP']; supplementalData.xml fractions",
+      "symbol": "SHP"
+    },
+    {
+      "code": "SLE",
+      "minor_unit_digits": 2,
+      "name": "Sierra Leonean Leone",
+      "source_locator": "common/main/en.xml currency[@type='SLE']; supplementalData.xml fractions",
+      "symbol": "SLE"
+    },
+    {
+      "code": "SOS",
+      "minor_unit_digits": 0,
+      "name": "Somali Shilling",
+      "source_locator": "common/main/en.xml currency[@type='SOS']; supplementalData.xml fractions",
+      "symbol": "SOS"
+    },
+    {
+      "code": "SRD",
+      "minor_unit_digits": 2,
+      "name": "Surinamese Dollar",
+      "source_locator": "common/main/en.xml currency[@type='SRD']; supplementalData.xml fractions",
+      "symbol": "SRD"
+    },
+    {
+      "code": "SSP",
+      "minor_unit_digits": 2,
+      "name": "South Sudanese Pound",
+      "source_locator": "common/main/en.xml currency[@type='SSP']; supplementalData.xml fractions",
+      "symbol": "SSP"
+    },
+    {
+      "code": "STN",
+      "minor_unit_digits": 2,
+      "name": "São Tomé & Príncipe Dobra",
+      "source_locator": "common/main/en.xml currency[@type='STN']; supplementalData.xml fractions",
+      "symbol": "STN"
+    },
+    {
+      "code": "SYP",
+      "minor_unit_digits": 0,
+      "name": "Syrian Pound",
+      "source_locator": "common/main/en.xml currency[@type='SYP']; supplementalData.xml fractions",
+      "symbol": "SYP"
+    },
+    {
+      "code": "SZL",
+      "minor_unit_digits": 2,
+      "name": "Swazi Lilangeni",
+      "source_locator": "common/main/en.xml currency[@type='SZL']; supplementalData.xml fractions",
+      "symbol": "SZL"
+    },
+    {
+      "code": "THB",
+      "minor_unit_digits": 2,
+      "name": "Thai Baht",
+      "source_locator": "common/main/en.xml currency[@type='THB']; supplementalData.xml fractions",
+      "symbol": "THB"
+    },
+    {
+      "code": "TJS",
+      "minor_unit_digits": 2,
+      "name": "Tajikistani Somoni",
+      "source_locator": "common/main/en.xml currency[@type='TJS']; supplementalData.xml fractions",
+      "symbol": "TJS"
+    },
+    {
+      "code": "TMT",
+      "minor_unit_digits": 2,
+      "name": "Turkmenistani Manat",
+      "source_locator": "common/main/en.xml currency[@type='TMT']; supplementalData.xml fractions",
+      "symbol": "TMT"
+    },
+    {
+      "code": "TND",
+      "minor_unit_digits": 3,
+      "name": "Tunisian Dinar",
+      "source_locator": "common/main/en.xml currency[@type='TND']; supplementalData.xml fractions",
+      "symbol": "TND"
+    },
+    {
+      "code": "TOP",
+      "minor_unit_digits": 2,
+      "name": "Tongan Paʻanga",
+      "source_locator": "common/main/en.xml currency[@type='TOP']; supplementalData.xml fractions",
+      "symbol": "TOP"
+    },
+    {
+      "code": "TRY",
+      "minor_unit_digits": 2,
+      "name": "Turkish Lira",
+      "source_locator": "common/main/en.xml currency[@type='TRY']; supplementalData.xml fractions",
+      "symbol": "TRY"
+    },
+    {
+      "code": "TTD",
+      "minor_unit_digits": 2,
+      "name": "Trinidad & Tobago Dollar",
+      "source_locator": "common/main/en.xml currency[@type='TTD']; supplementalData.xml fractions",
+      "symbol": "TTD"
+    },
+    {
+      "code": "TWD",
+      "minor_unit_digits": 2,
+      "name": "New Taiwan Dollar",
+      "source_locator": "common/main/en.xml currency[@type='TWD']; supplementalData.xml fractions",
+      "symbol": "NT$"
+    },
+    {
+      "code": "TZS",
+      "minor_unit_digits": 2,
+      "name": "Tanzanian Shilling",
+      "source_locator": "common/main/en.xml currency[@type='TZS']; supplementalData.xml fractions",
+      "symbol": "TZS"
+    },
+    {
+      "code": "UAH",
+      "minor_unit_digits": 2,
+      "name": "Ukrainian Hryvnia",
+      "source_locator": "common/main/en.xml currency[@type='UAH']; supplementalData.xml fractions",
+      "symbol": "UAH"
+    },
+    {
+      "code": "UGX",
+      "minor_unit_digits": 0,
+      "name": "Ugandan Shilling",
+      "source_locator": "common/main/en.xml currency[@type='UGX']; supplementalData.xml fractions",
+      "symbol": "UGX"
+    },
+    {
+      "code": "USD",
+      "minor_unit_digits": 2,
+      "name": "US Dollar",
+      "source_locator": "common/main/en.xml currency[@type='USD']; supplementalData.xml fractions",
+      "symbol": "$"
+    },
+    {
+      "code": "UYU",
+      "minor_unit_digits": 2,
+      "name": "Uruguayan Peso",
+      "source_locator": "common/main/en.xml currency[@type='UYU']; supplementalData.xml fractions",
+      "symbol": "UYU"
+    },
+    {
+      "code": "UZS",
+      "minor_unit_digits": 2,
+      "name": "Uzbekistani Som",
+      "source_locator": "common/main/en.xml currency[@type='UZS']; supplementalData.xml fractions",
+      "symbol": "UZS"
+    },
+    {
+      "code": "VES",
+      "minor_unit_digits": 2,
+      "name": "Venezuelan Bolívar",
+      "source_locator": "common/main/en.xml currency[@type='VES']; supplementalData.xml fractions",
+      "symbol": "VES"
+    },
+    {
+      "code": "VND",
+      "minor_unit_digits": 0,
+      "name": "Vietnamese Dong",
+      "source_locator": "common/main/en.xml currency[@type='VND']; supplementalData.xml fractions",
+      "symbol": "₫"
+    },
+    {
+      "code": "VUV",
+      "minor_unit_digits": 0,
+      "name": "Vanuatu Vatu",
+      "source_locator": "common/main/en.xml currency[@type='VUV']; supplementalData.xml fractions",
+      "symbol": "VUV"
+    },
+    {
+      "code": "WST",
+      "minor_unit_digits": 2,
+      "name": "Samoan Tala",
+      "source_locator": "common/main/en.xml currency[@type='WST']; supplementalData.xml fractions",
+      "symbol": "WST"
+    },
+    {
+      "code": "XAF",
+      "minor_unit_digits": 0,
+      "name": "Central African CFA Franc",
+      "source_locator": "common/main/en.xml currency[@type='XAF']; supplementalData.xml fractions",
+      "symbol": "FCFA"
+    },
+    {
+      "code": "XCD",
+      "minor_unit_digits": 2,
+      "name": "East Caribbean Dollar",
+      "source_locator": "common/main/en.xml currency[@type='XCD']; supplementalData.xml fractions",
+      "symbol": "EC$"
+    },
+    {
+      "code": "XCG",
+      "minor_unit_digits": 2,
+      "name": "Caribbean guilder",
+      "source_locator": "common/main/en.xml currency[@type='XCG']; supplementalData.xml fractions",
+      "symbol": null
+    },
+    {
+      "code": "XOF",
+      "minor_unit_digits": 0,
+      "name": "West African CFA Franc",
+      "source_locator": "common/main/en.xml currency[@type='XOF']; supplementalData.xml fractions",
+      "symbol": "F CFA"
+    },
+    {
+      "code": "XPF",
+      "minor_unit_digits": 0,
+      "name": "CFP Franc",
+      "source_locator": "common/main/en.xml currency[@type='XPF']; supplementalData.xml fractions",
+      "symbol": "CFPF"
+    },
+    {
+      "code": "YER",
+      "minor_unit_digits": 0,
+      "name": "Yemeni Rial",
+      "source_locator": "common/main/en.xml currency[@type='YER']; supplementalData.xml fractions",
+      "symbol": "YER"
+    },
+    {
+      "code": "ZAR",
+      "minor_unit_digits": 2,
+      "name": "South African Rand",
+      "source_locator": "common/main/en.xml currency[@type='ZAR']; supplementalData.xml fractions",
+      "symbol": "ZAR"
+    },
+    {
+      "code": "ZMW",
+      "minor_unit_digits": 2,
+      "name": "Zambian Kwacha",
+      "source_locator": "common/main/en.xml currency[@type='ZMW']; supplementalData.xml fractions",
+      "symbol": "ZMW"
+    },
+    {
+      "code": "ZWG",
+      "minor_unit_digits": 2,
+      "name": "Zimbabwean Gold",
+      "source_locator": "common/main/en.xml currency[@type='ZWG']; supplementalData.xml fractions",
+      "symbol": "ZWG"
+    }
+  ],
+  "languages": [
+    {
+      "code": "aa",
+      "name": "Afar",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "aa",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='aa']; likelySubtags.xml; IANA language subtag 'aa'"
+    },
+    {
+      "code": "aa-ER",
+      "name": "Afar",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "aa",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='aa']; likelySubtags.xml; IANA language subtag 'aa'"
+    },
+    {
+      "code": "abx",
+      "name": "Inabaknon",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "abx",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='abx']; likelySubtags.xml; IANA language subtag 'abx'"
+    },
+    {
+      "code": "ady",
+      "name": "Adyghe",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ady",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='ady']; likelySubtags.xml; IANA language subtag 'ady'"
+    },
+    {
+      "code": "af",
+      "name": "Afrikaans",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "af",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='af']; likelySubtags.xml; IANA language subtag 'af'"
+    },
+    {
+      "code": "ak",
+      "name": "Akan",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ak",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ak']; likelySubtags.xml; IANA language subtag 'ak'"
+    },
+    {
+      "code": "akl",
+      "name": "Aklanon",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "akl",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='akl']; likelySubtags.xml; IANA language subtag 'akl'"
+    },
+    {
+      "code": "am",
+      "name": "Amharic",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "am",
+      "script_code": "Ethi",
+      "source_locator": "common/main/en.xml language[@type='am']; likelySubtags.xml; IANA language subtag 'am'"
+    },
+    {
+      "code": "ar",
+      "name": "Arabic",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ar",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='ar']; likelySubtags.xml; IANA language subtag 'ar'"
+    },
+    {
+      "code": "ar-AE",
+      "name": "Arabic",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ar",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='ar']; likelySubtags.xml; IANA language subtag 'ar'"
+    },
+    {
+      "code": "ar-BH",
+      "name": "Arabic",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ar",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='ar']; likelySubtags.xml; IANA language subtag 'ar'"
+    },
+    {
+      "code": "ar-DZ",
+      "name": "Arabic",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ar",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='ar']; likelySubtags.xml; IANA language subtag 'ar'"
+    },
+    {
+      "code": "ar-EG",
+      "name": "Arabic",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ar",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='ar']; likelySubtags.xml; IANA language subtag 'ar'"
+    },
+    {
+      "code": "ar-IL",
+      "name": "Arabic",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ar",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='ar']; likelySubtags.xml; IANA language subtag 'ar'"
+    },
+    {
+      "code": "ar-IQ",
+      "name": "Arabic",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ar",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='ar']; likelySubtags.xml; IANA language subtag 'ar'"
+    },
+    {
+      "code": "ar-JO",
+      "name": "Arabic",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ar",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='ar']; likelySubtags.xml; IANA language subtag 'ar'"
+    },
+    {
+      "code": "ar-KW",
+      "name": "Arabic",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ar",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='ar']; likelySubtags.xml; IANA language subtag 'ar'"
+    },
+    {
+      "code": "ar-LB",
+      "name": "Arabic",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ar",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='ar']; likelySubtags.xml; IANA language subtag 'ar'"
+    },
+    {
+      "code": "ar-LY",
+      "name": "Arabic",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ar",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='ar']; likelySubtags.xml; IANA language subtag 'ar'"
+    },
+    {
+      "code": "ar-MA",
+      "name": "Arabic",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ar",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='ar']; likelySubtags.xml; IANA language subtag 'ar'"
+    },
+    {
+      "code": "ar-MR",
+      "name": "Arabic",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ar",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='ar']; likelySubtags.xml; IANA language subtag 'ar'"
+    },
+    {
+      "code": "ar-OM",
+      "name": "Arabic",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ar",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='ar']; likelySubtags.xml; IANA language subtag 'ar'"
+    },
+    {
+      "code": "ar-PS",
+      "name": "Arabic",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ar",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='ar']; likelySubtags.xml; IANA language subtag 'ar'"
+    },
+    {
+      "code": "ar-QA",
+      "name": "Arabic",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ar",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='ar']; likelySubtags.xml; IANA language subtag 'ar'"
+    },
+    {
+      "code": "ar-SA",
+      "name": "Arabic",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ar",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='ar']; likelySubtags.xml; IANA language subtag 'ar'"
+    },
+    {
+      "code": "ar-SD",
+      "name": "Arabic",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ar",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='ar']; likelySubtags.xml; IANA language subtag 'ar'"
+    },
+    {
+      "code": "ar-SO",
+      "name": "Arabic",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ar",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='ar']; likelySubtags.xml; IANA language subtag 'ar'"
+    },
+    {
+      "code": "ar-SY",
+      "name": "Arabic",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ar",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='ar']; likelySubtags.xml; IANA language subtag 'ar'"
+    },
+    {
+      "code": "ar-TD",
+      "name": "Arabic",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ar",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='ar']; likelySubtags.xml; IANA language subtag 'ar'"
+    },
+    {
+      "code": "ar-TN",
+      "name": "Arabic",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ar",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='ar']; likelySubtags.xml; IANA language subtag 'ar'"
+    },
+    {
+      "code": "ar-YE",
+      "name": "Arabic",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ar",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='ar']; likelySubtags.xml; IANA language subtag 'ar'"
+    },
+    {
+      "code": "arc",
+      "name": "Aramaic",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "arc",
+      "script_code": "Armi",
+      "source_locator": "common/main/en.xml language[@type='arc']; likelySubtags.xml; IANA language subtag 'arc'"
+    },
+    {
+      "code": "as",
+      "name": "Assamese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "as",
+      "script_code": "Beng",
+      "source_locator": "common/main/en.xml language[@type='as']; likelySubtags.xml; IANA language subtag 'as'"
+    },
+    {
+      "code": "av",
+      "name": "Avaric",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "av",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='av']; likelySubtags.xml; IANA language subtag 'av'"
+    },
+    {
+      "code": "ay",
+      "name": "Aymara",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ay",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ay']; likelySubtags.xml; IANA language subtag 'ay'"
+    },
+    {
+      "code": "az",
+      "name": "Azerbaijani",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "az",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='az']; likelySubtags.xml; IANA language subtag 'az'"
+    },
+    {
+      "code": "ba",
+      "name": "Bashkir",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ba",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='ba']; likelySubtags.xml; IANA language subtag 'ba'"
+    },
+    {
+      "code": "bal",
+      "name": "Baluchi",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "bal",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='bal']; likelySubtags.xml; IANA language subtag 'bal'"
+    },
+    {
+      "code": "bcl",
+      "name": "Central Bikol",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "bcl",
+      "script_code": null,
+      "source_locator": "common/main/en.xml language[@type='bcl']; likelySubtags.xml; IANA language subtag 'bcl'"
+    },
+    {
+      "code": "be",
+      "name": "Belarusian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "be",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='be']; likelySubtags.xml; IANA language subtag 'be'"
+    },
+    {
+      "code": "bem",
+      "name": "Bemba",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "bem",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='bem']; likelySubtags.xml; IANA language subtag 'bem'"
+    },
+    {
+      "code": "ber",
+      "name": "Berber languages",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "ber",
+      "script_code": null,
+      "source_locator": "common/main/en.xml language[@type='ber']; likelySubtags.xml; IANA language subtag 'ber'"
+    },
+    {
+      "code": "bg",
+      "name": "Bulgarian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "bg",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='bg']; likelySubtags.xml; IANA language subtag 'bg'"
+    },
+    {
+      "code": "bh",
+      "name": "Bihari languages",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "bh",
+      "script_code": null,
+      "source_locator": "common/main/en.xml language[@type='bh']; likelySubtags.xml; IANA language subtag 'bh'"
+    },
+    {
+      "code": "bho",
+      "name": "Bhojpuri",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "bho",
+      "script_code": "Deva",
+      "source_locator": "common/main/en.xml language[@type='bho']; likelySubtags.xml; IANA language subtag 'bho'"
+    },
+    {
+      "code": "bi",
+      "name": "Bislama",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "bi",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='bi']; likelySubtags.xml; IANA language subtag 'bi'"
+    },
+    {
+      "code": "bik",
+      "name": "Bikol",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "bik",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='bik']; likelySubtags.xml; IANA language subtag 'bik'"
+    },
+    {
+      "code": "bm",
+      "name": "Bambara",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "bm",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='bm']; likelySubtags.xml; IANA language subtag 'bm'"
+    },
+    {
+      "code": "bn",
+      "name": "Bangla",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "bn",
+      "script_code": "Beng",
+      "source_locator": "common/main/en.xml language[@type='bn']; likelySubtags.xml; IANA language subtag 'bn'"
+    },
+    {
+      "code": "bn-BD",
+      "name": "Bangla",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "bn",
+      "script_code": "Beng",
+      "source_locator": "common/main/en.xml language[@type='bn']; likelySubtags.xml; IANA language subtag 'bn'"
+    },
+    {
+      "code": "br",
+      "name": "Breton",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "br",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='br']; likelySubtags.xml; IANA language subtag 'br'"
+    },
+    {
+      "code": "brh",
+      "name": "Brahui",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "brh",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='brh']; likelySubtags.xml; IANA language subtag 'brh'"
+    },
+    {
+      "code": "bs",
+      "name": "Bosnian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "bs",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='bs']; likelySubtags.xml; IANA language subtag 'bs'"
+    },
+    {
+      "code": "bua",
+      "name": "Buriat",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "bua",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='bua']; likelySubtags.xml; IANA language subtag 'bua'"
+    },
+    {
+      "code": "ca",
+      "name": "Catalan",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ca",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ca']; likelySubtags.xml; IANA language subtag 'ca'"
+    },
+    {
+      "code": "cab",
+      "name": "Garifuna",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "cab",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='cab']; likelySubtags.xml; IANA language subtag 'cab'"
+    },
+    {
+      "code": "cau",
+      "name": "Caucasian languages",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "cau",
+      "script_code": null,
+      "source_locator": "common/main/en.xml language[@type='cau']; likelySubtags.xml; IANA language subtag 'cau'"
+    },
+    {
+      "code": "cbk",
+      "name": "Chavacano",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "cbk",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='cbk']; likelySubtags.xml; IANA language subtag 'cbk'"
+    },
+    {
+      "code": "ce",
+      "name": "Chechen",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ce",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='ce']; likelySubtags.xml; IANA language subtag 'ce'"
+    },
+    {
+      "code": "ceb",
+      "name": "Cebuano",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ceb",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ceb']; likelySubtags.xml; IANA language subtag 'ceb'"
+    },
+    {
+      "code": "ch-GU",
+      "name": "Chamorro",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ch",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ch']; likelySubtags.xml; IANA language subtag 'ch'"
+    },
+    {
+      "code": "ch-MP",
+      "name": "Chamorro",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ch",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ch']; likelySubtags.xml; IANA language subtag 'ch'"
+    },
+    {
+      "code": "chk",
+      "name": "Chuukese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "chk",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='chk']; likelySubtags.xml; IANA language subtag 'chk'"
+    },
+    {
+      "code": "chm",
+      "name": "Mari",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "chm",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='chm']; likelySubtags.xml; IANA language subtag 'chm'"
+    },
+    {
+      "code": "cmn",
+      "name": "Mandarin Chinese",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "cmn",
+      "script_code": null,
+      "source_locator": "common/main/en.xml language[@type='cmn']; likelySubtags.xml; IANA language subtag 'cmn'"
+    },
+    {
+      "code": "co",
+      "name": "Corsican",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "co",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='co']; likelySubtags.xml; IANA language subtag 'co'"
+    },
+    {
+      "code": "cs",
+      "name": "Czech",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "cs",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='cs']; likelySubtags.xml; IANA language subtag 'cs'"
+    },
+    {
+      "code": "cu",
+      "name": "Church Slavic",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "cu",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='cu']; likelySubtags.xml; IANA language subtag 'cu'"
+    },
+    {
+      "code": "cv",
+      "name": "Chuvash",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "cv",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='cv']; likelySubtags.xml; IANA language subtag 'cv'"
+    },
+    {
+      "code": "cy-GB",
+      "name": "Welsh",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "cy",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='cy']; likelySubtags.xml; IANA language subtag 'cy'"
+    },
+    {
+      "code": "da",
+      "name": "Danish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "da",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='da']; likelySubtags.xml; IANA language subtag 'da'"
+    },
+    {
+      "code": "da-DK",
+      "name": "Danish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "da",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='da']; likelySubtags.xml; IANA language subtag 'da'"
+    },
+    {
+      "code": "da-FO",
+      "name": "Danish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "da",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='da']; likelySubtags.xml; IANA language subtag 'da'"
+    },
+    {
+      "code": "da-GL",
+      "name": "Danish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "da",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='da']; likelySubtags.xml; IANA language subtag 'da'"
+    },
+    {
+      "code": "dag",
+      "name": "Dagbani",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "dag",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='dag']; likelySubtags.xml; IANA language subtag 'dag'"
+    },
+    {
+      "code": "de",
+      "name": "German",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "de",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='de']; likelySubtags.xml; IANA language subtag 'de'"
+    },
+    {
+      "code": "de-AT",
+      "name": "German",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "de",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='de']; likelySubtags.xml; IANA language subtag 'de'"
+    },
+    {
+      "code": "de-BE",
+      "name": "German",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "de",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='de']; likelySubtags.xml; IANA language subtag 'de'"
+    },
+    {
+      "code": "de-CH",
+      "name": "German",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "de",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='de']; likelySubtags.xml; IANA language subtag 'de'"
+    },
+    {
+      "code": "de-DK",
+      "name": "German",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "de",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='de']; likelySubtags.xml; IANA language subtag 'de'"
+    },
+    {
+      "code": "de-IT",
+      "name": "German",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "de",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='de']; likelySubtags.xml; IANA language subtag 'de'"
+    },
+    {
+      "code": "de-LI",
+      "name": "German",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "de",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='de']; likelySubtags.xml; IANA language subtag 'de'"
+    },
+    {
+      "code": "de-LU",
+      "name": "German",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "de",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='de']; likelySubtags.xml; IANA language subtag 'de'"
+    },
+    {
+      "code": "diq",
+      "name": "Dimli (individual language)",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "diq",
+      "script_code": null,
+      "source_locator": "common/main/en.xml language[@type='diq']; likelySubtags.xml; IANA language subtag 'diq'"
+    },
+    {
+      "code": "dje",
+      "name": "Zarma",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "dje",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='dje']; likelySubtags.xml; IANA language subtag 'dje'"
+    },
+    {
+      "code": "doi",
+      "name": "Dogri",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "doi",
+      "script_code": "Deva",
+      "source_locator": "common/main/en.xml language[@type='doi']; likelySubtags.xml; IANA language subtag 'doi'"
+    },
+    {
+      "code": "dta",
+      "name": "Daur",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "dta",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='dta']; likelySubtags.xml; IANA language subtag 'dta'"
+    },
+    {
+      "code": "dv",
+      "name": "Divehi",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "dv",
+      "script_code": "Thaa",
+      "source_locator": "common/main/en.xml language[@type='dv']; likelySubtags.xml; IANA language subtag 'dv'"
+    },
+    {
+      "code": "dz",
+      "name": "Dzongkha",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "dz",
+      "script_code": "Tibt",
+      "source_locator": "common/main/en.xml language[@type='dz']; likelySubtags.xml; IANA language subtag 'dz'"
+    },
+    {
+      "code": "ee",
+      "name": "Ewe",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ee",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ee']; likelySubtags.xml; IANA language subtag 'ee'"
+    },
+    {
+      "code": "el",
+      "name": "Greek",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "el",
+      "script_code": "Grek",
+      "source_locator": "common/main/en.xml language[@type='el']; likelySubtags.xml; IANA language subtag 'el'"
+    },
+    {
+      "code": "el-CY",
+      "name": "Greek",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "el",
+      "script_code": "Grek",
+      "source_locator": "common/main/en.xml language[@type='el']; likelySubtags.xml; IANA language subtag 'el'"
+    },
+    {
+      "code": "el-GR",
+      "name": "Greek",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "el",
+      "script_code": "Grek",
+      "source_locator": "common/main/en.xml language[@type='el']; likelySubtags.xml; IANA language subtag 'el'"
+    },
+    {
+      "code": "en",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-AG",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-AI",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-AS",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-AU",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-BB",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-BM",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-BN",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-BS",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-BW",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-BZ",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-CA",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-CK",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-CM",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-DM",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-ET",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-FJ",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-FK",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-FM",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-GB",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-GD",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-GH",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-GI",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-GM",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-GU",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-GY",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-IE",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-IL",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-IN",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-IO",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-JM",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-KE",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-KI",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-KN",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-KY",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-LC",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-LR",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-LS",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-MH",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-MP",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-MS",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-MT",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-MU",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-NA",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-NF",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-NG",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-NR",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-NU",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-NZ",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-PG",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-PH",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-PK",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-PN",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-PR",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-PW",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-RW",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-SB",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-SC",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-SG",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-SH",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-SL",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-SO",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-SZ",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-TC",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-TK",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-TO",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-TT",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-UG",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-UM",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-US",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-VC",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-VG",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-VI",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-VU",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-WS",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-ZA",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-ZM",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "en-ZW",
+      "name": "English",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "en",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='en']; likelySubtags.xml; IANA language subtag 'en'"
+    },
+    {
+      "code": "es",
+      "name": "Spanish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "es",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='es']; likelySubtags.xml; IANA language subtag 'es'"
+    },
+    {
+      "code": "es-AR",
+      "name": "Spanish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "es",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='es']; likelySubtags.xml; IANA language subtag 'es'"
+    },
+    {
+      "code": "es-BO",
+      "name": "Spanish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "es",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='es']; likelySubtags.xml; IANA language subtag 'es'"
+    },
+    {
+      "code": "es-CL",
+      "name": "Spanish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "es",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='es']; likelySubtags.xml; IANA language subtag 'es'"
+    },
+    {
+      "code": "es-CO",
+      "name": "Spanish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "es",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='es']; likelySubtags.xml; IANA language subtag 'es'"
+    },
+    {
+      "code": "es-CR",
+      "name": "Spanish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "es",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='es']; likelySubtags.xml; IANA language subtag 'es'"
+    },
+    {
+      "code": "es-CU",
+      "name": "Spanish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "es",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='es']; likelySubtags.xml; IANA language subtag 'es'"
+    },
+    {
+      "code": "es-DO",
+      "name": "Spanish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "es",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='es']; likelySubtags.xml; IANA language subtag 'es'"
+    },
+    {
+      "code": "es-EC",
+      "name": "Spanish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "es",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='es']; likelySubtags.xml; IANA language subtag 'es'"
+    },
+    {
+      "code": "es-ES",
+      "name": "Spanish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "es",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='es']; likelySubtags.xml; IANA language subtag 'es'"
+    },
+    {
+      "code": "es-GQ",
+      "name": "Spanish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "es",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='es']; likelySubtags.xml; IANA language subtag 'es'"
+    },
+    {
+      "code": "es-GT",
+      "name": "Spanish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "es",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='es']; likelySubtags.xml; IANA language subtag 'es'"
+    },
+    {
+      "code": "es-HN",
+      "name": "Spanish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "es",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='es']; likelySubtags.xml; IANA language subtag 'es'"
+    },
+    {
+      "code": "es-MX",
+      "name": "Spanish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "es",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='es']; likelySubtags.xml; IANA language subtag 'es'"
+    },
+    {
+      "code": "es-NI",
+      "name": "Spanish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "es",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='es']; likelySubtags.xml; IANA language subtag 'es'"
+    },
+    {
+      "code": "es-PA",
+      "name": "Spanish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "es",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='es']; likelySubtags.xml; IANA language subtag 'es'"
+    },
+    {
+      "code": "es-PE",
+      "name": "Spanish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "es",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='es']; likelySubtags.xml; IANA language subtag 'es'"
+    },
+    {
+      "code": "es-PR",
+      "name": "Spanish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "es",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='es']; likelySubtags.xml; IANA language subtag 'es'"
+    },
+    {
+      "code": "es-PY",
+      "name": "Spanish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "es",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='es']; likelySubtags.xml; IANA language subtag 'es'"
+    },
+    {
+      "code": "es-SV",
+      "name": "Spanish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "es",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='es']; likelySubtags.xml; IANA language subtag 'es'"
+    },
+    {
+      "code": "es-US",
+      "name": "Spanish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "es",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='es']; likelySubtags.xml; IANA language subtag 'es'"
+    },
+    {
+      "code": "es-UY",
+      "name": "Spanish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "es",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='es']; likelySubtags.xml; IANA language subtag 'es'"
+    },
+    {
+      "code": "es-VE",
+      "name": "Spanish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "es",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='es']; likelySubtags.xml; IANA language subtag 'es'"
+    },
+    {
+      "code": "et",
+      "name": "Estonian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "et",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='et']; likelySubtags.xml; IANA language subtag 'et'"
+    },
+    {
+      "code": "eu",
+      "name": "Basque",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "eu",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='eu']; likelySubtags.xml; IANA language subtag 'eu'"
+    },
+    {
+      "code": "fa",
+      "name": "Persian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fa",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='fa']; likelySubtags.xml; IANA language subtag 'fa'"
+    },
+    {
+      "code": "fa-AF",
+      "name": "Persian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fa",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='fa']; likelySubtags.xml; IANA language subtag 'fa'"
+    },
+    {
+      "code": "fa-IR",
+      "name": "Persian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fa",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='fa']; likelySubtags.xml; IANA language subtag 'fa'"
+    },
+    {
+      "code": "ff",
+      "name": "Fula",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ff",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ff']; likelySubtags.xml; IANA language subtag 'ff'"
+    },
+    {
+      "code": "fi",
+      "name": "Finnish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fi",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fi']; likelySubtags.xml; IANA language subtag 'fi'"
+    },
+    {
+      "code": "fi-FI",
+      "name": "Finnish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fi",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fi']; likelySubtags.xml; IANA language subtag 'fi'"
+    },
+    {
+      "code": "fi-SE",
+      "name": "Finnish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fi",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fi']; likelySubtags.xml; IANA language subtag 'fi'"
+    },
+    {
+      "code": "fia",
+      "name": "Nobiin",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "fia",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='fia']; likelySubtags.xml; IANA language subtag 'fia'"
+    },
+    {
+      "code": "fil",
+      "name": "Filipino",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fil",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fil']; likelySubtags.xml; IANA language subtag 'fil'"
+    },
+    {
+      "code": "fj",
+      "name": "Fijian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fj",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fj']; likelySubtags.xml; IANA language subtag 'fj'"
+    },
+    {
+      "code": "fo",
+      "name": "Faroese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fo",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fo']; likelySubtags.xml; IANA language subtag 'fo'"
+    },
+    {
+      "code": "fr",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-BE",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-BF",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-BI",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-BJ",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-CA",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-CD",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-CF",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-CG",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-CH",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-CI",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-CM",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-DJ",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-FR",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-GA",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-GF",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-GN",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-GP",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-HT",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-IT",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-KM",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-LB",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-LU",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-MC",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-MG",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-ML",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-MQ",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-NC",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-NE",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-PF",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-PM",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-RE",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-RW",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-SC",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-SN",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-TD",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-TG",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-VU",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-WF",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "fr-YT",
+      "name": "French",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fr']; likelySubtags.xml; IANA language subtag 'fr'"
+    },
+    {
+      "code": "frp",
+      "name": "Arpitan",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "frp",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='frp']; likelySubtags.xml; IANA language subtag 'frp'"
+    },
+    {
+      "code": "fuc",
+      "name": "Pulaar",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "fuc",
+      "script_code": null,
+      "source_locator": "common/main/en.xml language[@type='fuc']; likelySubtags.xml; IANA language subtag 'fuc'"
+    },
+    {
+      "code": "fud",
+      "name": "East Futuna",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "fud",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fud']; likelySubtags.xml; IANA language subtag 'fud'"
+    },
+    {
+      "code": "fy-NL",
+      "name": "Western Frisian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "fy",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='fy']; likelySubtags.xml; IANA language subtag 'fy'"
+    },
+    {
+      "code": "ga-IE",
+      "name": "Irish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ga",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ga']; likelySubtags.xml; IANA language subtag 'ga'"
+    },
+    {
+      "code": "gag",
+      "name": "Gagauz",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "gag",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='gag']; likelySubtags.xml; IANA language subtag 'gag'"
+    },
+    {
+      "code": "gd",
+      "name": "Scottish Gaelic",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "gd",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='gd']; likelySubtags.xml; IANA language subtag 'gd'"
+    },
+    {
+      "code": "gil",
+      "name": "Gilbertese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "gil",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='gil']; likelySubtags.xml; IANA language subtag 'gil'"
+    },
+    {
+      "code": "gl",
+      "name": "Galician",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "gl",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='gl']; likelySubtags.xml; IANA language subtag 'gl'"
+    },
+    {
+      "code": "gn",
+      "name": "Guarani",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "gn",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='gn']; likelySubtags.xml; IANA language subtag 'gn'"
+    },
+    {
+      "code": "gu",
+      "name": "Gujarati",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "gu",
+      "script_code": "Gujr",
+      "source_locator": "common/main/en.xml language[@type='gu']; likelySubtags.xml; IANA language subtag 'gu'"
+    },
+    {
+      "code": "gv",
+      "name": "Manx",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "gv",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='gv']; likelySubtags.xml; IANA language subtag 'gv'"
+    },
+    {
+      "code": "ha",
+      "name": "Hausa",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ha",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ha']; likelySubtags.xml; IANA language subtag 'ha'"
+    },
+    {
+      "code": "hak",
+      "name": "Hakka Chinese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "hak",
+      "script_code": "Hans",
+      "source_locator": "common/main/en.xml language[@type='hak']; likelySubtags.xml; IANA language subtag 'hak'"
+    },
+    {
+      "code": "haw",
+      "name": "Hawaiian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "haw",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='haw']; likelySubtags.xml; IANA language subtag 'haw'"
+    },
+    {
+      "code": "he",
+      "name": "Hebrew",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "he",
+      "script_code": "Hebr",
+      "source_locator": "common/main/en.xml language[@type='he']; likelySubtags.xml; IANA language subtag 'he'"
+    },
+    {
+      "code": "hi",
+      "name": "Hindi",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "hi",
+      "script_code": "Deva",
+      "source_locator": "common/main/en.xml language[@type='hi']; likelySubtags.xml; IANA language subtag 'hi'"
+    },
+    {
+      "code": "hil",
+      "name": "Hiligaynon",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "hil",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='hil']; likelySubtags.xml; IANA language subtag 'hil'"
+    },
+    {
+      "code": "hna",
+      "name": "Mina (Cameroon)",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "hna",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='hna']; likelySubtags.xml; IANA language subtag 'hna'"
+    },
+    {
+      "code": "hns",
+      "name": "Caribbean Hindustani",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "hns",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='hns']; likelySubtags.xml; IANA language subtag 'hns'"
+    },
+    {
+      "code": "ho",
+      "name": "Hiri Motu",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ho",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ho']; likelySubtags.xml; IANA language subtag 'ho'"
+    },
+    {
+      "code": "hr",
+      "name": "Croatian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "hr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='hr']; likelySubtags.xml; IANA language subtag 'hr'"
+    },
+    {
+      "code": "hr-BA",
+      "name": "Croatian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "hr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='hr']; likelySubtags.xml; IANA language subtag 'hr'"
+    },
+    {
+      "code": "hr-HR",
+      "name": "Croatian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "hr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='hr']; likelySubtags.xml; IANA language subtag 'hr'"
+    },
+    {
+      "code": "ht",
+      "name": "Haitian Creole",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ht",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ht']; likelySubtags.xml; IANA language subtag 'ht'"
+    },
+    {
+      "code": "hu",
+      "name": "Hungarian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "hu",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='hu']; likelySubtags.xml; IANA language subtag 'hu'"
+    },
+    {
+      "code": "hu-HU",
+      "name": "Hungarian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "hu",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='hu']; likelySubtags.xml; IANA language subtag 'hu'"
+    },
+    {
+      "code": "hy",
+      "name": "Armenian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "hy",
+      "script_code": "Armn",
+      "source_locator": "common/main/en.xml language[@type='hy']; likelySubtags.xml; IANA language subtag 'hy'"
+    },
+    {
+      "code": "hz",
+      "name": "Herero",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "hz",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='hz']; likelySubtags.xml; IANA language subtag 'hz'"
+    },
+    {
+      "code": "ibg",
+      "name": "Ibanag",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "ibg",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ibg']; likelySubtags.xml; IANA language subtag 'ibg'"
+    },
+    {
+      "code": "id",
+      "name": "Indonesian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "id",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='id']; likelySubtags.xml; IANA language subtag 'id'"
+    },
+    {
+      "code": "ig",
+      "name": "Igbo",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ig",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ig']; likelySubtags.xml; IANA language subtag 'ig'"
+    },
+    {
+      "code": "ilo",
+      "name": "Iloko",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ilo",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ilo']; likelySubtags.xml; IANA language subtag 'ilo'"
+    },
+    {
+      "code": "inc",
+      "name": "Indic languages",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "inc",
+      "script_code": null,
+      "source_locator": "common/main/en.xml language[@type='inc']; likelySubtags.xml; IANA language subtag 'inc'"
+    },
+    {
+      "code": "inh",
+      "name": "Ingush",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "inh",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='inh']; likelySubtags.xml; IANA language subtag 'inh'"
+    },
+    {
+      "code": "is",
+      "name": "Icelandic",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "is",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='is']; likelySubtags.xml; IANA language subtag 'is'"
+    },
+    {
+      "code": "it",
+      "name": "Italian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "it",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='it']; likelySubtags.xml; IANA language subtag 'it'"
+    },
+    {
+      "code": "it-CH",
+      "name": "Italian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "it",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='it']; likelySubtags.xml; IANA language subtag 'it'"
+    },
+    {
+      "code": "it-IT",
+      "name": "Italian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "it",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='it']; likelySubtags.xml; IANA language subtag 'it'"
+    },
+    {
+      "code": "it-SM",
+      "name": "Italian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "it",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='it']; likelySubtags.xml; IANA language subtag 'it'"
+    },
+    {
+      "code": "iu",
+      "name": "Inuktitut",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "iu",
+      "script_code": "Cans",
+      "source_locator": "common/main/en.xml language[@type='iu']; likelySubtags.xml; IANA language subtag 'iu'"
+    },
+    {
+      "code": "ja",
+      "name": "Japanese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ja",
+      "script_code": "Jpan",
+      "source_locator": "common/main/en.xml language[@type='ja']; likelySubtags.xml; IANA language subtag 'ja'"
+    },
+    {
+      "code": "jv",
+      "name": "Javanese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "jv",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='jv']; likelySubtags.xml; IANA language subtag 'jv'"
+    },
+    {
+      "code": "ka",
+      "name": "Georgian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ka",
+      "script_code": "Geor",
+      "source_locator": "common/main/en.xml language[@type='ka']; likelySubtags.xml; IANA language subtag 'ka'"
+    },
+    {
+      "code": "kbd",
+      "name": "Kabardian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "kbd",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='kbd']; likelySubtags.xml; IANA language subtag 'kbd'"
+    },
+    {
+      "code": "kbp",
+      "name": "Kabiyè",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "kbp",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='kbp']; likelySubtags.xml; IANA language subtag 'kbp'"
+    },
+    {
+      "code": "kg",
+      "name": "Kongo",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "kg",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='kg']; likelySubtags.xml; IANA language subtag 'kg'"
+    },
+    {
+      "code": "kk",
+      "name": "Kazakh",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "kk",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='kk']; likelySubtags.xml; IANA language subtag 'kk'"
+    },
+    {
+      "code": "kl",
+      "name": "Kalaallisut",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "kl",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='kl']; likelySubtags.xml; IANA language subtag 'kl'"
+    },
+    {
+      "code": "km",
+      "name": "Khmer",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "km",
+      "script_code": "Khmr",
+      "source_locator": "common/main/en.xml language[@type='km']; likelySubtags.xml; IANA language subtag 'km'"
+    },
+    {
+      "code": "kn",
+      "name": "Kannada",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "kn",
+      "script_code": "Knda",
+      "source_locator": "common/main/en.xml language[@type='kn']; likelySubtags.xml; IANA language subtag 'kn'"
+    },
+    {
+      "code": "ko-KP",
+      "name": "Korean",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ko",
+      "script_code": "Kore",
+      "source_locator": "common/main/en.xml language[@type='ko']; likelySubtags.xml; IANA language subtag 'ko'"
+    },
+    {
+      "code": "ko-KR",
+      "name": "Korean",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ko",
+      "script_code": "Kore",
+      "source_locator": "common/main/en.xml language[@type='ko']; likelySubtags.xml; IANA language subtag 'ko'"
+    },
+    {
+      "code": "kok",
+      "name": "Konkani",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "kok",
+      "script_code": "Deva",
+      "source_locator": "common/main/en.xml language[@type='kok']; likelySubtags.xml; IANA language subtag 'kok'"
+    },
+    {
+      "code": "kos",
+      "name": "Kosraean",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "kos",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='kos']; likelySubtags.xml; IANA language subtag 'kos'"
+    },
+    {
+      "code": "kpg",
+      "name": "Kapingamarangi",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "kpg",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='kpg']; likelySubtags.xml; IANA language subtag 'kpg'"
+    },
+    {
+      "code": "kr",
+      "name": "Kanuri",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "kr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='kr']; likelySubtags.xml; IANA language subtag 'kr'"
+    },
+    {
+      "code": "krc",
+      "name": "Karachay-Balkar",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "krc",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='krc']; likelySubtags.xml; IANA language subtag 'krc'"
+    },
+    {
+      "code": "krj",
+      "name": "Kinaray-a",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "krj",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='krj']; likelySubtags.xml; IANA language subtag 'krj'"
+    },
+    {
+      "code": "ks",
+      "name": "Kashmiri",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ks",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='ks']; likelySubtags.xml; IANA language subtag 'ks'"
+    },
+    {
+      "code": "ktu",
+      "name": "Kituba (Democratic Republic of Congo)",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "ktu",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ktu']; likelySubtags.xml; IANA language subtag 'ktu'"
+    },
+    {
+      "code": "ku",
+      "name": "Kurmanji",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ku",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ku']; likelySubtags.xml; IANA language subtag 'ku'"
+    },
+    {
+      "code": "kun",
+      "name": "Kunama",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "kun",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='kun']; likelySubtags.xml; IANA language subtag 'kun'"
+    },
+    {
+      "code": "kv",
+      "name": "Komi",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "kv",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='kv']; likelySubtags.xml; IANA language subtag 'kv'"
+    },
+    {
+      "code": "ky",
+      "name": "Kyrgyz",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ky",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='ky']; likelySubtags.xml; IANA language subtag 'ky'"
+    },
+    {
+      "code": "la",
+      "name": "Latin",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "la",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='la']; likelySubtags.xml; IANA language subtag 'la'"
+    },
+    {
+      "code": "lb",
+      "name": "Luxembourgish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "lb",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='lb']; likelySubtags.xml; IANA language subtag 'lb'"
+    },
+    {
+      "code": "lg",
+      "name": "Ganda",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "lg",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='lg']; likelySubtags.xml; IANA language subtag 'lg'"
+    },
+    {
+      "code": "ln",
+      "name": "Lingala",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ln",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ln']; likelySubtags.xml; IANA language subtag 'ln'"
+    },
+    {
+      "code": "ln-CG",
+      "name": "Lingala",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ln",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ln']; likelySubtags.xml; IANA language subtag 'ln'"
+    },
+    {
+      "code": "lo",
+      "name": "Lao",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "lo",
+      "script_code": "Laoo",
+      "source_locator": "common/main/en.xml language[@type='lo']; likelySubtags.xml; IANA language subtag 'lo'"
+    },
+    {
+      "code": "loz",
+      "name": "Lozi",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "loz",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='loz']; likelySubtags.xml; IANA language subtag 'loz'"
+    },
+    {
+      "code": "lt",
+      "name": "Lithuanian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "lt",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='lt']; likelySubtags.xml; IANA language subtag 'lt'"
+    },
+    {
+      "code": "lua",
+      "name": "Luba-Lulua",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "lua",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='lua']; likelySubtags.xml; IANA language subtag 'lua'"
+    },
+    {
+      "code": "lue",
+      "name": "Luvale",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "lue",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='lue']; likelySubtags.xml; IANA language subtag 'lue'"
+    },
+    {
+      "code": "lun",
+      "name": "Lunda",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "lun",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='lun']; likelySubtags.xml; IANA language subtag 'lun'"
+    },
+    {
+      "code": "lus",
+      "name": "Mizo",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "lus",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='lus']; likelySubtags.xml; IANA language subtag 'lus'"
+    },
+    {
+      "code": "lv",
+      "name": "Latvian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "lv",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='lv']; likelySubtags.xml; IANA language subtag 'lv'"
+    },
+    {
+      "code": "mdf",
+      "name": "Moksha",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "mdf",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='mdf']; likelySubtags.xml; IANA language subtag 'mdf'"
+    },
+    {
+      "code": "mdh",
+      "name": "Maguindanaon",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "mdh",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='mdh']; likelySubtags.xml; IANA language subtag 'mdh'"
+    },
+    {
+      "code": "men",
+      "name": "Mende",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "men",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='men']; likelySubtags.xml; IANA language subtag 'men'"
+    },
+    {
+      "code": "meu",
+      "name": "Motu",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "meu",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='meu']; likelySubtags.xml; IANA language subtag 'meu'"
+    },
+    {
+      "code": "mey",
+      "name": "Hassaniyya",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "mey",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='mey']; likelySubtags.xml; IANA language subtag 'mey'"
+    },
+    {
+      "code": "mg",
+      "name": "Malagasy",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "mg",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='mg']; likelySubtags.xml; IANA language subtag 'mg'"
+    },
+    {
+      "code": "mh",
+      "name": "Marshallese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "mh",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='mh']; likelySubtags.xml; IANA language subtag 'mh'"
+    },
+    {
+      "code": "mi",
+      "name": "Māori",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "mi",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='mi']; likelySubtags.xml; IANA language subtag 'mi'"
+    },
+    {
+      "code": "miq",
+      "name": "Mískito",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "miq",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='miq']; likelySubtags.xml; IANA language subtag 'miq'"
+    },
+    {
+      "code": "mk",
+      "name": "Macedonian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "mk",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='mk']; likelySubtags.xml; IANA language subtag 'mk'"
+    },
+    {
+      "code": "ml",
+      "name": "Malayalam",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ml",
+      "script_code": "Mlym",
+      "source_locator": "common/main/en.xml language[@type='ml']; likelySubtags.xml; IANA language subtag 'ml'"
+    },
+    {
+      "code": "mn",
+      "name": "Mongolian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "mn",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='mn']; likelySubtags.xml; IANA language subtag 'mn'"
+    },
+    {
+      "code": "mni",
+      "name": "Manipuri",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "mni",
+      "script_code": "Beng",
+      "source_locator": "common/main/en.xml language[@type='mni']; likelySubtags.xml; IANA language subtag 'mni'"
+    },
+    {
+      "code": "mnk",
+      "name": "Mandinka",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "mnk",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='mnk']; likelySubtags.xml; IANA language subtag 'mnk'"
+    },
+    {
+      "code": "mns",
+      "name": "Mansi",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "mns",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='mns']; likelySubtags.xml; IANA language subtag 'mns'"
+    },
+    {
+      "code": "mos",
+      "name": "Mossi",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "mos",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='mos']; likelySubtags.xml; IANA language subtag 'mos'"
+    },
+    {
+      "code": "mr",
+      "name": "Marathi",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "mr",
+      "script_code": "Deva",
+      "source_locator": "common/main/en.xml language[@type='mr']; likelySubtags.xml; IANA language subtag 'mr'"
+    },
+    {
+      "code": "mrw",
+      "name": "Maranao",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "mrw",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='mrw']; likelySubtags.xml; IANA language subtag 'mrw'"
+    },
+    {
+      "code": "ms-BN",
+      "name": "Malay",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ms",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ms']; likelySubtags.xml; IANA language subtag 'ms'"
+    },
+    {
+      "code": "ms-CC",
+      "name": "Malay",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ms",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ms']; likelySubtags.xml; IANA language subtag 'ms'"
+    },
+    {
+      "code": "ms-CX",
+      "name": "Malay",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ms",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ms']; likelySubtags.xml; IANA language subtag 'ms'"
+    },
+    {
+      "code": "ms-MY",
+      "name": "Malay",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ms",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ms']; likelySubtags.xml; IANA language subtag 'ms'"
+    },
+    {
+      "code": "ms-SG",
+      "name": "Malay",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ms",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ms']; likelySubtags.xml; IANA language subtag 'ms'"
+    },
+    {
+      "code": "msb",
+      "name": "Masbatenyo",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "msb",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='msb']; likelySubtags.xml; IANA language subtag 'msb'"
+    },
+    {
+      "code": "mt",
+      "name": "Maltese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "mt",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='mt']; likelySubtags.xml; IANA language subtag 'mt'"
+    },
+    {
+      "code": "mta",
+      "name": "Cotabato Manobo",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "mta",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='mta']; likelySubtags.xml; IANA language subtag 'mta'"
+    },
+    {
+      "code": "mwl",
+      "name": "Mirandese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "mwl",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='mwl']; likelySubtags.xml; IANA language subtag 'mwl'"
+    },
+    {
+      "code": "my",
+      "name": "Burmese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "my",
+      "script_code": "Mymr",
+      "source_locator": "common/main/en.xml language[@type='my']; likelySubtags.xml; IANA language subtag 'my'"
+    },
+    {
+      "code": "myv",
+      "name": "Erzya",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "myv",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='myv']; likelySubtags.xml; IANA language subtag 'myv'"
+    },
+    {
+      "code": "na",
+      "name": "Nauru",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "na",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='na']; likelySubtags.xml; IANA language subtag 'na'"
+    },
+    {
+      "code": "nan",
+      "name": "Min Nan Chinese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "nan",
+      "script_code": "Hans",
+      "source_locator": "common/main/en.xml language[@type='nan']; likelySubtags.xml; IANA language subtag 'nan'"
+    },
+    {
+      "code": "naq",
+      "name": "Nama",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "naq",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='naq']; likelySubtags.xml; IANA language subtag 'naq'"
+    },
+    {
+      "code": "nb",
+      "name": "Norwegian Bokmål",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "nb",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='nb']; likelySubtags.xml; IANA language subtag 'nb'"
+    },
+    {
+      "code": "nd",
+      "name": "North Ndebele",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "nd",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='nd']; likelySubtags.xml; IANA language subtag 'nd'"
+    },
+    {
+      "code": "ne",
+      "name": "Nepali",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ne",
+      "script_code": "Deva",
+      "source_locator": "common/main/en.xml language[@type='ne']; likelySubtags.xml; IANA language subtag 'ne'"
+    },
+    {
+      "code": "niu",
+      "name": "Niuean",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "niu",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='niu']; likelySubtags.xml; IANA language subtag 'niu'"
+    },
+    {
+      "code": "nkr",
+      "name": "Nukuoro",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "nkr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='nkr']; likelySubtags.xml; IANA language subtag 'nkr'"
+    },
+    {
+      "code": "nl",
+      "name": "Dutch",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "nl",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='nl']; likelySubtags.xml; IANA language subtag 'nl'"
+    },
+    {
+      "code": "nl-AN",
+      "name": "Dutch",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "nl",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='nl']; likelySubtags.xml; IANA language subtag 'nl'"
+    },
+    {
+      "code": "nl-AW",
+      "name": "Dutch",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "nl",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='nl']; likelySubtags.xml; IANA language subtag 'nl'"
+    },
+    {
+      "code": "nl-BE",
+      "name": "Dutch",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "nl",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='nl']; likelySubtags.xml; IANA language subtag 'nl'"
+    },
+    {
+      "code": "nl-NL",
+      "name": "Dutch",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "nl",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='nl']; likelySubtags.xml; IANA language subtag 'nl'"
+    },
+    {
+      "code": "nl-SR",
+      "name": "Dutch",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "nl",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='nl']; likelySubtags.xml; IANA language subtag 'nl'"
+    },
+    {
+      "code": "nn",
+      "name": "Norwegian Nynorsk",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "nn",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='nn']; likelySubtags.xml; IANA language subtag 'nn'"
+    },
+    {
+      "code": "no",
+      "name": "Norwegian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "no",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='no']; likelySubtags.xml; IANA language subtag 'no'"
+    },
+    {
+      "code": "nog",
+      "name": "Nogai",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "nog",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='nog']; likelySubtags.xml; IANA language subtag 'nog'"
+    },
+    {
+      "code": "nr",
+      "name": "South Ndebele",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "nr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='nr']; likelySubtags.xml; IANA language subtag 'nr'"
+    },
+    {
+      "code": "nrf",
+      "name": "Jèrriais",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "nrf",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='nrf']; likelySubtags.xml; IANA language subtag 'nrf'"
+    },
+    {
+      "code": "nso",
+      "name": "Northern Sotho",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "nso",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='nso']; likelySubtags.xml; IANA language subtag 'nso'"
+    },
+    {
+      "code": "ny",
+      "name": "Nyanja",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ny",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ny']; likelySubtags.xml; IANA language subtag 'ny'"
+    },
+    {
+      "code": "oc",
+      "name": "Occitan",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "oc",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='oc']; likelySubtags.xml; IANA language subtag 'oc'"
+    },
+    {
+      "code": "om-ET",
+      "name": "Oromo",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "om",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='om']; likelySubtags.xml; IANA language subtag 'om'"
+    },
+    {
+      "code": "or",
+      "name": "Odia",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "or",
+      "script_code": "Orya",
+      "source_locator": "common/main/en.xml language[@type='or']; likelySubtags.xml; IANA language subtag 'or'"
+    },
+    {
+      "code": "pa",
+      "name": "Punjabi",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "pa",
+      "script_code": "Guru",
+      "source_locator": "common/main/en.xml language[@type='pa']; likelySubtags.xml; IANA language subtag 'pa'"
+    },
+    {
+      "code": "pag",
+      "name": "Pangasinan",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "pag",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='pag']; likelySubtags.xml; IANA language subtag 'pag'"
+    },
+    {
+      "code": "pam",
+      "name": "Pampanga",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "pam",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='pam']; likelySubtags.xml; IANA language subtag 'pam'"
+    },
+    {
+      "code": "pap",
+      "name": "Papiamento",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "pap",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='pap']; likelySubtags.xml; IANA language subtag 'pap'"
+    },
+    {
+      "code": "pau",
+      "name": "Palauan",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "pau",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='pau']; likelySubtags.xml; IANA language subtag 'pau'"
+    },
+    {
+      "code": "pl",
+      "name": "Polish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "pl",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='pl']; likelySubtags.xml; IANA language subtag 'pl'"
+    },
+    {
+      "code": "pon",
+      "name": "Pohnpeian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "pon",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='pon']; likelySubtags.xml; IANA language subtag 'pon'"
+    },
+    {
+      "code": "pov",
+      "name": "Upper Guinea Crioulo",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "pov",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='pov']; likelySubtags.xml; IANA language subtag 'pov'"
+    },
+    {
+      "code": "ps",
+      "name": "Pashto",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ps",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='ps']; likelySubtags.xml; IANA language subtag 'ps'"
+    },
+    {
+      "code": "pt",
+      "name": "Portuguese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "pt",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='pt']; likelySubtags.xml; IANA language subtag 'pt'"
+    },
+    {
+      "code": "pt-AO",
+      "name": "Portuguese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "pt",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='pt']; likelySubtags.xml; IANA language subtag 'pt'"
+    },
+    {
+      "code": "pt-BR",
+      "name": "Portuguese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "pt",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='pt']; likelySubtags.xml; IANA language subtag 'pt'"
+    },
+    {
+      "code": "pt-CV",
+      "name": "Portuguese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "pt",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='pt']; likelySubtags.xml; IANA language subtag 'pt'"
+    },
+    {
+      "code": "pt-GW",
+      "name": "Portuguese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "pt",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='pt']; likelySubtags.xml; IANA language subtag 'pt'"
+    },
+    {
+      "code": "pt-MZ",
+      "name": "Portuguese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "pt",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='pt']; likelySubtags.xml; IANA language subtag 'pt'"
+    },
+    {
+      "code": "pt-PT",
+      "name": "Portuguese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "pt",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='pt']; likelySubtags.xml; IANA language subtag 'pt'"
+    },
+    {
+      "code": "pt-ST",
+      "name": "Portuguese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "pt",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='pt']; likelySubtags.xml; IANA language subtag 'pt'"
+    },
+    {
+      "code": "pt-TL",
+      "name": "Portuguese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "pt",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='pt']; likelySubtags.xml; IANA language subtag 'pt'"
+    },
+    {
+      "code": "qu",
+      "name": "Quechua",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "qu",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='qu']; likelySubtags.xml; IANA language subtag 'qu'"
+    },
+    {
+      "code": "rm",
+      "name": "Romansh",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "rm",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='rm']; likelySubtags.xml; IANA language subtag 'rm'"
+    },
+    {
+      "code": "rmm",
+      "name": "Roma",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "rmm",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='rmm']; likelySubtags.xml; IANA language subtag 'rmm'"
+    },
+    {
+      "code": "rn",
+      "name": "Rundi",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "rn",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='rn']; likelySubtags.xml; IANA language subtag 'rn'"
+    },
+    {
+      "code": "ro",
+      "name": "Romanian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ro",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ro']; likelySubtags.xml; IANA language subtag 'ro'"
+    },
+    {
+      "code": "rom",
+      "name": "Romany",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "rom",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='rom']; likelySubtags.xml; IANA language subtag 'rom'"
+    },
+    {
+      "code": "ru",
+      "name": "Russian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ru",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='ru']; likelySubtags.xml; IANA language subtag 'ru'"
+    },
+    {
+      "code": "ru-UA",
+      "name": "Russian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ru",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='ru']; likelySubtags.xml; IANA language subtag 'ru'"
+    },
+    {
+      "code": "rw",
+      "name": "Kinyarwanda",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "rw",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='rw']; likelySubtags.xml; IANA language subtag 'rw'"
+    },
+    {
+      "code": "sa",
+      "name": "Sanskrit",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "sa",
+      "script_code": "Deva",
+      "source_locator": "common/main/en.xml language[@type='sa']; likelySubtags.xml; IANA language subtag 'sa'"
+    },
+    {
+      "code": "sah",
+      "name": "Yakut",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "sah",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='sah']; likelySubtags.xml; IANA language subtag 'sah'"
+    },
+    {
+      "code": "sat",
+      "name": "Santali",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "sat",
+      "script_code": "Olck",
+      "source_locator": "common/main/en.xml language[@type='sat']; likelySubtags.xml; IANA language subtag 'sat'"
+    },
+    {
+      "code": "sc",
+      "name": "Sardinian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "sc",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='sc']; likelySubtags.xml; IANA language subtag 'sc'"
+    },
+    {
+      "code": "sd",
+      "name": "Sindhi",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "sd",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='sd']; likelySubtags.xml; IANA language subtag 'sd'"
+    },
+    {
+      "code": "se",
+      "name": "Northern Sami",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "se",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='se']; likelySubtags.xml; IANA language subtag 'se'"
+    },
+    {
+      "code": "sg",
+      "name": "Sango",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "sg",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='sg']; likelySubtags.xml; IANA language subtag 'sg'"
+    },
+    {
+      "code": "sgd",
+      "name": "Surigaonon",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "sgd",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='sgd']; likelySubtags.xml; IANA language subtag 'sgd'"
+    },
+    {
+      "code": "sh",
+      "name": "Serbo-Croatian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "sh",
+      "script_code": null,
+      "source_locator": "common/main/en.xml language[@type='sh']; likelySubtags.xml; IANA language subtag 'sh'"
+    },
+    {
+      "code": "si",
+      "name": "Sinhala",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "si",
+      "script_code": "Sinh",
+      "source_locator": "common/main/en.xml language[@type='si']; likelySubtags.xml; IANA language subtag 'si'"
+    },
+    {
+      "code": "sid",
+      "name": "Sidamo",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "sid",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='sid']; likelySubtags.xml; IANA language subtag 'sid'"
+    },
+    {
+      "code": "sit",
+      "name": "Sino-Tibetan languages",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "sit",
+      "script_code": null,
+      "source_locator": "common/main/en.xml language[@type='sit']; likelySubtags.xml; IANA language subtag 'sit'"
+    },
+    {
+      "code": "sk",
+      "name": "Slovak",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "sk",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='sk']; likelySubtags.xml; IANA language subtag 'sk'"
+    },
+    {
+      "code": "sl",
+      "name": "Slovenian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "sl",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='sl']; likelySubtags.xml; IANA language subtag 'sl'"
+    },
+    {
+      "code": "sm",
+      "name": "Samoan",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "sm",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='sm']; likelySubtags.xml; IANA language subtag 'sm'"
+    },
+    {
+      "code": "sma",
+      "name": "Southern Sami",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "sma",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='sma']; likelySubtags.xml; IANA language subtag 'sma'"
+    },
+    {
+      "code": "smn",
+      "name": "Inari Sami",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "smn",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='smn']; likelySubtags.xml; IANA language subtag 'smn'"
+    },
+    {
+      "code": "sn",
+      "name": "Shona",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "sn",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='sn']; likelySubtags.xml; IANA language subtag 'sn'"
+    },
+    {
+      "code": "snk",
+      "name": "Soninke",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "snk",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='snk']; likelySubtags.xml; IANA language subtag 'snk'"
+    },
+    {
+      "code": "so-DJ",
+      "name": "Somali",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "so",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='so']; likelySubtags.xml; IANA language subtag 'so'"
+    },
+    {
+      "code": "so-ET",
+      "name": "Somali",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "so",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='so']; likelySubtags.xml; IANA language subtag 'so'"
+    },
+    {
+      "code": "so-SO",
+      "name": "Somali",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "so",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='so']; likelySubtags.xml; IANA language subtag 'so'"
+    },
+    {
+      "code": "sov",
+      "name": "Sonsorol",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "sov",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='sov']; likelySubtags.xml; IANA language subtag 'sov'"
+    },
+    {
+      "code": "sq",
+      "name": "Albanian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "sq",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='sq']; likelySubtags.xml; IANA language subtag 'sq'"
+    },
+    {
+      "code": "sr",
+      "name": "Serbian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "sr",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='sr']; likelySubtags.xml; IANA language subtag 'sr'"
+    },
+    {
+      "code": "sr-BA",
+      "name": "Serbian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "sr",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='sr']; likelySubtags.xml; IANA language subtag 'sr'"
+    },
+    {
+      "code": "sre",
+      "name": "Sara",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "sre",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='sre']; likelySubtags.xml; IANA language subtag 'sre'"
+    },
+    {
+      "code": "srn",
+      "name": "Sranan Tongo",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "srn",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='srn']; likelySubtags.xml; IANA language subtag 'srn'"
+    },
+    {
+      "code": "ss",
+      "name": "Swati",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ss",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ss']; likelySubtags.xml; IANA language subtag 'ss'"
+    },
+    {
+      "code": "ss-SZ",
+      "name": "Swati",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ss",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ss']; likelySubtags.xml; IANA language subtag 'ss'"
+    },
+    {
+      "code": "st",
+      "name": "Southern Sotho",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "st",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='st']; likelySubtags.xml; IANA language subtag 'st'"
+    },
+    {
+      "code": "sv",
+      "name": "Swedish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "sv",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='sv']; likelySubtags.xml; IANA language subtag 'sv'"
+    },
+    {
+      "code": "sv-AX",
+      "name": "Swedish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "sv",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='sv']; likelySubtags.xml; IANA language subtag 'sv'"
+    },
+    {
+      "code": "sv-FI",
+      "name": "Swedish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "sv",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='sv']; likelySubtags.xml; IANA language subtag 'sv'"
+    },
+    {
+      "code": "sv-SE",
+      "name": "Swedish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "sv",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='sv']; likelySubtags.xml; IANA language subtag 'sv'"
+    },
+    {
+      "code": "sw",
+      "name": "Swahili",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "sw",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='sw']; likelySubtags.xml; IANA language subtag 'sw'"
+    },
+    {
+      "code": "sw-KE",
+      "name": "Swahili",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "sw",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='sw']; likelySubtags.xml; IANA language subtag 'sw'"
+    },
+    {
+      "code": "sw-TZ",
+      "name": "Swahili",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "sw",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='sw']; likelySubtags.xml; IANA language subtag 'sw'"
+    },
+    {
+      "code": "swk",
+      "name": "Malawi Sena",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "swk",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='swk']; likelySubtags.xml; IANA language subtag 'swk'"
+    },
+    {
+      "code": "ta",
+      "name": "Tamil",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ta",
+      "script_code": "Taml",
+      "source_locator": "common/main/en.xml language[@type='ta']; likelySubtags.xml; IANA language subtag 'ta'"
+    },
+    {
+      "code": "ta-SG",
+      "name": "Tamil",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ta",
+      "script_code": "Taml",
+      "source_locator": "common/main/en.xml language[@type='ta']; likelySubtags.xml; IANA language subtag 'ta'"
+    },
+    {
+      "code": "te",
+      "name": "Telugu",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "te",
+      "script_code": "Telu",
+      "source_locator": "common/main/en.xml language[@type='te']; likelySubtags.xml; IANA language subtag 'te'"
+    },
+    {
+      "code": "tem",
+      "name": "Timne",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "tem",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='tem']; likelySubtags.xml; IANA language subtag 'tem'"
+    },
+    {
+      "code": "tet",
+      "name": "Tetum",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "tet",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='tet']; likelySubtags.xml; IANA language subtag 'tet'"
+    },
+    {
+      "code": "tg",
+      "name": "Tajik",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "tg",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='tg']; likelySubtags.xml; IANA language subtag 'tg'"
+    },
+    {
+      "code": "th",
+      "name": "Thai",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "th",
+      "script_code": "Thai",
+      "source_locator": "common/main/en.xml language[@type='th']; likelySubtags.xml; IANA language subtag 'th'"
+    },
+    {
+      "code": "ti-ER",
+      "name": "Tigrinya",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ti",
+      "script_code": "Ethi",
+      "source_locator": "common/main/en.xml language[@type='ti']; likelySubtags.xml; IANA language subtag 'ti'"
+    },
+    {
+      "code": "ti-ET",
+      "name": "Tigrinya",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ti",
+      "script_code": "Ethi",
+      "source_locator": "common/main/en.xml language[@type='ti']; likelySubtags.xml; IANA language subtag 'ti'"
+    },
+    {
+      "code": "tig",
+      "name": "Tigre",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "tig",
+      "script_code": "Ethi",
+      "source_locator": "common/main/en.xml language[@type='tig']; likelySubtags.xml; IANA language subtag 'tig'"
+    },
+    {
+      "code": "tk",
+      "name": "Turkmen",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "tk",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='tk']; likelySubtags.xml; IANA language subtag 'tk'"
+    },
+    {
+      "code": "tkl",
+      "name": "Tokelauan",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "tkl",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='tkl']; likelySubtags.xml; IANA language subtag 'tkl'"
+    },
+    {
+      "code": "tl",
+      "name": "Tagalog",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "tl",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='tl']; likelySubtags.xml; IANA language subtag 'tl'"
+    },
+    {
+      "code": "tn",
+      "name": "Tswana",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "tn",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='tn']; likelySubtags.xml; IANA language subtag 'tn'"
+    },
+    {
+      "code": "tn-BW",
+      "name": "Tswana",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "tn",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='tn']; likelySubtags.xml; IANA language subtag 'tn'"
+    },
+    {
+      "code": "to",
+      "name": "Tongan",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "to",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='to']; likelySubtags.xml; IANA language subtag 'to'"
+    },
+    {
+      "code": "toi",
+      "name": "Tonga (Zambia)",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "toi",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='toi']; likelySubtags.xml; IANA language subtag 'toi'"
+    },
+    {
+      "code": "tox",
+      "name": "Tobian",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "tox",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='tox']; likelySubtags.xml; IANA language subtag 'tox'"
+    },
+    {
+      "code": "tpi",
+      "name": "Tok Pisin",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "tpi",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='tpi']; likelySubtags.xml; IANA language subtag 'tpi'"
+    },
+    {
+      "code": "tr",
+      "name": "Turkish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "tr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='tr']; likelySubtags.xml; IANA language subtag 'tr'"
+    },
+    {
+      "code": "tr-BG",
+      "name": "Turkish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "tr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='tr']; likelySubtags.xml; IANA language subtag 'tr'"
+    },
+    {
+      "code": "tr-CY",
+      "name": "Turkish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "tr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='tr']; likelySubtags.xml; IANA language subtag 'tr'"
+    },
+    {
+      "code": "tr-TR",
+      "name": "Turkish",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "tr",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='tr']; likelySubtags.xml; IANA language subtag 'tr'"
+    },
+    {
+      "code": "ts",
+      "name": "Tsonga",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ts",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ts']; likelySubtags.xml; IANA language subtag 'ts'"
+    },
+    {
+      "code": "tsg",
+      "name": "Tausug",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "tsg",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='tsg']; likelySubtags.xml; IANA language subtag 'tsg'"
+    },
+    {
+      "code": "tt",
+      "name": "Tatar",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "tt",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='tt']; likelySubtags.xml; IANA language subtag 'tt'"
+    },
+    {
+      "code": "tum",
+      "name": "Tumbuka",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "tum",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='tum']; likelySubtags.xml; IANA language subtag 'tum'"
+    },
+    {
+      "code": "tut",
+      "name": "Altaic languages",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "tut",
+      "script_code": null,
+      "source_locator": "common/main/en.xml language[@type='tut']; likelySubtags.xml; IANA language subtag 'tut'"
+    },
+    {
+      "code": "tvl",
+      "name": "Tuvalu",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "tvl",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='tvl']; likelySubtags.xml; IANA language subtag 'tvl'"
+    },
+    {
+      "code": "tw",
+      "name": "Twi",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "tw",
+      "script_code": null,
+      "source_locator": "common/main/en.xml language[@type='tw']; likelySubtags.xml; IANA language subtag 'tw'"
+    },
+    {
+      "code": "ty",
+      "name": "Tahitian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ty",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ty']; likelySubtags.xml; IANA language subtag 'ty'"
+    },
+    {
+      "code": "tyv",
+      "name": "Tuvinian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "tyv",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='tyv']; likelySubtags.xml; IANA language subtag 'tyv'"
+    },
+    {
+      "code": "udm",
+      "name": "Udmurt",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "udm",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='udm']; likelySubtags.xml; IANA language subtag 'udm'"
+    },
+    {
+      "code": "ug",
+      "name": "Uyghur",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ug",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='ug']; likelySubtags.xml; IANA language subtag 'ug'"
+    },
+    {
+      "code": "uk",
+      "name": "Ukrainian",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "uk",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='uk']; likelySubtags.xml; IANA language subtag 'uk'"
+    },
+    {
+      "code": "uli",
+      "name": "Ulithian",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "uli",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='uli']; likelySubtags.xml; IANA language subtag 'uli'"
+    },
+    {
+      "code": "ur",
+      "name": "Urdu",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ur",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='ur']; likelySubtags.xml; IANA language subtag 'ur'"
+    },
+    {
+      "code": "ur-PK",
+      "name": "Urdu",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ur",
+      "script_code": "Arab",
+      "source_locator": "common/main/en.xml language[@type='ur']; likelySubtags.xml; IANA language subtag 'ur'"
+    },
+    {
+      "code": "uz",
+      "name": "Uzbek",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "uz",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='uz']; likelySubtags.xml; IANA language subtag 'uz'"
+    },
+    {
+      "code": "uz-AF",
+      "name": "Uzbek",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "uz",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='uz']; likelySubtags.xml; IANA language subtag 'uz'"
+    },
+    {
+      "code": "ve",
+      "name": "Venda",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "ve",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='ve']; likelySubtags.xml; IANA language subtag 've'"
+    },
+    {
+      "code": "vi",
+      "name": "Vietnamese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "vi",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='vi']; likelySubtags.xml; IANA language subtag 'vi'"
+    },
+    {
+      "code": "vmw",
+      "name": "Makhuwa",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "vmw",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='vmw']; likelySubtags.xml; IANA language subtag 'vmw'"
+    },
+    {
+      "code": "war",
+      "name": "Waray",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "war",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='war']; likelySubtags.xml; IANA language subtag 'war'"
+    },
+    {
+      "code": "wls",
+      "name": "Wallisian",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "wls",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='wls']; likelySubtags.xml; IANA language subtag 'wls'"
+    },
+    {
+      "code": "wo",
+      "name": "Wolof",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "wo",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='wo']; likelySubtags.xml; IANA language subtag 'wo'"
+    },
+    {
+      "code": "woe",
+      "name": "Woleaian",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "woe",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='woe']; likelySubtags.xml; IANA language subtag 'woe'"
+    },
+    {
+      "code": "wof",
+      "name": "Gambian Wolof",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "wof",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='wof']; likelySubtags.xml; IANA language subtag 'wof'"
+    },
+    {
+      "code": "wuu",
+      "name": "Wu Chinese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "wuu",
+      "script_code": "Hans",
+      "source_locator": "common/main/en.xml language[@type='wuu']; likelySubtags.xml; IANA language subtag 'wuu'"
+    },
+    {
+      "code": "xal",
+      "name": "Kalmyk",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "xal",
+      "script_code": "Cyrl",
+      "source_locator": "common/main/en.xml language[@type='xal']; likelySubtags.xml; IANA language subtag 'xal'"
+    },
+    {
+      "code": "xh",
+      "name": "Xhosa",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "xh",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='xh']; likelySubtags.xml; IANA language subtag 'xh'"
+    },
+    {
+      "code": "yao",
+      "name": "Yao",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "yao",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='yao']; likelySubtags.xml; IANA language subtag 'yao'"
+    },
+    {
+      "code": "yap",
+      "name": "Yapese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "yap",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='yap']; likelySubtags.xml; IANA language subtag 'yap'"
+    },
+    {
+      "code": "yka",
+      "name": "Yakan",
+      "name_source_id": "iana-language-subtags-2026-06-14",
+      "primary_code": "yka",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='yka']; likelySubtags.xml; IANA language subtag 'yka'"
+    },
+    {
+      "code": "yo",
+      "name": "Yoruba",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "yo",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='yo']; likelySubtags.xml; IANA language subtag 'yo'"
+    },
+    {
+      "code": "yue",
+      "name": "Cantonese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "yue",
+      "script_code": "Hant",
+      "source_locator": "common/main/en.xml language[@type='yue']; likelySubtags.xml; IANA language subtag 'yue'"
+    },
+    {
+      "code": "za",
+      "name": "Zhuang",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "za",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='za']; likelySubtags.xml; IANA language subtag 'za'"
+    },
+    {
+      "code": "zh",
+      "name": "Chinese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "zh",
+      "script_code": "Hans",
+      "source_locator": "common/main/en.xml language[@type='zh']; likelySubtags.xml; IANA language subtag 'zh'"
+    },
+    {
+      "code": "zh-CN",
+      "name": "Chinese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "zh",
+      "script_code": "Hans",
+      "source_locator": "common/main/en.xml language[@type='zh']; likelySubtags.xml; IANA language subtag 'zh'"
+    },
+    {
+      "code": "zh-HK",
+      "name": "Chinese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "zh",
+      "script_code": "Hans",
+      "source_locator": "common/main/en.xml language[@type='zh']; likelySubtags.xml; IANA language subtag 'zh'"
+    },
+    {
+      "code": "zh-MO",
+      "name": "Chinese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "zh",
+      "script_code": "Hans",
+      "source_locator": "common/main/en.xml language[@type='zh']; likelySubtags.xml; IANA language subtag 'zh'"
+    },
+    {
+      "code": "zh-SG",
+      "name": "Chinese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "zh",
+      "script_code": "Hans",
+      "source_locator": "common/main/en.xml language[@type='zh']; likelySubtags.xml; IANA language subtag 'zh'"
+    },
+    {
+      "code": "zh-TW",
+      "name": "Chinese",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "zh",
+      "script_code": "Hans",
+      "source_locator": "common/main/en.xml language[@type='zh']; likelySubtags.xml; IANA language subtag 'zh'"
+    },
+    {
+      "code": "zu",
+      "name": "Zulu",
+      "name_source_id": "unicode-cldr-48.2-reference",
+      "primary_code": "zu",
+      "script_code": "Latn",
+      "source_locator": "common/main/en.xml language[@type='zu']; likelySubtags.xml; IANA language subtag 'zu'"
+    }
+  ],
+  "license_name": "Unicode License v3",
+  "license_url": "https://www.unicode.org/license.txt",
+  "source_id": "unicode-cldr-48.2-reference",
+  "source_name": "Unicode CLDR currency and language metadata"
+}

@@ -1,0 +1,15 @@
+{
+  "source_id": "geonames-timezones-2026-07-22",
+  "source_version": "2026-07-22",
+  "retrieved_at": "2026-07-22T00:00:00Z",
+  "license_name": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "files": [
+    {
+      "url": "https://download.geonames.org/export/dump/timeZones.txt",
+      "path": "timeZones.txt",
+      "sha256": "ea6f8bdcc259c21c562e8f7e7e0b0457cb89403bed60c76aac49ccee9a9ed18c",
+      "size_bytes": 13896
+    }
+  ]
+}

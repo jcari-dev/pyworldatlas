@@ -1,0 +1,9 @@
+SELECT ?country ?statement ?alpha2 ?mottoItem ?motto ?rank WHERE {
+  ?country wdt:P297 ?alpha2;
+           p:P1546 ?statement.
+  ?statement ps:P1546 ?mottoItem;
+             wikibase:rank ?rank.
+  ?mottoItem rdfs:label ?motto.
+  FILTER(REGEX(?alpha2, "^[A-Z]{2}$"))
+}
+ORDER BY ?alpha2 ?statement ?motto

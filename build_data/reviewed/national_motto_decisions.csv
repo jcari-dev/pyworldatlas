@@ -1,0 +1,39 @@
+country_code,statement_id,motto_item_id,decision,preferred_language_code,review_note
+AL,Q222-8a5e6fe1-4967-0960-59d0-b6d781c83549,Q50214298,include,en,Current source-listed national motto
+AO,Q916-af3cb794-457e-64d3-6331-e7861caa989a,Q102185417,exclude,en,The linked item label conflicts with the country record
+AR,Q414-278e8eb0-4111-91cd-dbee-c14c08a0c1cf,Q3247037,include,es,Current source-listed national motto
+BE,Q31-34946ee4-4ced-be54-69e6-4239f9971cd2,Q1308013,include,nl,Current source-listed national motto
+BG,Q219-c7bfcf93-41c1-b133-08c7-a21a7c8ebc70,Q1308013,include,bg,Current source-listed national motto
+BR,Q155-a7be64a0-4f14-ea8f-6448-f2da7514d3b3,Q1077885,include,pt,Current source-listed national motto
+CA,Q16-1c67b7f6-4cd4-6a0d-66a9-2b6e435e69cd,Q41423,include,en,Current source-listed national motto
+CH,Q39-01c8942e-4404-8ab2-5629-61c63ec8c4d6,Q2717243,exclude,de,Traditional status is not represented by the 0.6 model
+CZ,Q213-25666090-4d93-43c4-84f6-622a1be38edf,Q3274908,include,cs,Current source-listed national motto
+DZ,Q262-a9b2ac92-4672-62c7-49bf-e5e681982fe4,Q102185522,include,ar,Current source-listed national motto
+ES,Q29-f9fc8b40-4966-4b00-2bbb-5906c5f3c0ec,Q1045726,include,es,Current source-listed national motto
+FR,Q142-012830a4-496a-e0ce-4f4b-0f6b0034083b,Q3489443,exclude,fr,Historical statement
+FR,Q142-43f9e961-4f78-58e5-8c92-8133c36942fe,Q251583,exclude,fr,Duplicate normal-rank statement
+FR,Q142-46726fce-492b-129e-08c5-fad66787f117,Q251583,include,fr,Preferred-rank current statement
+GE,Q230-e3a51ff1-402d-09f1-e224-0c4777700679,Q3646621,include,ka,Current source-listed national motto
+GN,Q1006-6e465246-4de3-1852-dcaf-91a32e612ad2,Q77669393,include,fr,Current source-listed national motto
+GQ,Q983-5af41bb2-4abc-e128-e619-926b07b50dd5,Q102185452,include,es,Current source-listed national motto
+GR,Q41-452d381a-4df9-1487-69fc-df7e87e55e3f,Q2746673,include,el,Current source-listed national motto
+HT,Q790-41890478-4a9e-b348-3b61-fe859097c97f,Q251583,include,en,Current source-listed national motto
+ID,Q252-d5647ca8-4898-fd1e-a0b4-0c62374f4eb5,Q145327,include,id,Current source-listed national motto
+IN,Q668-0bef4e3f-45e9-9c4e-74ca-a187e20f3bd3,Q680277,include,hi,Current source-listed national motto
+IQ,Q796-08683310-47a5-a509-c481-5ae593af2d9d,Q191811,include,ar,Current source-listed national motto
+IR,Q794-26210fc7-4483-0ff4-cea3-130689662168,Q191811,include,fa,Current source-listed national motto
+KE,Q114-1e163260-48f6-12e5-0c9e-c8b5c3d04c32,Q1432776,include,sw,Current source-listed national motto
+KN,Q763-3d778871-45a2-d03c-804b-539900ceca4c,Q102185480,include,en,Current source-listed national motto
+MC,Q235-2e06cc56-41f5-5cb2-5b68-b14ce6a77875,Q3023442,include,fr,Current source-listed national motto
+NC,Q33788-e2c33f63-409b-c817-e836-c9b59e4c2160,Q3518652,include,fr,Current source-listed territory motto
+NP,Q837-C7EF7841-881A-47CC-842C-FA9917D2772E,Q56686358,include,en,Current source-listed national motto
+PG,Q691-ed7477fb-4c8a-083e-776f-2c71fff97862,Q7893834,include,en,Current source-listed national motto
+PH,Q928-03f2fdfa-44ac-6017-e148-e2095df62d04,Q25047907,include,en,Current source-listed national motto
+PK,Q843-fe32f72d-42a0-6071-57b6-2403d04d72cb,Q19605101,include,ur,Current source-listed national motto
+RE,Q17070-2e937175-4f36-7f52-de5a-18aae7490e75,Q3073909,include,fr,Current source-listed territory motto
+SA,Q851-5bd6fced-4fda-d9fb-5b53-c78ff1b6bcdf,Q41831,include,ar,Current source-listed national motto
+TZ,Q924-0952a406-46a4-b8df-d195-d80f6a46f362,Q5500679,include,sw,Current source-listed national motto
+US,Q30-84997e7b-47e8-23b4-6db1-cb8988f767ea,Q270871,include,en,Current official motto
+US,Q30-9d2a29fa-4fe0-45e1-f58a-6dc79447f606,Q191587,exclude,en,Traditional status is not represented by the 0.6 model
+UY,Q77-78edb2c1-447b-51c7-ff72-0e861168d5df,Q137944685,include,es,Current source-listed national motto
+ZA,Q258-acf8dd72-4dcb-3a87-6ac7-8db253b9e686,Q7893834,exclude,en,The linked label does not preserve the exact national-language form

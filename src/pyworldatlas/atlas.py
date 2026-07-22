@@ -14,10 +14,11 @@ from ._version import SCHEMA_VERSION, __version__
 from .database import Database
 from .exceptions import (AmbiguousPlaceError, AtlasClosedError, CapitalNotFoundError,
                          CountryNotFoundError, DatasetVersionError, PlaceNotFoundError)
-from .models import (Area, BorderPathResult, Capital, City, Coordinate, Country,
-                     CountryCodes, CountryMatch, Currency,
-                     DatasetInfo, Flashcard, Geography, Language, LocalizedName,
-                     SourceReference)
+from .models import (Area, BorderPathResult, Capital, CapitalDistance, City,
+                     Coordinate, Country, CountryCodes, CountryMatch,
+                     CountryRanking, Currency, DatasetInfo, Demonym, Flashcard,
+                     Geography, Language, LocalizedName, NationalAnthem,
+                     NationalMotto, PostalCodeFormat, SourceReference, Timezone)
 
 
 def _flag(alpha2: str) -> str:
@@ -129,8 +130,17 @@ class Atlas:
         ranked = sorted(best.items(), key=lambda item: (-item[1][0], self._load_country(item[0]).name))[:limit]
         return tuple(CountryMatch(self._load_country(cid), matched, score) for cid, (score, matched) in ranked)
 
-    def countries(self, *, continent: str | None = None, region: str | None = None) -> tuple[Country, ...]:
-        """Return countries alphabetically, optionally filtered by UN classifications."""
+    def countries(
+        self,
+        *,
+        continent: str | None = None,
+        region: str | None = None,
+        currency_code: str | None = None,
+        language_code: str | None = None,
+        script_code: str | None = None,
+        timezone_id: str | None = None,
+    ) -> tuple[Country, ...]:
+        """Return countries alphabetically with optional exact profile filters."""
         self._ensure_open()
         clauses, params = [], []
         if continent:
@@ -139,9 +149,93 @@ class Atlas:
         if region:
             clauses.append("(region = ? OR subregion = ?)")
             params.extend((region, region))
+        if currency_code:
+            clauses.append("upper(currency_code) = upper(?)")
+            params.append(currency_code)
+        if language_code:
+            clauses.append(
+                "id IN (SELECT country_id FROM country_language "
+                "WHERE lower(code)=lower(?) OR lower(primary_code)=lower(?))"
+            )
+            params.extend((language_code, language_code))
+        if script_code:
+            clauses.append(
+                "id IN (SELECT country_id FROM country_language WHERE lower(script_code)=lower(?))"
+            )
+            params.append(script_code)
+        if timezone_id:
+            clauses.append(
+                "id IN (SELECT country_id FROM country_timezone WHERE lower(timezone_id)=lower(?))"
+            )
+            params.append(timezone_id)
         where = f" WHERE {' AND '.join(clauses)}" if clauses else ""
         rows = self._db.connection.execute(f"SELECT id FROM country{where} ORDER BY name", params).fetchall()
         return tuple(self._load_country(int(row[0])) for row in rows)
+
+    def rank_countries(
+        self,
+        metric: str,
+        *,
+        limit: int | None = None,
+        descending: bool = True,
+        continent: str | None = None,
+        region: str | None = None,
+    ) -> tuple[CountryRanking, ...]:
+        """Rank countries by a documented sourced or directly derived metric.
+
+        Supported metrics are ``"population"``, ``"area"``,
+        ``"population_density"``, ``"border_count"``, and
+        ``"major_city_count"``. Missing values are excluded.
+        """
+        aliases = {"area_km2": "area", "density": "population_density"}
+        normalized_metric = aliases.get(metric.casefold(), metric.casefold())
+        units = {
+            "population": "people",
+            "area": "km²",
+            "population_density": "people/km²",
+            "border_count": "countries",
+            "major_city_count": "places",
+        }
+        if normalized_metric not in units:
+            raise ValueError(
+                "metric must be 'population', 'area', 'population_density', "
+                "'border_count', or 'major_city_count'"
+            )
+        if limit is not None and (
+            isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0
+        ):
+            raise ValueError("limit must be a positive integer or None")
+
+        ranked: list[tuple[Country, int | float]] = []
+        for country in self.countries(continent=continent, region=region):
+            if normalized_metric == "population":
+                value = country.population
+            elif normalized_metric == "area":
+                value = country.area_km2
+            elif normalized_metric == "population_density":
+                value = country.population_density
+            elif normalized_metric == "border_count":
+                value = len(self.neighbors(country.alpha2))
+            else:
+                value = country.major_city_count
+            if value is not None:
+                ranked.append((country, value))
+        ranked.sort(
+            key=lambda item: (
+                -float(item[1]) if descending else float(item[1]),
+                item[0].name,
+            )
+        )
+        if limit is not None:
+            ranked = ranked[:limit]
+        return tuple(
+            CountryRanking(position, country.reference(), normalized_metric, value, units[normalized_metric])
+            for position, (country, value) in enumerate(ranked, 1)
+        )
+
+    def rank(self, metric: str, **kwargs: object) -> tuple[CountryRanking, ...]:
+        """Alias for :meth:`rank_countries` suited to exploratory sessions."""
+        return self.rank_countries(metric, **kwargs)
 
     def countries_with_local_names(
         self,
@@ -522,6 +616,38 @@ class Atlas:
         finish = self._coordinates_of(second, country=second_country)
         return start.distance_to(finish, unit=unit)
 
+    def nearest_capitals(
+        self,
+        origin: str | Country | Capital | City | Coordinate | tuple[float, float],
+        *,
+        limit: int = 5,
+        unit: str = "km",
+        country: str | None = None,
+        include_origin: bool = False,
+    ) -> tuple[CapitalDistance, ...]:
+        """Return primary capitals nearest to a city, country, or coordinate.
+
+        String origins use the exact city lookup and may be constrained with
+        ``country``. Pass a :class:`Country` to measure from its primary
+        capital or a :class:`Coordinate` for an arbitrary starting point.
+        """
+        if isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0:
+            raise ValueError("limit must be a positive integer")
+        start = self._coordinates_of(origin, country=country)
+        results: list[CapitalDistance] = []
+        for candidate in self.countries():
+            capital = candidate.capital
+            if capital is None:
+                continue
+            distance = start.distance_to(capital.coordinates, unit=unit)
+            if not include_origin and distance <= 1e-9:
+                continue
+            results.append(
+                CapitalDistance(candidate.reference(), capital, distance, unit)
+            )
+        results.sort(key=lambda result: (result.distance, result.country.name))
+        return tuple(results[:limit])
+
     def _coordinates_of(
         self,
         value: str | Country | Capital | City | Coordinate | tuple[float, float],
@@ -557,15 +683,115 @@ class Atlas:
         city_rows = self._db.connection.execute("SELECT * FROM city WHERE country_id=? ORDER BY population DESC, name", (country_id,)).fetchall()
         cities = tuple(City(c["name"], row["alpha2"], Coordinate(c["latitude"], c["longitude"]), c["population"], c["elevation_m"], c["timezone_id"], ("official",) if c["is_capital"] else (), (), c["geonames_id"]) for c in city_rows)
         source_rows = self._db.connection.execute("SELECT DISTINCT s.* FROM source s JOIN field_source f ON f.source_id=s.id WHERE f.country_id=? ORDER BY s.id", (country_id,)).fetchall()
-        sources = tuple(SourceReference(s["id"], s["name"], s["homepage"], s["retrieved_at"]) for s in source_rows)
+        sources = tuple(
+            SourceReference(
+                s["id"], s["name"], s["homepage"], s["retrieved_at"],
+                s["version"], s["license_name"], s["license_url"], s["notes"],
+            )
+            for s in source_rows
+        )
+        source_by_id = {source.id: source for source in sources}
         local_names = self._load_local_names().get(country_id, ())
         geography = Geography(row["continent"], row["region"], row["subregion"], Area(row["total_area_km2"]))
-        currency = Currency(row["currency_code"], row["currency_name"]) if row["currency_code"] else None
-        languages = tuple(Language(code) for code in json.loads(row["language_codes"]))
+        currency = (
+            Currency(
+                row["currency_code"], row["currency_name"], row["currency_symbol"],
+                row["currency_minor_unit_digits"],
+                source_by_id.get("unicode-cldr-48.2-reference"),
+            )
+            if row["currency_code"] else None
+        )
+        language_rows = self._db.connection.execute(
+            "SELECT * FROM country_language WHERE country_id=? ORDER BY code",
+            (country_id,),
+        ).fetchall()
+        languages = tuple(
+            Language(
+                item["code"], item["primary_code"], item["name"], item["script_code"],
+                source_by_id.get(item["source_id"]),
+            )
+            for item in language_rows
+        )
         calling_codes = tuple(json.loads(row["calling_codes"]))
         observed_timezones = tuple(sorted({city.timezone_id for city in cities if city.timezone_id}))
+        timezone_rows = self._db.connection.execute(
+            "SELECT * FROM country_timezone WHERE country_id=? ORDER BY timezone_id",
+            (country_id,),
+        ).fetchall()
+        timezones = tuple(
+            Timezone(
+                item["timezone_id"], item["january_utc_offset_hours"],
+                item["july_utc_offset_hours"], item["raw_utc_offset_hours"],
+                source_by_id.get(item["source_id"]),
+            )
+            for item in timezone_rows
+        )
+        anthem_rows = self._db.connection.execute(
+            "SELECT * FROM country_anthem WHERE country_id=? ORDER BY title",
+            (country_id,),
+        ).fetchall()
+        anthems = tuple(
+            NationalAnthem(
+                item["title"], item["english_title"], source_by_id[item["source_id"]],
+                item["source_locator"],
+            )
+            for item in anthem_rows
+        )
+        motto_rows = self._db.connection.execute(
+            "SELECT * FROM country_motto WHERE country_id=? ORDER BY text",
+            (country_id,),
+        ).fetchall()
+        mottos = tuple(
+            NationalMotto(
+                item["text"], item["language_code"], item["english_text"],
+                source_by_id[item["source_id"]], item["source_locator"],
+            )
+            for item in motto_rows
+        )
+        demonym_rows = self._db.connection.execute(
+            "SELECT * FROM country_demonym WHERE country_id=? ORDER BY language_code",
+            (country_id,),
+        ).fetchall()
+        demonyms = tuple(
+            Demonym(
+                item["noun"], item["adjective"], item["language_code"],
+                source_by_id[item["source_id"]], item["source_locator"],
+            )
+            for item in demonym_rows
+        )
+        postal_code = (
+            PostalCodeFormat(
+                row["postal_code_format"], row["postal_code_regex"],
+                source_by_id.get("geonames"),
+            )
+            if row["postal_code_format"] else None
+        )
         formal_name = next((name.text for name in names if name.kind == "formal"), None)
-        return Country(row["name"], row["official_name"], names, aliases, CountryCodes(row["alpha2"], row["alpha3"], row["numeric_code"], None, row["geonames_id"]), _flag(row["alpha2"]), geography, capitals, cities, sources, local_names, row["population"], currency, languages, calling_codes, row["top_level_domain"], observed_timezones, formal_name)
+        return Country(
+            name=row["name"],
+            official_name=row["official_name"],
+            names=names,
+            aliases=aliases,
+            codes=CountryCodes(row["alpha2"], row["alpha3"], row["numeric_code"], None, row["geonames_id"]),
+            flag=_flag(row["alpha2"]),
+            geography=geography,
+            capitals=capitals,
+            major_cities=cities,
+            sources=sources,
+            local_names=local_names,
+            population=row["population"],
+            currency=currency,
+            languages=languages,
+            calling_codes=calling_codes,
+            top_level_domain=row["top_level_domain"],
+            observed_timezones=observed_timezones,
+            formal_name=formal_name,
+            anthems=anthems,
+            mottos=mottos,
+            demonyms=demonyms,
+            timezones=timezones,
+            postal_code=postal_code,
+        )
 
     @lru_cache(maxsize=1)
     def _load_local_names(self) -> dict[int, tuple[LocalizedName, ...]]:
