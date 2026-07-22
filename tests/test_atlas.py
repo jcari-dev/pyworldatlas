@@ -85,9 +85,9 @@ class AtlasTests(unittest.TestCase):
         )
         self.assertEqual(cards[0].to_dict()["topic"], "capitals")
         topics = (
-            "alpha_2_codes", "alpha_3_codes", "areas", "calling_codes",
+            "alpha_2_codes", "alpha_3_codes", "areas", "border_counts", "calling_codes",
             "continents", "countries_from_capitals", "currencies", "flags",
-            "language_codes", "local_names", "m49_codes", "population_density",
+            "language_codes", "local_names", "m49_codes", "neighbors", "population_density",
             "populations", "regions", "top_level_domains",
         )
         for topic in topics:
@@ -99,6 +99,20 @@ class AtlasTests(unittest.TestCase):
         self.assertEqual(
             [(card.country.alpha2, card.answer) for card in local_names],
             [("CH", "Schweiz"), ("BR", "Brasil")],
+        )
+        neighbor_cards = self.atlas.flashcards(topic="neighbors", count=3, seed=42)
+        self.assertEqual(
+            [(card.country.alpha2, card.answer) for card in neighbor_cards],
+            [
+                ("KW", "Iraq, Saudi Arabia"),
+                ("BI", "Democratic Republic of the Congo, Rwanda, Tanzania"),
+                ("AE", "Oman, Saudi Arabia"),
+            ],
+        )
+        count_cards = self.atlas.flashcards(topic="border_counts", count=3, seed=42)
+        self.assertEqual(
+            [(card.country.alpha2, card.answer) for card in count_cards],
+            [("KW", "2"), ("BS", "0"), ("BI", "3")],
         )
         with self.assertRaisesRegex(ValueError, "unsupported flashcard topic"):
             self.atlas.flashcards(topic="trivia", count=1)
@@ -204,7 +218,10 @@ class AtlasTests(unittest.TestCase):
         self.assertEqual(path.origin.alpha2, "PT")
         self.assertEqual(path.destination.alpha2, "CN")
         self.assertEqual(path.crossings, len(path.countries) - 1)
+        self.assertEqual(path.names, tuple(country.name for country in path.countries))
+        self.assertEqual(path.alpha2_codes, tuple(country.alpha2 for country in path.countries))
         self.assertEqual(path.crossings, self.atlas.border_crossings("Portugal", "China"))
+        self.assertTrue(self.atlas.has_land_route("Portugal", "China"))
         for first, second in zip(path.countries, path.countries[1:]):
             self.assertTrue(self.atlas.shares_border(first.alpha2, second.alpha2))
 
@@ -213,6 +230,8 @@ class AtlasTests(unittest.TestCase):
         self.assertEqual(tuple(country.alpha2 for country in same.countries), ("JP",))
         self.assertIsNone(self.atlas.border_path("Japan", "China"))
         self.assertIsNone(self.atlas.border_crossings("Japan", "China"))
+        self.assertFalse(self.atlas.has_land_route("Japan", "China"))
+        self.assertTrue(self.atlas.has_land_route("Japan", "JP"))
         self.assertEqual(self.atlas.countries_reachable_by_land("Japan"), ())
         reachable = {country.name for country in self.atlas.countries_reachable_by_land("Portugal")}
         self.assertIn("China", reachable)
@@ -250,7 +269,7 @@ class AtlasTests(unittest.TestCase):
 
     def test_dataset_versions(self):
         info = self.atlas.dataset_info()
-        self.assertEqual((info.library_version, info.schema_version, info.dataset_version), ("0.3.0", 3, "2026.07.21.1"))
+        self.assertEqual((info.library_version, info.schema_version, info.dataset_version), ("0.3.1", 3, "2026.07.21.1"))
         self.assertEqual(info.country_count, 248)
 
     def test_official_local_names_pilot(self):

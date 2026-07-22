@@ -279,6 +279,16 @@ class BorderPathResult:
         """Return the last country in the path."""
         return self.countries[-1]
 
+    @property
+    def names(self) -> tuple[str, ...]:
+        """Return country display names in path order."""
+        return tuple(country.name for country in self.countries)
+
+    @property
+    def alpha2_codes(self) -> tuple[str, ...]:
+        """Return alpha-2 country codes in path order."""
+        return tuple(country.alpha2 for country in self.countries)
+
     def to_dict(self) -> dict[str, Any]:
         """Return JSON-compatible primitives for this path."""
         return _jsonable(self)

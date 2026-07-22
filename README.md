@@ -2,7 +2,7 @@
 
 > A compact, source-aware world atlas for Python that works completely offline.
 
-[![Source 0.3.0](https://img.shields.io/badge/source-0.3.0-1677be)](CHANGELOG.md)
+[![Source 0.3.1](https://img.shields.io/badge/source-0.3.1-1677be)](CHANGELOG.md)
 [![PyPI](https://img.shields.io/pypi/v/pyworldatlas.svg?label=PyPI)](https://pypi.org/project/pyworldatlas/)
 [![Python 3.10–3.14](https://img.shields.io/badge/python-3.10%E2%80%933.14-10233d)](https://www.python.org/)
 [![Runtime dependencies: 0](https://img.shields.io/badge/runtime%20dependencies-0-1b8a6b)](#small-by-design)
@@ -30,9 +30,10 @@ with Atlas() as atlas:
 ## Dataset coverage
 
 The bundled dataset contains every country and area in the captured UN M49
-scope, cross-checked against GeoNames country metadata. Version 0.3.0 adds a
+scope, cross-checked against GeoNames country metadata. Version 0.3.0 added a
 reviewed land-border graph to the profile, coordinate, capital, and
-populated-place records established in earlier releases.
+populated-place records established in earlier releases. Version 0.3.1 makes
+that graph easier to query, teach, and explain.
 
 | Current dataset | Coverage |
 |---|---:|
@@ -45,7 +46,7 @@ populated-place records established in earlier releases.
 | Runtime dependencies | 0 |
 | Bundled databases | 1 SQLite file |
 
-The 0.3.0 checkout includes richer country profiles, dependency-free coordinate
+The 0.3.1 checkout includes richer country profiles, dependency-free coordinate
 calculations, flag emoji, discovery cards, reproducible sampling, structured
 flashcards, reviewed neighbors, and shortest land-border paths. Boundary
 geometry, historical statistics, national leaders, interactive learning
@@ -69,7 +70,7 @@ python -m pip install -e . -e pipeline
 You can also test the exact local wheel after running the release build:
 
 ```console
-python -m pip install --no-index --no-deps dist/pyworldatlas-0.3.0-py3-none-any.whl
+python -m pip install --no-index --no-deps dist/pyworldatlas-0.3.1-py3-none-any.whl
 ```
 
 The package runtime supports Python 3.10 through 3.14 during the 0.x release
@@ -97,6 +98,7 @@ series. Python versions are only claimed as release-supported after CI passes.
 | Bearing and midpoint | `coordinate.bearing_to(other)`, `.midpoint_to(other)` |
 | Land neighbors | `atlas.neighbors("France")`, `atlas.shares_border("ES", "MA")` |
 | Border paths | `atlas.border_path("Portugal", "China")`, `atlas.border_crossings(...)` |
+| Land connectivity | `atlas.has_land_route("Portugal", "China")` |
 | Land components | `atlas.countries_reachable_by_land("Portugal")` |
 | Borderless entities | `atlas.countries_with_no_land_borders()` |
 | Source inspection | `country.sources` |
@@ -165,7 +167,8 @@ same dataset, filters, and seed produce the same ordered lesson across supported
 Python versions. Flashcards are immutable structured values rather than an
 interactive game. Supported topics cover capitals, flags, country codes,
 currencies, calling codes, domains, language codes, regions, local names,
-population, area, and calculated density.
+population, area, calculated density, reviewed neighbors, and land-border
+counts.
 
 ## Latitude, longitude, and distance
 
@@ -207,7 +210,8 @@ names, reviewed aliases, alpha-2, alpha-3, and M49 numeric codes.
 
 ## Land borders and shortest paths
 
-The 0.3.0 graph contains 319 reviewed undirected relationships. Neighbor results
+The land-border graph introduced in 0.3.0 contains 319 reviewed undirected
+relationships. Neighbor results
 are alphabetical, and equal-length shortest paths are deterministic.
 
 ```python
@@ -219,15 +223,21 @@ with Atlas() as atlas:
 
     path = atlas.border_path("Portugal", "China")
     print(path.crossings)
-    print(" -> ".join(country.name for country in path.countries))
+    print(" -> ".join(path.names))
+    print(path.alpha2_codes)
 
     print(atlas.border_path("Japan", "China"))  # None
+    print(atlas.has_land_route("Portugal", "China"))  # True
 ```
 
 `border_path()` uses breadth-first search and returns an immutable,
 JSON-serializable `BorderPathResult`. A missing route is `None`, not an error.
 Maritime proximity, border geometry, border length, and road routing are not
 represented.
+
+The structured flashcard API also supports `neighbors` and `border_counts`.
+Neighbor answers come directly from the reviewed graph; border counts are the
+number of accepted edges attached to the selected country or area.
 
 ## Small by design
 
@@ -248,7 +258,7 @@ At runtime PyWorldAtlas does not:
 
 ## Data you can trace
 
-The 0.3.0 checkout uses:
+The 0.3.1 checkout uses:
 
 - **United Nations M49** for canonical identities, standard codes, regions, and
   subregions.
@@ -295,7 +305,7 @@ with Atlas() as atlas:
 - **Schema version** describes compatibility with the bundled SQLite structure.
 - **Dataset version** identifies the captured source snapshot.
 
-For this development checkout they are `0.3.0`, `3`, and `2026.07.21.1`.
+For this development checkout they are `0.3.1`, `3`, and `2026.07.21.1`.
 
 ## Documentation and roadmap
 
@@ -306,10 +316,12 @@ For this development checkout they are `0.3.0`, `3`, and `2026.07.21.1`.
 - Milestone evidence: [MILESTONE_0_1_REPORT.md](MILESTONE_0_1_REPORT.md)
 - 0.2.1 execution status: [RELEASE_0_2_STATUS.md](RELEASE_0_2_STATUS.md)
 - 0.3.0 release status: [RELEASE_0_3_STATUS.md](RELEASE_0_3_STATUS.md)
+- 0.3.1 release status: [RELEASE_0_3_1_STATUS.md](RELEASE_0_3_1_STATUS.md)
 - Maintainer release process: [RELEASING.md](RELEASING.md)
 
-Version 0.3.0 is the reviewed land-border release. Later releases extend
-boundary geometry, historical statistics, institutions, culture, and exports.
+Version 0.3.1 polishes the reviewed land-border API and its learning tools.
+Later releases extend boundary geometry, historical statistics, institutions,
+culture, and exports.
 
 ## License and attribution
 

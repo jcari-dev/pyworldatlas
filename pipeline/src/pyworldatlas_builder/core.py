@@ -666,6 +666,16 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
             "docs": "Border API, data policy, exceptions, and examples",
             "release": "Publication state is tracked on GitHub Releases and PyPI",
         },
+        {
+            "name": "3.1 — Border API and learning polish",
+            "version": "0.3.1",
+            "status": "complete",
+            "functions": "Land-route reachability, path name/code conveniences, neighbor flashcards, and border-count flashcards",
+            "tests": "Deterministic flashcard fixtures, reachability edge cases, examples, and complete release gate",
+            "dataset": "No dataset change; derives from the 319 reviewed relationships",
+            "docs": "API provenance, connectivity semantics, serialization, flashcards, and examples",
+            "release": "Publication state is tracked on GitHub Releases and PyPI",
+        },
     ]
     for name, version in [
         ("4 — Geometry", "0.4.0"), ("5 — Statistics", "0.5.0"),

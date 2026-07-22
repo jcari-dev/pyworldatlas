@@ -45,6 +45,7 @@ _FLASHCARD_TOPICS = (
     "alpha_2_codes",
     "alpha_3_codes",
     "areas",
+    "border_counts",
     "calling_codes",
     "capitals",
     "continents",
@@ -54,6 +55,7 @@ _FLASHCARD_TOPICS = (
     "language_codes",
     "local_names",
     "m49_codes",
+    "neighbors",
     "population_density",
     "populations",
     "regions",
@@ -164,10 +166,10 @@ class Atlas:
 
     def _border_country_id(self, query: str) -> int:
         """Resolve a public country query for an internal graph operation."""
-        country = self.country(query)
-        country_id = self._country_id(country.alpha2)
-        if country_id is None:  # pragma: no cover - guarded by the loaded profile
-            raise CountryNotFoundError(f"No unambiguous country matches {query!r}")
+        country_id = self._country_id(query)
+        if country_id is None:
+            self.country(query)  # raises the public error with ranked suggestions
+            raise CountryNotFoundError(f"No unambiguous country matches {query!r}")  # pragma: no cover
         return country_id
 
     def neighbors(self, country: str) -> tuple[Country, ...]:
@@ -225,6 +227,17 @@ class Atlas:
         """Return the fewest land-border crossings, or ``None`` if unreachable."""
         path = self.border_path(origin, destination)
         return path.crossings if path else None
+
+    def has_land_route(self, origin: str, destination: str) -> bool:
+        """Return whether ``origin`` and ``destination`` are land-connected.
+
+        This is derived at query time from the reviewed border graph; it does
+        not use road, rail, ferry, maritime, or travel-access data. Identical
+        endpoints return ``True`` because their shortest graph path has zero
+        border crossings. Unknown country queries raise
+        :class:`~pyworldatlas.CountryNotFoundError`.
+        """
+        return self.border_path(origin, destination) is not None
 
     def countries_reachable_by_land(self, country: str) -> tuple[Country, ...]:
         """Return every other entity in ``country``'s land-connected component.
@@ -287,16 +300,18 @@ class Atlas:
         """Return deterministic, immutable geography flashcards.
 
         Supported topics are ``alpha_2_codes``, ``alpha_3_codes``, ``areas``,
-        ``calling_codes``, ``capitals``, ``continents``,
+        ``border_counts``, ``calling_codes``, ``capitals``, ``continents``,
         ``countries_from_capitals``, ``currencies``, ``flags``,
-        ``language_codes``, ``local_names``, ``m49_codes``,
+        ``language_codes``, ``local_names``, ``m49_codes``, ``neighbors``,
         ``population_density``, ``populations``, ``regions``, and
         ``top_level_domains``. Countries missing the answer required by a topic
         are excluded before sampling. An impossible count raises
         :class:`ValueError` rather than silently returning fewer cards.
 
         Population, area, and density answers describe the captured source
-        snapshot. Flashcards are structured values, not an interactive game.
+        snapshot. Neighbor and border-count answers are derived from the
+        reviewed land-border graph. Flashcards are structured values, not an
+        interactive game.
         """
         if topic not in _FLASHCARD_TOPICS:
             allowed = ", ".join(_FLASHCARD_TOPICS)
@@ -309,8 +324,7 @@ class Atlas:
         selected = _stable_country_sample(candidates, count, seed)
         return tuple(self._flashcard(country, topic) for country in selected)
 
-    @staticmethod
-    def _has_flashcard_answer(country: Country, topic: str) -> bool:
+    def _has_flashcard_answer(self, country: Country, topic: str) -> bool:
         if topic in {"capitals", "countries_from_capitals"}:
             return country.capital is not None
         if topic == "alpha_3_codes":
@@ -331,6 +345,9 @@ class Atlas:
             return bool(country.local_names)
         if topic == "m49_codes":
             return country.codes.numeric is not None
+        if topic == "neighbors":
+            country_id = self._country_id(country.alpha2)
+            return country_id is not None and bool(self._border_adjacency()[country_id])
         if topic == "population_density":
             return country.population_density is not None
         if topic == "populations":
@@ -341,8 +358,7 @@ class Atlas:
             return country.top_level_domain is not None
         return True
 
-    @staticmethod
-    def _flashcard(country: Country, topic: str) -> Flashcard:
+    def _flashcard(self, country: Country, topic: str) -> Flashcard:
         reference = country.reference()
         if topic == "capitals":
             prompt, answer = f"What is the capital of {country.name}?", country.capital.name
@@ -359,6 +375,12 @@ class Atlas:
             prompt, answer = f"What is the alpha-3 code for {country.name}?", country.alpha3
         elif topic == "m49_codes":
             prompt, answer = f"What is the M49 code for {country.name}?", country.codes.numeric
+        elif topic == "border_counts":
+            prompt = f"How many reviewed land neighbors does {country.name} have?"
+            answer = str(len(self.neighbors(country.alpha2)))
+        elif topic == "neighbors":
+            prompt = f"Which countries or areas share a reviewed land border with {country.name}?"
+            answer = ", ".join(neighbor.name for neighbor in self.neighbors(country.alpha2))
         elif topic == "currencies":
             label = country.currency.name or country.currency.code
             answer = f"{label} ({country.currency.code})" if label != country.currency.code else label
