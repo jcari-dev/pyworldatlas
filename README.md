@@ -2,7 +2,7 @@
 
 > A compact, source-aware world atlas for Python that works completely offline.
 
-[![Source 0.4.0](https://img.shields.io/badge/source-0.4.0-1677be)](CHANGELOG.md)
+[![Source 0.5.0](https://img.shields.io/badge/source-0.5.0-1677be)](CHANGELOG.md)
 [![PyPI](https://img.shields.io/pypi/v/pyworldatlas.svg?label=PyPI)](https://pypi.org/project/pyworldatlas/)
 [![Python 3.10–3.14](https://img.shields.io/badge/python-3.10%E2%80%933.14-10233d)](https://www.python.org/)
 [![Runtime dependencies: 0](https://img.shields.io/badge/runtime%20dependencies-0-1b8a6b)](#small-by-design)
@@ -27,16 +27,30 @@ with Atlas() as atlas:
     print("France" in atlas)                   # True
 ```
 
+## Educational purpose and editorial policy
+
+PyWorldAtlas is a purely educational package that provides offline access to
+factual geographic data. It does not provide political commentary, promote a
+viewpoint, rank people or places, or decide geographic disagreements. Values
+follow documented source conventions, and the package states its coverage and
+limitations clearly.
+
+Every person, place, language, and culture must be described respectfully.
+Hateful, harassing, threatening, demeaning, or discriminatory content is not
+accepted. Read the formal [educational and editorial
+policy](EDUCATIONAL_AND_NEUTRALITY_POLICY.md) and
+[community code of conduct](CODE_OF_CONDUCT.md).
+
 ## Dataset coverage
 
 The bundled dataset contains every country and area in the captured UN M49
 scope, cross-checked against GeoNames country metadata. Version 0.3.0 added a
 reviewed land-border graph to the profile, coordinate, capital, and
 populated-place records established in earlier releases. Version 0.3.1 makes
-that graph easier to query, teach, and explain. The 0.4.0 development milestone
-adds one sourced local-language identity for every record while continuing the
-stricter review of national official short and formal names. It also adds a
-separate sourced English formal-name layer for 240 profiles.
+that graph easier to query, teach, and explain. Version 0.5.0 adds one sourced
+local-language identity for every record, a separate sourced English
+formal-name layer for 240 profiles, and the package's educational and editorial
+policy.
 
 | Current dataset | Coverage |
 |---|---:|
@@ -53,11 +67,11 @@ separate sourced English formal-name layer for 240 profiles.
 | Runtime dependencies | 0 |
 | Bundled databases | 1 SQLite file |
 
-The 0.4.0 development checkout includes richer country profiles, reviewed
+The 0.5.0 release includes richer country profiles, reviewed
 multilingual country identities, dependency-free coordinate
 calculations, flag emoji, discovery cards, reproducible sampling, structured
 flashcards, reviewed neighbors, and shortest land-border paths. Boundary
-geometry, anthem and motto records, civic events, historical statistics,
+geometry, anthem and motto records, reference dates, historical statistics,
 national institutions, interactive learning applications, and exports remain
 later work.
 
@@ -79,7 +93,7 @@ python -m pip install -e . -e pipeline
 You can also test the exact local wheel after running the release build:
 
 ```console
-python -m pip install --no-index --no-deps dist/pyworldatlas-0.4.0-py3-none-any.whl
+python -m pip install --no-index --no-deps dist/pyworldatlas-0.5.0-py3-none-any.whl
 ```
 
 The package runtime supports Python 3.10 through 3.14 during the 0.x release
@@ -321,7 +335,7 @@ At runtime PyWorldAtlas does not:
 
 ## Data you can trace
 
-The 0.4.0 development checkout uses:
+The 0.5.0 release uses:
 
 - **United Nations M49** for canonical identities, standard codes, regions, and
   subregions.
@@ -378,7 +392,7 @@ with Atlas() as atlas:
 - **Schema version** describes compatibility with the bundled SQLite structure.
 - **Dataset version** identifies the captured source snapshot.
 
-For this development checkout they are `0.4.0`, `4`, and `2026.07.21.4`.
+For this release they are `0.5.0`, `5`, and `2026.07.21.5`.
 
 ## Documentation and roadmap
 
@@ -390,14 +404,18 @@ For this development checkout they are `0.4.0`, `4`, and `2026.07.21.4`.
 - 0.2.1 execution status: [RELEASE_0_2_STATUS.md](RELEASE_0_2_STATUS.md)
 - 0.3.0 release status: [RELEASE_0_3_STATUS.md](RELEASE_0_3_STATUS.md)
 - 0.3.1 release status: [RELEASE_0_3_1_STATUS.md](RELEASE_0_3_1_STATUS.md)
-- 0.4.0 development status: [RELEASE_0_4_STATUS.md](RELEASE_0_4_STATUS.md)
+- 0.4 development status: [RELEASE_0_4_STATUS.md](RELEASE_0_4_STATUS.md)
 - Country identity contract: [COUNTRY_IDENTITY_DATA_SPEC.md](COUNTRY_IDENTITY_DATA_SPEC.md)
+- Educational and editorial policy: [EDUCATIONAL_AND_NEUTRALITY_POLICY.md](EDUCATIONAL_AND_NEUTRALITY_POLICY.md)
+- Community code of conduct: [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+- Contribution and factual-correction guide: [CONTRIBUTING.md](CONTRIBUTING.md)
+- 0.5.0 release status: [RELEASE_0_5_STATUS.md](RELEASE_0_5_STATUS.md)
 - Maintainer release process: [RELEASING.md](RELEASING.md)
 
-Version 0.4.0 is the official country-identity milestone. It remains in
-development while reviewed coverage expands. National symbols and civic facts,
-boundary geometry, historical statistics, institutions, and exports follow in
-later milestones.
+Version 0.5.0 includes the completed country-identity milestone and establishes
+the project's educational and editorial policy. National symbols and reference
+facts move to 0.6.0; boundary geometry,
+historical statistics, institutions, and exports follow later.
 
 ## License and attribution
 

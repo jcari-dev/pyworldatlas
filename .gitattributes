@@ -1,0 +1,5 @@
+# Keep repository text and generated data deterministic across platforms.
+* text=auto eol=lf
+
+# Preserve the exact upstream response bytes covered by the source manifest.
+build_data/raw/wikidata/2026-07-21/official-names.json -text

@@ -1,6 +1,6 @@
 # Data model
 
-Schema 4 stores normalized countries, names, capitals, populated places, source
+Schema 5 stores normalized countries, names, capitals, populated places, source
 references, local identity names, and canonical undirected land-border pairs in
 SQLite. Profile columns add population,
 currency, language codes, calling codes, country-code top-level domains, and
@@ -8,6 +8,9 @@ area. Sourced English formal names use ``country_name`` rows with
 ``kind = 'formal'`` and field-level provenance. Country, capital, city,
 coordinate, currency, language, and source values
 are returned as immutable dataclasses.
+
+Schema 5 removes the unused entity-status column. The public model contains
+only sourced geographic fields that the package actively uses.
 
 Country discovery features add immutable `CountryReference`, `Flashcard`, and
 `CountryDiscoveryCard`, and `BorderPathResult` result models. They are runtime views over existing
@@ -44,9 +47,10 @@ source reference, and exact locator. Country convenience methods only project
 these records; they never translate or generate a fallback.
 
 Missing scalar values are `None`; missing collections are empty tuples. Country
-profiles are normalized records rather than opaque JSON documents. The current
-dataset does not include a sourced political-entity classification, so
-`Country.status` is `CountryStatus.OTHER` for every record.
+profiles are normalized records rather than opaque JSON documents. The public
+model does not classify entity recognition or legal status. The words
+*country* and *area* reflect the documented source scope and are not intended
+to provide a broader classification.
 
 `Country.sources` lists the sources that contributed to a profile. It does not
 yet provide a value-by-value provenance map. Every local identity carries its

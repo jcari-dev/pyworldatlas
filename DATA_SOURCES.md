@@ -1,5 +1,19 @@
 # Data sources
 
+## Field-specific source policy
+
+Each source is selected for a specific field. The project prefers established
+standards bodies, international statistical and naming publications, openly
+licensed geographic datasets, and primary institutional records when they are
+appropriate for that field. Commentary, anonymous compilations, unsupported
+claims, and advocacy material are not used as dataset authorities.
+
+No source is presented as universally neutral or complete. A source may reflect
+a particular date or naming convention. PyWorldAtlas records those limitations,
+uses independent cross-checks where useful, and publishes review decisions.
+Including a source value is not an endorsement of the source organization or a
+broader interpretation. See `EDUCATIONAL_AND_NEUTRALITY_POLICY.md`.
+
 ## United Nations M49
 
 - Purpose: canonical country/area names, ISO and M49 codes, regions, subregions.
@@ -21,7 +35,7 @@ GeoNames-only identity rows outside that scope are excluded rather than inferred
 - Snapshot: `countryInfo.txt` and `cities15000.zip`, captured 2026-07-20 with SHA-256 manifests.
 - License: Creative Commons Attribution 4.0.
 - Refresh: reviewed before each dataset release.
-- Limitations: capital feature codes do not model every multi-capital political nuance.
+- Limitations: capital feature codes do not model every multi-capital arrangement.
 
 The captured intersection provides 241 usable primary-capital records and 6,265
 populated-place records: places at or above the configured 100,000-person
@@ -111,7 +125,7 @@ threshold, plus retained capitals.
   decision in `build_data/reviewed/border_decisions.csv`.
 - Limitations: generalized 1:50m geometry may omit shared segments for small
   territories and enclaves, and Natural Earth applies a documented de facto
-  worldview.
+  map convention.
 
 The reviewed 0.3.0 graph contains 319 canonical undirected relationships: 315
 cross-source agreements and four explicit inclusions. Two source-only

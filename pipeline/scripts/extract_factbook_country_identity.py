@@ -123,6 +123,7 @@ def main() -> None:
     args.output.write_text(
         json.dumps(snapshot, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
+        newline="\n",
     )
     print(f"Wrote {len(snapshot['records'])} records to {args.output}")
 

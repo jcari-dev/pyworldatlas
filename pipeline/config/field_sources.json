@@ -1,9 +1,11 @@
 {
   "country_identity": ["un-m49", "geonames"],
-  "english_names": ["un-m49", "geonames"],
+  "english_names": ["un-m49", "geonames", "reviewed-overrides"],
+  "english_formal_names": ["cia-world-factbook-2025", "un-protocol-country-names-2025", "wikidata-official-names-2026-07-21"],
   "local_display_names": ["unicode-cldr-48.2"],
   "national_official_names": ["ungegn-country-names-2017"],
   "regions": ["un-m49"],
   "capitals": ["geonames"],
-  "major_cities": ["geonames"]
+  "major_cities": ["geonames"],
+  "land_borders": ["geonames", "natural-earth", "reviewed-borders"]
 }

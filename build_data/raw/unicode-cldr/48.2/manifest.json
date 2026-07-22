@@ -8,8 +8,8 @@
   },
   "derived_file": {
     "path": "country_identity.json",
-    "sha256": "aee9f75640517eb10ba830316f5bbf171f6af5b2671a980ff7b367f6456ba780",
-    "size_bytes": 108942
+    "sha256": "033e6b58bf52d0a46f4720fe1d259c9e8ba1ae92e524841bd918c1956c84b252",
+    "size_bytes": 105955
   },
   "extractor": "pipeline/scripts/extract_cldr_country_identity.py",
   "license_name": "Unicode License v3",

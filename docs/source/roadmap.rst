@@ -29,28 +29,28 @@ documentation update.
      - Reachability, path conveniences, graph flashcards, expanded API guidance
      - Published
    * - 0.4.0
-     - In progress
+     - Complete
      - Complete selected local identities, 240 English formal names, scripts, provenance, coverage discovery
-     - Local release gate passed; publication pending
+     - Merged and included in 0.5.0
    * - 0.5.0
-     - Planned
-     - Anthem titles, mottos, contributors, adoption dates, and labelled civic events
-     - —
+     - Release candidate
+     - Country identity, educational-use policy, public-field audit, policy release gate
+     - Local gate passing; publication pending
    * - 0.6.0
      - Planned
-     - Boundary geometry, point-in-boundary lookup, GeoJSON
+     - Anthem titles, mottos, contributors, adoption dates, and labelled reference dates
      - —
    * - 0.7.0
      - Planned
-     - Historical statistics and sourced institutions
+     - Boundary geometry, point-in-boundary lookup, GeoJSON
      - —
    * - 0.8.0
      - Planned
-     - Advanced learning utilities, exports, expanded CLI
+     - Historical statistics and sourced institutions
      - —
    * - 0.9.0
      - Planned
-     - Full-world validation, refresh automation, and release hardening
+     - Advanced learning utilities, exports, full-world validation, and release hardening
      - —
    * - 1.0.0
      - Planned
@@ -75,14 +75,17 @@ and borderless-entity discovery. Version 0.3.1 adds explicit reachability,
 path-name and alpha-2-code conveniences, graph-derived flashcards, and expanded
 API provenance guidance.
 
-Version 0.4.0 adds one sourced local identity for all 248 countries and areas,
+The 0.4 development milestone added one sourced local identity for all 248 countries and areas,
 covering 80 languages and 21 scripts through pinned CLDR 48.2 data. Reviewed
 UNGEGN replacements add national official short/formal names and
 source-provided romanization for 10 selected records. A separate sourced
 English formal-name layer covers 240 profiles, with eight explicit source-scope
-gaps. The milestone remains in development until the candidate is committed,
-reviewed, and published.
+gaps. The work is merged and included in version 0.5.0.
 
-Version 0.5.0 adds national-symbol and civic-fact models after their source
-matrix is approved. Boundary geometry, border lengths, point-in-country lookup,
-and GeoJSON move to 0.6.0.
+Version 0.5.0 publishes the country-identity work and formalizes the educational
+and editorial policy, source-selection boundaries, respectful collaboration
+standard, correction process, and automated release-content gate.
+
+National-symbol and reference-fact models move to 0.6.0 and require a separate
+source and safety review. Boundary geometry, border lengths, point-in-country
+lookup, and GeoJSON move to 0.7.0.

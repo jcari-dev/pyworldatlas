@@ -6,8 +6,8 @@
     {
       "url": "https://download.geonames.org/export/dump/countryInfo.txt",
       "path": "countryInfo.txt",
-      "sha256": "93bafc525813f22e4711ff9ed6d626343094ce48c26388dc7c49189b3d7d5512",
-      "size_bytes": 31678
+      "sha256": "cb6a0e5c5175aa1e78acaff11f7014a10c2f1f4626ea5a77db2b028c76d8d960",
+      "size_bytes": 31376
     },
     {
       "url": "https://download.geonames.org/export/dump/cities15000.zip",

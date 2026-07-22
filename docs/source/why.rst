@@ -2,7 +2,7 @@ Why PyWorldAtlas?
 =================
 
 Geographic software often begins with a network request, an API key, or a large
-scientific stack. PyWorldAtlas takes a different position: a useful world
+scientific stack. PyWorldAtlas takes a different approach: a useful world
 reference should still work in a classroom with unreliable Wi-Fi, on a small
 computer, inside a reproducible build, or during a flight.
 
@@ -52,3 +52,7 @@ What it is not
 PyWorldAtlas is not a live-news service, professional GIS engine, routing
 system, or replacement for authoritative statistical agencies. It is a scoped,
 offline reference with explicit source and coverage boundaries.
+
+It is also not a live commentary or opinion service. Source conventions are
+attributed and their limitations are documented. The formal editorial
+commitments and community standard are in :doc:`educational_principles`.

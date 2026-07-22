@@ -1,5 +1,5 @@
 {
-  "dataset_version": "2026.07.21.4",
+  "dataset_version": "2026.07.21.5",
   "countries": 248,
   "capitals": 241,
   "major_cities": 6265,
@@ -41,6 +41,6 @@
   "reviewed_land_borders": 319,
   "countries_with_land_borders": 163,
   "countries_with_no_land_borders": 85,
-  "database_sha256": "7926de71c414ae0fff58d77b12cc521e944b9772c125c9f5fecd033bd24e3f22",
+  "database_sha256": "ccce4893bf89ca864957766be0d4a3c4fce8b0290f19aa76d41ce1a3e3fc209f",
   "validation": "PASS"
 }

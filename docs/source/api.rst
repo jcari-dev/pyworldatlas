@@ -10,10 +10,16 @@ Profile conventions
 - Public records are frozen dataclasses.
 - Optional scalar fields use ``None`` when the captured source has no value.
 - Repeated fields use tuples and are empty when no values are bundled.
-- ``Country.status`` is ``CountryStatus.OTHER`` for the current dataset because
-  political entity type has not yet been sourced.
+- The public model does not expose an entity-recognition or legal-status
+  classification. The words *country* and *area* follow the documented source
+  scope.
 - ``Country.sources`` identifies sources used somewhere in the profile; it is
   not a field-by-field provenance map.
+
+The public model focuses on stable geographic reference fields rather than
+current affairs, opinion, or speculative narrative. See
+:doc:`educational_principles` for the source and editorial review required for
+a new field family.
 
 Country identity provenance
 ---------------------------
@@ -118,9 +124,6 @@ Country models
    :members:
 
 .. autoclass:: pyworldatlas.CountryCodes
-   :members:
-
-.. autoclass:: pyworldatlas.CountryStatus
    :members:
 
 .. autoclass:: pyworldatlas.LocalizedName

@@ -1,8 +1,8 @@
 Changelog
 =========
 
-0.4.0 — In development
-----------------------
+0.5.0 — 2026-07-21
+------------------
 
 - Added one sourced local-language identity for all 248 countries and areas,
   spanning 80 languages and 21 writing systems.
@@ -19,6 +19,23 @@ Changelog
 - Added country coverage discovery with language and script filters.
 - Added multilingual examples, coverage reporting, an identity data contract,
   and a clearer official-names guide.
+- Established a clear educational and editorial policy for the offline
+  geographic dataset, documentation, examples, and contributions.
+- Added a community code of conduct, factual-correction guidance, a dedicated
+  documentation page, and automated policy and release-content checks.
+- Removed an unused entity-classification field. The package now exposes only
+  the sourced geographic fields it uses.
+- Kept current affairs, opinion, comparisons of people or cultures, and
+  speculative narrative outside the bundled dataset.
+- Moved national symbols and reference facts to 0.6.0 for their own source review.
+
+0.4.0 — Reserved tag; not published to PyPI
+--------------------------------------------
+
+- Preserved the public tag after it was created against the 0.3.1 commit before
+  the country-identity candidate reached ``main``.
+- Included the completed country-identity milestone in 0.5.0 rather than moving
+  or reusing a public version tag.
 
 0.3.1 — 2026-07-21
 ------------------

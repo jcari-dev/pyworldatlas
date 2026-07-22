@@ -15,7 +15,7 @@ from .database import Database
 from .exceptions import (AmbiguousPlaceError, AtlasClosedError, CapitalNotFoundError,
                          CountryNotFoundError, DatasetVersionError, PlaceNotFoundError)
 from .models import (Area, BorderPathResult, Capital, City, Coordinate, Country,
-                     CountryCodes, CountryMatch, CountryStatus, Currency,
+                     CountryCodes, CountryMatch, Currency,
                      DatasetInfo, Flashcard, Geography, Language, LocalizedName,
                      SourceReference)
 
@@ -565,7 +565,7 @@ class Atlas:
         calling_codes = tuple(json.loads(row["calling_codes"]))
         observed_timezones = tuple(sorted({city.timezone_id for city in cities if city.timezone_id}))
         formal_name = next((name.text for name in names if name.kind == "formal"), None)
-        return Country(row["name"], row["official_name"], names, aliases, CountryCodes(row["alpha2"], row["alpha3"], row["numeric_code"], None, row["geonames_id"]), _flag(row["alpha2"]), CountryStatus(row["status"]), geography, capitals, cities, sources, local_names, row["population"], currency, languages, calling_codes, row["top_level_domain"], observed_timezones, formal_name)
+        return Country(row["name"], row["official_name"], names, aliases, CountryCodes(row["alpha2"], row["alpha3"], row["numeric_code"], None, row["geonames_id"]), _flag(row["alpha2"]), geography, capitals, cities, sources, local_names, row["population"], currency, languages, calling_codes, row["top_level_domain"], observed_timezones, formal_name)
 
     @lru_cache(maxsize=1)
     def _load_local_names(self) -> dict[int, tuple[LocalizedName, ...]]:

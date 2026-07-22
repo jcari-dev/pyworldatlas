@@ -11,6 +11,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tarfile
 import tempfile
 import venv
 
@@ -248,8 +249,9 @@ def prepare_release(version: str, output_dir: Path | None = None) -> None:
     demo(wheel)
     print("[4/5] Documentation from release wheel")
     docs(wheel)
-    print("[5/5] Release wheel content audit")
+    print("[5/5] Release content and policy audit")
     audit_wheel(wheel)
+    audit_sdist(sdist)
     artifacts = [wheel, sdist]
     status_data = json.loads((ROOT / "build_data/reports/status.json").read_text(encoding="utf-8"))
     if status_data["library_version"] != version:
@@ -275,6 +277,7 @@ def prepare_release(version: str, output_dir: Path | None = None) -> None:
         "docs_html": "passed",
         "docs_doctest": "passed",
         "wheel_audit": "passed",
+        "sdist_policy_audit": "passed",
     }
     (output_dir / "release-manifest.json").write_text(
         json.dumps(manifest, indent=2) + "\n", encoding="utf-8",
@@ -309,12 +312,13 @@ def check() -> None:
     run_tests()
     with tempfile.TemporaryDirectory(prefix="pyworldatlas-check-") as folder:
         print("[2/4] Build distributions and run offline wheel demo")
-        wheel, _ = build_distributions(Path(folder) / "dist")
+        wheel, sdist = build_distributions(Path(folder) / "dist")
         demo(wheel)
         print("[3/4] Documentation")
         docs(wheel)
-        print("[4/4] Wheel content audit")
+        print("[4/4] Release content and policy audit")
         audit_wheel(wheel)
+        audit_sdist(sdist)
 
 
 def audit_wheel(wheel: Path) -> None:
@@ -332,6 +336,27 @@ def audit_wheel(wheel: Path) -> None:
             f"forbidden={forbidden}"
         )
     print("All checks passed.")
+
+
+def audit_sdist(sdist: Path) -> None:
+    """Ensure the source distribution carries the public policy documents."""
+    required = {
+        "BOUNDARIES_AND_DISPUTES.md",
+        "CODE_OF_CONDUCT.md",
+        "CONTRIBUTING.md",
+        "DATA_QUALITY.md",
+        "DATA_SOURCES.md",
+        "EDUCATIONAL_AND_NEUTRALITY_POLICY.md",
+        "THIRD_PARTY_NOTICES.md",
+    }
+    with tarfile.open(sdist, "r:gz") as archive:
+        included = {Path(name).name for name in archive.getnames()}
+    missing = sorted(required - included)
+    if missing:
+        raise RuntimeError(
+            f"Source distribution policy audit failed; missing={missing}"
+        )
+    print("Source distribution policy documents: PASS")
 
 
 def main() -> int:
