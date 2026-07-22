@@ -24,6 +24,9 @@ Each `country_border` row stores the two country identifiers in canonical order,
 its review status, its evidence-source identifiers, and an optional decision
 note. Runtime adjacency is symmetric. Shortest paths use breadth-first search
 and are calculated on demand; paths and connected components are not persisted.
+`BorderPathResult.names` and `alpha2_codes` are projections of its immutable
+country references. Land-route checks and border flashcards are derived from
+the same graph and do not create additional tables or country facts.
 
 Missing scalar values are `None`; missing collections are empty tuples. Country
 profiles are normalized records rather than opaque JSON documents. The current

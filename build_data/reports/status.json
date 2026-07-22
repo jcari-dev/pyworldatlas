@@ -1,5 +1,5 @@
 {
-  "library_version": "0.3.0",
+  "library_version": "0.3.1",
   "schema_version": 3,
   "dataset_version": "2026.07.21.1",
   "milestones": [
@@ -41,6 +41,16 @@
       "tests": "Source-difference review gate, graph invariants, API tests, and complete release gate",
       "dataset": "319 reviewed undirected land-border relationships",
       "docs": "Border API, data policy, exceptions, and examples",
+      "release": "Publication state is tracked on GitHub Releases and PyPI"
+    },
+    {
+      "name": "3.1 \u2014 Border API and learning polish",
+      "version": "0.3.1",
+      "status": "complete",
+      "functions": "Land-route reachability, path name/code conveniences, neighbor flashcards, and border-count flashcards",
+      "tests": "Deterministic flashcard fixtures, reachability edge cases, examples, and complete release gate",
+      "dataset": "No dataset change; derives from the 319 reviewed relationships",
+      "docs": "API provenance, connectivity semantics, serialization, flashcards, and examples",
       "release": "Publication state is tracked on GitHub Releases and PyPI"
     },
     {
@@ -131,7 +141,7 @@
     "reviewed_land_borders": 319,
     "countries_with_land_borders": 163,
     "countries_with_no_land_borders": 85,
-    "database_sha256": "97d5fb7fd1824314d24ad8ae6dbc49370e28c70d82d93b40b736497141bb58ba",
+    "database_sha256": "8adb552f5c745571f5413aa3fbbac164e9dd57cbeba7fb4a2ea273fe5f2f97fc",
     "validation": "PASS"
   }
 }

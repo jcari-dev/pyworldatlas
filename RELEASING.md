@@ -53,7 +53,7 @@ gate first:
 
 ```console
 python maintain.py bootstrap
-python maintain.py prepare-release 0.3.0
+python maintain.py prepare-release 0.3.1
 ```
 
 If Windows reports that an existing file under `dist` is in use, close the
@@ -61,7 +61,7 @@ terminal, upload dialog, or file preview holding it. To run the same release
 gate without replacing that directory, choose another ignored output path:
 
 ```console
-python maintain.py prepare-release 0.3.0 --output-dir build/release-dist
+python maintain.py prepare-release 0.3.1 --output-dir build/release-dist
 ```
 
 Review `release-manifest.json` and `SHA256SUMS` in the selected output directory.
@@ -71,9 +71,9 @@ and the working tree is clean, then create and push the release tag:
 
 ```console
 git status
-git tag -a v0.3.0 -m "Release 0.3.0"
+git tag -a v0.3.1 -m "Release 0.3.1"
 git push origin main
-git push origin v0.3.0
+git push origin v0.3.1
 ```
 
 The tag workflow publishes the wheel and source distribution to PyPI, creates a
@@ -84,7 +84,7 @@ Verify the public package in a new environment:
 
 ```console
 py -3.10 -m venv .venv-live
-.venv-live\Scripts\python -m pip install --no-cache-dir pyworldatlas==0.3.0
+.venv-live\Scripts\python -m pip install --no-cache-dir pyworldatlas==0.3.1
 .venv-live\Scripts\python -c "from pyworldatlas import Atlas; a=Atlas(); print(len(a), [c.name for c in a.neighbors('France')]); a.close()"
 ```
 

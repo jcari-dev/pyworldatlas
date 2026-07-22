@@ -68,3 +68,5 @@ from already attributed profile fields; they add no external country facts.
 The sampling algorithm ranks M49 identifiers with SHA-256 and never calls a
 remote service. Flashcard wording is package code under the project license;
 answers retain the provenance and freshness limits of their underlying fields.
+Neighbor and border-count flashcards are calculated from the reviewed 0.3.0
+graph and introduce no additional border claims.
