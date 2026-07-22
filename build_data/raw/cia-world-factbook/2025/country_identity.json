@@ -1,0 +1,2409 @@
+{
+  "public_domain_notice": "https://www.cia.gov/site-policies/",
+  "records": [
+    {
+      "conventional_formal_name": "People's Democratic Republic of Algeria",
+      "conventional_short_name": "Algeria",
+      "country_code": "DZ",
+      "local_formal_name": "Al Jumhuriyah al Jaza'iriyah ad Dimuqratiyah ash Sha'biyah",
+      "local_short_name": "Al Jaza'ir",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/ag.json",
+      "source_sha256": "ebdc5453205803934c4c04cd085ea166c3d1e41426d945b172591c035541bc91"
+    },
+    {
+      "conventional_formal_name": "Republic of Angola",
+      "conventional_short_name": "Angola",
+      "country_code": "AO",
+      "local_formal_name": "Republica de Angola",
+      "local_short_name": "Angola",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/ao.json",
+      "source_sha256": "438e19fd18b2507ecab8370833d2e47e64d382adde18969e3bed16e4e6bad585"
+    },
+    {
+      "conventional_formal_name": "Republic of Botswana",
+      "conventional_short_name": "Botswana",
+      "country_code": "BW",
+      "local_formal_name": "Republic of Botswana",
+      "local_short_name": "Botswana",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/bc.json",
+      "source_sha256": "9104fe2ff35c5e0d16590144676012c945b7c7ed931fce7a35a4cfce7137d080"
+    },
+    {
+      "conventional_formal_name": "Republic of Benin",
+      "conventional_short_name": "Benin",
+      "country_code": "BJ",
+      "local_formal_name": "République du Benin",
+      "local_short_name": "Benin",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/bn.json",
+      "source_sha256": "bb2055b412df5ba7e542dcd5c12f54e81a87045de1483eea438fc14e51afda1b"
+    },
+    {
+      "conventional_formal_name": "Republic of Burundi",
+      "conventional_short_name": "Burundi",
+      "country_code": "BI",
+      "local_formal_name": "République du Burundi (French)/ Republika y'u Burundi (Kirundi)",
+      "local_short_name": "Burundi",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/by.json",
+      "source_sha256": "5ff5ff5000245fb431a8b0a5254f003ed46da3c58c394f59e0879935c34149c5"
+    },
+    {
+      "conventional_formal_name": "Republic of Chad",
+      "conventional_short_name": "Chad",
+      "country_code": "TD",
+      "local_formal_name": "République du Tchad/Jumhuriyat Tshad",
+      "local_short_name": "Tchad/Tshad",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/cd.json",
+      "source_sha256": "29d38f402fc4273847635e98b9f14652275c70b278346211bb25133381ef111f"
+    },
+    {
+      "conventional_formal_name": "Republic of the Congo",
+      "conventional_short_name": "Congo (Brazzaville)",
+      "country_code": "CG",
+      "local_formal_name": "République du Congo",
+      "local_short_name": "Congo",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/cf.json",
+      "source_sha256": "7414bd60dc436f84b96440af40f7224323a3a65d3c4d88a52915248df47bcea5"
+    },
+    {
+      "conventional_formal_name": "Democratic Republic of the Congo",
+      "conventional_short_name": "DRC",
+      "country_code": "CD",
+      "local_formal_name": "République démocratique du Congo",
+      "local_short_name": "RDC",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/cg.json",
+      "source_sha256": "e2fbc92c304c0127acf3a4473a0656d7789765cdb687eca79ee080901132369e"
+    },
+    {
+      "conventional_formal_name": "Republic of Cameroon",
+      "conventional_short_name": "Cameroon",
+      "country_code": "CM",
+      "local_formal_name": "République du Cameroun (French)/Republic of Cameroon (English)",
+      "local_short_name": "Cameroun/Cameroon",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/cm.json",
+      "source_sha256": "c62400f8806a9c11c16632a308d357b3aa719cfb6134a9085087f0f27181a570"
+    },
+    {
+      "conventional_formal_name": "Union of the Comoros",
+      "conventional_short_name": "Comoros",
+      "country_code": "KM",
+      "local_formal_name": "Udzima wa Komori (Comorian)/Union des Comores (French)/Al Ittihad al Qumuri (Arabic)",
+      "local_short_name": "Komori (Comorian)/Les Comores (French)/Juzur al Qamar (Arabic)",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/cn.json",
+      "source_sha256": "9a500e1ed587c332bd7ded1a8eb6d6c998592dce6dca6cab19c1803c9e449327"
+    },
+    {
+      "conventional_formal_name": "Central African Republic",
+      "conventional_short_name": null,
+      "country_code": "CF",
+      "local_formal_name": "République centrafricaine",
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "africa/ct.json",
+      "source_sha256": "dd3a089e257f51f4d2bc8e154e17327f76c4fcd4aa7ccf802ff50ed80ea57131"
+    },
+    {
+      "conventional_formal_name": "Republic of Cabo Verde",
+      "conventional_short_name": "Cabo Verde",
+      "country_code": "CV",
+      "local_formal_name": "Republica de Cabo Verde",
+      "local_short_name": "Cabo Verde",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/cv.json",
+      "source_sha256": "b272ed9ab2c9cb06f8a76b2fd658a7c0d3788fff3e143e9be67b1df7cb1a124c"
+    },
+    {
+      "conventional_formal_name": "Republic of Djibouti",
+      "conventional_short_name": "Djibouti",
+      "country_code": "DJ",
+      "local_formal_name": "République de Djibouti (French)/ Jumhuriyat Jibuti (Arabic)",
+      "local_short_name": "Djibouti (French)/ Jibuti (Arabic)",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/dj.json",
+      "source_sha256": "76584440364b35a3c3db4a39970efd36fafb169fe18619084671832267fa2ef2"
+    },
+    {
+      "conventional_formal_name": "Arab Republic of Egypt",
+      "conventional_short_name": "Egypt",
+      "country_code": "EG",
+      "local_formal_name": "Jumhuriyat Misr al-Arabiyah",
+      "local_short_name": "Misr",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/eg.json",
+      "source_sha256": "ce54d42efc2a952fb6b5bbfdda57e9a3484ef2758dd195a4dcd1d433e3a44de1"
+    },
+    {
+      "conventional_formal_name": "Republic of Equatorial Guinea",
+      "conventional_short_name": "Equatorial Guinea",
+      "country_code": "GQ",
+      "local_formal_name": "Republica de Guinea Ecuatorial (Spanish)/ République de Guinée équatoriale (French)",
+      "local_short_name": "Guinea Ecuatorial (Spanish)/Guinée équatoriale (French)",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/ek.json",
+      "source_sha256": "91b93aeaee973d773658174b376097266d1fc45e05400deab3a8c05e188c1bcd"
+    },
+    {
+      "conventional_formal_name": "State of Eritrea",
+      "conventional_short_name": "Eritrea",
+      "country_code": "ER",
+      "local_formal_name": "Hagere Ertra",
+      "local_short_name": "Ertra",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/er.json",
+      "source_sha256": "50b3a8414615b4e155c5f3a0e9db879a0674808611bd7441a8b6f7075d70131d"
+    },
+    {
+      "conventional_formal_name": "Federal Democratic Republic of Ethiopia",
+      "conventional_short_name": "Ethiopia",
+      "country_code": "ET",
+      "local_formal_name": "YeItyop'iya Federalawi Demokrasiyawi Ripeblik",
+      "local_short_name": "Ityop'iya",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/et.json",
+      "source_sha256": "1cc0bc4a127e9f0528bf8234d88c135be900cc51b833e88c9c01b4834a393575"
+    },
+    {
+      "conventional_formal_name": "Republic of The Gambia",
+      "conventional_short_name": "The Gambia",
+      "country_code": "GM",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "africa/ga.json",
+      "source_sha256": "6237841c4a492aceade744928af8019a189a574334d125c91ad27ac4d449bcae"
+    },
+    {
+      "conventional_formal_name": "Gabonese Republic",
+      "conventional_short_name": "Gabon",
+      "country_code": "GA",
+      "local_formal_name": "République Gabonaise",
+      "local_short_name": "Gabon",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/gb.json",
+      "source_sha256": "05f1863e5e5adce8478d89347f42f5b716abfeb83a8f2495e84b0c42ee3d2daa"
+    },
+    {
+      "conventional_formal_name": "Republic of Ghana",
+      "conventional_short_name": "Ghana",
+      "country_code": "GH",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "africa/gh.json",
+      "source_sha256": "bc3d6e44b20aa80a3278583b4b9b2ba0526d893cd4796db438b516cba91e21d2"
+    },
+    {
+      "conventional_formal_name": "Republic of Guinea",
+      "conventional_short_name": "Guinea",
+      "country_code": "GN",
+      "local_formal_name": "République de Guinée",
+      "local_short_name": "Guinée",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/gv.json",
+      "source_sha256": "c7efca3df3cebbb6886ce3749a1dbebe4b02413e5a3378910e74744b253ecceb"
+    },
+    {
+      "conventional_formal_name": "Republic of Côte d'Ivoire",
+      "conventional_short_name": "Côte d'Ivoire",
+      "country_code": "CI",
+      "local_formal_name": "République de Côte d'Ivoire",
+      "local_short_name": "Cote d'Ivoire",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/iv.json",
+      "source_sha256": "d51155bd7b1e2eb7e2f19e264fddb98305578708c183340189760c2af26c1b1b"
+    },
+    {
+      "conventional_formal_name": "Republic of Kenya",
+      "conventional_short_name": "Kenya",
+      "country_code": "KE",
+      "local_formal_name": "Republic of Kenya (English)/ Jamhuri ya Kenya (Swahili)",
+      "local_short_name": "Kenya",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/ke.json",
+      "source_sha256": "8d2d7be53378c684257510990c0409a3b245fe233acfc4f717b47606197b94d2"
+    },
+    {
+      "conventional_formal_name": "Republic of Liberia",
+      "conventional_short_name": "Liberia",
+      "country_code": "LR",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "africa/li.json",
+      "source_sha256": "e600d0afb71bf7b88914914b8654edd51a6d62d6649910dcc1d24dc0efda82c5"
+    },
+    {
+      "conventional_formal_name": "Kingdom of Lesotho",
+      "conventional_short_name": "Lesotho",
+      "country_code": "LS",
+      "local_formal_name": "Kingdom of Lesotho",
+      "local_short_name": "Lesotho",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/lt.json",
+      "source_sha256": "34d6eeabcb04098db658b21748d6e4339dabf57f2ac2f2d70b0b795051821422"
+    },
+    {
+      "conventional_formal_name": "State of Libya",
+      "conventional_short_name": "Libya",
+      "country_code": "LY",
+      "local_formal_name": "Dawlat Libiya",
+      "local_short_name": "Libiya",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/ly.json",
+      "source_sha256": "5ef51692189c564f804032b679ec27a4b178283f747b3a39bc0a79011846ff31"
+    },
+    {
+      "conventional_formal_name": "Republic of Madagascar",
+      "conventional_short_name": "Madagascar",
+      "country_code": "MG",
+      "local_formal_name": "République de Madagascar/Repoblikan'i Madagasikara",
+      "local_short_name": "Madagascar/Madagasikara",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/ma.json",
+      "source_sha256": "016b2abbcc9b73d372c534b4852fed58e2fe186ba3166937c8e6d4c7908382fa"
+    },
+    {
+      "conventional_formal_name": "Republic of Malawi",
+      "conventional_short_name": "Malawi",
+      "country_code": "MW",
+      "local_formal_name": "Dziko la Malawi",
+      "local_short_name": "Malawi",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/mi.json",
+      "source_sha256": "da8c342f8cfaaaa7b9f6d11ca1ab301fcbc04c205a98671de56ee6d171989988"
+    },
+    {
+      "conventional_formal_name": "Republic of Mali",
+      "conventional_short_name": "Mali",
+      "country_code": "ML",
+      "local_formal_name": "République de Mali",
+      "local_short_name": "Mali",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/ml.json",
+      "source_sha256": "593dadefa47afa5250105e598ad711575cef470ca3efa5e40dc49f0248e706f6"
+    },
+    {
+      "conventional_formal_name": "Kingdom of Morocco",
+      "conventional_short_name": "Morocco",
+      "country_code": "MA",
+      "local_formal_name": "Al Mamlakah al Maghribiyah",
+      "local_short_name": "Al Maghrib",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/mo.json",
+      "source_sha256": "620bb1acc45326e7fc84a6d086ebbab90a5e4a16fa275d2d34a1d66d64850052"
+    },
+    {
+      "conventional_formal_name": "Republic of Mauritius",
+      "conventional_short_name": "Mauritius",
+      "country_code": "MU",
+      "local_formal_name": "Republic of Mauritius",
+      "local_short_name": "Mauritius",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/mp.json",
+      "source_sha256": "da743673ac843d82595f015e0641f081a3a6071dbd12de6a2a45153bce2173d2"
+    },
+    {
+      "conventional_formal_name": "Islamic Republic of Mauritania",
+      "conventional_short_name": "Mauritania",
+      "country_code": "MR",
+      "local_formal_name": "Al Jumhuriyah al Islamiyah al Muritaniyah",
+      "local_short_name": "Muritaniyah",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/mr.json",
+      "source_sha256": "5fc97370eefd2829b2797e0a087e97221d7baaa9fb40b5447ceb267a4885f0c2"
+    },
+    {
+      "conventional_formal_name": "Republic of Mozambique",
+      "conventional_short_name": "Mozambique",
+      "country_code": "MZ",
+      "local_formal_name": "Republica de Mocambique",
+      "local_short_name": "Mocambique",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/mz.json",
+      "source_sha256": "6bd45a8cca778ad36b530713e4478337535865596bdd5b7e6668311716e32af1"
+    },
+    {
+      "conventional_formal_name": "Republic of Niger",
+      "conventional_short_name": "Niger",
+      "country_code": "NE",
+      "local_formal_name": "République du Niger",
+      "local_short_name": "Niger",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/ng.json",
+      "source_sha256": "5a8072e2670db20b9766d5655ec71529c1fccdb15ed99482faff56cbc41a5463"
+    },
+    {
+      "conventional_formal_name": "Federal Republic of Nigeria",
+      "conventional_short_name": "Nigeria",
+      "country_code": "NG",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "africa/ni.json",
+      "source_sha256": "e9f6c82a5884f0f4c5f8d833cac814f3fb0a1c77201e20edd1dc1fa829dd04b6"
+    },
+    {
+      "conventional_formal_name": "Republic of South Sudan",
+      "conventional_short_name": "South Sudan",
+      "country_code": "SS",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "africa/od.json",
+      "source_sha256": "a1956d479e2437451fbc526fabd5e0bd58759077b5ef8af1217755ff30d2cf90"
+    },
+    {
+      "conventional_formal_name": "Republic of Guinea-Bissau",
+      "conventional_short_name": "Guinea-Bissau",
+      "country_code": "GW",
+      "local_formal_name": "Republica da Guine-Bissau",
+      "local_short_name": "Guine-Bissau",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/pu.json",
+      "source_sha256": "5cdc59c592a74d2750dae13d0d1a52d97166cc8f562eed25954a27d9aaa48ed3"
+    },
+    {
+      "conventional_formal_name": "Republic of Rwanda",
+      "conventional_short_name": "Rwanda",
+      "country_code": "RW",
+      "local_formal_name": "Republika y'u Rwanda",
+      "local_short_name": "Rwanda",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/rw.json",
+      "source_sha256": "14420dc3d2db091d32cac3581e9fc09674b2efe80c7586ba05287781382afc69"
+    },
+    {
+      "conventional_formal_name": "Republic of Seychelles",
+      "conventional_short_name": "Seychelles",
+      "country_code": "SC",
+      "local_formal_name": "Republic of Seychelles",
+      "local_short_name": "Seychelles",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/se.json",
+      "source_sha256": "11b71cbb00389eb22c568ddca4ac6829be1489d8d0caf320ccbe0eba0720a833"
+    },
+    {
+      "conventional_formal_name": "Republic of South Africa",
+      "conventional_short_name": "South Africa",
+      "country_code": "ZA",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "africa/sf.json",
+      "source_sha256": "7d37b593f98a9df463e9219345e8883afdf480b5482aee124fc8884b8bcfe4e0"
+    },
+    {
+      "conventional_formal_name": "Republic of Senegal",
+      "conventional_short_name": "Senegal",
+      "country_code": "SN",
+      "local_formal_name": "République du Sénégal",
+      "local_short_name": "Sénégal",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/sg.json",
+      "source_sha256": "49577b2877386049b5371d82b1180bac71ffc0531ecbae38f15d586e6868ffa1"
+    },
+    {
+      "conventional_formal_name": "Saint Helena, Ascension, and Tristan da Cunha",
+      "conventional_short_name": null,
+      "country_code": "SH",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "africa/sh.json",
+      "source_sha256": "4849b9e98020e071a1963b8039cf43ddeb3f6803dda9788de4ee9723bc9c6c07"
+    },
+    {
+      "conventional_formal_name": "Republic of Sierra Leone",
+      "conventional_short_name": "Sierra Leone",
+      "country_code": "SL",
+      "local_formal_name": "Republic of Sierra Leone",
+      "local_short_name": "Sierra Leone",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/sl.json",
+      "source_sha256": "60fcbd828a8542193dd0281fd95592e466124e8b8f66fbaaf0ffb08d4db7adb9"
+    },
+    {
+      "conventional_formal_name": "Federal Republic of Somalia",
+      "conventional_short_name": "Somalia",
+      "country_code": "SO",
+      "local_formal_name": "Jamhuuriyadda Federaalka Soomaaliya (Somali)/ Jumhuriyat as Sumal al Fidiraliyah (Arabic)",
+      "local_short_name": "Soomaaliya (Somali)/ As Sumal (Arabic)",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/so.json",
+      "source_sha256": "13d7a85fa4dcbfe3af70ab174d6952f1b0a5873e5a13134dd2827a869ec6bbc0"
+    },
+    {
+      "conventional_formal_name": "Republic of the Sudan",
+      "conventional_short_name": "Sudan",
+      "country_code": "SD",
+      "local_formal_name": "Jumhuriyat as-Sudan",
+      "local_short_name": "As-Sudan",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/su.json",
+      "source_sha256": "82a429e004c4fa6287b380b186bdf52251cee4f44fb1b147c208eb514762aa54"
+    },
+    {
+      "conventional_formal_name": "Togolese Republic",
+      "conventional_short_name": "Togo",
+      "country_code": "TG",
+      "local_formal_name": "République Togolaise",
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "africa/to.json",
+      "source_sha256": "03e2519b7635cf46a27731077574c45adfd89a2cde264fc748d5eba9a675db6e"
+    },
+    {
+      "conventional_formal_name": "Democratic Republic of Sao Tome and Principe",
+      "conventional_short_name": "Sao Tome and Principe",
+      "country_code": "ST",
+      "local_formal_name": "Republica Democratica de Sao Tome e Principe",
+      "local_short_name": "Sao Tome e Principe",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/tp.json",
+      "source_sha256": "23d65569684f246b5e80317eecd482a96ede4f11200cdb74b900b66de784f877"
+    },
+    {
+      "conventional_formal_name": "Republic of Tunisia",
+      "conventional_short_name": "Tunisia",
+      "country_code": "TN",
+      "local_formal_name": "Al Jumhuriyah at Tunisiyah",
+      "local_short_name": "Tunis",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/ts.json",
+      "source_sha256": "5b267c821e687e397a221b126d069b84087f37165fc09d4a2204a32635a0787d"
+    },
+    {
+      "conventional_formal_name": "United Republic of Tanzania",
+      "conventional_short_name": "Tanzania",
+      "country_code": "TZ",
+      "local_formal_name": "Jamhuri ya Muungano wa Tanzania",
+      "local_short_name": "Tanzania",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/tz.json",
+      "source_sha256": "fbfd82248069bba849544c70efabff64d81587c495ec97b4b310ca242dcb6c94"
+    },
+    {
+      "conventional_formal_name": "Republic of Uganda",
+      "conventional_short_name": "Uganda",
+      "country_code": "UG",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "africa/ug.json",
+      "source_sha256": "d65444647a9968e1f4bddf37cb2c6a7bfa0efda9852e7aa596a4c87e900d36ea"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Burkina Faso",
+      "country_code": "BF",
+      "local_formal_name": null,
+      "local_short_name": "Burkina Faso",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/uv.json",
+      "source_sha256": "9f415bda0e69abb75c6e40cd70aa4c53adeab0ba9e267d7713426a97bc8fb03f"
+    },
+    {
+      "conventional_formal_name": "Republic of Namibia",
+      "conventional_short_name": "Namibia",
+      "country_code": "NA",
+      "local_formal_name": "Republic of Namibia",
+      "local_short_name": "Namibia",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/wa.json",
+      "source_sha256": "5cd6392ea37f00e55b38bc10895b7e1d36af078d685342cabc710bff4819b306"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Western Sahara",
+      "country_code": "EH",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "africa/wi.json",
+      "source_sha256": "32f15bcd7819a862c734e9c9429935fbc5b815717a90ade2b2388dc67c6b9c3a"
+    },
+    {
+      "conventional_formal_name": "Kingdom of Eswatini",
+      "conventional_short_name": "Eswatini",
+      "country_code": "SZ",
+      "local_formal_name": "Umbuso weSwatini",
+      "local_short_name": "eSwatini",
+      "source_locator": "Government > Country name",
+      "source_path": "africa/wz.json",
+      "source_sha256": "b7ecb33bd7449a2e022525f101a28914019fcb36fde6f48c75a7796bfc733c4a"
+    },
+    {
+      "conventional_formal_name": "Republic of Zambia",
+      "conventional_short_name": "Zambia",
+      "country_code": "ZM",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "africa/za.json",
+      "source_sha256": "448b12edfa5a4cdd6084000b3e720c98b053928119befecbe9fc6f52fd342bad"
+    },
+    {
+      "conventional_formal_name": "Republic of Zimbabwe",
+      "conventional_short_name": "Zimbabwe",
+      "country_code": "ZW",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "africa/zi.json",
+      "source_sha256": "737d0b10a68427a6f3ad5666c78a21c70d4b62e77ea254812cd913a5fb3a87f4"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Antarctica",
+      "country_code": "AQ",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "antarctica/ay.json",
+      "source_sha256": "44c500b8764426f2ea7f69caaf34f71ecebc6ce0bf775cf191af2a4c49c88b1b"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Bouvet Island",
+      "country_code": "BV",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "antarctica/bv.json",
+      "source_sha256": "dadf133f993acfd0fc31f618dbc23450373968d477427d0987a207515080ab7a"
+    },
+    {
+      "conventional_formal_name": "Territory of the French Southern and Antarctic Lands",
+      "conventional_short_name": "French Southern and Antarctic Lands",
+      "country_code": "TF",
+      "local_formal_name": "Terres australes et antarctiques françaises",
+      "local_short_name": "Terres Australes et Antarctiques Françaises",
+      "source_locator": "Government > Country name",
+      "source_path": "antarctica/fs.json",
+      "source_sha256": "c48478d8906d615ebd7f675671d7ba2feef96f95bb0551cf04c87ac9cee54347"
+    },
+    {
+      "conventional_formal_name": "Territory of Heard Island and McDonald Islands",
+      "conventional_short_name": "Heard Island and McDonald Islands",
+      "country_code": "HM",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "antarctica/hm.json",
+      "source_sha256": "c0ba8594e125c1442c3d6d015cae74b0a928bb025d73a953f1bc730196138a17"
+    },
+    {
+      "conventional_formal_name": "American Samoa",
+      "conventional_short_name": "American Samoa",
+      "country_code": "AS",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "australia-oceania/aq.json",
+      "source_sha256": "5502abd77b581bd2124ec8174e6060b3e1e885da0df424e7d87a34e021f7af2f"
+    },
+    {
+      "conventional_formal_name": "Commonwealth of Australia",
+      "conventional_short_name": "Australia",
+      "country_code": "AU",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "australia-oceania/as.json",
+      "source_sha256": "58898b7becdca598b19fa05551e2ea686c056517a9ab5d9697066c4f8f4cb706"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Solomon Islands",
+      "country_code": "SB",
+      "local_formal_name": null,
+      "local_short_name": "Solomon Islands",
+      "source_locator": "Government > Country name",
+      "source_path": "australia-oceania/bp.json",
+      "source_sha256": "12f3f1988407fd916f3a8f7b7666ab41f8ae9c4c97ba1597a20b2bec26665367"
+    },
+    {
+      "conventional_formal_name": "Territory of Cocos (Keeling) Islands",
+      "conventional_short_name": "Cocos (Keeling) Islands",
+      "country_code": "CC",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "australia-oceania/ck.json",
+      "source_sha256": "e1e8d0f18a6ea46c7064e20d00a161227399c634f72c5463fae6a61e53c4f58c"
+    },
+    {
+      "conventional_formal_name": "Commonwealth of the Northern Mariana Islands",
+      "conventional_short_name": "Northern Mariana Islands",
+      "country_code": "MP",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "australia-oceania/cq.json",
+      "source_sha256": "32a8e3166bba06909d45fd0f04f28f8794e6771aae01c341d797a15b8e2ff412"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Cook Islands",
+      "country_code": "CK",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "australia-oceania/cw.json",
+      "source_sha256": "65680a628ac28b4a7451a77046e23f96d5eca5a773280602e7875e0b38d53ddd"
+    },
+    {
+      "conventional_formal_name": "Republic of Fiji",
+      "conventional_short_name": "Fiji",
+      "country_code": "FJ",
+      "local_formal_name": "Republic of Fiji (English)/ Matanitu ko Viti (Fijian)",
+      "local_short_name": "Fiji (English)/ Viti (Fijian)",
+      "source_locator": "Government > Country name",
+      "source_path": "australia-oceania/fj.json",
+      "source_sha256": "f7ba6fc292d9d62baf4ed91a99e26b825cf3132ad61a4222f1a69d6ae698bafd"
+    },
+    {
+      "conventional_formal_name": "Federated States of Micronesia",
+      "conventional_short_name": null,
+      "country_code": "FM",
+      "local_formal_name": "Federated States of Micronesia",
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "australia-oceania/fm.json",
+      "source_sha256": "96c292f4a8b2d8eb2fec985e8ef5bf1dd85063ca857123c2aed9b210e6e58422"
+    },
+    {
+      "conventional_formal_name": "Overseas Lands of French Polynesia",
+      "conventional_short_name": "French Polynesia",
+      "country_code": "PF",
+      "local_formal_name": "Pays d'outre-mer de la Polynésie française",
+      "local_short_name": "Polynésie Française",
+      "source_locator": "Government > Country name",
+      "source_path": "australia-oceania/fp.json",
+      "source_sha256": "8397689c6957419c4aafbdc9440126c7c8e128312e2e66f5655e048e5480a539"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Guam",
+      "country_code": "GU",
+      "local_formal_name": null,
+      "local_short_name": "Guahan",
+      "source_locator": "Government > Country name",
+      "source_path": "australia-oceania/gq.json",
+      "source_sha256": "5ce9d95080192f079f2d50bca4decdc7cfb66905900bd144efc29a235b209daa"
+    },
+    {
+      "conventional_formal_name": "Republic of Kiribati",
+      "conventional_short_name": "Kiribati",
+      "country_code": "KI",
+      "local_formal_name": "Republic of Kiribati",
+      "local_short_name": "Kiribati",
+      "source_locator": "Government > Country name",
+      "source_path": "australia-oceania/kr.json",
+      "source_sha256": "8a4cb9b1f6b9ce293382c31a2513b68c315e38165ebd68a8f52ae891268084f8"
+    },
+    {
+      "conventional_formal_name": "Territory of Christmas Island",
+      "conventional_short_name": "Christmas Island",
+      "country_code": "CX",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "australia-oceania/kt.json",
+      "source_sha256": "8fea8cb39c72a7c67ce753d55f9d3679c1af4d5a835cbce749019d819603acf0"
+    },
+    {
+      "conventional_formal_name": "Territory of New Caledonia and Dependencies",
+      "conventional_short_name": "New Caledonia",
+      "country_code": "NC",
+      "local_formal_name": "Territoire des Nouvelle-Calédonie et dépendances",
+      "local_short_name": "Nouvelle-Calédonie",
+      "source_locator": "Government > Country name",
+      "source_path": "australia-oceania/nc.json",
+      "source_sha256": "e661292f176fa34d447b92d4acf42b0b18b2bab92341ac5deafc53a845cef255"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Niue",
+      "country_code": "NU",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "australia-oceania/ne.json",
+      "source_sha256": "95204a443089ac04847dfe1147049fd48eaffb27d64e1bc83fb02f654d567eea"
+    },
+    {
+      "conventional_formal_name": "Territory of Norfolk Island",
+      "conventional_short_name": "Norfolk Island",
+      "country_code": "NF",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "australia-oceania/nf.json",
+      "source_sha256": "18a8e5360f9162ad5b38318751d627484346310fe2140d94f88e9e4585d00c62"
+    },
+    {
+      "conventional_formal_name": "Republic of Vanuatu",
+      "conventional_short_name": "Vanuatu",
+      "country_code": "VU",
+      "local_formal_name": "Ripablik blong Vanuatu",
+      "local_short_name": "Vanuatu",
+      "source_locator": "Government > Country name",
+      "source_path": "australia-oceania/nh.json",
+      "source_sha256": "8d8f973a5156ca9f5a8b3d9a88b008477c113fe0ba54d1faa5442ad69cd7b47b"
+    },
+    {
+      "conventional_formal_name": "Republic of Nauru",
+      "conventional_short_name": "Nauru",
+      "country_code": "NR",
+      "local_formal_name": "Republic of Nauru",
+      "local_short_name": "Nauru",
+      "source_locator": "Government > Country name",
+      "source_path": "australia-oceania/nr.json",
+      "source_sha256": "678cdbff7c84154a0f80a801706c8c87b45744c980ef7eef1c2317be1c518813"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "New Zealand",
+      "country_code": "NZ",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "australia-oceania/nz.json",
+      "source_sha256": "3d3f9c3531dfc1ed413ebb732bd6dcfc5db8e9b165273f605638e0b66cec4efe"
+    },
+    {
+      "conventional_formal_name": "Pitcairn, Henderson, Ducie, and Oeno Islands",
+      "conventional_short_name": "Pitcairn Islands",
+      "country_code": "PN",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "australia-oceania/pc.json",
+      "source_sha256": "7ea9cc3ccbeaf3d5a4a1f4cc64e4099cc91f4bbb66abd9075b37c79d2b0b9b4d"
+    },
+    {
+      "conventional_formal_name": "Republic of Palau",
+      "conventional_short_name": "Palau",
+      "country_code": "PW",
+      "local_formal_name": "Beluu er a Belau",
+      "local_short_name": "Belau",
+      "source_locator": "Government > Country name",
+      "source_path": "australia-oceania/ps.json",
+      "source_sha256": "5b4ca9f496cb58cd0fcdf7d1278476b533e634c45f4f4b523c7c50aea2245654"
+    },
+    {
+      "conventional_formal_name": "Republic of the Marshall Islands",
+      "conventional_short_name": "Marshall Islands",
+      "country_code": "MH",
+      "local_formal_name": "Republic of the Marshall Islands",
+      "local_short_name": "Marshall Islands",
+      "source_locator": "Government > Country name",
+      "source_path": "australia-oceania/rm.json",
+      "source_sha256": "2551ad94fc470449d671f631dbdaa4033eba682ed98d05bb864e747077852ff3"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Tokelau",
+      "country_code": "TK",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "australia-oceania/tl.json",
+      "source_sha256": "e39c0408380cde68ea2a9962395e9c0a6b320d8b9ac81ed53023e30a345788f7"
+    },
+    {
+      "conventional_formal_name": "Kingdom of Tonga",
+      "conventional_short_name": "Tonga",
+      "country_code": "TO",
+      "local_formal_name": "Pule'anga Fakatu'i 'o Tonga",
+      "local_short_name": "Tonga",
+      "source_locator": "Government > Country name",
+      "source_path": "australia-oceania/tn.json",
+      "source_sha256": "dc4558ee4878e8243f4040c2ee81317526aede647c692d80d170c182f28df65c"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Tuvalu",
+      "country_code": "TV",
+      "local_formal_name": null,
+      "local_short_name": "Tuvalu",
+      "source_locator": "Government > Country name",
+      "source_path": "australia-oceania/tv.json",
+      "source_sha256": "6fc384e0ed1906883a00dd123d6d467af4674bd64e6871f5710b4e759d278f85"
+    },
+    {
+      "conventional_formal_name": "Territory of the Wallis and Futuna Islands",
+      "conventional_short_name": "Wallis and Futuna",
+      "country_code": "WF",
+      "local_formal_name": "Territoire des Iles Wallis et Futuna",
+      "local_short_name": "Wallis et Futuna",
+      "source_locator": "Government > Country name",
+      "source_path": "australia-oceania/wf.json",
+      "source_sha256": "ba9cbc18ff66cb6718ffa58f9c377ff3904456ac689f99c09a4c75eec9809924"
+    },
+    {
+      "conventional_formal_name": "Independent State of Samoa",
+      "conventional_short_name": "Samoa",
+      "country_code": "WS",
+      "local_formal_name": "Malo Sa'oloto Tuto'atasi o Samoa",
+      "local_short_name": "Samoa",
+      "source_locator": "Government > Country name",
+      "source_path": "australia-oceania/ws.json",
+      "source_sha256": "5b48cdd924e498bd58cc51e95b0b9f9a107fc0267f3e5a33ae2108950718790d"
+    },
+    {
+      "conventional_formal_name": "Country of Aruba",
+      "conventional_short_name": "Aruba",
+      "country_code": "AW",
+      "local_formal_name": "Land Aruba (Dutch); Pais Aruba (Papiamento)",
+      "local_short_name": "Aruba",
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/aa.json",
+      "source_sha256": "4f40e0ed180d2e714746609a74a61d9d1fc522b747c614d3f4f0c53e9aeab39b"
+    },
+    {
+      "conventional_formal_name": "Antigua and Barbuda",
+      "conventional_short_name": "Antigua and Barbuda",
+      "country_code": "AG",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/ac.json",
+      "source_sha256": "0d17d81886b8e582f59b9a11d75ae8bdbae9a51b49e1b7699d2cedc739ec85eb"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Anguilla",
+      "country_code": "AI",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/av.json",
+      "source_sha256": "dd2d3c431913eff67ae44ad2d19ef2bfa8f8053a46b918503a1eb8b23ac8e327"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Barbados",
+      "country_code": "BB",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/bb.json",
+      "source_sha256": "7c45f15b81eaa5bfd0b71961f062fd616c0077f505ac90cb910a27a81df2ed6a"
+    },
+    {
+      "conventional_formal_name": "Commonwealth of The Bahamas",
+      "conventional_short_name": "The Bahamas",
+      "country_code": "BS",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/bf.json",
+      "source_sha256": "1d834bae7d6b74483a4237d64d0743d1e4bb0f9d6b2a08d29068aa62d28d9274"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Belize",
+      "country_code": "BZ",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/bh.json",
+      "source_sha256": "2d1622343cde5e5621464b8a2d23b36efd1c40cd27c5a8bf8c2f940c524117d2"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Cayman Islands",
+      "country_code": "KY",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/cj.json",
+      "source_sha256": "109325c7c88f66086a55e087d680bdf747638a802f9800f98c40216a16236c2e"
+    },
+    {
+      "conventional_formal_name": "Republic of Costa Rica",
+      "conventional_short_name": "Costa Rica",
+      "country_code": "CR",
+      "local_formal_name": "República de Costa Rica",
+      "local_short_name": "Costa Rica",
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/cs.json",
+      "source_sha256": "74de5b6828dc95153adeb97153799b2353d163106bb3ffde32b18ee25e0b64fc"
+    },
+    {
+      "conventional_formal_name": "Republic of Cuba",
+      "conventional_short_name": "Cuba",
+      "country_code": "CU",
+      "local_formal_name": "República de Cuba",
+      "local_short_name": "Cuba",
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/cu.json",
+      "source_sha256": "4ba4c21be9192d7198aa9829bfdf5d1b28f70230233ef2812ba4404cf07a56f4"
+    },
+    {
+      "conventional_formal_name": "Commonwealth of Dominica",
+      "conventional_short_name": "Dominica",
+      "country_code": "DM",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/do.json",
+      "source_sha256": "2b2121fafad7a27a87e2d70f26fc81ff43f1c8d2e5621e7210a3f968f893ecf3"
+    },
+    {
+      "conventional_formal_name": "Dominican Republic",
+      "conventional_short_name": "The Dominican",
+      "country_code": "DO",
+      "local_formal_name": "República Dominicana",
+      "local_short_name": "La Dominicana",
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/dr.json",
+      "source_sha256": "bc7b306f31ebe721003b0922db14985033440d589a690673aecb2ac8892ce538"
+    },
+    {
+      "conventional_formal_name": "Republic of El Salvador",
+      "conventional_short_name": "El Salvador",
+      "country_code": "SV",
+      "local_formal_name": "República de El Salvador",
+      "local_short_name": "El Salvador",
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/es.json",
+      "source_sha256": "510b065355540d357147a48c2abcdc7f086a40b5663d77a74da13aa484955db3"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Grenada",
+      "country_code": "GD",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/gj.json",
+      "source_sha256": "2a65ebeb65db8a4dc1dc21a0637a52a4709885c5b11f087d3066f8362a5c664e"
+    },
+    {
+      "conventional_formal_name": "Republic of Guatemala",
+      "conventional_short_name": "Guatemala",
+      "country_code": "GT",
+      "local_formal_name": "República de Guatemala",
+      "local_short_name": "Guatemala",
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/gt.json",
+      "source_sha256": "2f014a2e80da8f6152a124f1fbd31a0211dbaf8cf0db6c5cf03cf997dcac6181"
+    },
+    {
+      "conventional_formal_name": "Republic of Haiti",
+      "conventional_short_name": "Haiti",
+      "country_code": "HT",
+      "local_formal_name": "République d'Haïti (French)/Repiblik d Ayiti (Haitian Creole)",
+      "local_short_name": "Haïti (French)/ Ayiti (Haitian Creole)",
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/ha.json",
+      "source_sha256": "ceb43c21109088de02125c716715f1fd7682837665d7a26e9e7b3724b68146ac"
+    },
+    {
+      "conventional_formal_name": "Republic of Honduras",
+      "conventional_short_name": "Honduras",
+      "country_code": "HN",
+      "local_formal_name": "República de Honduras",
+      "local_short_name": "Honduras",
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/ho.json",
+      "source_sha256": "ad41ab9f16019df069c52dd85af623034d34f367fa9fac7f8489dc8e40a10d37"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Jamaica",
+      "country_code": "JM",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/jm.json",
+      "source_sha256": "7c51736853a33f0931ebe6b0cc33b5f047319a8f7a21f537c0c15faf67ccb8e4"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Montserrat",
+      "country_code": "MS",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/mh.json",
+      "source_sha256": "9a40246604b03ff612c2191cf2b374d00c9f6219b957a6c13e667dddde407b6a"
+    },
+    {
+      "conventional_formal_name": "Country of Sint Maarten",
+      "conventional_short_name": "Sint Maarten",
+      "country_code": "SX",
+      "local_formal_name": "Land Sint Maarten (Dutch)/ Country of Sint Maarten (English)",
+      "local_short_name": "Sint Maarten (Dutch and English)",
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/nn.json",
+      "source_sha256": "ccae14fec0f4181bc46198c3f277ab1b77f62feac846d1b387eec743abb7e160"
+    },
+    {
+      "conventional_formal_name": "Republic of Nicaragua",
+      "conventional_short_name": "Nicaragua",
+      "country_code": "NI",
+      "local_formal_name": "República de Nicaragua",
+      "local_short_name": "Nicaragua",
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/nu.json",
+      "source_sha256": "f9f1655945cd4c1b5290678976f5d3c9ab1504d6f8923d0b7aaa0e8808ba45e4"
+    },
+    {
+      "conventional_formal_name": "Republic of Panama",
+      "conventional_short_name": "Panama",
+      "country_code": "PA",
+      "local_formal_name": "República de Panama",
+      "local_short_name": "Panama",
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/pm.json",
+      "source_sha256": "b0952532e0c025ef1d5eabc9d8891d00fc54016af4bcd7c881daa920c1058eaf"
+    },
+    {
+      "conventional_formal_name": "Overseas Collectivity of Saint Martin",
+      "conventional_short_name": "Saint Martin",
+      "country_code": "MF",
+      "local_formal_name": "Collectivité d'outre mer de Saint-Martin",
+      "local_short_name": "Saint-Martin",
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/rn.json",
+      "source_sha256": "ba810405471176505f334480c3169cf58630163831d08f537a0c70c75f9f8c28"
+    },
+    {
+      "conventional_formal_name": "Commonwealth of Puerto Rico",
+      "conventional_short_name": "Puerto Rico",
+      "country_code": "PR",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/rq.json",
+      "source_sha256": "2cccb6ae3c317432c9e5ad03177db4ba7b10fe2ff4ed46c93f0556b82d242e61"
+    },
+    {
+      "conventional_formal_name": "Federation of Saint Kitts and Nevis",
+      "conventional_short_name": "Saint Kitts and Nevis",
+      "country_code": "KN",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/sc.json",
+      "source_sha256": "563b7560859be19d1d3d03a86318047e1e23e4f3d92d47b1df93a75310640626"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Saint Lucia",
+      "country_code": "LC",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/st.json",
+      "source_sha256": "1de4fbc326e194502ae5cad61c5131ec1c5e386dccbf00307ee2cab5192d8e16"
+    },
+    {
+      "conventional_formal_name": "Overseas Collectivity of Saint Barthelemy",
+      "conventional_short_name": "Saint Barthelemy",
+      "country_code": "BL",
+      "local_formal_name": "Collectivité d'outre mer de Saint-Barthélemy",
+      "local_short_name": "Saint-Barthélemy",
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/tb.json",
+      "source_sha256": "495800081ba06c8e9ae1344b9f210bb70a0fbc0a008b6d80c6e7835492663097"
+    },
+    {
+      "conventional_formal_name": "Republic of Trinidad and Tobago",
+      "conventional_short_name": "Trinidad and Tobago",
+      "country_code": "TT",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/td.json",
+      "source_sha256": "ede9513044f0c0e3f96a11fc739401e552ca3ce5b92f1e307feb1db4274b139b"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Turks and Caicos Islands",
+      "country_code": "TC",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/tk.json",
+      "source_sha256": "01b0d613e632bf65a9c1bba65959995bde4e1c0c344828b46fe55e681f68d11f"
+    },
+    {
+      "conventional_formal_name": "Country of Curacao",
+      "conventional_short_name": "Curacao",
+      "country_code": "CW",
+      "local_formal_name": "Land Curacao (Dutch)/ Pais Korsou (Papiamento)",
+      "local_short_name": "Curacao (Dutch)/ Korsou (Papiamento)",
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/uc.json",
+      "source_sha256": "22688e08c41534e7a54ef25935c65cd955d803348003c90ab9ee1ad21f8bcfb4"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Saint Vincent and the Grenadines",
+      "country_code": "VC",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/vc.json",
+      "source_sha256": "16de7a2f045689126dfac02321429a7ab27f062668b3d30424647170c1acb848"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "British Virgin Islands",
+      "country_code": "VG",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/vi.json",
+      "source_sha256": "d7a1d118b2521bc0c9f92e88a7d777b958376edaf7a6620eee88f31f4fffd0d1"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Virgin Islands",
+      "country_code": "VI",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "central-america-n-caribbean/vq.json",
+      "source_sha256": "d7643e03872195a7ea27e0e84420b0b9cd67ec9b9b8eed5115edbb502381ca56"
+    },
+    {
+      "conventional_formal_name": "Republic of Azerbaijan",
+      "conventional_short_name": "Azerbaijan",
+      "country_code": "AZ",
+      "local_formal_name": "Azarbaycan Respublikasi",
+      "local_short_name": "Azarbaycan",
+      "source_locator": "Government > Country name",
+      "source_path": "central-asia/aj.json",
+      "source_sha256": "d9c9eaa36dabad5a06c9ef6254d38f757789d43ec8cfa667a3ad6ac0f6886c73"
+    },
+    {
+      "conventional_formal_name": "Republic of Armenia",
+      "conventional_short_name": "Armenia",
+      "country_code": "AM",
+      "local_formal_name": "Hayastani Hanrapetut'yun",
+      "local_short_name": "Hayastan",
+      "source_locator": "Government > Country name",
+      "source_path": "central-asia/am.json",
+      "source_sha256": "d1b616cd15ce383ccd66da73ce10252e4d0d4db778aaa2ea6da30846ed958d39"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Georgia",
+      "country_code": "GE",
+      "local_formal_name": "Republic of Georgia",
+      "local_short_name": "Sak'art'velo",
+      "source_locator": "Government > Country name",
+      "source_path": "central-asia/gg.json",
+      "source_sha256": "fd68eb962c83dfd8445872dcb532ef3f9302820738f6bc199eae4c21ab46fa57"
+    },
+    {
+      "conventional_formal_name": "Kyrgyz Republic",
+      "conventional_short_name": "Kyrgyzstan",
+      "country_code": "KG",
+      "local_formal_name": "Kyrgyz Respublikasy",
+      "local_short_name": "Kyrgyzstan",
+      "source_locator": "Government > Country name",
+      "source_path": "central-asia/kg.json",
+      "source_sha256": "71ee9bbaead5920b230cb411b06e46de5a4b47d8cf258e72c65ede3c59c96014"
+    },
+    {
+      "conventional_formal_name": "Republic of Kazakhstan",
+      "conventional_short_name": "Kazakhstan",
+      "country_code": "KZ",
+      "local_formal_name": "Qazaqstan Respublikasy",
+      "local_short_name": "Qazaqstan",
+      "source_locator": "Government > Country name",
+      "source_path": "central-asia/kz.json",
+      "source_sha256": "03b965010b518180f638afd122855df0a50526edb71b66291a91c8edba21d9a6"
+    },
+    {
+      "conventional_formal_name": "Russian Federation",
+      "conventional_short_name": "Russia",
+      "country_code": "RU",
+      "local_formal_name": "Rossiyskaya Federatsiya",
+      "local_short_name": "Rossiya",
+      "source_locator": "Government > Country name",
+      "source_path": "central-asia/rs.json",
+      "source_sha256": "cd9b9b835b17ec0cbb9c98abb5a0ec66a1f94bf49f31f79844f7d433233581ab"
+    },
+    {
+      "conventional_formal_name": "Republic of Tajikistan",
+      "conventional_short_name": "Tajikistan",
+      "country_code": "TJ",
+      "local_formal_name": "Jumhurii Tojikiston",
+      "local_short_name": "Tojikiston",
+      "source_locator": "Government > Country name",
+      "source_path": "central-asia/ti.json",
+      "source_sha256": "89eb891403be2f8ceb1a3835bd27d5e1957ec90d9e3310917a6a2affbdb8e05f"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Turkmenistan",
+      "country_code": "TM",
+      "local_formal_name": null,
+      "local_short_name": "Turkmenistan",
+      "source_locator": "Government > Country name",
+      "source_path": "central-asia/tx.json",
+      "source_sha256": "7e647b588287ea050e88b90fead605ebdcf2e6ae5401680b0d0f6d92b223f068"
+    },
+    {
+      "conventional_formal_name": "Republic of Uzbekistan",
+      "conventional_short_name": "Uzbekistan",
+      "country_code": "UZ",
+      "local_formal_name": "O'zbekiston Respublikasi",
+      "local_short_name": "O'zbekiston",
+      "source_locator": "Government > Country name",
+      "source_path": "central-asia/uz.json",
+      "source_sha256": "e9b78a812635b6b25c8dcec84a50fda3c511d5639f725cfebf0d92128aba3a2f"
+    },
+    {
+      "conventional_formal_name": "Union of Burma",
+      "conventional_short_name": "Burma",
+      "country_code": "MM",
+      "local_formal_name": "Pyidaungzu Thammada Myanma Naingngandaw (translated as the Republic of the Union of Myanmar)",
+      "local_short_name": "Myanma Naingngandaw",
+      "source_locator": "Government > Country name",
+      "source_path": "east-n-southeast-asia/bm.json",
+      "source_sha256": "b266659907f542fd25869b4942cd90a59b9fc61b480c062129a6fbe45dbeae55"
+    },
+    {
+      "conventional_formal_name": "Brunei Darussalam",
+      "conventional_short_name": "Brunei",
+      "country_code": "BN",
+      "local_formal_name": "Negara Brunei Darussalam",
+      "local_short_name": "Brunei",
+      "source_locator": "Government > Country name",
+      "source_path": "east-n-southeast-asia/bx.json",
+      "source_sha256": "aeaa2392246a14a62804f9b92833758471122f8fec452289ff969ab2a2e33e30"
+    },
+    {
+      "conventional_formal_name": "Kingdom of Cambodia",
+      "conventional_short_name": "Cambodia",
+      "country_code": "KH",
+      "local_formal_name": "Preahreacheanachakr Kampuchea (phonetic transliteration)",
+      "local_short_name": "Kampuchea",
+      "source_locator": "Government > Country name",
+      "source_path": "east-n-southeast-asia/cb.json",
+      "source_sha256": "f22ae63e7aac78a80429914da0a5de9ad76bcfbdfb6ac4d13ce14c147e473f03"
+    },
+    {
+      "conventional_formal_name": "People's Republic of China",
+      "conventional_short_name": "China",
+      "country_code": "CN",
+      "local_formal_name": "Zhonghua Renmin Gongheguo",
+      "local_short_name": "Zhongguo",
+      "source_locator": "Government > Country name",
+      "source_path": "east-n-southeast-asia/ch.json",
+      "source_sha256": "adbc9868c3369c1e4580d78ce37160c94397c6680fb4c6a923c2fa124dc1f47e"
+    },
+    {
+      "conventional_formal_name": "Hong Kong Special Administrative Region",
+      "conventional_short_name": "Hong Kong",
+      "country_code": "HK",
+      "local_formal_name": "Heung Kong Takpit Hangching Ku (Eitel/Dyer-Ball)",
+      "local_short_name": "Heung Kong (Eitel/Dyer-Ball)",
+      "source_locator": "Government > Country name",
+      "source_path": "east-n-southeast-asia/hk.json",
+      "source_sha256": "6870b484787f672643f743eba27959be402de50e40eb2dd0072e832512d8c98d"
+    },
+    {
+      "conventional_formal_name": "Republic of Indonesia",
+      "conventional_short_name": "Indonesia",
+      "country_code": "ID",
+      "local_formal_name": "Republik Indonesia",
+      "local_short_name": "Indonesia",
+      "source_locator": "Government > Country name",
+      "source_path": "east-n-southeast-asia/id.json",
+      "source_sha256": "3e6294ac289846925b7d9623e7e8ee35be81d94cf3a419122ccf9a5470ffe16e"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Japan",
+      "country_code": "JP",
+      "local_formal_name": "Nihon-koku/Nippon-koku",
+      "local_short_name": "Nihon/Nippon",
+      "source_locator": "Government > Country name",
+      "source_path": "east-n-southeast-asia/ja.json",
+      "source_sha256": "b183fd8927f0d26bac3fe4c7e5d08c95899257769bde1933b357fd4b1411267b"
+    },
+    {
+      "conventional_formal_name": "Democratic People's Republic of Korea",
+      "conventional_short_name": "North Korea",
+      "country_code": "KP",
+      "local_formal_name": "Choson-minjujuui-inmin-konghwaguk",
+      "local_short_name": "Choson",
+      "source_locator": "Government > Country name",
+      "source_path": "east-n-southeast-asia/kn.json",
+      "source_sha256": "19a215852742d055670894c4a4b4c7d47a9b7013f283129ec393ff97ad19ae56"
+    },
+    {
+      "conventional_formal_name": "Republic of Korea",
+      "conventional_short_name": "South Korea",
+      "country_code": "KR",
+      "local_formal_name": "Taehan-min'guk",
+      "local_short_name": "Han'guk",
+      "source_locator": "Government > Country name",
+      "source_path": "east-n-southeast-asia/ks.json",
+      "source_sha256": "f5a0267a89822ccaebed8a16503ce96f9229f344fdf3f2190031040be07ed684"
+    },
+    {
+      "conventional_formal_name": "Lao People's Democratic Republic",
+      "conventional_short_name": "Laos",
+      "country_code": "LA",
+      "local_formal_name": "Sathalanalat Paxathipatai Paxaxon Lao",
+      "local_short_name": "Mueang Lao (unofficial)",
+      "source_locator": "Government > Country name",
+      "source_path": "east-n-southeast-asia/la.json",
+      "source_sha256": "c31b49598c0f8b343700f7aaad8c59b414b0630728f13fb78ccc1ae77d754384"
+    },
+    {
+      "conventional_formal_name": "Macau Special Administrative Region",
+      "conventional_short_name": "Macau",
+      "country_code": "MO",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "east-n-southeast-asia/mc.json",
+      "source_sha256": "1bcd364486a574793c476a04f328d6cac15fe396b4819750092fb5810b064073"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Mongolia",
+      "country_code": "MN",
+      "local_formal_name": null,
+      "local_short_name": "Mongol Uls",
+      "source_locator": "Government > Country name",
+      "source_path": "east-n-southeast-asia/mg.json",
+      "source_sha256": "bb181d4931a820bc11b58e5b917d512ba987ffcbed281ddde9ce2462fb4502ba"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Malaysia",
+      "country_code": "MY",
+      "local_formal_name": null,
+      "local_short_name": "Malaysia",
+      "source_locator": "Government > Country name",
+      "source_path": "east-n-southeast-asia/my.json",
+      "source_sha256": "85c9b66747a62da78a41d883983e13f175e5665afd8b9b369e617a8eff8b4058"
+    },
+    {
+      "conventional_formal_name": "Independent State of Papua New Guinea",
+      "conventional_short_name": "Papua New Guinea",
+      "country_code": "PG",
+      "local_formal_name": null,
+      "local_short_name": "Papuaniugini",
+      "source_locator": "Government > Country name",
+      "source_path": "east-n-southeast-asia/pp.json",
+      "source_sha256": "94e5d3f803f07420cba5655b1e138fcaa45bab8c552f202eb3ba98806b1ef7eb"
+    },
+    {
+      "conventional_formal_name": "Republic of the Philippines",
+      "conventional_short_name": "Philippines",
+      "country_code": "PH",
+      "local_formal_name": "Republika ng Pilipinas",
+      "local_short_name": "Pilipinas",
+      "source_locator": "Government > Country name",
+      "source_path": "east-n-southeast-asia/rp.json",
+      "source_sha256": "457df2a2367d40849d42770cd000230c3261f7e1026aa805e7cb393d372ef8a9"
+    },
+    {
+      "conventional_formal_name": "Republic of Singapore",
+      "conventional_short_name": "Singapore",
+      "country_code": "SG",
+      "local_formal_name": "Republic of Singapore",
+      "local_short_name": "Singapore",
+      "source_locator": "Government > Country name",
+      "source_path": "east-n-southeast-asia/sn.json",
+      "source_sha256": "d2dfa76ac3e4c100fd423f2e9bc382c71fff8b1d9fc45d3b07945676f65343bc"
+    },
+    {
+      "conventional_formal_name": "Kingdom of Thailand",
+      "conventional_short_name": "Thailand",
+      "country_code": "TH",
+      "local_formal_name": "Ratcha Anachak Thai",
+      "local_short_name": "Prathet Thai",
+      "source_locator": "Government > Country name",
+      "source_path": "east-n-southeast-asia/th.json",
+      "source_sha256": "8d02242e08d712338c9859d34d8c1a87ed8d4d035d86ae4f849e1177e7991b6d"
+    },
+    {
+      "conventional_formal_name": "Democratic Republic of Timor-Leste",
+      "conventional_short_name": "Timor-Leste",
+      "country_code": "TL",
+      "local_formal_name": "Republika Demokratika Timor Lorosa'e (Tetum)/ Republica Democratica de Timor-Leste (Portuguese)",
+      "local_short_name": "Timor Lorosa'e (Tetum)/ Timor-Leste (Portuguese)",
+      "source_locator": "Government > Country name",
+      "source_path": "east-n-southeast-asia/tt.json",
+      "source_sha256": "4a249694765ebca1c155142c5e86564b78de01bd52bf4d431f9e5e607356606c"
+    },
+    {
+      "conventional_formal_name": "Socialist Republic of Vietnam",
+      "conventional_short_name": "Vietnam",
+      "country_code": "VN",
+      "local_formal_name": "Cong Hoa Xa Hoi Chu Nghia Viet Nam",
+      "local_short_name": "Viet Nam",
+      "source_locator": "Government > Country name",
+      "source_path": "east-n-southeast-asia/vm.json",
+      "source_sha256": "49b257946fc8ba5075ede4d958165c4a3eb371be04bae28952ed5c3c76e73a51"
+    },
+    {
+      "conventional_formal_name": "Republic of Albania",
+      "conventional_short_name": "Albania",
+      "country_code": "AL",
+      "local_formal_name": "Republika e Shqiperise",
+      "local_short_name": "Shqiperia",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/al.json",
+      "source_sha256": "fb02159f1705a3176dd361732915df987fb4862f4c43fd091f7e88b7e2847c7f"
+    },
+    {
+      "conventional_formal_name": "Principality of Andorra",
+      "conventional_short_name": "Andorra",
+      "country_code": "AD",
+      "local_formal_name": "Principat d'Andorra",
+      "local_short_name": "Andorra",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/an.json",
+      "source_sha256": "bd950a1fa4acf96cdc9a56105de94687267243b27c564abf7eeaad9c7dc4f76b"
+    },
+    {
+      "conventional_formal_name": "Republic of Austria",
+      "conventional_short_name": "Austria",
+      "country_code": "AT",
+      "local_formal_name": "Republik Oesterreich",
+      "local_short_name": "Oesterreich",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/au.json",
+      "source_sha256": "1b8100080be2ca5ac401161be2a1c83116468389ad03f02ff3e4756e1705fe63"
+    },
+    {
+      "conventional_formal_name": "Kingdom of Belgium",
+      "conventional_short_name": "Belgium",
+      "country_code": "BE",
+      "local_formal_name": "Royaume de Belgique (French)/Koninkrijk Belgie (Dutch)/Koenigreich Belgien (German)",
+      "local_short_name": "Belgique/Belgie/Belgien",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/be.json",
+      "source_sha256": "060686c2531371a6f422ad25e7787b81e076aa0d44a0f37f5612d47526674ac8"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Bosnia and Herzegovina",
+      "country_code": "BA",
+      "local_formal_name": null,
+      "local_short_name": "Bosna i Hercegovina",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/bk.json",
+      "source_sha256": "e8402cdc96a6530464aaa7b5fdd4c5de43036aeffab79ffec310c3d0344049ce"
+    },
+    {
+      "conventional_formal_name": "Republic of Belarus",
+      "conventional_short_name": "Belarus",
+      "country_code": "BY",
+      "local_formal_name": "Respublika Byelarus' (Belarusian)/ Respublika Belarus' (Russian)",
+      "local_short_name": "Byelarus' (Belarusian)/ Belarus' (Russian)",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/bo.json",
+      "source_sha256": "abad1dfce3040fcfbe259d55dbad5628290f7c031f64c2a732f751a8c0013ba7"
+    },
+    {
+      "conventional_formal_name": "Republic of Bulgaria",
+      "conventional_short_name": "Bulgaria",
+      "country_code": "BG",
+      "local_formal_name": "Republika Bulgaria",
+      "local_short_name": "Bulgaria",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/bu.json",
+      "source_sha256": "6161f9b81210bb96ffcdf3284c7680cfaaac220e9e52765a0999eb145d5ed078"
+    },
+    {
+      "conventional_formal_name": "Republic of Cyprus",
+      "conventional_short_name": "Cyprus",
+      "country_code": "CY",
+      "local_formal_name": "Kypriaki Dimokratia (Greek)/ Kibris Cumhuriyeti (Turkish)",
+      "local_short_name": "Kypros (Greek)/ Kibris (Turkish)",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/cy.json",
+      "source_sha256": "8d3396876de89adcdded2e1c78a664d1af43b4ed8f0c0214fe7f10f3c947878a"
+    },
+    {
+      "conventional_formal_name": "Kingdom of Denmark",
+      "conventional_short_name": "Denmark",
+      "country_code": "DK",
+      "local_formal_name": "Kongeriget Danmark",
+      "local_short_name": "Danmark",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/da.json",
+      "source_sha256": "88862551b0951ea80388859c8f2a9245aaec1c25469c753caf272aef93935c1e"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Ireland",
+      "country_code": "IE",
+      "local_formal_name": null,
+      "local_short_name": "Eire",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/ei.json",
+      "source_sha256": "82b210e48c10f06182d28b02bcedd358c298eb35fbe9af88061cba7de3e49be5"
+    },
+    {
+      "conventional_formal_name": "Republic of Estonia",
+      "conventional_short_name": "Estonia",
+      "country_code": "EE",
+      "local_formal_name": "Eesti Vabariik",
+      "local_short_name": "Eesti",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/en.json",
+      "source_sha256": "365ea09768f7d4cfe27ba11eb1bb61baf4a1e63d6d62a7a228afdadea0a455db"
+    },
+    {
+      "conventional_formal_name": "Czech Republic",
+      "conventional_short_name": "Czechia",
+      "country_code": "CZ",
+      "local_formal_name": "Ceska republika",
+      "local_short_name": "Cesko",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/ez.json",
+      "source_sha256": "c4dad41b5a65f78ce6891a07b72b07ccb01d5f0b6f07e058f946218e421110db"
+    },
+    {
+      "conventional_formal_name": "Republic of Finland",
+      "conventional_short_name": "Finland",
+      "country_code": "FI",
+      "local_formal_name": "Suomen tasavalta (Finnish)/ Republiken Finland (Swedish)",
+      "local_short_name": "Suomi (Finnish)/ Finland (Swedish)",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/fi.json",
+      "source_sha256": "6c59f61d0f59f883414c8b3bb51dbd86d911fded24c4cdbc7a828f252dac984a"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Faroe Islands",
+      "country_code": "FO",
+      "local_formal_name": null,
+      "local_short_name": "Foroyar",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/fo.json",
+      "source_sha256": "92ad0bf957420491fd9c341ece75f72d21b2aeba7e76aae73ae514c5a08647c3"
+    },
+    {
+      "conventional_formal_name": "French Republic",
+      "conventional_short_name": "France",
+      "country_code": "FR",
+      "local_formal_name": "République française",
+      "local_short_name": "France",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/fr.json",
+      "source_sha256": "78a07214a47f07de7e58ac5387c709a684d27128fd2a7dee8ce033a6ba8f8baf"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Gibraltar",
+      "country_code": "GI",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "europe/gi.json",
+      "source_sha256": "eb93163eb69d65dd514e1b9f004d666131b1059a784bb466bad2a0c768f01e8e"
+    },
+    {
+      "conventional_formal_name": "Bailiwick of Guernsey",
+      "conventional_short_name": "Guernsey",
+      "country_code": "GG",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "europe/gk.json",
+      "source_sha256": "1fc72a7f75add4e51d617f7090e30c8d7e38b801f75e2dfd7bb63573c11ac3e7"
+    },
+    {
+      "conventional_formal_name": "Federal Republic of Germany",
+      "conventional_short_name": "Germany",
+      "country_code": "DE",
+      "local_formal_name": "Bundesrepublik Deutschland",
+      "local_short_name": "Deutschland",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/gm.json",
+      "source_sha256": "945c6690e57a23edc576f5f17f442decd163e1b6e3599a9418c506c021a60a92"
+    },
+    {
+      "conventional_formal_name": "Hellenic Republic",
+      "conventional_short_name": "Greece",
+      "country_code": "GR",
+      "local_formal_name": "Elliniki Dimokratia",
+      "local_short_name": "Ellas or Ellada",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/gr.json",
+      "source_sha256": "f3d5e6c3846e01ec56a145bbb0d537aa18db483531c8bddb28bd66fe460a00c8"
+    },
+    {
+      "conventional_formal_name": "Republic of Croatia",
+      "conventional_short_name": "Croatia",
+      "country_code": "HR",
+      "local_formal_name": "Republika Hrvatska",
+      "local_short_name": "Hrvatska",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/hr.json",
+      "source_sha256": "c1745b6771b74889839b7b4e010dc97bbf4bd77eac6a02c7da79947513acb994"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Hungary",
+      "country_code": "HU",
+      "local_formal_name": null,
+      "local_short_name": "Magyarorszag",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/hu.json",
+      "source_sha256": "3db98c3fe15aff956e9a5d4600b5a4f2b3215c01348058be190719d7355f8dc7"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Iceland",
+      "country_code": "IS",
+      "local_formal_name": null,
+      "local_short_name": "Island",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/ic.json",
+      "source_sha256": "42d9619a1fcebc46e9cec7370865fd16e03c1672155df2c3f99c2139f993ebbe"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Isle of Man",
+      "country_code": "IM",
+      "local_formal_name": "Ellan Vannin",
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "europe/im.json",
+      "source_sha256": "f1b704e36e82948b822b63587ce0f8ff9f1084eb4040ed9afe482c2acfd7620c"
+    },
+    {
+      "conventional_formal_name": "Italian Republic",
+      "conventional_short_name": "Italy",
+      "country_code": "IT",
+      "local_formal_name": "Repubblica Italiana",
+      "local_short_name": "Italia",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/it.json",
+      "source_sha256": "cfd934c6a4d84e6eb044eb41620e78803ae9d5833d84d934d98c3f5e895a71d5"
+    },
+    {
+      "conventional_formal_name": "Bailiwick of Jersey",
+      "conventional_short_name": "Jersey",
+      "country_code": "JE",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "europe/je.json",
+      "source_sha256": "e38cdf64cddc23ad836b6566c79bab6c8e8c28e9569d1f53611e590b24ff6366"
+    },
+    {
+      "conventional_formal_name": "Republic of Latvia",
+      "conventional_short_name": "Latvia",
+      "country_code": "LV",
+      "local_formal_name": "Latvijas Republika",
+      "local_short_name": "Latvija",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/lg.json",
+      "source_sha256": "f558b5d35c5bc9c30f90608d4d1f9bc1990d6a3d631054ad45764227899c04ef"
+    },
+    {
+      "conventional_formal_name": "Republic of Lithuania",
+      "conventional_short_name": "Lithuania",
+      "country_code": "LT",
+      "local_formal_name": "Lietuvos Respublika",
+      "local_short_name": "Lietuva",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/lh.json",
+      "source_sha256": "bf07c2eda26330ce0580ad6752948f0620fb4df8b851c08ad277933b9b617aee"
+    },
+    {
+      "conventional_formal_name": "Slovak Republic",
+      "conventional_short_name": "Slovakia",
+      "country_code": "SK",
+      "local_formal_name": "Slovenska republika",
+      "local_short_name": "Slovensko",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/lo.json",
+      "source_sha256": "f057b45bac35a0c02f5406b11301d559cbaaeb12d2906d9b4f806d703d0918fa"
+    },
+    {
+      "conventional_formal_name": "Principality of Liechtenstein",
+      "conventional_short_name": "Liechtenstein",
+      "country_code": "LI",
+      "local_formal_name": "Fuerstentum Liechtenstein",
+      "local_short_name": "Liechtenstein",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/ls.json",
+      "source_sha256": "009d9b3426df229e6154423858b4b45cc002f27dfde3b0045698a352bfaa775f"
+    },
+    {
+      "conventional_formal_name": "Grand Duchy of Luxembourg",
+      "conventional_short_name": "Luxembourg",
+      "country_code": "LU",
+      "local_formal_name": "Grand Duché de Luxembourg",
+      "local_short_name": "Luxembourg",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/lu.json",
+      "source_sha256": "8c6c19c21896c5d07a2b1eedb889456b9dea3adead64dc1256e140af08ac3c6f"
+    },
+    {
+      "conventional_formal_name": "Republic of Moldova",
+      "conventional_short_name": "Moldova",
+      "country_code": "MD",
+      "local_formal_name": "Republica Moldova",
+      "local_short_name": "Moldova",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/md.json",
+      "source_sha256": "593fdc4596051fce98d285dfcc94d4e8d78e23671ff844ac2b0b3faa5f879d15"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Montenegro",
+      "country_code": "ME",
+      "local_formal_name": null,
+      "local_short_name": "Crna Gora",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/mj.json",
+      "source_sha256": "b14f2b82315272d65b2e0b3b73ce5ccb5e3cf1657320683682ab2400590df2d5"
+    },
+    {
+      "conventional_formal_name": "Republic of North Macedonia",
+      "conventional_short_name": "North Macedonia",
+      "country_code": "MK",
+      "local_formal_name": "Republika Severna Makedonija",
+      "local_short_name": "Severna Makedonija",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/mk.json",
+      "source_sha256": "c5034e8c6f74b5569a5d74231804aea931cf875f8e37705c3dadc2bb50b7991e"
+    },
+    {
+      "conventional_formal_name": "Principality of Monaco",
+      "conventional_short_name": "Monaco",
+      "country_code": "MC",
+      "local_formal_name": "Principauté de Monaco",
+      "local_short_name": "Monaco",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/mn.json",
+      "source_sha256": "d353e5eb67c0a8846fb0361b8d46f92f402b28077d2f9c72c3452355ff01f24c"
+    },
+    {
+      "conventional_formal_name": "Republic of Malta",
+      "conventional_short_name": "Malta",
+      "country_code": "MT",
+      "local_formal_name": "Repubblika ta' Malta",
+      "local_short_name": "Malta",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/mt.json",
+      "source_sha256": "b9b374125c154ba59abb209945129d616336e6acedf9cff6899800e2e850686a"
+    },
+    {
+      "conventional_formal_name": "Kingdom of the Netherlands",
+      "conventional_short_name": "Netherlands",
+      "country_code": "NL",
+      "local_formal_name": "Koninkrijk der Nederlanden",
+      "local_short_name": "Nederland",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/nl.json",
+      "source_sha256": "886b5634d50b6d10706d6a1d097e05c4993412b1c6ea0f06edd7b73bd6664d4a"
+    },
+    {
+      "conventional_formal_name": "Kingdom of Norway",
+      "conventional_short_name": "Norway",
+      "country_code": "NO",
+      "local_formal_name": "Kongeriket Norge",
+      "local_short_name": "Norge",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/no.json",
+      "source_sha256": "ad3d815b185f7924c9a722f96576f97c0a6f073d8b9ade589a4e193a5b791510"
+    },
+    {
+      "conventional_formal_name": "Republic of Poland",
+      "conventional_short_name": "Poland",
+      "country_code": "PL",
+      "local_formal_name": "Rzeczpospolita Polska",
+      "local_short_name": "Polska",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/pl.json",
+      "source_sha256": "94283eb92b8989aaddbdba24e9f1e4ba0c5d18db79ebfa013ee429ca06a56a00"
+    },
+    {
+      "conventional_formal_name": "Portuguese Republic",
+      "conventional_short_name": "Portugal",
+      "country_code": "PT",
+      "local_formal_name": "Republica Portuguesa",
+      "local_short_name": "Portugal",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/po.json",
+      "source_sha256": "7a63e4c5491b7b96a85ad905941f276442669bc967adda929d5c093ba9ebc129"
+    },
+    {
+      "conventional_formal_name": "Republic of Serbia",
+      "conventional_short_name": "Serbia",
+      "country_code": "RS",
+      "local_formal_name": "Republika Srbija",
+      "local_short_name": "Srbija",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/ri.json",
+      "source_sha256": "d890bc34fe4f511350621e4c5920ff892a55ec86ce76f73ce3c8c96e5b1d76db"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Romania",
+      "country_code": "RO",
+      "local_formal_name": null,
+      "local_short_name": "Romania",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/ro.json",
+      "source_sha256": "c26b90243169f50726a44116fcb61a4ae8f659dc7e4b0c5b9d3ce3df71e3b6a9"
+    },
+    {
+      "conventional_formal_name": "Republic of Slovenia",
+      "conventional_short_name": "Slovenia",
+      "country_code": "SI",
+      "local_formal_name": "Republika Slovenija",
+      "local_short_name": "Slovenija",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/si.json",
+      "source_sha256": "e0d87d6497d906e5e581327b01573cffdd3074989bbb356a0203ab7023db35c3"
+    },
+    {
+      "conventional_formal_name": "Republic of San Marino",
+      "conventional_short_name": "San Marino",
+      "country_code": "SM",
+      "local_formal_name": "Repubblica di San Marino",
+      "local_short_name": "San Marino",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/sm.json",
+      "source_sha256": "6a8f3c94d5b374c350922a4140bcf752ec8a834c4c5e961bc4d490b61e0cffb9"
+    },
+    {
+      "conventional_formal_name": "Kingdom of Spain",
+      "conventional_short_name": "Spain",
+      "country_code": "ES",
+      "local_formal_name": "Reino de España",
+      "local_short_name": "España",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/sp.json",
+      "source_sha256": "4971c216fcb128cf1bc34c5f7ecce5ff0d91e24aa6be1e090944b5639deba366"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Svalbard (sometimes referred to as Spitsbergen, the largest island in the archipelago)",
+      "country_code": "SJ",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "europe/sv.json",
+      "source_sha256": "114fc68163c4d3bb21dd352292ff8192a2f979c26a969fd8646c92213fee9cf2"
+    },
+    {
+      "conventional_formal_name": "Kingdom of Sweden",
+      "conventional_short_name": "Sweden",
+      "country_code": "SE",
+      "local_formal_name": "Konungariket Sverige",
+      "local_short_name": "Sverige",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/sw.json",
+      "source_sha256": "8158de3ef4027c75a09521486744efbb47b34171d463248c29dbb637621f09f7"
+    },
+    {
+      "conventional_formal_name": "Swiss Confederation",
+      "conventional_short_name": "Switzerland",
+      "country_code": "CH",
+      "local_formal_name": "Schweizerische Eidgenossenschaft (German)/ Confederation Suisse (French)/ Confederazione Svizzera (Italian)/ Confederaziun Svizra (Romansh)",
+      "local_short_name": "Schweiz (German)/ Suisse (French)/ Svizzera (Italian)/ Svizra (Romansh)",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/sz.json",
+      "source_sha256": "5302a37772a3c548395ce45633b63ba03093a6894bf3dcb14cddeba397862730"
+    },
+    {
+      "conventional_formal_name": "United Kingdom of Great Britain and Northern Ireland; note - the island of Great Britain includes England, Scotland, and Wales",
+      "conventional_short_name": "United Kingdom",
+      "country_code": "GB",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "europe/uk.json",
+      "source_sha256": "a31cdb90400212d86f0aa617e7e999b114d97a33b455d73b3020aa50e8e06540"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Ukraine",
+      "country_code": "UA",
+      "local_formal_name": null,
+      "local_short_name": "Ukraina",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/up.json",
+      "source_sha256": "572dee7f5acd8b98c077943c1b9c6b8f015f78a02694bde0bbf114d4366a2c80"
+    },
+    {
+      "conventional_formal_name": "The Holy See (Vatican City State)",
+      "conventional_short_name": "Holy See (Vatican City)",
+      "country_code": "VA",
+      "local_formal_name": "La Santa Sede (Stato della Citta del Vaticano)",
+      "local_short_name": "Santa Sede (Citta del Vaticano)",
+      "source_locator": "Government > Country name",
+      "source_path": "europe/vt.json",
+      "source_sha256": "c3cfed000910d69f5bef94714aaadb4a976ca31f3bb2b5fbd757e51b698b824a"
+    },
+    {
+      "conventional_formal_name": "United Arab Emirates",
+      "conventional_short_name": null,
+      "country_code": "AE",
+      "local_formal_name": "Al Imarat al Arabiyah al Muttahidah",
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "middle-east/ae.json",
+      "source_sha256": "f2829f27eecec690d0aba2786823dbf8afb97716ab4bc7317fbd43264aad50ac"
+    },
+    {
+      "conventional_formal_name": "Kingdom of Bahrain",
+      "conventional_short_name": "Bahrain",
+      "country_code": "BH",
+      "local_formal_name": "Mamlakat al Bahrayn",
+      "local_short_name": "Al Bahrayn",
+      "source_locator": "Government > Country name",
+      "source_path": "middle-east/ba.json",
+      "source_sha256": "3eea19fc2afa5cc5cdfb0740a23d1620b946321ae03551c0c2f2c245152c329d"
+    },
+    {
+      "conventional_formal_name": "Islamic Republic of Iran",
+      "conventional_short_name": "Iran",
+      "country_code": "IR",
+      "local_formal_name": "Jomhuri-ye Eslami-ye Iran",
+      "local_short_name": "Iran",
+      "source_locator": "Government > Country name",
+      "source_path": "middle-east/ir.json",
+      "source_sha256": "f9a878134af1b9eaa319a9bd5e4275c803d6a8635a5101f5f2eef1213de66cdb"
+    },
+    {
+      "conventional_formal_name": "State of Israel",
+      "conventional_short_name": "Israel",
+      "country_code": "IL",
+      "local_formal_name": "Medinat Yisra'el",
+      "local_short_name": "Yisra'el",
+      "source_locator": "Government > Country name",
+      "source_path": "middle-east/is.json",
+      "source_sha256": "97b195e81ecfb9abdd6b9179b59497515dd5cdb088230dbfbe5b15e224d00df4"
+    },
+    {
+      "conventional_formal_name": "Republic of Iraq",
+      "conventional_short_name": "Iraq",
+      "country_code": "IQ",
+      "local_formal_name": "Jumhuriyat al-Iraq/Komar-i Eraq",
+      "local_short_name": "Al Iraq/Eraq",
+      "source_locator": "Government > Country name",
+      "source_path": "middle-east/iz.json",
+      "source_sha256": "29d559e04d9036fa84d68a20cf159dc4046d6b903c4a92e757c3e399891b3e74"
+    },
+    {
+      "conventional_formal_name": "Hashemite Kingdom of Jordan",
+      "conventional_short_name": "Jordan",
+      "country_code": "JO",
+      "local_formal_name": "Al Mamlakah al Urduniyah al Hashimiyah",
+      "local_short_name": "Al Urdun",
+      "source_locator": "Government > Country name",
+      "source_path": "middle-east/jo.json",
+      "source_sha256": "1fe7ca7db37c45560ba14fadc34917262c9baf0ae3e69825e095c4346b0a6e75"
+    },
+    {
+      "conventional_formal_name": "State of Kuwait",
+      "conventional_short_name": "Kuwait",
+      "country_code": "KW",
+      "local_formal_name": "Dawlat al Kuwayt",
+      "local_short_name": "Al Kuwayt",
+      "source_locator": "Government > Country name",
+      "source_path": "middle-east/ku.json",
+      "source_sha256": "a09f81e07a4a78df8e12cd865dd3c3739cb9a639a6f6ca33878b996aeca3f77b"
+    },
+    {
+      "conventional_formal_name": "Lebanese Republic",
+      "conventional_short_name": "Lebanon",
+      "country_code": "LB",
+      "local_formal_name": "Al Jumhuriyah al Lubnaniyah",
+      "local_short_name": "Lubnan",
+      "source_locator": "Government > Country name",
+      "source_path": "middle-east/le.json",
+      "source_sha256": "43a60fda50e4c3b62d90a732746d85eae10ce27c9df11a265a88712a658f1eaf"
+    },
+    {
+      "conventional_formal_name": "Sultanate of Oman",
+      "conventional_short_name": "Oman",
+      "country_code": "OM",
+      "local_formal_name": "Saltanat Uman",
+      "local_short_name": "Uman",
+      "source_locator": "Government > Country name",
+      "source_path": "middle-east/mu.json",
+      "source_sha256": "d1e8be023e154b88d721a703963563417539e59f06384e4809048c706799c4ed"
+    },
+    {
+      "conventional_formal_name": "State of Qatar",
+      "conventional_short_name": "Qatar",
+      "country_code": "QA",
+      "local_formal_name": "Dawlat Qatar",
+      "local_short_name": "Qatar",
+      "source_locator": "Government > Country name",
+      "source_path": "middle-east/qa.json",
+      "source_sha256": "6c5ea33c28b0a26a521b1c264318a296c38ae42c750c47caf7f05dc324066366"
+    },
+    {
+      "conventional_formal_name": "Kingdom of Saudi Arabia",
+      "conventional_short_name": "Saudi Arabia",
+      "country_code": "SA",
+      "local_formal_name": "Al Mamlakah al Arabiyah as Suudiyah",
+      "local_short_name": "Al Arabiyah as Suudiyah",
+      "source_locator": "Government > Country name",
+      "source_path": "middle-east/sa.json",
+      "source_sha256": "00a658154f91e6246db04aa986e9691c9d6a93ebb71644ae53a7c4c9607e7e12"
+    },
+    {
+      "conventional_formal_name": "Syrian Arab Republic",
+      "conventional_short_name": "Syria",
+      "country_code": "SY",
+      "local_formal_name": "Al Jumhuriyah al Arabiyah as Suriyah",
+      "local_short_name": "Suriyah",
+      "source_locator": "Government > Country name",
+      "source_path": "middle-east/sy.json",
+      "source_sha256": "5287833e5af481beae23a0db00e10cd1eb6697f0ad558f8ea8b64d5d27164274"
+    },
+    {
+      "conventional_formal_name": "Republic of Turkey",
+      "conventional_short_name": "Turkey",
+      "country_code": "TR",
+      "local_formal_name": "Turkey Cumhuriyeti",
+      "local_short_name": "Turkey",
+      "source_locator": "Government > Country name",
+      "source_path": "middle-east/tu.json",
+      "source_sha256": "5db63f238c65bf4d7a5e6c636e490258f2445bb31829fe7fabc304f7c9fed3a7"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "West Bank",
+      "country_code": "PS",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "middle-east/we.json",
+      "source_sha256": "ab25855610848f73670ec3a4175bdf9da02ef99a06d50f32c596c76239fdc0a5"
+    },
+    {
+      "conventional_formal_name": "Republic of Yemen",
+      "conventional_short_name": "Yemen",
+      "country_code": "YE",
+      "local_formal_name": "Al Jumhuriyah al Yamaniyah",
+      "local_short_name": "Al Yaman",
+      "source_locator": "Government > Country name",
+      "source_path": "middle-east/ym.json",
+      "source_sha256": "fd62c3fd558e33aa2c087c752f95caf57ada0b10fe233bd512a3b9060878e1bb"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Bermuda",
+      "country_code": "BM",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "north-america/bd.json",
+      "source_sha256": "a14e0740aa44d9f1a08bb3f203f71100a4386890c8e6f2e4589082c8a6bad1e4"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Canada",
+      "country_code": "CA",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "north-america/ca.json",
+      "source_sha256": "1dd30fe81e04179ccb19f2a96b4d7484ca572c8e41abed5cd2e12cc1ae2bf073"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Greenland",
+      "country_code": "GL",
+      "local_formal_name": null,
+      "local_short_name": "Kalaallit Nunaat",
+      "source_locator": "Government > Country name",
+      "source_path": "north-america/gl.json",
+      "source_sha256": "eb10310bd8a1d3763ed798210d32d9c3267a741a6aa2e7db7830574aa7cfe458"
+    },
+    {
+      "conventional_formal_name": "United Mexican States",
+      "conventional_short_name": "Mexico",
+      "country_code": "MX",
+      "local_formal_name": "Estados Unidos Mexicanos",
+      "local_short_name": "Mexico",
+      "source_locator": "Government > Country name",
+      "source_path": "north-america/mx.json",
+      "source_sha256": "a65a56b32af541c2c0df56aa147253efe3458df04c4df3c69be3ee62c93b55d6"
+    },
+    {
+      "conventional_formal_name": "Territorial Collectivity of Saint Pierre and Miquelon",
+      "conventional_short_name": "Saint Pierre and Miquelon",
+      "country_code": "PM",
+      "local_formal_name": "Département de Saint-Pierre et Miquelon",
+      "local_short_name": "Saint-Pierre et Miquelon",
+      "source_locator": "Government > Country name",
+      "source_path": "north-america/sb.json",
+      "source_sha256": "d971d187b4e00d12f7d83496cf1aacb03e07141d679b581fc3dc0998c0120418"
+    },
+    {
+      "conventional_formal_name": "United States of America",
+      "conventional_short_name": "United States",
+      "country_code": "US",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "north-america/us.json",
+      "source_sha256": "e62fd64ae15bbcc20cb3e5f6ded1d3c5397de32c8fc76243830c4d1467bca190"
+    },
+    {
+      "conventional_formal_name": "Argentine Republic",
+      "conventional_short_name": "Argentina",
+      "country_code": "AR",
+      "local_formal_name": "República Argentina",
+      "local_short_name": "Argentina",
+      "source_locator": "Government > Country name",
+      "source_path": "south-america/ar.json",
+      "source_sha256": "ea523b77489150bbd50171505ecd6af9a5d24f5d386746363873ab89bb753eac"
+    },
+    {
+      "conventional_formal_name": "Plurinational State of Bolivia",
+      "conventional_short_name": "Bolivia",
+      "country_code": "BO",
+      "local_formal_name": "Estado Plurinacional de Bolivia",
+      "local_short_name": "Bolivia",
+      "source_locator": "Government > Country name",
+      "source_path": "south-america/bl.json",
+      "source_sha256": "48472cb54ec27090b6a72730251098d5d5779d8cb49b34cf8c86f9dd6e20b10a"
+    },
+    {
+      "conventional_formal_name": "Federative Republic of Brazil",
+      "conventional_short_name": "Brazil",
+      "country_code": "BR",
+      "local_formal_name": "República Federativa do Brasil",
+      "local_short_name": "Brasil",
+      "source_locator": "Government > Country name",
+      "source_path": "south-america/br.json",
+      "source_sha256": "ac8a6135a5bd252b3158ded49862839e9c161ffc30b053c9e3876c780b0d6656"
+    },
+    {
+      "conventional_formal_name": "Republic of Chile",
+      "conventional_short_name": "Chile",
+      "country_code": "CL",
+      "local_formal_name": "República de Chile",
+      "local_short_name": "Chile",
+      "source_locator": "Government > Country name",
+      "source_path": "south-america/ci.json",
+      "source_sha256": "78ee52040564809f1fe4b7ae19990fb3aab9c0463f7ec5039f5bd9db90df1b27"
+    },
+    {
+      "conventional_formal_name": "Republic of Colombia",
+      "conventional_short_name": "Colombia",
+      "country_code": "CO",
+      "local_formal_name": "República de Colombia",
+      "local_short_name": "Colombia",
+      "source_locator": "Government > Country name",
+      "source_path": "south-america/co.json",
+      "source_sha256": "e4c057b75779d0d02c0c782aeb0a6048d064009967292f178e2f855dec2b2fd1"
+    },
+    {
+      "conventional_formal_name": "Republic of Ecuador",
+      "conventional_short_name": "Ecuador",
+      "country_code": "EC",
+      "local_formal_name": "República del Ecuador",
+      "local_short_name": "Ecuador",
+      "source_locator": "Government > Country name",
+      "source_path": "south-america/ec.json",
+      "source_sha256": "2643cf9b17c5b43c5d15353c586bcfdf9c3fce481909f6c1c470f68f6ff7cc6c"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Falkland Islands (Islas Malvinas)",
+      "country_code": "FK",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "south-america/fk.json",
+      "source_sha256": "8383bb611fb3976953cd0a66f6ffe5eca2a64f7c074187a708a69f609c62f2e4"
+    },
+    {
+      "conventional_formal_name": "Cooperative Republic of Guyana",
+      "conventional_short_name": "Guyana",
+      "country_code": "GY",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "south-america/gy.json",
+      "source_sha256": "de6233683241f4352cfc4ae1b05b85b117a1e78994d8656cdfc4507a006ef7c4"
+    },
+    {
+      "conventional_formal_name": "Republic of Suriname",
+      "conventional_short_name": "Suriname",
+      "country_code": "SR",
+      "local_formal_name": "Republiek Suriname",
+      "local_short_name": "Suriname",
+      "source_locator": "Government > Country name",
+      "source_path": "south-america/ns.json",
+      "source_sha256": "1f1349dd3beedb99ecd481c2532afa43bef82da9aaa1db93fd1ff3706a1b8448"
+    },
+    {
+      "conventional_formal_name": "Republic of Paraguay",
+      "conventional_short_name": "Paraguay",
+      "country_code": "PY",
+      "local_formal_name": "República del Paraguay",
+      "local_short_name": "Paraguay",
+      "source_locator": "Government > Country name",
+      "source_path": "south-america/pa.json",
+      "source_sha256": "85f8b3dc6cfab4485af89d5aa437f2013c2e3c6fac65239c99e356f9a33705b4"
+    },
+    {
+      "conventional_formal_name": "Republic of Peru",
+      "conventional_short_name": "Peru",
+      "country_code": "PE",
+      "local_formal_name": "República del Perú",
+      "local_short_name": "Perú",
+      "source_locator": "Government > Country name",
+      "source_path": "south-america/pe.json",
+      "source_sha256": "0fc54fb4c8082616b77064e8dfc2a0ae0b98ae31251fc92c86c37d3ff34b5962"
+    },
+    {
+      "conventional_formal_name": "South Georgia and the South Sandwich Islands",
+      "conventional_short_name": "South Georgia and South Sandwich Islands",
+      "country_code": "GS",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "south-america/sx.json",
+      "source_sha256": "eae8a8c47c5c0a6e5932a613fc3ddc64f950e82255d3c7b95ea04631be16cee6"
+    },
+    {
+      "conventional_formal_name": "Oriental Republic of Uruguay",
+      "conventional_short_name": "Uruguay",
+      "country_code": "UY",
+      "local_formal_name": "República Oriental del Uruguay",
+      "local_short_name": "Uruguay",
+      "source_locator": "Government > Country name",
+      "source_path": "south-america/uy.json",
+      "source_sha256": "f5a9e1a03b712715402fd7ab44928c93e521bbfb8898f438079c6cb8858813ae"
+    },
+    {
+      "conventional_formal_name": "Bolivarian Republic of Venezuela",
+      "conventional_short_name": "Venezuela",
+      "country_code": "VE",
+      "local_formal_name": "República Bolivariana de Venezuela",
+      "local_short_name": "Venezuela",
+      "source_locator": "Government > Country name",
+      "source_path": "south-america/ve.json",
+      "source_sha256": "be6d065db238b49b34b155aaa1d10de6320cfb65d1dbd917d8ee4feab113d84c"
+    },
+    {
+      "conventional_formal_name": "Islamic Republic of Afghanistan (prior to 15 August 2021); current country name disputed",
+      "conventional_short_name": "Afghanistan",
+      "country_code": "AF",
+      "local_formal_name": "Jamhuri-ye Islami-ye Afghanistan (prior to 15 August 2021; current country name is disputed)",
+      "local_short_name": "Afghanistan",
+      "source_locator": "Government > Country name",
+      "source_path": "south-asia/af.json",
+      "source_sha256": "c8926b2e00beca57e1189fae75affe012f7c0e6d7fd8d326839db34f0567333d"
+    },
+    {
+      "conventional_formal_name": "People's Republic of Bangladesh",
+      "conventional_short_name": "Bangladesh",
+      "country_code": "BD",
+      "local_formal_name": "Gana Prajatantri Bangladesh",
+      "local_short_name": "Bangladesh",
+      "source_locator": "Government > Country name",
+      "source_path": "south-asia/bg.json",
+      "source_sha256": "cc946166407e3522195790f49aa54db30aa9d430edfd08677a0910e16fce3764"
+    },
+    {
+      "conventional_formal_name": "Kingdom of Bhutan",
+      "conventional_short_name": "Bhutan",
+      "country_code": "BT",
+      "local_formal_name": "Druk Gyalkhap",
+      "local_short_name": "Druk Yul",
+      "source_locator": "Government > Country name",
+      "source_path": "south-asia/bt.json",
+      "source_sha256": "c0d46b729b3e1167bb66b3d456dcfc1502e0f76632dc7a1dc29dbc625c171cf4"
+    },
+    {
+      "conventional_formal_name": "Democratic Socialist Republic of Sri Lanka",
+      "conventional_short_name": "Sri Lanka",
+      "country_code": "LK",
+      "local_formal_name": "Shri Lanka Prajatantrika Samajavadi Janarajaya (Sinhala)/ Ilankai Jananayaka Choshalichak Kutiyarachu (Tamil)",
+      "local_short_name": "Shri Lanka (Sinhala)/ Ilankai (Tamil)",
+      "source_locator": "Government > Country name",
+      "source_path": "south-asia/ce.json",
+      "source_sha256": "063b54d0c810f641448dbaed5c2eadaa343816e4aa6aecdf301f9bedf697a9f4"
+    },
+    {
+      "conventional_formal_name": "Republic of India",
+      "conventional_short_name": "India",
+      "country_code": "IN",
+      "local_formal_name": "Republic of India (English)/ Bharatiya Ganarajya (Hindi)",
+      "local_short_name": "India (English)/ Bharat (Hindi)",
+      "source_locator": "Government > Country name",
+      "source_path": "south-asia/in.json",
+      "source_sha256": "1ed4a78bdd35d0a8c4fe0c0caa4b103c3dc5ff7008d0824f84ab19b3815cc7f2"
+    },
+    {
+      "conventional_formal_name": "British Indian Ocean Territory",
+      "conventional_short_name": null,
+      "country_code": "IO",
+      "local_formal_name": null,
+      "local_short_name": null,
+      "source_locator": "Government > Country name",
+      "source_path": "south-asia/io.json",
+      "source_sha256": "635e10895799d30343cad6f63c2020f0cd683bfd9b4a5c03d36a9ed80888d162"
+    },
+    {
+      "conventional_formal_name": "Republic of Maldives",
+      "conventional_short_name": "Maldives",
+      "country_code": "MV",
+      "local_formal_name": "Dhivehi Raajjeyge Jumhooriyyaa",
+      "local_short_name": "Dhivehi Raajje",
+      "source_locator": "Government > Country name",
+      "source_path": "south-asia/mv.json",
+      "source_sha256": "c6844a8f39cb99db0e36692b3f78d0cd8f5f64b3fbcde69ed277457c165f5c7c"
+    },
+    {
+      "conventional_formal_name": null,
+      "conventional_short_name": "Nepal",
+      "country_code": "NP",
+      "local_formal_name": null,
+      "local_short_name": "Nepal",
+      "source_locator": "Government > Country name",
+      "source_path": "south-asia/np.json",
+      "source_sha256": "a621e6feba6e0c37e2cb9960b6f66f25794f4193f0888e083284dcbb9bf9a479"
+    },
+    {
+      "conventional_formal_name": "Islamic Republic of Pakistan",
+      "conventional_short_name": "Pakistan",
+      "country_code": "PK",
+      "local_formal_name": "Jamhuryat Islami Pakistan",
+      "local_short_name": "Pakistan",
+      "source_locator": "Government > Country name",
+      "source_path": "south-asia/pk.json",
+      "source_sha256": "e6f3861659fd885e7a6c1c5ff9491823cb396fe38d708cf08c36786ca4b5c8c3"
+    }
+  ],
+  "source_id": "cia-world-factbook-2025",
+  "source_name": "CIA World Factbook structured country profiles",
+  "structured_repository": "https://github.com/factbook/factbook.json",
+  "structured_repository_commit": "8662a8b17a784841ab4528631b04090eb2f183eb"
+}

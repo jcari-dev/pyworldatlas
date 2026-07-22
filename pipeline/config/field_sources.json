@@ -1,8 +1,9 @@
 {
   "country_identity": ["un-m49", "geonames"],
   "english_names": ["un-m49", "geonames"],
+  "local_display_names": ["unicode-cldr-48.2"],
+  "national_official_names": ["ungegn-country-names-2017"],
   "regions": ["un-m49"],
   "capitals": ["geonames"],
   "major_cities": ["geonames"]
 }
-

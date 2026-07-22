@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.4.0 — In development
+
+- Added one sourced local-language identity for all 248 countries and areas,
+  spanning 80 languages and 21 writing systems.
+- Added pinned Unicode CLDR 48.2 extraction with exact locale/XPath provenance,
+  official-language selection metadata, and Unicode License v3 attribution.
+- Kept 10 selected UNGEGN records as the higher-evidence national official
+  short/formal layer.
+- Added sourced English formal names for 240 profiles, including 195 distinct
+  long forms, explicit provenance, exact reviewed exceptions, lookup support,
+  and honest `None` values for eight areas outside the source intersection.
+- Added `Country.formal_name`, `Country.has_distinct_formal_name`, and
+  `Atlas.countries_with_formal_names()`.
+- Added complete local-name record lookup, formal-name and formal-romanization
+  conveniences, evidence kinds, language statuses, and exact source locators.
+- Added country coverage discovery with language and script filters.
+- Added multilingual examples, coverage reporting, an identity data contract,
+  and a clearer official-names documentation guide.
+
 ## 0.3.1 — 2026-07-21
 
 - Added `Atlas.has_land_route()` for explicit land-graph reachability checks.

@@ -26,8 +26,11 @@ Missing values remain missing
 
 Traceable to sources
    Country identity and regional classification come from UN M49. Profile,
-   capital, and populated-place records come from GeoNames. Reviewed official
-   local names come from UNGEGN. Source references are exposed on profiles.
+   capital, and populated-place records come from GeoNames. Complete local
+   display names come from Unicode CLDR, while reviewed national official forms
+   come from UNGEGN. English formal names use a public-domain Factbook base with
+   eight exact reviewed UN or Wikidata exceptions. Source references are
+   exposed on profiles and local-name records.
 
 Useful for learning
    Flag emoji, compact discovery cards, reproducible samples, and structured

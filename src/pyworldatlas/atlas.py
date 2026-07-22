@@ -143,6 +143,65 @@ class Atlas:
         rows = self._db.connection.execute(f"SELECT id FROM country{where} ORDER BY name", params).fetchall()
         return tuple(self._load_country(int(row[0])) for row in rows)
 
+    def countries_with_local_names(
+        self,
+        *,
+        language_code: str | None = None,
+        script_code: str | None = None,
+        name_kind: str | None = None,
+    ) -> tuple[Country, ...]:
+        """Return countries with sourced local-language name records.
+
+        Results are alphabetical. ``language_code`` and ``script_code`` are
+        optional, case-insensitive exact filters such as ``"es"``, ``"hi"``,
+        ``"Deva"``, or ``"Jpan"``. Every UN M49 record has one selected local
+        identity. Inspect ``LocalizedName.kind`` to distinguish reviewed
+        national official forms from CLDR locale display names, or pass
+        ``name_kind="national_official"`` or ``"locale_display"`` directly.
+        """
+        self._ensure_open()
+        clauses: list[str] = []
+        params: list[str] = []
+        if language_code is not None:
+            clauses.append("lower(n.language_code) = lower(?)")
+            params.append(language_code)
+        if script_code is not None:
+            clauses.append("lower(n.script_code) = lower(?)")
+            params.append(script_code)
+        if name_kind is not None:
+            normalized_kind = name_kind.casefold()
+            if normalized_kind not in {"national_official", "locale_display"}:
+                raise ValueError(
+                    "name_kind must be 'national_official' or 'locale_display'"
+                )
+            clauses.append("n.name_kind = ?")
+            params.append(normalized_kind)
+        where = f" WHERE {' AND '.join(clauses)}" if clauses else ""
+        rows = self._db.connection.execute(
+            f"""SELECT DISTINCT c.id
+                FROM country c JOIN country_local_name n ON n.country_id = c.id
+                {where}
+                ORDER BY c.name""",
+            params,
+        ).fetchall()
+        return tuple(self._load_country(int(row[0])) for row in rows)
+
+    def countries_with_formal_names(self) -> tuple[Country, ...]:
+        """Return countries and areas with a sourced English formal name.
+
+        Results are alphabetical. Some countries use the same sourced text for
+        their short and formal forms; check ``Country.has_distinct_formal_name``
+        when an application needs only distinct long forms.
+        """
+        self._ensure_open()
+        rows = self._db.connection.execute(
+            """SELECT DISTINCT c.id
+               FROM country c JOIN country_name n ON n.country_id = c.id
+               WHERE n.kind = 'formal'
+               ORDER BY c.name"""
+        ).fetchall()
+        return tuple(self._load_country(int(row[0])) for row in rows)
+
     @lru_cache(maxsize=1)
     def _border_adjacency(self) -> dict[int, tuple[int, ...]]:
         """Load the undirected border graph once for graph operations."""
@@ -310,8 +369,9 @@ class Atlas:
 
         Population, area, and density answers describe the captured source
         snapshot. Neighbor and border-count answers are derived from the
-        reviewed land-border graph. Flashcards are structured values, not an
-        interactive game.
+        reviewed land-border graph. Local-name cards use the selected CLDR or
+        UNGEGN identity record for every country and area.
+        Flashcards are structured values, not an interactive game.
         """
         if topic not in _FLASHCARD_TOPICS:
             allowed = ", ".join(_FLASHCARD_TOPICS)
@@ -396,7 +456,10 @@ class Atlas:
         elif topic == "regions":
             prompt, answer = f"Which UN region contains {country.name}?", country.region
         elif topic == "local_names":
-            local_name = country.local_names[0]
+            local_name = next(
+                (name for name in country.local_names if name.language_code != "en"),
+                country.local_names[0],
+            )
             prompt = f"What is a locally official short name for {country.name} in {local_name.language_name}?"
             answer = local_name.short_name
         elif topic == "areas":
@@ -501,7 +564,8 @@ class Atlas:
         languages = tuple(Language(code) for code in json.loads(row["language_codes"]))
         calling_codes = tuple(json.loads(row["calling_codes"]))
         observed_timezones = tuple(sorted({city.timezone_id for city in cities if city.timezone_id}))
-        return Country(row["name"], row["official_name"], names, aliases, CountryCodes(row["alpha2"], row["alpha3"], row["numeric_code"], None, row["geonames_id"]), _flag(row["alpha2"]), CountryStatus(row["status"]), geography, capitals, cities, sources, local_names, row["population"], currency, languages, calling_codes, row["top_level_domain"], observed_timezones)
+        formal_name = next((name.text for name in names if name.kind == "formal"), None)
+        return Country(row["name"], row["official_name"], names, aliases, CountryCodes(row["alpha2"], row["alpha3"], row["numeric_code"], None, row["geonames_id"]), _flag(row["alpha2"]), CountryStatus(row["status"]), geography, capitals, cities, sources, local_names, row["population"], currency, languages, calling_codes, row["top_level_domain"], observed_timezones, formal_name)
 
     @lru_cache(maxsize=1)
     def _load_local_names(self) -> dict[int, tuple[LocalizedName, ...]]:
@@ -514,12 +578,23 @@ class Atlas:
         grouped: dict[int, list[LocalizedName]] = {}
         for row in rows:
             source = SourceReference(row["source_id"], row["source_name"], row["homepage"], row["retrieved_at"])
-            grouped.setdefault(int(row["country_id"]), []).append(LocalizedName(
-                row["short_name"], row["language_code"], "local_official", True,
-                row["language_name"], row["script_code"], row["official_name"],
-                row["romanized_short_name"], row["romanized_official_name"],
-                bool(row["is_official_language"]), source,
-            ))
+            grouped.setdefault(int(row["country_id"]), []).append(
+                LocalizedName(
+                    text=row["short_name"],
+                    language_code=row["language_code"],
+                    kind=row["name_kind"],
+                    preferred=True,
+                    language_name=row["language_name"],
+                    script_code=row["script_code"],
+                    official_name=row["official_name"],
+                    romanized_short_name=row["romanized_short_name"],
+                    romanized_official_name=row["romanized_official_name"],
+                    is_official_language=bool(row["is_official_language"]),
+                    source=source,
+                    source_locator=row["source_locator"],
+                    language_status=row["language_status"],
+                )
+            )
         return {country_id: tuple(names) for country_id, names in grouped.items()}
 
     def __getitem__(self, query: str) -> Country:

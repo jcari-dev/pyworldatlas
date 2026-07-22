@@ -27,22 +27,22 @@ documentation update.
    * - 0.3.1
      - Complete
      - Reachability, path conveniences, graph flashcards, expanded API guidance
-     - Release candidate
+     - Published
    * - 0.4.0
-     - Planned
-     - Boundary geometry, point-in-boundary lookup, GeoJSON
-     - —
+     - In progress
+     - Complete selected local identities, 240 English formal names, scripts, provenance, coverage discovery
+     - Local release gate passed; publication pending
    * - 0.5.0
      - Planned
-     - Historical population and GDP series, comparison and ranking
+     - Anthem titles, mottos, contributors, adoption dates, and labelled civic events
      - —
    * - 0.6.0
      - Planned
-     - Heads of state, heads of government, monarchs
+     - Boundary geometry, point-in-boundary lookup, GeoJSON
      - —
    * - 0.7.0
      - Planned
-     - Expanded language, currency, timezone, communication, and culture metadata
+     - Historical statistics and sourced institutions
      - —
    * - 0.8.0
      - Planned
@@ -73,5 +73,16 @@ Version 0.3.0 added a reviewed land-border graph, neighbor and shared-neighbor
 queries, deterministic shortest paths, crossing counts, connected land regions,
 and borderless-entity discovery. Version 0.3.1 adds explicit reachability,
 path-name and alpha-2-code conveniences, graph-derived flashcards, and expanded
-API provenance guidance. Boundary geometry, border lengths, point-in-country
-lookup, and GeoJSON remain reserved for 0.4.0.
+API provenance guidance.
+
+Version 0.4.0 adds one sourced local identity for all 248 countries and areas,
+covering 80 languages and 21 scripts through pinned CLDR 48.2 data. Reviewed
+UNGEGN replacements add national official short/formal names and
+source-provided romanization for 10 selected records. A separate sourced
+English formal-name layer covers 240 profiles, with eight explicit source-scope
+gaps. The milestone remains in development until the candidate is committed,
+reviewed, and published.
+
+Version 0.5.0 adds national-symbol and civic-fact models after their source
+matrix is approved. Boundary geometry, border lengths, point-in-country lookup,
+and GeoJSON move to 0.6.0.

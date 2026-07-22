@@ -31,6 +31,8 @@ class AtlasTests(unittest.TestCase):
 
     def test_rich_country_profile(self):
         japan = self.atlas.country("Japan")
+        self.assertEqual(japan.formal_name, "Japan")
+        self.assertFalse(japan.has_distinct_formal_name)
         self.assertEqual(japan.population, 126_529_100)
         self.assertEqual((japan.currency.code, japan.currency.name), ("JPY", "Yen"))
         self.assertEqual(japan.calling_codes, ("+81",))
@@ -52,6 +54,7 @@ class AtlasTests(unittest.TestCase):
         self.assertEqual(card.country.numeric, "392")
         self.assertEqual(card.capital, "Tokyo")
         self.assertEqual(card.flag_emoji, "🇯🇵")
+        self.assertEqual(card.formal_name, "Japan")
         self.assertEqual(card.language_codes, ("ja",))
         self.assertEqual(card.to_dict()["country"]["alpha2"], "JP")
         self.atlas.close()
@@ -98,7 +101,7 @@ class AtlasTests(unittest.TestCase):
         local_names = self.atlas.flashcards(topic="local_names", count=2, seed=42)
         self.assertEqual(
             [(card.country.alpha2, card.answer) for card in local_names],
-            [("CH", "Schweiz"), ("BR", "Brasil")],
+            [("KW", "الكويت"), ("BS", "Bahamas")],
         )
         neighbor_cards = self.atlas.flashcards(topic="neighbors", count=3, seed=42)
         self.assertEqual(
@@ -117,7 +120,7 @@ class AtlasTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "unsupported flashcard topic"):
             self.atlas.flashcards(topic="trivia", count=1)
         with self.assertRaisesRegex(ValueError, "exceeds"):
-            self.atlas.flashcards(topic="local_names", count=3)
+            self.atlas.flashcards(topic="local_names", count=249)
 
     def test_coordinate_calculations(self):
         london = Coordinate(51.5074, -0.1278)
@@ -269,10 +272,41 @@ class AtlasTests(unittest.TestCase):
 
     def test_dataset_versions(self):
         info = self.atlas.dataset_info()
-        self.assertEqual((info.library_version, info.schema_version, info.dataset_version), ("0.3.1", 3, "2026.07.21.1"))
+        self.assertEqual((info.library_version, info.schema_version, info.dataset_version), ("0.4.0", 4, "2026.07.21.4"))
         self.assertEqual(info.country_count, 248)
 
-    def test_official_local_names_pilot(self):
+    def test_english_formal_names_are_sourced_and_discoverable(self):
+        self.assertEqual(
+            self.atlas.country("Turkey").formal_name,
+            "Republic of Türkiye",
+        )
+        self.assertEqual(
+            self.atlas.country("Guyana").formal_name,
+            "Co-operative Republic of Guyana",
+        )
+        self.assertEqual(
+            self.atlas.country("Viet Nam").formal_name,
+            "Socialist Republic of Viet Nam",
+        )
+        self.assertTrue(self.atlas.country("Afghanistan").has_distinct_formal_name)
+        self.assertIsNone(self.atlas.country("Aland Islands").formal_name)
+        self.assertEqual(self.atlas.country("Republic of Türkiye").alpha2, "TR")
+        self.assertEqual(
+            self.atlas.country("Co-operative Republic of Guyana").alpha2,
+            "GY",
+        )
+
+        covered = self.atlas.countries_with_formal_names()
+        self.assertEqual(len(covered), 240)
+        self.assertEqual(
+            {country.alpha2 for country in self.atlas.countries()} -
+            {country.alpha2 for country in covered},
+            {"AX", "BQ", "GF", "GP", "MQ", "RE", "UM", "YT"},
+        )
+        source_ids = {source.id for source in self.atlas.country("Guyana").sources}
+        self.assertIn("wikidata-official-names-2026-07-21", source_ids)
+
+    def test_reviewed_official_local_names(self):
         brazil = self.atlas.country("Brazil")
         self.assertEqual(brazil.name_in("pt"), "Brasil")
         self.assertEqual(brazil.official_name_in("pt"), "República Federativa do Brasil")
@@ -280,19 +314,81 @@ class AtlasTests(unittest.TestCase):
         self.assertIsNone(brazil.romanized_name_in("pt"))
         self.assertEqual(brazil.local_names[0].script_code, "Latn")
         self.assertEqual(brazil.local_names[0].source.id, "ungegn-country-names-2017")
+        self.assertTrue(brazil.local_names[0].is_national_official)
 
         switzerland = self.atlas.country("Switzerland")
         self.assertEqual(
             {name.language_code: name.short_name for name in switzerland.local_names},
-            {"de": "Schweiz", "fr": "Suisse", "it": "Svizzera", "rm": "Svizra"},
+            {"de": "Schweiz"},
         )
-        self.assertEqual(switzerland.official_name_in("rm"), "Confederaziun svizra")
+        self.assertEqual(
+            switzerland.official_name_in("de"),
+            "Schweizerische Eidgenossenschaft",
+        )
+
+        dominican = self.atlas.country("DO")
+        self.assertEqual(dominican.local_name_languages, ("es",))
+        self.assertEqual(dominican.name_in("ES"), "República Dominicana")
+        self.assertEqual(dominican.local_name("es").formal_name, "República Dominicana")
+
+        china = self.atlas.country("China")
+        self.assertEqual(china.name_in("zh"), "中国")
+        self.assertEqual(china.official_name_in("zh"), "中华人民共和国")
+        self.assertEqual(china.romanized_name_in("zh"), "Zhongguo")
+        self.assertEqual(
+            china.romanized_official_name_in("zh"),
+            "Zhonghua Renmin Gongheguo",
+        )
+
+        india = self.atlas.country("India")
+        self.assertEqual(india.local_name_languages, ("hi",))
+        self.assertEqual(india.name_in("hi"), "भारत")
+        self.assertEqual(india.romanized_name_in("hi"), "Bhārat")
+        self.assertIn("PDF page 44", india.local_name("hi").source_locator)
+
+        japan = self.atlas.country("Japan")
+        self.assertEqual(japan.name_in("ja"), "日本")
+        self.assertEqual(japan.romanized_name_in("ja"), "Nihon, or Nippon")
+
+        reviewed = self.atlas.countries_with_local_names()
+        self.assertEqual(len(reviewed), 248)
+        self.assertEqual(
+            len(self.atlas.countries_with_local_names(name_kind="national_official")),
+            10,
+        )
+        self.assertEqual(
+            len(self.atlas.countries_with_local_names(name_kind="LOCALE_DISPLAY")),
+            238,
+        )
+        with self.assertRaisesRegex(ValueError, "name_kind"):
+            self.atlas.countries_with_local_names(name_kind="translated")
+        self.assertEqual(
+            tuple(country.alpha2 for country in self.atlas.countries_with_local_names(script_code="Jpan")),
+            ("JP",),
+        )
+        spanish = {
+            country.alpha2
+            for country in self.atlas.countries_with_local_names(language_code="ES")
+        }
+        self.assertTrue({"CL", "DO", "ES", "MX"} <= spanish)
+
+        andorra = self.atlas.country("Andorra")
+        self.assertEqual(andorra.name_in("ca"), "Andorra")
+        self.assertIsNone(andorra.official_name_in("ca"))
+        self.assertEqual(andorra.local_name("ca").kind, "locale_display")
+        self.assertEqual(andorra.local_name("ca").source.id, "unicode-cldr-48.2")
+        self.assertEqual(andorra.local_name("ca").language_status, "official")
+
+        antarctica = self.atlas.country("Antarctica").local_names[0]
+        self.assertFalse(antarctica.is_official_language)
+        self.assertEqual(antarctica.language_status, "not_applicable")
 
     def test_local_names_survive_close_and_serialize_as_unicode(self):
         brazil = self.atlas.country("Brazil")
         self.atlas.close()
         self.assertEqual(brazil.official_name_in("pt"), "República Federativa do Brasil")
         self.assertIn("República Federativa do Brasil", brazil.to_json())
+        self.assertIn("PDF page 17", brazil.to_json())
 
     def test_collection_loads_local_names_once(self):
         statements = []

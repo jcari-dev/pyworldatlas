@@ -1,0 +1,10 @@
+SELECT ?country ?statement ?alpha2 ?officialName ?rank ?start ?end WHERE {
+  ?country wdt:P297 ?alpha2;
+           p:P1448 ?statement.
+  ?statement ps:P1448 ?officialName;
+             wikibase:rank ?rank.
+  OPTIONAL { ?statement pq:P580 ?start. }
+  OPTIONAL { ?statement pq:P582 ?end. }
+  FILTER(REGEX(?alpha2, "^[A-Z]{2}$"))
+}
+ORDER BY ?alpha2 ?officialName

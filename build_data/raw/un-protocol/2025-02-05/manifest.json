@@ -1,0 +1,14 @@
+{
+  "source_id": "un-protocol-country-names-2025",
+  "source_version": "2025-02-05",
+  "retrieved_at": "2026-07-21T00:00:00Z",
+  "title": "Official Names of the United Nations Membership",
+  "url": "https://www.un.org/dgacm/sites/www.un.org.dgacm/files/Documents_Protocol/officialnamesofcountries.pdf",
+  "remote_file": {
+    "sha256": "201203ab1a7c514f7223f13dd97a1f7f41688cb48041def7cb3a4e0a759a3042",
+    "size_bytes": 121795,
+    "pages": 5
+  },
+  "redistributed": false,
+  "use": "Five short formal-name excerpts used to resolve public-domain source differences; source credited per United Nations reuse guidance."
+}

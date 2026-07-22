@@ -48,12 +48,15 @@ in this repository under `docs/source/`.
 
 ## Prepare and publish a release
 
+> **Current candidate:** the local `0.4.0` release gate passes. Tag only after
+> the candidate is committed, reviewed, merged to `main`, and green in CI.
+
 For example, to publish the next planned feature release, run the local release
 gate first:
 
 ```console
 python maintain.py bootstrap
-python maintain.py prepare-release 0.3.1
+python maintain.py prepare-release 0.4.0
 ```
 
 If Windows reports that an existing file under `dist` is in use, close the
@@ -61,7 +64,7 @@ terminal, upload dialog, or file preview holding it. To run the same release
 gate without replacing that directory, choose another ignored output path:
 
 ```console
-python maintain.py prepare-release 0.3.1 --output-dir build/release-dist
+python maintain.py prepare-release 0.4.0 --output-dir build/release-dist
 ```
 
 Review `release-manifest.json` and `SHA256SUMS` in the selected output directory.
@@ -71,9 +74,9 @@ and the working tree is clean, then create and push the release tag:
 
 ```console
 git status
-git tag -a v0.3.1 -m "Release 0.3.1"
+git tag -a v0.4.0 -m "Release 0.4.0"
 git push origin main
-git push origin v0.3.1
+git push origin v0.4.0
 ```
 
 The tag workflow publishes the wheel and source distribution to PyPI, creates a
@@ -84,8 +87,8 @@ Verify the public package in a new environment:
 
 ```console
 py -3.10 -m venv .venv-live
-.venv-live\Scripts\python -m pip install --no-cache-dir pyworldatlas==0.3.1
-.venv-live\Scripts\python -c "from pyworldatlas import Atlas; a=Atlas(); print(len(a), [c.name for c in a.neighbors('France')]); a.close()"
+.venv-live\Scripts\python -m pip install --no-cache-dir pyworldatlas==0.4.0
+.venv-live\Scripts\python -c "from pyworldatlas import Atlas; a=Atlas(); print(len(a), len(a.countries_with_formal_names()), a.country('Republic of Türkiye').alpha2); a.close()"
 ```
 
 Finally, verify the public pages:
@@ -107,3 +110,6 @@ Never reuse, delete, or move a published version tag. If publication fails
 before PyPI accepts the version, repair the workflow and rerun it. If PyPI has
 accepted the version, preserve it and use a patch release for any code or
 metadata correction.
+
+Never tag a dirty branch or an unmerged candidate. The tag-triggered workflow
+is the single path to PyPI, the GitHub Release, and the documentation site.

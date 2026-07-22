@@ -1,0 +1,17 @@
+{
+  "source_id": "unicode-cldr-48.2",
+  "source_version": "48.2",
+  "retrieved_at": "2026-07-21T00:00:00Z",
+  "source_archive": {
+    "url": "https://unicode.org/Public/cldr/48.2/cldr-common-48.2.zip",
+    "sha256": "d2844f9dbf6124d11a7b047f5381a467902d82a673be3d658f4c0791ffa0b83b"
+  },
+  "derived_file": {
+    "path": "country_identity.json",
+    "sha256": "aee9f75640517eb10ba830316f5bbf171f6af5b2671a980ff7b367f6456ba780",
+    "size_bytes": 108942
+  },
+  "extractor": "pipeline/scripts/extract_cldr_country_identity.py",
+  "license_name": "Unicode License v3",
+  "license_url": "https://www.unicode.org/license.txt"
+}

@@ -15,8 +15,12 @@ The current build checks:
 - Source references for every profile.
 - SQLite ``integrity_check`` and foreign-key consistency.
 - Reproducible database checksums from identical snapshots.
-- Required language/script metadata and source locators for every local name.
-- Unique country/language pairs and explicit romanization values.
+- Valid language and ISO 15924 script codes, Unicode NFC text, and exact CLDR
+  locale/XPath or UNGEGN PDF locators for every local identity.
+- Exactly 248 unique country identity rows, explicit evidence kinds and
+  language statuses, and source-only romanization values.
+- Exactly 240 sourced English formal names, validated source records, exact
+  override locators, normalized Unicode, and the expected eight-code gap set.
 - Non-negative population snapshots and validated profile collection types.
 - Coordinate constructor bounds and known-route geodesic reference checks.
 - Canonical undirected border edges with valid country endpoints and no self-edges.
@@ -48,9 +52,15 @@ Coverage
    * - Country source references
      - 248
      - 248
-   * - Official local names
-     - 5
-     - 2 reviewed countries
+   * - Selected local identity names
+     - 248
+     - 248 countries and areas, 80 languages, 21 scripts
+   * - Sourced English formal names
+     - 240
+     - 195 distinct long forms and 45 source-equal short/formal forms
+   * - Reviewed national official forms
+     - 10
+     - UNGEGN short/formal records replacing the matching CLDR display name
    * - Coordinate-bearing cities
      - 6,265
      - Bundled populated-place records
@@ -85,6 +95,11 @@ Missing data is a valid value
 ``None`` means the current sources did not provide a field or that its roadmap
 milestone has not been implemented. It does not mean zero, false, or an inferred
 fact. PyWorldAtlas never fills a gap with an unsourced assumption.
+
+For ``Country.formal_name``, the eight explicit gaps are AX, BQ, GF, GP, MQ,
+RE, UM, and YT. For covered profiles the formal value may legitimately equal
+the short name; use ``has_distinct_formal_name`` only when that distinction is
+the question.
 
 Interpretation cautions
 -----------------------

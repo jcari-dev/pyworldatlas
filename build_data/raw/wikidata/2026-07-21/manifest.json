@@ -1,0 +1,17 @@
+{
+  "source_id": "wikidata-official-names-2026-07-21",
+  "source_version": "2026-07-21 query snapshot",
+  "retrieved_at": "2026-07-21T00:00:00Z",
+  "endpoint": "https://query.wikidata.org/sparql",
+  "query": {
+    "path": "pipeline/queries/wikidata_official_names.rq",
+    "sha256": "65ea69c3b8c5b09e04dd418601c5e8a7e2b367ca2d2f690d66a2a2829be3bdb9"
+  },
+  "file": {
+    "path": "official-names.json",
+    "sha256": "841f3d5ae07f18469dc302e326954484d6cf812ee5bbbb07ff63f2edec2e85fe",
+    "size_bytes": 715154
+  },
+  "rights": "Creative Commons CC0 1.0",
+  "rights_url": "https://www.wikidata.org/wiki/Wikidata:Licensing"
+}

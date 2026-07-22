@@ -1,8 +1,8 @@
 project = "PyWorldAtlas"
 author = "PyWorldAtlas maintainers"
 copyright = "2026, PyWorldAtlas maintainers"
-release = "0.3.1"
-version = "0.3"
+release = "0.4.0"
+version = "0.4"
 extensions = [
     "sphinx.ext.autodoc", "sphinx.ext.autosummary", "sphinx.ext.napoleon",
     "sphinx.ext.doctest", "sphinx.ext.viewcode", "sphinx.ext.intersphinx",
@@ -13,7 +13,7 @@ autodoc_member_order = "bysource"
 nitpicky = True
 nitpick_ignore = [("py:class", "pathlib.Path")]
 html_theme = "sphinx_rtd_theme"
-html_title = "PyWorldAtlas 0.3.1"
+html_title = "PyWorldAtlas 0.4.0"
 html_short_title = "PyWorldAtlas"
 html_theme_options = {
     "prev_next_buttons_location": "bottom",
