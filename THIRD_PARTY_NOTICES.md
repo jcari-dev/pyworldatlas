@@ -64,3 +64,10 @@ Natural Earth states that its raster and vector data is in the public domain and
 may be used for personal, educational, and commercial purposes. Source archives,
 embedded versions, URLs, and checksums are retained in the raw-data manifest.
 See https://www.naturalearthdata.com/about/terms-of-use/.
+
+The documentation includes a small set of Twemoji flag SVGs from release
+17.0.2 for consistent showcase rendering. Twemoji graphics are copyright
+Twitter, Inc. and other contributors and are licensed under CC BY 4.0. These
+documentation-only assets are not included in the installed Python package.
+See https://github.com/jdecked/twemoji and
+https://creativecommons.org/licenses/by/4.0/.

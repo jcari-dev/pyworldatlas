@@ -433,7 +433,7 @@ For this release they are `0.7.0`, `7`, and `2026.07.22.7`.
 ## Documentation and roadmap
 
 - Documentation source for this checkout: [docs/source](docs/source)
-- Published documentation (updated by the release workflow):
+- Published documentation (updated by the release and documentation workflows):
   https://jcari-dev.github.io/pyworldatlas-documentation/
 - Current implementation status: [ROADMAP_STATUS.md](ROADMAP_STATUS.md)
 - Milestone evidence: [MILESTONE_0_1_REPORT.md](MILESTONE_0_1_REPORT.md)

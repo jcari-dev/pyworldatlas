@@ -1,6 +1,29 @@
 60-second quickstart
 ====================
 
+.. container:: atlas-card-grid
+
+   .. container:: atlas-card atlas-card-blue
+
+      .. rubric:: Look up
+
+      Resolve a familiar name, alias, alpha-2, alpha-3, or M49 code to one
+      immutable profile.
+
+   .. container:: atlas-card atlas-card-teal
+
+      .. rubric:: Explore
+
+      Read names, capitals, cities, reference facts, physical geography, and
+      source metadata offline.
+
+   .. container:: atlas-card atlas-card-gold
+
+      .. rubric:: Connect
+
+      Filter, rank, measure, follow reviewed land paths, create flashcards, and
+      serialize results.
+
 Create the atlas
 ----------------
 

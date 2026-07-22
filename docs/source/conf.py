@@ -2,7 +2,7 @@ project = "PyWorldAtlas"
 author = "PyWorldAtlas maintainers"
 copyright = "2026, PyWorldAtlas maintainers"
 release = "0.7.0"
-version = "0.6"
+version = "0.7"
 extensions = [
     "sphinx.ext.autodoc", "sphinx.ext.autosummary", "sphinx.ext.napoleon",
     "sphinx.ext.doctest", "sphinx.ext.viewcode", "sphinx.ext.intersphinx",
@@ -28,4 +28,43 @@ html_context = {
     "display_github": False,
     "current_version": release,
 }
+html_static_path = ["_static"]
+html_css_files = ["pyworldatlas.css"]
+rst_prolog = """
+.. role:: atlas-flag
+   :class: atlas-flag
+
+.. role:: atlas-kicker
+   :class: atlas-kicker
+
+.. |flag-br| image:: /_static/twemoji/1f1e7-1f1f7.svg
+   :class: atlas-flag-image
+   :width: 1.45em
+   :alt: Brazil flag emoji
+
+.. |flag-jp| image:: /_static/twemoji/1f1ef-1f1f5.svg
+   :class: atlas-flag-image
+   :width: 1.45em
+   :alt: Japan flag emoji
+
+.. |flag-ch| image:: /_static/twemoji/1f1e8-1f1ed.svg
+   :class: atlas-flag-image
+   :width: 1.45em
+   :alt: Switzerland flag emoji
+
+.. |flag-cn| image:: /_static/twemoji/1f1e8-1f1f3.svg
+   :class: atlas-flag-image
+   :width: 1.45em
+   :alt: China flag emoji
+
+.. |flag-fr| image:: /_static/twemoji/1f1eb-1f1f7.svg
+   :class: atlas-flag-image
+   :width: 1.45em
+   :alt: France flag emoji
+
+.. |flag-ae| image:: /_static/twemoji/1f1e6-1f1ea.svg
+   :class: atlas-flag-image
+   :width: 1.45em
+   :alt: United Arab Emirates flag emoji
+"""
 exclude_patterns = ["_build"]
