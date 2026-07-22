@@ -35,9 +35,68 @@ threshold, plus retained capitals.
   with a SHA-256 manifest.
 - Review layer: `build_data/reviewed/country_local_names.csv`, with exact entry
   and page locators for every row.
-- Current scope: five records across Brazil and Switzerland.
-- Limitations: the five reviewed records do not imply full-world local-name
+- Current development scope: 10 selected records with reviewed national short
+  and formal names. This batch is not complete local national-official
   coverage.
+- Limitations: UNGEGN covers independent states rather than every area in the
+  248-record UN M49 runtime scope.
+
+## Unicode CLDR 48.2
+
+- Purpose: one localized territory display name and language-selection record
+  for every country or area.
+- Official URL: https://unicode.org/Public/cldr/48.2/
+- Snapshot: a compact 248-row extraction from `cldr-common-48.2.zip`, retaining
+  the archive URL/checksum and exact locale/XPath locators.
+- Extractor: `pipeline/scripts/extract_cldr_country_identity.py`.
+- License: Unicode License v3.
+- Coverage: 248 / 248 local display names across 80 languages and 21 scripts;
+  244 selections use an official, de-facto official, or regional official
+  language.
+- Limitations: CLDR territory labels are localized display names. They are not
+  automatically diplomatic formal names, and the API labels them accordingly.
+
+## CIA World Factbook country-name profiles
+
+- Purpose: base English formal-name layer.
+- Official URL: https://www.cia.gov/the-world-factbook/
+- Structured snapshot: `factbook.json` commit
+  `8662a8b17a784841ab4528631b04090eb2f183eb`, reduced deterministically to the
+  `Government > Country name` fields for 240 matching profiles.
+- Extractor: `pipeline/scripts/extract_factbook_country_identity.py`.
+- Terms: public domain under the CIA site policy and the structured
+  repository's public-domain dedication.
+- Coverage: 195 distinct long forms and 45 profiles where the source supplies
+  no distinct long form, so the sourced short form is retained.
+- Limitations: AX, BQ, GF, GP, MQ, RE, UM, and YT are outside the captured
+  source intersection and remain `None`.
+
+## United Nations Protocol and Liaison Service
+
+- Purpose: five current English formal-name excerpts used where the final
+  Factbook snapshot differs from current UN usage.
+- Official document: *Official Names of the United Nations Membership*, dated
+  2025-02-05.
+- URL: https://www.un.org/dgacm/sites/www.un.org.dgacm/files/Documents_Protocol/officialnamesofcountries.pdf
+- Use: exact entries for Afghanistan, Italy, Niger, Türkiye, and Viet Nam,
+  each with a PDF page locator in the reviewed override file.
+- Retention: the PDF checksum and metadata are recorded, but the PDF is not
+  redistributed in this repository.
+- Review-only check: a current UNTERM country-name export was inspected to
+  compare the 193 UN-member entries. It is not redistributed and no package
+  record is sourced from that workbook.
+
+## Wikidata official-name statements
+
+- Purpose: three reviewed English formal-name corrections where exact current
+  statements are available under CC0.
+- Query endpoint: https://query.wikidata.org/sparql
+- Snapshot: 2026-07-21, with the exact query, result checksum, statement IDs,
+  ranks, and qualifiers retained.
+- License: Creative Commons CC0 1.0.
+- Use: Guyana, Saint Kitts and Nevis, and Myanmar only.
+- Limitation: Wikidata is not used as an unreviewed bulk authority; every used
+  statement is pinned by ID and value.
 
 ## Natural Earth
 

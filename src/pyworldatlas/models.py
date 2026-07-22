@@ -44,7 +44,15 @@ class CountryCodes:
 
 @dataclass(frozen=True, slots=True)
 class LocalizedName:
-    """A sourced country name, alias, or official local-language form."""
+    """A sourced country or area name in a selected local language.
+
+    ``kind`` is ``"national_official"`` for reviewed UNGEGN short/formal
+    names and ``"locale_display"`` for Unicode CLDR territory display names.
+    ``official_name`` and the romanized fields remain ``None`` unless their
+    source explicitly supplies those values. ``language_status`` records why
+    the language was selected, such as ``"official"`` or
+    ``"de_facto_official"``.
+    """
 
     text: str
     language_code: str | None
@@ -57,11 +65,23 @@ class LocalizedName:
     romanized_official_name: str | None = None
     is_official_language: bool = False
     source: SourceReference | None = None
+    source_locator: str | None = None
+    language_status: str | None = None
 
     @property
     def short_name(self) -> str:
         """Return the short local-language form."""
         return self.text
+
+    @property
+    def formal_name(self) -> str | None:
+        """Return the formal local-language form supplied by the source."""
+        return self.official_name
+
+    @property
+    def is_national_official(self) -> bool:
+        """Whether UNGEGN supplies a reviewed national official name."""
+        return self.kind == "national_official"
 
 
 @dataclass(frozen=True, slots=True)
@@ -332,6 +352,7 @@ class CountryDiscoveryCard:
     country: CountryReference
     flag_emoji: str | None
     official_name: str | None
+    formal_name: str | None
     capital: str | None
     capital_coordinates: Coordinate | None
     continent: str | None
@@ -360,7 +381,12 @@ class CountryDiscoveryCard:
 
 @dataclass(frozen=True, slots=True)
 class Country:
-    """A sourced, immutable country profile from the offline atlas."""
+    """A sourced, immutable country profile from the offline atlas.
+
+    ``official_name`` is the canonical English identity from UN M49.
+    ``formal_name`` is the sourced English long or formal form when the
+    country or area is covered by the formal-name source layer.
+    """
 
     name: str
     official_name: str | None
@@ -380,6 +406,7 @@ class Country:
     calling_codes: tuple[str, ...] = ()
     top_level_domain: str | None = None
     observed_timezones: tuple[str, ...] = ()
+    formal_name: str | None = None
 
     @property
     def alpha2(self) -> str:
@@ -422,6 +449,15 @@ class Country:
         return self.flag if len(self.alpha2) == 2 and self.alpha2.isalpha() else None
 
     @property
+    def has_distinct_formal_name(self) -> bool:
+        """Return whether the sourced English formal form differs from ``name``.
+
+        ``False`` also covers records outside the current formal-name source
+        scope. Inspect ``formal_name`` directly when that distinction matters.
+        """
+        return bool(self.formal_name and self.formal_name.casefold() != self.name.casefold())
+
+    @property
     def population_density(self) -> float | None:
         """Return snapshot population per square kilometre when calculable.
 
@@ -459,20 +495,45 @@ class Country:
         """Return the primary capital's coordinates, when a capital is available."""
         return self.capital.coordinates if self.capital else None
 
+    @property
+    def local_name_languages(self) -> tuple[str, ...]:
+        """Return language codes represented by sourced local identity records."""
+        return tuple(name.language_code for name in self.local_names if name.language_code)
+
+    def local_name(self, language_code: str) -> LocalizedName | None:
+        """Return the complete sourced local record for ``language_code``.
+
+        Matching is case-insensitive. ``None`` means that this dataset does not
+        contain a selected record for that language; it does not mean the
+        language or local name does not exist. No translation, English
+        fallback, or romanization is invented.
+        """
+        normalized = language_code.casefold()
+        return next((name for name in self.local_names if name.language_code == normalized), None)
+
     def name_in(self, language_code: str) -> str | None:
-        """Return the short local name for ``language_code``, without fallback."""
-        match = next((name for name in self.local_names if name.language_code == language_code.casefold()), None)
+        """Return the sourced short local name, without fallback."""
+        match = self.local_name(language_code)
         return match.short_name if match else None
 
     def official_name_in(self, language_code: str) -> str | None:
-        """Return the formal local name for ``language_code``, without fallback."""
-        match = next((name for name in self.local_names if name.language_code == language_code.casefold()), None)
-        return match.official_name if match else None
+        """Return the reviewed formal local name, without fallback.
+
+        This is populated only for ``national_official`` local records. It is
+        separate from the English ``formal_name`` profile field.
+        """
+        match = self.local_name(language_code)
+        return match.formal_name if match else None
 
     def romanized_name_in(self, language_code: str) -> str | None:
         """Return a source-provided romanized short name, without generating one."""
-        match = next((name for name in self.local_names if name.language_code == language_code.casefold()), None)
+        match = self.local_name(language_code)
         return match.romanized_short_name if match else None
+
+    def romanized_official_name_in(self, language_code: str) -> str | None:
+        """Return a source-provided romanized formal name, without generating one."""
+        match = self.local_name(language_code)
+        return match.romanized_official_name if match else None
 
     def reference(self) -> CountryReference:
         """Return a compact immutable reference suitable for results and prompts."""
@@ -490,6 +551,7 @@ class Country:
             country=self.reference(),
             flag_emoji=self.flag_emoji,
             official_name=self.official_name,
+            formal_name=self.formal_name,
             capital=capital.name if capital else None,
             capital_coordinates=capital.coordinates if capital else None,
             continent=self.continent,

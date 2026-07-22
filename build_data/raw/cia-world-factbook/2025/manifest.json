@@ -1,0 +1,21 @@
+{
+  "source_id": "cia-world-factbook-2025",
+  "source_version": "factbook.json@8662a8b17a784841ab4528631b04090eb2f183eb",
+  "retrieved_at": "2026-07-21T00:00:00Z",
+  "upstream_name": "CIA World Factbook",
+  "upstream_url": "https://www.cia.gov/the-world-factbook/",
+  "structured_repository": "https://github.com/factbook/factbook.json",
+  "structured_repository_commit": "8662a8b17a784841ab4528631b04090eb2f183eb",
+  "rights": "Public domain",
+  "rights_urls": [
+    "https://www.cia.gov/site-policies/",
+    "https://github.com/factbook/factbook.json#license--public-domain-dedication"
+  ],
+  "derived_file": {
+    "path": "country_identity.json",
+    "sha256": "b91155d2742036350fbd8c86668b4413278265a53747a3422aa5b4a4c6f65fb8",
+    "size_bytes": 105226
+  },
+  "extractor": "pipeline/scripts/extract_factbook_country_identity.py",
+  "scope": "Country-name fields only; narrative profile content is not copied."
+}

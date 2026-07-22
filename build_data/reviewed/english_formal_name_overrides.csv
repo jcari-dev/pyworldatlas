@@ -1,0 +1,9 @@
+country_code,formal_name,source_id,source_record_id,source_locator,review_note
+AF,Islamic Republic of Afghanistan,un-protocol-country-names-2025,AF,PDF page 1,"Current UN Protocol membership form; replaces the Factbook's explicitly disputed historical note."
+GY,Co-operative Republic of Guyana,wikidata-official-names-2026-07-21,Q734-deb94ad8-465d-bd39-66f7-3cc861455aa4,Q734 official name statement,"CC0 statement matches the current UN Protocol spelling, including the hyphen."
+IT,Republic of Italy,un-protocol-country-names-2025,IT,PDF page 3,"Current UN Protocol membership form; resolves the Factbook wording difference."
+KN,Saint Kitts and Nevis,wikidata-official-names-2026-07-21,Q763-F25196C3-3A3D-40B0-81C7-B688F82DEC18,Q763 official name statement,"CC0 statement matches the current UN Protocol form."
+MM,Republic of the Union of Myanmar,wikidata-official-names-2026-07-21,Q836-11830f1c-4827-67f4-33d6-1b124e461a12,Q836 official name statement,"CC0 statement matches the current UN Protocol form and includes a 2010-10-21 start qualifier."
+NE,Republic of the Niger,un-protocol-country-names-2025,NE,PDF page 3,"Current UN Protocol membership form; preserves the source's definite article."
+TR,Republic of Türkiye,un-protocol-country-names-2025,TR,PDF page 4,"Current UN Protocol membership form; replaces the superseded Factbook wording."
+VN,Socialist Republic of Viet Nam,un-protocol-country-names-2025,VN,PDF page 5,"Current UN Protocol membership form; preserves the UN spelling of Viet Nam."

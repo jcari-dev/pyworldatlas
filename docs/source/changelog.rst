@@ -1,6 +1,25 @@
 Changelog
 =========
 
+0.4.0 — In development
+----------------------
+
+- Added one sourced local-language identity for all 248 countries and areas,
+  spanning 80 languages and 21 writing systems.
+- Added pinned Unicode CLDR 48.2 extraction with exact locale/XPath provenance,
+  official-language selection metadata, and Unicode License v3 attribution.
+- Kept 10 selected UNGEGN records as the higher-evidence national official
+  short/formal layer.
+- Added sourced English formal names for 240 profiles, exact reviewed source
+  exceptions, lookup support, and explicit gaps for eight areas.
+- Added ``Country.formal_name``, ``Country.has_distinct_formal_name``, and
+  :meth:`~pyworldatlas.Atlas.countries_with_formal_names`.
+- Added complete local-name record lookup, formal-name and formal-romanization
+  conveniences, evidence kinds, language statuses, and exact source locators.
+- Added country coverage discovery with language and script filters.
+- Added multilingual examples, coverage reporting, an identity data contract,
+  and a clearer official-names guide.
+
 0.3.1 — 2026-07-21
 ------------------
 

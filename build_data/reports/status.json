@@ -1,7 +1,7 @@
 {
-  "library_version": "0.3.1",
-  "schema_version": 3,
-  "dataset_version": "2026.07.21.1",
+  "library_version": "0.4.0",
+  "schema_version": 4,
+  "dataset_version": "2026.07.21.4",
   "milestones": [
     {
       "name": "0 \u2014 Clean foundation",
@@ -54,17 +54,17 @@
       "release": "Publication state is tracked on GitHub Releases and PyPI"
     },
     {
-      "name": "4 \u2014 Geometry",
+      "name": "4 \u2014 Official country identity",
       "version": "0.4.0",
-      "status": "planned",
-      "functions": "\u2014",
-      "tests": "\u2014",
-      "dataset": "\u2014",
-      "docs": "\u2014",
-      "release": "\u2014"
+      "status": "in progress",
+      "functions": "Complete local display names, English formal names, reviewed local official forms, language/script lookup, romanization, and coverage discovery",
+      "tests": "30 unit/pipeline tests, 221 doctests, clean-wheel examples, and release audit passed",
+      "dataset": "248 local identities / 240 English formal names / 10 reviewed local official forms",
+      "docs": "Identity guide, fun multilingual examples, evidence levels, source rules, and complete coverage metrics",
+      "release": "Local 0.4.0 release gate passed; commit, review, and publication pending"
     },
     {
-      "name": "5 \u2014 Statistics",
+      "name": "5 \u2014 National symbols and civic facts",
       "version": "0.5.0",
       "status": "planned",
       "functions": "\u2014",
@@ -74,7 +74,7 @@
       "release": "\u2014"
     },
     {
-      "name": "6 \u2014 Leaders",
+      "name": "6 \u2014 Geometry",
       "version": "0.6.0",
       "status": "planned",
       "functions": "\u2014",
@@ -84,7 +84,7 @@
       "release": "\u2014"
     },
     {
-      "name": "7 \u2014 Culture and institutions",
+      "name": "7 \u2014 Statistics and institutions",
       "version": "0.7.0",
       "status": "planned",
       "functions": "\u2014",
@@ -125,7 +125,7 @@
     }
   ],
   "coverage": {
-    "dataset_version": "2026.07.21.1",
+    "dataset_version": "2026.07.21.4",
     "countries": 248,
     "capitals": 241,
     "major_cities": 6265,
@@ -136,12 +136,38 @@
     "language_profiles": 245,
     "top_level_domain_profiles": 248,
     "observed_timezone_profiles": 242,
-    "local_names": 5,
-    "local_name_countries": 2,
+    "local_names": 248,
+    "local_name_countries": 248,
+    "local_name_languages": 80,
+    "local_name_scripts": 21,
+    "romanized_local_names": 3,
+    "national_official_local_names": 10,
+    "locale_display_names": 238,
+    "official_language_local_names": 244,
+    "countries_without_local_names": [],
+    "countries_without_official_language_local_names": [
+      "AQ",
+      "BV",
+      "HM",
+      "TF"
+    ],
+    "english_formal_names": 240,
+    "distinct_english_formal_names": 195,
+    "english_formal_names_same_as_short": 45,
+    "countries_without_english_formal_names": [
+      "AX",
+      "BQ",
+      "GF",
+      "GP",
+      "MQ",
+      "RE",
+      "UM",
+      "YT"
+    ],
     "reviewed_land_borders": 319,
     "countries_with_land_borders": 163,
     "countries_with_no_land_borders": 85,
-    "database_sha256": "8adb552f5c745571f5413aa3fbbac164e9dd57cbeba7fb4a2ea273fe5f2f97fc",
+    "database_sha256": "7926de71c414ae0fff58d77b12cc521e944b9772c125c9f5fecd033bd24e3f22",
     "validation": "PASS"
   }
 }

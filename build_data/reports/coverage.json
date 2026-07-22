@@ -1,5 +1,5 @@
 {
-  "dataset_version": "2026.07.21.1",
+  "dataset_version": "2026.07.21.4",
   "countries": 248,
   "capitals": 241,
   "major_cities": 6265,
@@ -10,11 +10,37 @@
   "language_profiles": 245,
   "top_level_domain_profiles": 248,
   "observed_timezone_profiles": 242,
-  "local_names": 5,
-  "local_name_countries": 2,
+  "local_names": 248,
+  "local_name_countries": 248,
+  "local_name_languages": 80,
+  "local_name_scripts": 21,
+  "romanized_local_names": 3,
+  "national_official_local_names": 10,
+  "locale_display_names": 238,
+  "official_language_local_names": 244,
+  "countries_without_local_names": [],
+  "countries_without_official_language_local_names": [
+    "AQ",
+    "BV",
+    "HM",
+    "TF"
+  ],
+  "english_formal_names": 240,
+  "distinct_english_formal_names": 195,
+  "english_formal_names_same_as_short": 45,
+  "countries_without_english_formal_names": [
+    "AX",
+    "BQ",
+    "GF",
+    "GP",
+    "MQ",
+    "RE",
+    "UM",
+    "YT"
+  ],
   "reviewed_land_borders": 319,
   "countries_with_land_borders": 163,
   "countries_with_no_land_borders": 85,
-  "database_sha256": "8adb552f5c745571f5413aa3fbbac164e9dd57cbeba7fb4a2ea273fe5f2f97fc",
+  "database_sha256": "7926de71c414ae0fff58d77b12cc521e944b9772c125c9f5fecd033bd24e3f22",
   "validation": "PASS"
 }

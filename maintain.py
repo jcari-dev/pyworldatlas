@@ -77,7 +77,33 @@ def status(*, write: bool = True) -> None:
         f"Populated places: {coverage['major_cities']}", f"Last validation: {coverage['validation']}",
     ]
     if "local_names" in coverage:
-        lines.insert(-1, f"Official local names: {coverage['local_names']} across {coverage['local_name_countries']} reviewed countries")
+        details = (
+            f"Local identity names: {coverage['local_names']} / "
+            f"{coverage['countries']} countries and areas"
+        )
+        if "local_name_languages" in coverage:
+            details += (
+                f" / {coverage['local_name_languages']} languages / "
+                f"{coverage['local_name_scripts']} scripts"
+            )
+        lines.insert(-1, details)
+        if "national_official_local_names" in coverage:
+            lines.insert(
+                -1,
+                "Reviewed national official forms: "
+                f"{coverage['national_official_local_names']} / "
+                f"official-language selections: "
+                f"{coverage['official_language_local_names']} / "
+                f"{coverage['countries']}",
+            )
+        if "english_formal_names" in coverage:
+            lines.insert(
+                -1,
+                "English formal names: "
+                f"{coverage['english_formal_names']} / "
+                f"{coverage['countries']} profiles / "
+                f"{coverage['distinct_english_formal_names']} distinct long forms",
+            )
     if "population_profiles" in coverage:
         lines.insert(-1, f"Profile fields: {coverage['population_profiles']} population / {coverage['currency_profiles']} currency / {coverage['language_profiles']} language-code records")
     if "reviewed_land_borders" in coverage:
@@ -298,8 +324,13 @@ def audit_wheel(wheel: Path) -> None:
         names = archive.namelist()
     databases = [name for name in names if name.endswith(".sqlite3")]
     forbidden = [name for name in names if name.startswith(("pipeline/", "tests/", "docs/", "build_data/"))]
-    if len(databases) != 1 or forbidden:
-        raise RuntimeError(f"Wheel audit failed: databases={databases}, forbidden={forbidden}")
+    unicode_licenses = [name for name in names if name.endswith("UNICODE_LICENSE.txt")]
+    if len(databases) != 1 or len(unicode_licenses) != 1 or forbidden:
+        raise RuntimeError(
+            "Wheel audit failed: "
+            f"databases={databases}, unicode_licenses={unicode_licenses}, "
+            f"forbidden={forbidden}"
+        )
     print("All checks passed.")
 
 

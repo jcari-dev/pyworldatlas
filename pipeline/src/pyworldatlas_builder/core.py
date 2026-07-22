@@ -13,13 +13,20 @@ from pathlib import Path
 import re
 import sqlite3
 import struct
+import unicodedata
 import zipfile
 
 
 EXPECTED_COUNTRY_COUNT = 248
 EXPECTED_CAPITAL_COUNT = 241
 EXPECTED_CITY_COUNT = 6_265
-EXPECTED_LOCAL_NAME_COUNT = 5
+EXPECTED_REVIEWED_LOCAL_NAME_COUNT = 14
+EXPECTED_LOCAL_NAME_COUNT = 248
+EXPECTED_ENGLISH_FORMAL_NAME_COUNT = 240
+EXPECTED_FORMAL_NAME_OVERRIDE_COUNT = 8
+EXPECTED_ENGLISH_FORMAL_NAME_GAPS = {
+    "AX", "BQ", "GF", "GP", "MQ", "RE", "UM", "YT",
+}
 EXPECTED_NATURAL_EARTH_BORDER_COUNT = 317
 EXPECTED_GEONAMES_BORDER_COUNT = 319
 EXPECTED_BORDER_COUNT = 319
@@ -125,6 +132,32 @@ def write_manifests(root: Path) -> None:
         manifest = {"source_id": source_id, "source_version": version, "retrieved_at": retrieved_at, "files": files}
         (folder / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
 
+    cldr_folder = root / "build_data" / "raw" / "unicode-cldr" / "48.2"
+    cldr_snapshot_path = cldr_folder / "country_identity.json"
+    if not cldr_snapshot_path.is_file():
+        raise FileNotFoundError(f"Missing raw snapshot: {cldr_snapshot_path}")
+    cldr_snapshot = _load_json(cldr_snapshot_path)
+    cldr_manifest = {
+        "source_id": "unicode-cldr-48.2",
+        "source_version": "48.2",
+        "retrieved_at": "2026-07-21T00:00:00Z",
+        "source_archive": {
+            "url": cldr_snapshot["archive_url"],
+            "sha256": cldr_snapshot["archive_sha256"],
+        },
+        "derived_file": {
+            "path": "country_identity.json",
+            "sha256": _sha(cldr_snapshot_path),
+            "size_bytes": cldr_snapshot_path.stat().st_size,
+        },
+        "extractor": "pipeline/scripts/extract_cldr_country_identity.py",
+        "license_name": cldr_snapshot["license_name"],
+        "license_url": cldr_snapshot["license_url"],
+    }
+    (cldr_folder / "manifest.json").write_text(
+        json.dumps(cldr_manifest, indent=2) + "\n", encoding="utf-8"
+    )
+
 
 def parse_un_m49(root: Path) -> dict[str, dict[str, object]]:
     parser = M49Parser()
@@ -193,8 +226,10 @@ def parse_geonames(root: Path, country_codes: set[str]) -> tuple[dict[str, dict[
     return countries, cities
 
 
-def parse_country_local_names(root: Path, country_codes: set[str]) -> list[dict[str, object]]:
-    """Read the reviewed transcription of the approved UNGEGN source artifact."""
+def _parse_reviewed_country_local_names(
+    root: Path, country_codes: set[str]
+) -> list[dict[str, object]]:
+    """Read reviewed formal-name transcriptions from the UNGEGN artifact."""
     path = root / "build_data/reviewed/country_local_names.csv"
     records: list[dict[str, object]] = []
     seen: set[tuple[str, str]] = set()
@@ -207,11 +242,27 @@ def parse_country_local_names(root: Path, country_codes: set[str]) -> list[dict[
                 raise ValueError(f"Unknown country code on {path}:{line_number}: {code}")
             if key in seen:
                 raise ValueError(f"Duplicate local name on {path}:{line_number}: {key}")
-            required = ("language_name", "script_code", "short_name", "official_name", "source_id", "source_locator")
+            required = ("language_code", "language_name", "script_code", "short_name", "official_name", "source_id", "source_locator")
             if not all(row[field] for field in required):
                 raise ValueError(f"Incomplete local name on {path}:{line_number}")
+            if re.fullmatch(r"[a-z]{2,3}", language_code) is None:
+                raise ValueError(f"Invalid language code on {path}:{line_number}: {language_code}")
+            if re.fullmatch(r"[A-Z][a-z]{3}", row["script_code"]) is None:
+                raise ValueError(f"Invalid ISO 15924 script code on {path}:{line_number}: {row['script_code']}")
+            if "PDF page " not in row["source_locator"]:
+                raise ValueError(f"Missing PDF page locator on {path}:{line_number}")
             if row["is_official_language"].casefold() not in {"true", "false"}:
                 raise ValueError(f"Invalid official-language flag on {path}:{line_number}")
+            unicode_fields = (
+                "short_name", "official_name", "romanized_short_name",
+                "romanized_official_name",
+            )
+            if any(
+                value and unicodedata.normalize("NFC", value) != value
+                for field in unicode_fields
+                if (value := row[field])
+            ):
+                raise ValueError(f"Local name is not Unicode NFC on {path}:{line_number}")
             seen.add(key)
             records.append({
                 "country_code": code,
@@ -227,11 +278,236 @@ def parse_country_local_names(root: Path, country_codes: set[str]) -> list[dict[
                     "romanized_short_name": row["romanized_short_name"] or None,
                     "romanized_official_name": row["romanized_official_name"] or None,
                     "is_official_language": row["is_official_language"].casefold() == "true",
+                    "name_kind": "national_official",
+                    "language_status": "official",
                     "source_locator": row["source_locator"],
                 },
             })
-    if len(records) != EXPECTED_LOCAL_NAME_COUNT:
-        raise ValueError(f"Expected {EXPECTED_LOCAL_NAME_COUNT} pilot local names, found {len(records)}")
+    if len(records) != EXPECTED_REVIEWED_LOCAL_NAME_COUNT:
+        raise ValueError(
+            f"Expected {EXPECTED_REVIEWED_LOCAL_NAME_COUNT} reviewed formal names, "
+            f"found {len(records)}"
+        )
+    return records
+
+
+def parse_country_local_names(root: Path, country_codes: set[str]) -> list[dict[str, object]]:
+    """Build one sourced local identity record for every country or area.
+
+    Unicode CLDR supplies complete localized display-name coverage and the
+    selected official-language metadata. A matching reviewed UNGEGN record
+    replaces the display name with national official short and formal forms.
+    """
+    reviewed = _parse_reviewed_country_local_names(root, country_codes)
+    reviewed_by_key = {
+        (record["country_code"], record["data"]["language_code"]): record
+        for record in reviewed
+    }
+    path = root / "build_data/raw/unicode-cldr/48.2/country_identity.json"
+    snapshot = _load_json(path)
+    source_id = snapshot.get("source_id")
+    if source_id != "unicode-cldr-48.2":
+        raise ValueError(f"Unexpected CLDR source identifier in {path}: {source_id}")
+    rows = snapshot.get("records")
+    if not isinstance(rows, list) or len(rows) != EXPECTED_LOCAL_NAME_COUNT:
+        raise ValueError(
+            f"Expected {EXPECTED_LOCAL_NAME_COUNT} CLDR identity rows, "
+            f"found {len(rows) if isinstance(rows, list) else 'invalid data'}"
+        )
+
+    records: list[dict[str, object]] = []
+    seen_countries: set[str] = set()
+    for row in rows:
+        code = row["country_code"].upper()
+        language_code = row["language_code"].casefold()
+        if code not in country_codes:
+            raise ValueError(f"Unknown country code in {path}: {code}")
+        if code in seen_countries:
+            raise ValueError(f"Duplicate CLDR identity row in {path}: {code}")
+        if re.fullmatch(r"[a-z]{2,3}(?:-[a-z0-9]{2,8})*", language_code) is None:
+            raise ValueError(f"Invalid CLDR language code in {path}: {language_code}")
+        if re.fullmatch(r"[A-Z][a-z]{3}", row["script_code"]) is None:
+            raise ValueError(f"Invalid CLDR script code in {path}: {row['script_code']}")
+        if unicodedata.normalize("NFC", row["local_name"]) != row["local_name"]:
+            raise ValueError(f"CLDR local name is not Unicode NFC in {path}: {code}")
+        seen_countries.add(code)
+        reviewed_record = reviewed_by_key.get((code, language_code))
+        if reviewed_record is not None:
+            records.append(reviewed_record)
+            continue
+        records.append({
+            "country_code": code,
+            "source_id": source_id,
+            "source_record_id": row["source_locator"],
+            "retrieved_at": "2026-07-21",
+            "data": {
+                "language_code": language_code,
+                "language_name": row["language_name"],
+                "script_code": row["script_code"],
+                "short_name": row["local_name"],
+                "official_name": None,
+                "romanized_short_name": None,
+                "romanized_official_name": None,
+                "is_official_language": bool(row["is_official_language"]),
+                "name_kind": "locale_display",
+                "language_status": row["language_status"],
+                "source_locator": row["source_locator"],
+            },
+        })
+    missing = sorted(country_codes - seen_countries)
+    extra = sorted(seen_countries - country_codes)
+    if missing or extra:
+        raise ValueError(f"CLDR identity scope mismatch; missing={missing}, extra={extra}")
+    return records
+
+
+def parse_english_formal_names(
+    root: Path, country_codes: set[str]
+) -> list[dict[str, object]]:
+    """Build reviewed English formal-name records from reusable sources.
+
+    The public-domain World Factbook snapshot supplies the base layer. A small
+    reviewed override file resolves source conflicts with current CC0 Wikidata
+    statements or short, credited excerpts from the UN Protocol membership
+    list. Areas absent from the Factbook scope remain explicitly uncovered.
+    """
+    factbook_path = (
+        root / "build_data/raw/cia-world-factbook/2025/country_identity.json"
+    )
+    snapshot = _load_json(factbook_path)
+    if snapshot.get("source_id") != "cia-world-factbook-2025":
+        raise ValueError(f"Unexpected Factbook source identifier in {factbook_path}")
+    rows = snapshot.get("records")
+    if not isinstance(rows, list) or len(rows) != EXPECTED_ENGLISH_FORMAL_NAME_COUNT:
+        raise ValueError(
+            f"Expected {EXPECTED_ENGLISH_FORMAL_NAME_COUNT} Factbook identity rows, "
+            f"found {len(rows) if isinstance(rows, list) else 'invalid data'}"
+        )
+
+    wikidata_path = root / "build_data/raw/wikidata/2026-07-21/official-names.json"
+    wikidata_rows = _load_json(wikidata_path)["results"]["bindings"]
+    wikidata_by_statement = {
+        row["statement"]["value"].rsplit("/", 1)[-1]: row
+        for row in wikidata_rows
+    }
+
+    override_path = root / "build_data/reviewed/english_formal_name_overrides.csv"
+    overrides: dict[str, dict[str, str]] = {}
+    with override_path.open(encoding="utf-8", newline="") as stream:
+        for line_number, row in enumerate(csv.DictReader(stream), 2):
+            code = row["country_code"].upper()
+            if code not in country_codes:
+                raise ValueError(
+                    f"Unknown country code on {override_path}:{line_number}: {code}"
+                )
+            if code in overrides:
+                raise ValueError(
+                    f"Duplicate formal-name override on {override_path}:{line_number}: {code}"
+                )
+            required = (
+                "formal_name", "source_id", "source_record_id",
+                "source_locator", "review_note",
+            )
+            if not all(row[field] for field in required):
+                raise ValueError(
+                    f"Incomplete formal-name override on {override_path}:{line_number}"
+                )
+            if row["source_id"] == "wikidata-official-names-2026-07-21":
+                statement = wikidata_by_statement.get(row["source_record_id"])
+                if statement is None:
+                    raise ValueError(
+                        f"Unknown Wikidata statement on {override_path}:{line_number}"
+                    )
+                if statement["alpha2"]["value"] != code:
+                    raise ValueError(
+                        f"Wikidata country mismatch on {override_path}:{line_number}"
+                    )
+                if statement["officialName"]["value"] != row["formal_name"]:
+                    raise ValueError(
+                        f"Wikidata value mismatch on {override_path}:{line_number}"
+                    )
+                if statement["rank"]["value"].endswith("DeprecatedRank"):
+                    raise ValueError(
+                        f"Deprecated Wikidata statement on {override_path}:{line_number}"
+                    )
+            elif row["source_id"] == "un-protocol-country-names-2025":
+                if "PDF page " not in row["source_locator"]:
+                    raise ValueError(
+                        f"Missing UN PDF locator on {override_path}:{line_number}"
+                    )
+            else:
+                raise ValueError(
+                    f"Unsupported override source on {override_path}:{line_number}"
+                )
+            overrides[code] = row
+    if len(overrides) != EXPECTED_FORMAL_NAME_OVERRIDE_COUNT:
+        raise ValueError(
+            f"Expected {EXPECTED_FORMAL_NAME_OVERRIDE_COUNT} formal-name overrides, "
+            f"found {len(overrides)}"
+        )
+
+    records: list[dict[str, object]] = []
+    seen: set[str] = set()
+    applied_overrides: set[str] = set()
+    for row in rows:
+        code = row["country_code"].upper()
+        if code not in country_codes:
+            raise ValueError(f"Unknown country code in {factbook_path}: {code}")
+        if code in seen:
+            raise ValueError(f"Duplicate Factbook identity row in {factbook_path}: {code}")
+        seen.add(code)
+
+        override = overrides.get(code)
+        if override is not None:
+            formal_name = override["formal_name"]
+            source_id = override["source_id"]
+            source_record_id = override["source_record_id"]
+            source_locator = override["source_locator"]
+            name_status = "source_provided"
+            applied_overrides.add(code)
+        else:
+            formal_name = row["conventional_formal_name"]
+            if code == "GB" and formal_name:
+                formal_name = formal_name.split("; note -", 1)[0].strip()
+            if formal_name and "disputed" in formal_name.casefold():
+                raise ValueError(
+                    f"Unresolved disputed Factbook formal name for {code}"
+                )
+            if formal_name is None:
+                formal_name = row["conventional_short_name"]
+                name_status = "same_as_short"
+            else:
+                name_status = "source_provided"
+            source_id = "cia-world-factbook-2025"
+            source_record_id = row["source_path"]
+            source_locator = row["source_locator"]
+
+        if not formal_name:
+            raise ValueError(f"Missing formal-name fallback for {code} in {factbook_path}")
+        if unicodedata.normalize("NFC", formal_name) != formal_name:
+            raise ValueError(f"Formal name is not Unicode NFC for {code}")
+        records.append({
+            "country_code": code,
+            "source_id": source_id,
+            "source_record_id": source_record_id,
+            "retrieved_at": "2026-07-21",
+            "data": {
+                "formal_name": formal_name,
+                "formal_name_status": name_status,
+                "source_locator": source_locator,
+            },
+        })
+
+    if applied_overrides != set(overrides):
+        raise ValueError(
+            f"Unused formal-name overrides: {sorted(set(overrides) - applied_overrides)}"
+        )
+    gaps = country_codes - seen
+    if gaps != EXPECTED_ENGLISH_FORMAL_NAME_GAPS:
+        raise ValueError(
+            "Unexpected English formal-name scope; "
+            f"missing={sorted(gaps)}, expected={sorted(EXPECTED_ENGLISH_FORMAL_NAME_GAPS)}"
+        )
     return records
 
 
@@ -434,6 +710,10 @@ def normalize(root: Path) -> dict[str, object]:
     common = _load_json(root / "pipeline/config/common_names.json")
     aliases = _load_json(root / "pipeline/config/aliases.json")
     local_names = parse_country_local_names(root, set(un))
+    formal_names = parse_english_formal_names(root, set(un))
+    formal_names_by_country = {
+        record["country_code"]: record for record in formal_names
+    }
     borders = parse_land_borders(root, un, geocountries)
     countries = []
     names = []
@@ -453,6 +733,21 @@ def normalize(root: Path) -> dict[str, object]:
             "geonames_id": g["data"]["geonames_id"],
             "status": "other",
         })
+        formal_record = formal_names_by_country.get(code)
+        if formal_record is None:
+            data.update({
+                "formal_name": None,
+                "formal_name_status": "not_in_source_scope",
+                "formal_name_source_id": None,
+                "formal_name_source_record_id": None,
+            })
+        else:
+            data.update({
+                "formal_name": formal_record["data"]["formal_name"],
+                "formal_name_status": formal_record["data"]["formal_name_status"],
+                "formal_name_source_id": formal_record["source_id"],
+                "formal_name_source_record_id": formal_record["source_record_id"],
+            })
         countries.append({**u, "data": data})
         all_names = [
             (data["name"], "common", "geonames"),
@@ -466,6 +761,20 @@ def normalize(root: Path) -> dict[str, object]:
                 continue
             seen.add(normalize_name(name))
             names.append({"country_code": code, "source_id": source_id, "source_record_id": str(data["numeric_code"]), "retrieved_at": "2026-07-20", "data": {"name": name, "normalized_name": normalize_name(name), "kind": kind, "preferred": kind == "common"}})
+        if formal_record is not None:
+            formal_name = formal_record["data"]["formal_name"]
+            names.append({
+                "country_code": code,
+                "source_id": formal_record["source_id"],
+                "source_record_id": formal_record["source_record_id"],
+                "retrieved_at": formal_record["retrieved_at"],
+                "data": {
+                    "name": formal_name,
+                    "normalized_name": normalize_name(formal_name),
+                    "kind": "formal",
+                    "preferred": False,
+                },
+            })
         candidate = next((city for city in cities if city["country_code"] == code and city["data"]["name"] == g["data"]["capital"]), None)
         if candidate is None:
             candidate = next((city for city in cities if city["country_code"] == code and city["data"]["is_capital"]), None)
@@ -479,6 +788,7 @@ def normalize(root: Path) -> dict[str, object]:
         "countries": countries,
         "country_names": names,
         "local_names": local_names,
+        "formal_names": formal_names,
         "capitals": capitals,
         "cities": cities,
         "borders": borders,
@@ -499,7 +809,7 @@ CREATE TABLE country_border (country1_id INTEGER NOT NULL, country2_id INTEGER N
 CREATE INDEX idx_country_border_second ON country_border(country2_id);
 CREATE TABLE country_name (country_id INTEGER NOT NULL, name TEXT NOT NULL, normalized_name TEXT NOT NULL, language_code TEXT, kind TEXT NOT NULL, preferred INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(country_id,name,kind), FOREIGN KEY(country_id) REFERENCES country(id));
 CREATE INDEX idx_country_name_normalized ON country_name(normalized_name);
-CREATE TABLE country_local_name (country_id INTEGER NOT NULL, language_code TEXT NOT NULL, language_name TEXT NOT NULL, script_code TEXT NOT NULL, short_name TEXT NOT NULL, official_name TEXT, romanized_short_name TEXT, romanized_official_name TEXT, is_official_language INTEGER NOT NULL, source_id TEXT NOT NULL, source_locator TEXT NOT NULL, PRIMARY KEY(country_id,language_code), FOREIGN KEY(country_id) REFERENCES country(id), FOREIGN KEY(source_id) REFERENCES source(id)) WITHOUT ROWID;
+CREATE TABLE country_local_name (country_id INTEGER NOT NULL, language_code TEXT NOT NULL, language_name TEXT NOT NULL, script_code TEXT NOT NULL, short_name TEXT NOT NULL, name_kind TEXT NOT NULL CHECK(name_kind IN ('national_official','locale_display')), official_name TEXT, romanized_short_name TEXT, romanized_official_name TEXT, is_official_language INTEGER NOT NULL, language_status TEXT NOT NULL, source_id TEXT NOT NULL, source_locator TEXT NOT NULL, PRIMARY KEY(country_id,language_code), FOREIGN KEY(country_id) REFERENCES country(id), FOREIGN KEY(source_id) REFERENCES source(id)) WITHOUT ROWID;
 CREATE INDEX idx_country_local_name_country ON country_local_name(country_id);
 CREATE TABLE capital (id INTEGER PRIMARY KEY, country_id INTEGER NOT NULL, name TEXT NOT NULL, normalized_name TEXT NOT NULL, role TEXT NOT NULL, is_primary INTEGER NOT NULL, latitude REAL NOT NULL, longitude REAL NOT NULL, population INTEGER, elevation_m REAL, timezone_id TEXT, geonames_id INTEGER UNIQUE, FOREIGN KEY(country_id) REFERENCES country(id));
 CREATE TABLE city (id INTEGER PRIMARY KEY, country_id INTEGER NOT NULL, name TEXT NOT NULL, normalized_name TEXT NOT NULL, latitude REAL NOT NULL, longitude REAL NOT NULL, population INTEGER, elevation_m REAL, timezone_id TEXT, geonames_id INTEGER UNIQUE, is_capital INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(country_id) REFERENCES country(id));
@@ -520,7 +830,7 @@ def build_database(root: Path, normalized: dict[str, object]) -> Path:
     epoch = os.environ.get("SOURCE_DATE_EPOCH")
     built_at = datetime.fromtimestamp(int(epoch), timezone.utc).isoformat().replace("+00:00", "Z") if epoch else "2026-07-21T00:00:00Z"
     library_version = _project_version(root)
-    meta = {"schema_version": "3", "dataset_version": "2026.07.21.1", "library_version": library_version, "built_at": built_at}
+    meta = {"schema_version": "4", "dataset_version": "2026.07.21.4", "library_version": library_version, "built_at": built_at}
     con.executemany("INSERT INTO schema_meta VALUES (?,?)", sorted(meta.items()))
     sources = [
         ("geonames", "GeoNames", "https://www.geonames.org/", "2026-07-20", "2026-07-20", "CC BY 4.0", "https://creativecommons.org/licenses/by/4.0/", _sha(root / "build_data/raw/geonames/2026-07-20/manifest.json"), "Country metadata and populated places"),
@@ -528,7 +838,11 @@ def build_database(root: Path, normalized: dict[str, object]) -> Path:
         ("reviewed-borders", "PyWorldAtlas reviewed border decisions", "https://jcari-dev.github.io/pyworldatlas-documentation/borders.html", library_version, "2026-07-21", "MIT", None, _sha(root / "build_data/reviewed/border_decisions.csv"), "Explicit decisions for every difference between the pinned GeoNames and Natural Earth border inputs"),
         ("reviewed-overrides", "PyWorldAtlas reviewed overrides", "https://jcari-dev.github.io/pyworldatlas-documentation/", library_version, "2026-07-20", "MIT", None, _sha(root / "pipeline/config/overrides.json"), "Reviewed familiar names and aliases"),
         ("un-m49", "United Nations M49", "https://unstats.un.org/unsd/methodology/m49/", "2026-07-20", "2026-07-20", None, None, _sha(root / "build_data/raw/un-m49/2026-07-20/manifest.json"), "Canonical identities and regions"),
-        ("ungegn-country-names-2017", "UNGEGN List of Country Names", "https://unstats.un.org/unsd/ungegn/working_groups/wg1.cshtml", "E/CONF.105/13/CRP.13 (2017-07-17)", "2026-07-20", None, None, _sha(root / "build_data/raw/ungegn-country-names/2017-07-17/manifest.json"), "Approved national official short and formal country names; pilot entries transcribed with page locators"),
+        ("ungegn-country-names-2017", "UNGEGN List of Country Names", "https://unstats.un.org/unsd/ungegn/working_groups/wg1.cshtml", "E/CONF.105/13/CRP.13 (2017-07-17)", "2026-07-20", None, None, _sha(root / "build_data/raw/ungegn-country-names/2017-07-17/manifest.json"), "Approved national official short and formal country names; reviewed entries transcribed with page locators"),
+        ("unicode-cldr-48.2", "Unicode Common Locale Data Repository", "https://cldr.unicode.org/", "48.2", "2026-07-21", "Unicode License v3", "https://www.unicode.org/license.txt", _sha(root / "build_data/raw/unicode-cldr/48.2/manifest.json"), "Localized territory display names and official-language metadata used for complete local identity coverage"),
+        ("cia-world-factbook-2025", "CIA World Factbook country-name profiles", "https://www.cia.gov/the-world-factbook/", "factbook.json@8662a8b17a784841ab4528631b04090eb2f183eb", "2026-07-21", "Public domain", "https://www.cia.gov/site-policies/", _sha(root / "build_data/raw/cia-world-factbook/2025/manifest.json"), "English conventional and local country-name fields from the final structured Factbook profiles"),
+        ("wikidata-official-names-2026-07-21", "Wikidata official-name statements", "https://www.wikidata.org/", "2026-07-21 query snapshot", "2026-07-21", "CC0 1.0", "https://www.wikidata.org/wiki/Wikidata:Licensing", _sha(root / "build_data/raw/wikidata/2026-07-21/manifest.json"), "Three reviewed English formal-name statements used where the public-domain Factbook differs from current UN usage"),
+        ("un-protocol-country-names-2025", "UN Protocol official names of United Nations membership", "https://www.un.org/dgacm/en/content/protocol", "2025-02-05", "2026-07-21", "Credited excerpts under UN reuse guidance", "https://shop.un.org/rights-permissions", _sha(root / "build_data/raw/un-protocol/2025-02-05/manifest.json"), "Five short English formal-name excerpts used to resolve current-name differences; source PDF is not redistributed"),
     ]
     con.executemany("INSERT INTO source VALUES (?,?,?,?,?,?,?,?,?)", sources)
     ids: dict[str, int] = {}
@@ -544,11 +858,26 @@ def build_database(root: Path, normalized: dict[str, object]) -> Path:
             (ident, "land_borders.natural_earth", "natural-earth", "admin-0-map-units-50m"),
             (ident, "land_borders.review", "reviewed-borders", data["alpha2"]),
         ]
+        if data["formal_name_source_id"] is not None:
+            field_sources.append((
+                ident,
+                "formal_name",
+                data["formal_name_source_id"],
+                data["formal_name_source_record_id"],
+            ))
         if any(name["country_code"] == code and name["source_id"] == "reviewed-overrides" for name in normalized["country_names"]):
             field_sources.append((ident, "names.reviewed", "reviewed-overrides", data["numeric_code"]))
-        if any(name["country_code"] == code for name in normalized["local_names"]):
-            locator = next(name["source_record_id"] for name in normalized["local_names"] if name["country_code"] == code)
-            field_sources.append((ident, "local_names", "ungegn-country-names-2017", locator))
+        local_record = next(
+            name for name in normalized["local_names"] if name["country_code"] == code
+        )
+        field_sources.append(
+            (
+                ident,
+                "local_names",
+                local_record["source_id"],
+                local_record["source_record_id"],
+            )
+        )
         con.executemany("INSERT INTO field_source VALUES (?,?,?,?)", field_sources)
     for record in normalized["borders"]:
         data = record["data"]
@@ -568,8 +897,8 @@ def build_database(root: Path, normalized: dict[str, object]) -> Path:
     for record in sorted(normalized["local_names"], key=lambda r: (r["country_code"], r["data"]["language_code"])):
         d = record["data"]
         con.execute(
-            "INSERT INTO country_local_name VALUES (?,?,?,?,?,?,?,?,?,?,?)",
-            (ids[record["country_code"]], d["language_code"], d["language_name"], d["script_code"], d["short_name"], d["official_name"], d["romanized_short_name"], d["romanized_official_name"], int(d["is_official_language"]), record["source_id"], d["source_locator"]),
+            "INSERT INTO country_local_name VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            (ids[record["country_code"]], d["language_code"], d["language_name"], d["script_code"], d["short_name"], d["name_kind"], d["official_name"], d["romanized_short_name"], d["romanized_official_name"], int(d["is_official_language"]), d["language_status"], record["source_id"], d["source_locator"]),
         )
     capital_ids = {record["data"]["geonames_id"] for record in normalized["capitals"]}
     for ident, record in enumerate(sorted(normalized["capitals"], key=lambda r: (r["country_code"], r["data"]["name"])), 1):
@@ -593,7 +922,7 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
     reports.mkdir(parents=True, exist_ok=True)
     countries = normalized["countries"]
     coverage = {
-        "dataset_version": "2026.07.21.1",
+        "dataset_version": "2026.07.21.4",
         "countries": len(countries),
         "capitals": len(normalized["capitals"]),
         "major_cities": len(normalized["cities"]),
@@ -610,6 +939,46 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
         }),
         "local_names": len(normalized["local_names"]),
         "local_name_countries": len({record["country_code"] for record in normalized["local_names"]}),
+        "local_name_languages": len({record["data"]["language_code"] for record in normalized["local_names"]}),
+        "local_name_scripts": len({record["data"]["script_code"] for record in normalized["local_names"]}),
+        "romanized_local_names": sum(
+            record["data"]["romanized_short_name"] is not None
+            for record in normalized["local_names"]
+        ),
+        "national_official_local_names": sum(
+            record["data"]["name_kind"] == "national_official"
+            for record in normalized["local_names"]
+        ),
+        "locale_display_names": sum(
+            record["data"]["name_kind"] == "locale_display"
+            for record in normalized["local_names"]
+        ),
+        "official_language_local_names": sum(
+            record["data"]["is_official_language"]
+            for record in normalized["local_names"]
+        ),
+        "countries_without_local_names": sorted(
+            {record["country_code"] for record in countries}
+            - {record["country_code"] for record in normalized["local_names"]}
+        ),
+        "countries_without_official_language_local_names": sorted(
+            record["country_code"]
+            for record in normalized["local_names"]
+            if not record["data"]["is_official_language"]
+        ),
+        "english_formal_names": len(normalized["formal_names"]),
+        "distinct_english_formal_names": sum(
+            record["data"]["formal_name_status"] == "source_provided"
+            for record in normalized["formal_names"]
+        ),
+        "english_formal_names_same_as_short": sum(
+            record["data"]["formal_name_status"] == "same_as_short"
+            for record in normalized["formal_names"]
+        ),
+        "countries_without_english_formal_names": sorted(
+            {record["country_code"] for record in countries}
+            - {record["country_code"] for record in normalized["formal_names"]}
+        ),
         "reviewed_land_borders": len(normalized["borders"]),
         "countries_with_land_borders": len({
             code
@@ -676,18 +1045,29 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
             "docs": "API provenance, connectivity semantics, serialization, flashcards, and examples",
             "release": "Publication state is tracked on GitHub Releases and PyPI",
         },
+        {
+            "name": "4 — Official country identity",
+            "version": "0.4.0",
+            "status": "in progress",
+            "functions": "Complete local display names, English formal names, reviewed local official forms, language/script lookup, romanization, and coverage discovery",
+            "tests": "30 unit/pipeline tests, 221 doctests, clean-wheel examples, and release audit passed",
+            "dataset": f"{coverage['local_names']} local identities / {coverage['english_formal_names']} English formal names / {coverage['national_official_local_names']} reviewed local official forms",
+            "docs": "Identity guide, fun multilingual examples, evidence levels, source rules, and complete coverage metrics",
+            "release": "Local 0.4.0 release gate passed; commit, review, and publication pending",
+        },
     ]
     for name, version in [
-        ("4 — Geometry", "0.4.0"), ("5 — Statistics", "0.5.0"),
-        ("6 — Leaders", "0.6.0"), ("7 — Culture and institutions", "0.7.0"),
+        ("5 — National symbols and civic facts", "0.5.0"),
+        ("6 — Geometry", "0.6.0"),
+        ("7 — Statistics and institutions", "0.7.0"),
         ("8 — Advanced education and export", "0.8.0"), ("9 — Full-world hardening", "0.9.0"),
         ("Stable offline atlas", "1.0.0"),
     ]:
         milestones.append({"name": name, "version": version, "status": "planned", "functions": "—", "tests": "—", "dataset": "—", "docs": "—", "release": "—"})
     status = {
         "library_version": _project_version(root),
-        "schema_version": 3,
-        "dataset_version": "2026.07.21.1",
+        "schema_version": 4,
+        "dataset_version": "2026.07.21.4",
         "milestones": milestones,
         "coverage": coverage,
     }

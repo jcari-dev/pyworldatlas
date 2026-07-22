@@ -2,7 +2,7 @@
 
 > A compact, source-aware world atlas for Python that works completely offline.
 
-[![Source 0.3.1](https://img.shields.io/badge/source-0.3.1-1677be)](CHANGELOG.md)
+[![Source 0.4.0](https://img.shields.io/badge/source-0.4.0-1677be)](CHANGELOG.md)
 [![PyPI](https://img.shields.io/pypi/v/pyworldatlas.svg?label=PyPI)](https://pypi.org/project/pyworldatlas/)
 [![Python 3.10–3.14](https://img.shields.io/badge/python-3.10%E2%80%933.14-10233d)](https://www.python.org/)
 [![Runtime dependencies: 0](https://img.shields.io/badge/runtime%20dependencies-0-1b8a6b)](#small-by-design)
@@ -33,7 +33,10 @@ The bundled dataset contains every country and area in the captured UN M49
 scope, cross-checked against GeoNames country metadata. Version 0.3.0 added a
 reviewed land-border graph to the profile, coordinate, capital, and
 populated-place records established in earlier releases. Version 0.3.1 makes
-that graph easier to query, teach, and explain.
+that graph easier to query, teach, and explain. The 0.4.0 development milestone
+adds one sourced local-language identity for every record while continuing the
+stricter review of national official short and formal names. It also adds a
+separate sourced English formal-name layer for 240 profiles.
 
 | Current dataset | Coverage |
 |---|---:|
@@ -41,16 +44,22 @@ that graph easier to query, teach, and explain.
 | Primary capitals | 241 / 248 |
 | Capital coordinates | 241 / 241 |
 | Populated-place records | 6,265, including retained capitals |
+| English country/area identities | 248 / 248 |
+| Sourced English formal names | 240 / 248: 195 distinct long forms, 45 equal to the short form |
+| Selected local-language names | 248 / 248, across 80 languages and 21 scripts |
+| Reviewed national official short/formal names | 10 / 248 |
 | Reviewed land borders | 319 undirected relationships |
 | Countries and areas without an accepted land border | 85 |
 | Runtime dependencies | 0 |
 | Bundled databases | 1 SQLite file |
 
-The 0.3.1 checkout includes richer country profiles, dependency-free coordinate
+The 0.4.0 development checkout includes richer country profiles, reviewed
+multilingual country identities, dependency-free coordinate
 calculations, flag emoji, discovery cards, reproducible sampling, structured
 flashcards, reviewed neighbors, and shortest land-border paths. Boundary
-geometry, historical statistics, national leaders, interactive learning
-applications, and exports remain later work.
+geometry, anthem and motto records, civic events, historical statistics,
+national institutions, interactive learning applications, and exports remain
+later work.
 
 ## Installation
 
@@ -70,7 +79,7 @@ python -m pip install -e . -e pipeline
 You can also test the exact local wheel after running the release build:
 
 ```console
-python -m pip install --no-index --no-deps dist/pyworldatlas-0.3.1-py3-none-any.whl
+python -m pip install --no-index --no-deps dist/pyworldatlas-0.4.0-py3-none-any.whl
 ```
 
 The package runtime supports Python 3.10 through 3.14 during the 0.x release
@@ -89,6 +98,7 @@ series. Python versions are only claimed as release-supported after CI passes.
 | Capital records | `country.capital`, `.coordinates`, `.timezone_id` |
 | Major cities | `atlas.major_cities("Japan", limit=5)` |
 | Rich profile | `country.population`, `.currency`, `.languages`, `.calling_codes` |
+| English name layers | `country.name`, `.official_name`, `.formal_name` |
 | Flags and calculated facts | `country.flag_emoji`, `.population_density` |
 | Discovery cards | `country.discovery_card()` |
 | Stable country samples | `atlas.sample_countries(count=5, seed=42)` |
@@ -102,7 +112,9 @@ series. Python versions are only claimed as release-supported after CI passes.
 | Land components | `atlas.countries_reachable_by_land("Portugal")` |
 | Borderless entities | `atlas.countries_with_no_land_borders()` |
 | Source inspection | `country.sources` |
-| Official local names | `country.local_names`, `country.name_in("pt")` |
+| Local-language names | `country.local_name("es")`, `country.name_in("zh")` |
+| Name coverage | `atlas.countries_with_local_names(script_code="Jpan")` |
+| Formal-name coverage | `atlas.countries_with_formal_names()` |
 | Serialization | `country.to_dict()`, `country.to_json()` |
 | Version inspection | `atlas.dataset_info()` |
 
@@ -119,6 +131,7 @@ with Atlas() as atlas:
 
     print(country.name)
     print(country.official_name)
+    print(country.formal_name)
     print(country.flag)
     print(country.flag_emoji)
     print(country.codes.alpha2)
@@ -142,6 +155,56 @@ with Atlas() as atlas:
         print(country.capital.population)
         print(country.capital.timezone_id)
 ```
+
+## Country names and writing systems
+
+English display, canonical, and formal names are separate fields:
+
+```python
+from pyworldatlas import Atlas
+
+with Atlas() as atlas:
+    turkey = atlas.country("TR")
+
+    print(turkey.name)           # Turkey (familiar lookup/display name)
+    print(turkey.official_name)  # Türkiye (canonical UN M49 identity)
+    print(turkey.formal_name)    # Republic of Türkiye (sourced long form)
+```
+
+The English formal-name layer covers 240 profiles. A formal name can equal the
+short form: Japan has ``formal_name == "Japan"`` and
+``has_distinct_formal_name is False``. Eight areas outside the captured source
+scope return ``None``; the package does not manufacture a constitutional name.
+
+Every country and area has one sourced local-language display name. Reviewed
+UNGEGN records add formal national names and romanization where the publication
+supplies them:
+
+```python
+from pyworldatlas import Atlas
+
+with Atlas() as atlas:
+    dominican = atlas.country("DO")
+    print(dominican.flag, dominican.name_in("es"))
+
+    for code, language in (("CN", "zh"), ("IN", "hi"), ("JP", "ja")):
+        country = atlas.country(code)
+        local = country.local_name(language)
+        print(local.short_name, local.formal_name, local.script_code)
+        print(local.romanized_short_name)
+
+    print([
+        country.name
+        for country in atlas.countries_with_local_names(language_code="es")
+    ])
+```
+
+The local display layer covers all 248 records across 80 languages and 21
+scripts. ``local.kind`` is ``"locale_display"`` for a Unicode CLDR label and
+``"national_official"`` for a reviewed UNGEGN short/formal name. Formal names
+and romanizations on the local record remain ``None`` until their authoritative
+source supplies them. This local ``formal_name`` is language-specific and is
+separate from ``country.formal_name``, which is English.
 
 ## Country discovery and education
 
@@ -258,7 +321,7 @@ At runtime PyWorldAtlas does not:
 
 ## Data you can trace
 
-The 0.3.1 checkout uses:
+The 0.4.0 development checkout uses:
 
 - **United Nations M49** for canonical identities, standard codes, regions, and
   subregions.
@@ -267,11 +330,21 @@ The 0.3.1 checkout uses:
   timezone identifiers, GeoNames IDs, and one input to border review.
 - **Natural Earth** public-domain 1:50m map units as an independent land-border
   topology check.
+- **Unicode CLDR 48.2** for one localized territory display name and
+  official-language selection per country or area.
+- **CIA World Factbook** public-domain country-name profiles for the base
+  English formal-name layer.
+- **United Nations Protocol and Liaison Service** for five current English
+  formal-name excerpts where the final Factbook snapshot differs from current
+  UN usage.
+- **Wikidata** CC0 official-name statements for three reviewed English
+  formal-name corrections.
 
-The reviewed local-name records use the **UNGEGN List of Country Names**
-(``E/CONF.105/13/CRP.13``) for national official short and formal names. Current
-coverage is five records across Brazil and Switzerland. The captured source
-artifact and reviewed rows include checksums and exact entry/page locators.
+The stricter local formal-name records use the **UNGEGN List of Country Names**
+(``E/CONF.105/13/CRP.13``) for national official short and formal names. Ten
+selected records currently have this reviewed evidence level. CLDR and UNGEGN
+values include exact source locators; both snapshots and the deterministic CLDR
+extractor are retained with the builder.
 
 Raw snapshots are preserved with SHA-256 manifests. The separate builder emits
 inspectable normalized JSON Lines before generating SQLite. Missing values stay
@@ -305,7 +378,7 @@ with Atlas() as atlas:
 - **Schema version** describes compatibility with the bundled SQLite structure.
 - **Dataset version** identifies the captured source snapshot.
 
-For this development checkout they are `0.3.1`, `3`, and `2026.07.21.1`.
+For this development checkout they are `0.4.0`, `4`, and `2026.07.21.4`.
 
 ## Documentation and roadmap
 
@@ -317,15 +390,19 @@ For this development checkout they are `0.3.1`, `3`, and `2026.07.21.1`.
 - 0.2.1 execution status: [RELEASE_0_2_STATUS.md](RELEASE_0_2_STATUS.md)
 - 0.3.0 release status: [RELEASE_0_3_STATUS.md](RELEASE_0_3_STATUS.md)
 - 0.3.1 release status: [RELEASE_0_3_1_STATUS.md](RELEASE_0_3_1_STATUS.md)
+- 0.4.0 development status: [RELEASE_0_4_STATUS.md](RELEASE_0_4_STATUS.md)
+- Country identity contract: [COUNTRY_IDENTITY_DATA_SPEC.md](COUNTRY_IDENTITY_DATA_SPEC.md)
 - Maintainer release process: [RELEASING.md](RELEASING.md)
 
-Version 0.3.1 polishes the reviewed land-border API and its learning tools.
-Later releases extend boundary geometry, historical statistics, institutions,
-culture, and exports.
+Version 0.4.0 is the official country-identity milestone. It remains in
+development while reviewed coverage expands. National symbols and civic facts,
+boundary geometry, historical statistics, institutions, and exports follow in
+later milestones.
 
 ## License and attribution
 
 PyWorldAtlas code is available under the [MIT License](LICENSE). GeoNames data
-is provided under CC BY 4.0, and Natural Earth data is public domain. Other
-source terms and notices are recorded in
+is provided under CC BY 4.0, Natural Earth and CIA World Factbook data are
+public domain, Wikidata structured data is CC0, and Unicode CLDR data is used
+under the Unicode License v3. Other source terms and notices are recorded in
 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
