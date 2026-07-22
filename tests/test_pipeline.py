@@ -4,12 +4,16 @@ from pathlib import Path
 import unittest
 
 from pyworldatlas_builder.core import (
+    EXPECTED_ANTHEM_COUNT,
     EXPECTED_BORDER_COUNT,
     EXPECTED_CAPITAL_COUNT,
     EXPECTED_CITY_COUNT,
     EXPECTED_COUNTRY_COUNT,
+    EXPECTED_DEMONYM_COUNT,
     EXPECTED_ENGLISH_FORMAL_NAME_COUNT,
     EXPECTED_LOCAL_NAME_COUNT,
+    EXPECTED_MOTTO_COUNT,
+    EXPECTED_TIMEZONE_COUNTRY_COUNT,
     build_database,
     normalize,
     parse_un_m49,
@@ -39,6 +43,14 @@ class PipelineTests(unittest.TestCase):
             len(records["formal_names"]), EXPECTED_ENGLISH_FORMAL_NAME_COUNT
         )
         self.assertEqual(len(records["borders"]), EXPECTED_BORDER_COUNT)
+        self.assertEqual(len(records["anthems"]), EXPECTED_ANTHEM_COUNT)
+        self.assertEqual(len(records["mottos"]), EXPECTED_MOTTO_COUNT)
+        self.assertEqual(len(records["demonyms"]), EXPECTED_DEMONYM_COUNT)
+        self.assertEqual(
+            len({record["country_code"] for record in records["timezones"]}),
+            EXPECTED_TIMEZONE_COUNTRY_COUNT,
+        )
+        self.assertEqual(len(records["language_profiles"]), 722)
         self.assertTrue(all(record["data"]["population"] is None or record["data"]["population"] >= 0 for record in records["countries"]))
         self.assertTrue(all(isinstance(record["data"]["calling_codes"], list) for record in records["countries"]))
         self.assertTrue(all(isinstance(record["data"]["language_codes"], list) for record in records["countries"]))
@@ -142,12 +154,48 @@ class PipelineTests(unittest.TestCase):
         factbook_path = ROOT / "build_data/raw/cia-world-factbook/2025/country_identity.json"
         self.assertEqual(
             sha256(factbook_path.read_bytes()).hexdigest(),
-            "7127b6a1e653b93984fd821236ab408377b8b43e135de2b4b60a47974460e77c",
+            "4f05fc72f0e63f87c9963967c2576cbb01f93de41684e07fedfb44a2bb93a6ee",
         )
         wikidata_path = ROOT / "build_data/raw/wikidata/2026-07-21/official-names.json"
         self.assertEqual(
             sha256(wikidata_path.read_bytes()).hexdigest(),
             "841f3d5ae07f18469dc302e326954484d6cf812ee5bbbb07ff63f2edec2e85fe",
+        )
+
+    def test_reference_snapshots_are_pinned_and_complete(self):
+        expected_hashes = {
+            "build_data/raw/unicode-cldr/48.2/country_reference.json":
+                "5e48a1c193b64fb02941ea8c369a92a965618da7a532ec3bd1fe82b452badd79",
+            "build_data/raw/iana/2026-07-22/language-subtag-registry.txt":
+                "be1fad86a99e3a932d07b80c9b3c271ec2381a5909ce22420144e5077ab0a43a",
+            "build_data/raw/geonames/2026-07-22/timeZones.txt":
+                "ea6f8bdcc259c21c562e8f7e7e0b0457cb89403bed60c76aac49ccee9a9ed18c",
+            "build_data/raw/wikidata/2026-07-22/national-mottos.json":
+                "4af587a6f19febd169b99850669ecdc426ac2b86ef5399e3eab2f5e51d3e448c",
+        }
+        for relative_path, expected_hash in expected_hashes.items():
+            self.assertEqual(
+                sha256((ROOT / relative_path).read_bytes()).hexdigest(),
+                expected_hash,
+            )
+
+        records = normalize(ROOT)
+        self.assertEqual(
+            {record["country_code"] for record in records["countries"]}
+            - {record["country_code"] for record in records["timezones"]},
+            {"BV", "HM"},
+        )
+        self.assertEqual(
+            len({record["data"]["code"] for record in records["language_profiles"]}),
+            503,
+        )
+        self.assertEqual(
+            len({
+                record["data"]["currency_code"]
+                for record in records["countries"]
+                if record["data"]["currency_code"]
+            }),
+            153,
         )
 
     def test_database_build_is_reproducible(self):

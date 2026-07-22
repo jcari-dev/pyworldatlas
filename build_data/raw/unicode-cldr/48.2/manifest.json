@@ -11,7 +11,13 @@
     "sha256": "033e6b58bf52d0a46f4720fe1d259c9e8ba1ae92e524841bd918c1956c84b252",
     "size_bytes": 105955
   },
+  "reference_file": {
+    "path": "country_reference.json",
+    "sha256": "5e48a1c193b64fb02941ea8c369a92a965618da7a532ec3bd1fe82b452badd79",
+    "size_bytes": 179269
+  },
   "extractor": "pipeline/scripts/extract_cldr_country_identity.py",
+  "reference_extractor": "pipeline/scripts/extract_cldr_reference_data.py",
   "license_name": "Unicode License v3",
   "license_url": "https://www.unicode.org/license.txt"
 }

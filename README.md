@@ -2,7 +2,7 @@
 
 > A compact, source-aware world atlas for Python that works completely offline.
 
-[![Source 0.5.0](https://img.shields.io/badge/source-0.5.0-1677be)](CHANGELOG.md)
+[![Source 0.6.0](https://img.shields.io/badge/source-0.6.0-1677be)](CHANGELOG.md)
 [![PyPI](https://img.shields.io/pypi/v/pyworldatlas.svg?label=PyPI)](https://pypi.org/project/pyworldatlas/)
 [![Python 3.10–3.14](https://img.shields.io/badge/python-3.10%E2%80%933.14-10233d)](https://www.python.org/)
 [![Runtime dependencies: 0](https://img.shields.io/badge/runtime%20dependencies-0-1b8a6b)](#small-by-design)
@@ -19,21 +19,24 @@ third-party dependency.
 from pyworldatlas import Atlas
 
 with Atlas() as atlas:
-    japan = atlas.country("Japan")
+    brazil = atlas.country("Brazil")
 
-    print(japan.capital.name)                  # Tokyo
-    print(japan.capital.coordinates.as_tuple())
-    print(atlas["DO"].name)                    # Dominican Republic
-    print("France" in atlas)                   # True
+    print(brazil.flag, brazil.name_in("pt"), brazil.capital.name)
+    print(brazil.anthem.title)                 # Hino Nacional Brasileiro
+    print(brazil.motto.english_text)            # Order and Progress
+    print([row.capital.name for row in atlas.nearest_capitals(
+        "Tokyo", country="JP", limit=3
+    )])
 ```
 
 ## Educational purpose and editorial policy
 
 PyWorldAtlas is a purely educational package that provides offline access to
 factual geographic data. It does not provide political commentary, promote a
-viewpoint, rank people or places, or decide geographic disagreements. Values
-follow documented source conventions, and the package states its coverage and
-limitations clearly.
+viewpoint, or decide geographic disagreements. Factual ranking methods only
+sort documented numeric fields; they are not judgments about countries or
+people. Values follow documented source conventions, and the package states
+its coverage and limitations clearly.
 
 Every person, place, language, and culture must be described respectfully.
 Hateful, harassing, threatening, demeaning, or discriminatory content is not
@@ -47,10 +50,11 @@ The bundled dataset contains every country and area in the captured UN M49
 scope, cross-checked against GeoNames country metadata. Version 0.3.0 added a
 reviewed land-border graph to the profile, coordinate, capital, and
 populated-place records established in earlier releases. Version 0.3.1 makes
-that graph easier to query, teach, and explain. Version 0.5.0 adds one sourced
+that graph easier to query, teach, and explain. Version 0.5.0 added one sourced
 local-language identity for every record, a separate sourced English
 formal-name layer for 240 profiles, and the package's educational and editorial
-policy.
+policy. Version 0.6.0 adds country reference facts, practical metadata, profile
+filters, deterministic rankings, and nearest-capital discovery.
 
 | Current dataset | Coverage |
 |---|---:|
@@ -62,18 +66,22 @@ policy.
 | Sourced English formal names | 240 / 248: 195 distinct long forms, 45 equal to the short form |
 | Selected local-language names | 248 / 248, across 80 languages and 21 scripts |
 | Reviewed national official short/formal names | 10 / 248 |
+| Anthem titles | 234 / 248 |
+| Reviewed source-listed mottos | 32 / 248 |
+| English demonym profiles | 227 / 248 |
+| Country timezone records | 417 across 246 profiles |
+| Country-language metadata | 722 records across 245 profiles |
+| Postal-code formats | 176 / 248 |
 | Reviewed land borders | 319 undirected relationships |
 | Countries and areas without an accepted land border | 85 |
 | Runtime dependencies | 0 |
 | Bundled databases | 1 SQLite file |
 
-The 0.5.0 release includes richer country profiles, reviewed
-multilingual country identities, dependency-free coordinate
-calculations, flag emoji, discovery cards, reproducible sampling, structured
-flashcards, reviewed neighbors, and shortest land-border paths. Boundary
-geometry, anthem and motto records, reference dates, historical statistics,
-national institutions, interactive learning applications, and exports remain
-later work.
+The 0.6.0 release includes richer currency and language objects, complete
+captured country timezones, postal formats, anthem titles, reviewed mottos,
+demonyms, exact profile filters, typed rankings, and nearest-capital results.
+Boundary geometry, GeoJSON, point-in-country lookup, anthem credits/dates, and
+reference dates remain outside this release.
 
 ## Installation
 
@@ -93,7 +101,7 @@ python -m pip install -e . -e pipeline
 You can also test the exact local wheel after running the release build:
 
 ```console
-python -m pip install --no-index --no-deps dist/pyworldatlas-0.5.0-py3-none-any.whl
+python -m pip install --no-index --no-deps dist/pyworldatlas-0.6.0-py3-none-any.whl
 ```
 
 The package runtime supports Python 3.10 through 3.14 during the 0.x release
@@ -112,6 +120,11 @@ series. Python versions are only claimed as release-supported after CI passes.
 | Capital records | `country.capital`, `.coordinates`, `.timezone_id` |
 | Major cities | `atlas.major_cities("Japan", limit=5)` |
 | Rich profile | `country.population`, `.currency`, `.languages`, `.calling_codes` |
+| Reference facts | `country.anthem`, `.motto`, `.demonym`, `.postal_code` |
+| Timezone profiles | `country.timezones`, `.timezone_ids` |
+| Practical filters | `atlas.countries(currency_code="EUR", timezone_id="Europe/Paris")` |
+| Rankings | `atlas.rank("population", limit=10)` |
+| Nearby capitals | `atlas.nearest_capitals("Tokyo", country="JP")` |
 | English name layers | `country.name`, `.official_name`, `.formal_name` |
 | Flags and calculated facts | `country.flag_emoji`, `.population_density` |
 | Discovery cards | `country.discovery_card()` |
@@ -335,24 +348,26 @@ At runtime PyWorldAtlas does not:
 
 ## Data you can trace
 
-The 0.5.0 release uses:
+The 0.6.0 release uses:
 
 - **United Nations M49** for canonical identities, standard codes, regions, and
   subregions.
 - **GeoNames** for capitals, populated places, WGS84 coordinates, population
   snapshots, currencies, language and calling codes, country-code domains,
-  timezone identifiers, GeoNames IDs, and one input to border review.
+  timezone identifiers, postal formats, GeoNames IDs, and one input to border review.
 - **Natural Earth** public-domain 1:50m map units as an independent land-border
   topology check.
-- **Unicode CLDR 48.2** for one localized territory display name and
-  official-language selection per country or area.
-- **CIA World Factbook** public-domain country-name profiles for the base
-  English formal-name layer.
+- **Unicode CLDR 48.2** for localized territory display names, currency
+  labels/symbols/minor units, language labels, and likely scripts.
+- **IANA Language Subtag Registry** as a language-name fallback for captured
+  codes not labelled by CLDR.
+- **CIA World Factbook** public-domain structured fields for the base English
+  formal-name layer, anthem titles, and English demonyms.
 - **United Nations Protocol and Liaison Service** for five current English
   formal-name excerpts where the final Factbook snapshot differs from current
   UN usage.
-- **Wikidata** CC0 official-name statements for three reviewed English
-  formal-name corrections.
+- **Wikidata** CC0 statements for three reviewed English formal-name
+  corrections and 32 explicitly reviewed source-listed mottos.
 
 The stricter local formal-name records use the **UNGEGN List of Country Names**
 (``E/CONF.105/13/CRP.13``) for national official short and formal names. Ten
@@ -392,7 +407,7 @@ with Atlas() as atlas:
 - **Schema version** describes compatibility with the bundled SQLite structure.
 - **Dataset version** identifies the captured source snapshot.
 
-For this release they are `0.5.0`, `5`, and `2026.07.21.5`.
+For this release they are `0.6.0`, `6`, and `2026.07.22.6`.
 
 ## Documentation and roadmap
 
@@ -410,12 +425,12 @@ For this release they are `0.5.0`, `5`, and `2026.07.21.5`.
 - Community code of conduct: [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
 - Contribution and factual-correction guide: [CONTRIBUTING.md](CONTRIBUTING.md)
 - 0.5.0 release status: [RELEASE_0_5_STATUS.md](RELEASE_0_5_STATUS.md)
+- 0.6.0 release status: [RELEASE_0_6_STATUS.md](RELEASE_0_6_STATUS.md)
 - Maintainer release process: [RELEASING.md](RELEASING.md)
 
-Version 0.5.0 includes the completed country-identity milestone and establishes
-the project's educational and editorial policy. National symbols and reference
-facts move to 0.6.0; boundary geometry,
-historical statistics, institutions, and exports follow later.
+Version 0.6.0 adds the country-reference and discovery milestone. Version 0.7.0
+is reserved for physical geography. Boundary geometry, GeoJSON, bounding boxes,
+centroids, and point-in-country lookup are deferred beyond 0.7.
 
 ## License and attribution
 

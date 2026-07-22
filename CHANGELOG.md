@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.6.0 — 2026-07-22
+
+- Added 234 source-provided national-anthem title profiles without lyrics,
+  audio, contributor credits, or adoption histories.
+- Added 32 explicitly reviewed source-listed national mottos and published an
+  include/exclude decision for every captured statement.
+- Added 227 English demonym profiles with source-preserved noun and adjective
+  forms.
+- Enriched currencies with CLDR English names, common symbols, minor-unit
+  digits, and source references.
+- Added language names and likely scripts for 722 country-language records,
+  using the IANA Language Subtag Registry as a name fallback where needed.
+- Added 417 country-level timezone records across 246 profiles and 176
+  postal-code formats.
+- Added exact currency, language, script, and timezone filters.
+- Added typed country rankings for population, area, density, reviewed border
+  count, and bundled major-city count.
+- Added typed nearest-capital discovery using the existing great-circle
+  distance implementation.
+- Expanded discovery cards, serialization, source metadata, coverage reports,
+  tests, runnable examples, and the public API reference.
+- Reworked the documentation opening around useful and educational examples,
+  with dedicated country-reference and rankings guides.
+- Deferred reference dates, anthem credits/dates, boundary geometry, GeoJSON,
+  bounding boxes, centroids, and point-in-country lookup.
+
 ## 0.5.0 — 2026-07-21
 
 - Added one sourced local-language identity for all 248 countries and areas,

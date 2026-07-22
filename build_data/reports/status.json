@@ -1,7 +1,7 @@
 {
-  "library_version": "0.5.0",
-  "schema_version": 5,
-  "dataset_version": "2026.07.21.5",
+  "library_version": "0.6.0",
+  "schema_version": 6,
+  "dataset_version": "2026.07.22.6",
   "milestones": [
     {
       "name": "0 \u2014 Clean foundation",
@@ -71,20 +71,20 @@
       "tests": "Policy-document integrity, public-model scope, source-role, example-language, documentation, and release audits",
       "dataset": "Reviewed geographic dataset with updated provenance and policy metadata; no new narrative fields",
       "docs": "Educational purpose, source scope, geographic conventions, community standards, and correction guidance",
-      "release": "Complete 0.5.0 release candidate; publication pending"
+      "release": "Published as v0.5.0"
     },
     {
-      "name": "6 \u2014 National symbols and reference facts",
+      "name": "6 \u2014 Country reference and discovery",
       "version": "0.6.0",
-      "status": "planned",
-      "functions": "\u2014",
-      "tests": "\u2014",
-      "dataset": "\u2014",
-      "docs": "\u2014",
-      "release": "\u2014"
+      "status": "complete",
+      "functions": "Anthem titles, reviewed mottos, demonyms, complete timezone profiles, postal formats, richer currency and language metadata, profile filters, rankings, and nearest capitals",
+      "tests": "Source-scope, review-decision, typed-model, ranking, filtering, serialization, documentation, and clean-wheel release gates",
+      "dataset": "234 anthem profiles / 32 reviewed mottos / 227 demonym profiles / 246 timezone profiles / 176 postal formats / 722 country-language records",
+      "docs": "Reference-facts guide, example gallery, rankings, filters, provenance, coverage boundaries, and runnable examples",
+      "release": "Complete 0.6.0 release candidate; publication pending"
     },
     {
-      "name": "7 \u2014 Geometry",
+      "name": "7 \u2014 Physical geography",
       "version": "0.7.0",
       "status": "planned",
       "functions": "\u2014",
@@ -94,7 +94,7 @@
       "release": "\u2014"
     },
     {
-      "name": "8 \u2014 Statistics and institutions",
+      "name": "8 \u2014 Boundary geometry and spatial queries",
       "version": "0.8.0",
       "status": "planned",
       "functions": "\u2014",
@@ -104,7 +104,7 @@
       "release": "\u2014"
     },
     {
-      "name": "9 \u2014 Advanced education, export, and full-world hardening",
+      "name": "9 \u2014 Advanced education and full-world hardening",
       "version": "0.9.0",
       "status": "planned",
       "functions": "\u2014",
@@ -125,7 +125,7 @@
     }
   ],
   "coverage": {
-    "dataset_version": "2026.07.21.5",
+    "dataset_version": "2026.07.22.6",
     "countries": 248,
     "capitals": 241,
     "major_cities": 6265,
@@ -136,6 +136,20 @@
     "language_profiles": 245,
     "top_level_domain_profiles": 248,
     "observed_timezone_profiles": 242,
+    "timezone_profiles": 246,
+    "timezone_records": 417,
+    "postal_code_formats": 176,
+    "currency_symbols": 245,
+    "currency_minor_units": 247,
+    "language_metadata_records": 722,
+    "language_metadata_countries": 245,
+    "language_script_records": 709,
+    "anthem_titles": 234,
+    "anthem_countries": 234,
+    "mottos": 32,
+    "motto_countries": 32,
+    "demonyms": 227,
+    "demonym_countries": 227,
     "local_names": 248,
     "local_name_countries": 248,
     "local_name_languages": 80,
@@ -167,7 +181,7 @@
     "reviewed_land_borders": 319,
     "countries_with_land_borders": 163,
     "countries_with_no_land_borders": 85,
-    "database_sha256": "ccce4893bf89ca864957766be0d4a3c4fce8b0290f19aa76d41ce1a3e3fc209f",
+    "database_sha256": "4efc9dbd68a84c7126c1367689301cddff711b9dc35a5117ecaa4b1f8dc347d8",
     "validation": "PASS"
   }
 }

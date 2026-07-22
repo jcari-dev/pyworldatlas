@@ -8,9 +8,9 @@ area. It is designed for accurate display, search, education, and serialization
 without guessing a constitutional name, translation, or romanization.
 
 The 0.4 development milestone completed the official-name layer. Version 0.5.0
-publishes that work with the educational and editorial audit. National anthem titles,
-mottos, and clearly labelled reference dates move to 0.6.0 and are defined below so
-that later data does not force an incompatible API.
+published that work with the educational and editorial audit. Version 0.6.0
+adds a deliberately smaller country-reference contract: anthem titles,
+reviewed source-listed mottos, demonyms, and practical profile metadata.
 
 ## Country-identity release boundary
 
@@ -169,29 +169,40 @@ Generated reports must expose at least:
 
 Documentation must place these numbers beside every coverage claim.
 
-## Version 0.6.0: national symbols and reference facts
+## Version 0.6.0: country reference facts
 
-The following models are reserved for a later minor release after their source
-matrix is approved. They are not part of the 0.4.0 API.
+The 0.6 models are optional, immutable, source-aware records. Missing coverage
+remains explicit.
 
 ### National anthem
 
-- National-script title and English title.
-- Language and script.
-- Adoption and readoption dates with explicit precision.
-- Contributor credits with roles such as lyricist and composer.
-- Per-record source reference.
-- No lyrics or audio.
+- Source title and optional source-provided English title.
+- Per-record source reference and exact locator.
+- No lyrics, audio, contributor credits, adoption dates, or narrative history.
 
 ### National motto
 
-- National-script text.
-- Language and script.
-- Published English translation when an authoritative source supplies one.
-- Official or traditional status, stated explicitly.
-- Per-record source reference.
+- Selected source label and language code.
+- English label when the captured statement supplies one.
+- Per-record source reference and exact statement locator.
+- An explicit review decision for every captured statement.
+- No inferred official, traditional, constitutional, statutory, or current
+  legal status.
 
-### Reference date
+### Demonym
+
+- Source-preserved English noun and adjective forms.
+- Per-record source reference and exact locator.
+- No generated gender, number, local-language, or alternate forms.
+
+### Practical metadata
+
+- Currency name, common symbol, and minor-unit digits.
+- Language English name and likely script.
+- Country-level timezone records and captured offsets.
+- Postal-code display format and optional source regular expression.
+
+### Deferred reference dates
 
 A country does not receive one context-free `foundation_date`. Instead, each
 record identifies the event it dates, for example:
@@ -202,11 +213,12 @@ record identifies the event it dates, for example:
 - State established or unified.
 - United Nations admission.
 
-Dates retain year, month, or day precision exactly as supported by the source.
-No event is included merely to choose a side in a disputed historical claim.
+Dates would retain year, month, or day precision exactly as supported by the
+source. They are not part of 0.6.0 because a uniform source and review contract
+has not been approved.
 
 ## Release rule
 
-The country-identity layer ships in 0.5.0 only after the declared English and
-local coverage, tests, coverage report, examples, HTML documentation, doctests,
-wheel smoke tests, policy checks, and source audit all pass.
+The 0.6 reference layer ships only after exact source checksums, motto decisions,
+declared coverage, typed-model tests, examples, HTML documentation, doctests,
+wheel smoke tests, policy checks, and source audits all pass.

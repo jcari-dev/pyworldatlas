@@ -1,0 +1,15 @@
+{
+  "source_id": "iana-language-subtags-2026-06-14",
+  "source_version": "File-Date 2026-06-14",
+  "retrieved_at": "2026-07-22T00:00:00Z",
+  "license_name": "CC0 1.0",
+  "license_url": "https://www.iana.org/help/licensing-terms",
+  "files": [
+    {
+      "url": "https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry",
+      "path": "language-subtag-registry.txt",
+      "sha256": "be1fad86a99e3a932d07b80c9b3c271ec2381a5909ce22420144e5077ab0a43a",
+      "size_bytes": 731605
+    }
+  ]
+}

@@ -48,28 +48,27 @@ in this repository under `docs/source/`.
 
 ## Prepare and publish a release
 
-> **Current candidate:** 0.5.0 includes the merged country-identity milestone
-> and the educational-use policy. The existing `v0.4.0` tag is retained and
-> must not be reused. Publish 0.5.0 only after its pull request is merged to
+> **Current candidate:** 0.6.0 adds the country-reference and discovery
+> milestone. Publish 0.6.0 only after its pull request is merged to
 > `main` and CI is green.
 
-### Current 0.5.0 sequence
+### Current 0.6.0 sequence
 
-From the repository root on the `release/0.5.0` branch:
+From the repository root on the `release/0.6.0` branch:
 
 ```console
-python maintain.py prepare-release 0.5.0
+python maintain.py prepare-release 0.6.0
 git status
 git add -A
-git commit -m "Prepare PyWorldAtlas 0.5.0"
-git push -u origin release/0.5.0
+git commit -m "Prepare PyWorldAtlas 0.6.0"
+git push -u origin release/0.6.0
 ```
 
 On GitHub, open a pull request with:
 
 - Base branch: `main`
-- Compare branch: `release/0.5.0`
-- Title: `Release PyWorldAtlas 0.5.0`
+- Compare branch: `release/0.6.0`
+- Title: `Release PyWorldAtlas 0.6.0`
 
 Wait for every CI job to pass, review the file and source changes, and merge the
 pull request. Do not create the release tag from the feature branch.
@@ -79,10 +78,10 @@ After the merge, return to the terminal and tag the exact merged `main` commit:
 ```console
 git switch main
 git pull --ff-only origin main
-python maintain.py prepare-release 0.5.0
+python maintain.py prepare-release 0.6.0
 git status
-git tag -a v0.5.0 -m "Release 0.5.0"
-git push origin v0.5.0
+git tag -a v0.6.0 -m "Release 0.6.0"
+git push origin v0.6.0
 ```
 
 The tag starts the release workflow. Approve the protected `pypi` environment
@@ -94,7 +93,7 @@ gate first:
 
 ```console
 python maintain.py bootstrap
-python maintain.py prepare-release 0.5.0
+python maintain.py prepare-release 0.6.0
 ```
 
 If Windows reports that an existing file under `dist` is in use, close the
@@ -102,7 +101,7 @@ terminal, upload dialog, or file preview holding it. To run the same release
 gate without replacing that directory, choose another ignored output path:
 
 ```console
-python maintain.py prepare-release 0.5.0 --output-dir build/release-dist
+python maintain.py prepare-release 0.6.0 --output-dir build/release-dist
 ```
 
 Review `release-manifest.json` and `SHA256SUMS` in the selected output directory.
@@ -127,8 +126,8 @@ Verify the public package in a new environment:
 
 ```console
 py -3.10 -m venv .venv-live
-.venv-live\Scripts\python -m pip install --no-cache-dir pyworldatlas==0.5.0
-.venv-live\Scripts\python -c "from pyworldatlas import Atlas; a=Atlas(); print(len(a), len(a.countries_with_formal_names()), a.country('Republic of Türkiye').alpha2); a.close()"
+.venv-live\Scripts\python -m pip install --no-cache-dir pyworldatlas==0.6.0
+.venv-live\Scripts\python -c "from pyworldatlas import Atlas; a=Atlas(); j=a.country('Japan'); print(len(a), j.flag, j.anthem.title, len(a.rank('population', limit=5))); a.close()"
 ```
 
 Finally, verify the public pages:
@@ -151,9 +150,9 @@ before PyPI accepts the version, repair the workflow and rerun it. If PyPI has
 accepted the version, preserve it and use a patch release for any code or
 metadata correction.
 
-Version 0.5.0 establishes the package's purely educational scope. It must pass
-the policy-integrity tests alongside the ordinary runtime, pipeline,
-documentation, and clean-wheel gates.
+Version 0.6.0 preserves the package's educational scope while adding factual
+reference and discovery tools. It must pass the policy-integrity tests
+alongside the runtime, pipeline, documentation, and clean-wheel gates.
 
 Never tag a dirty branch or an unmerged candidate. The tag-triggered workflow
 is the single path to PyPI, the GitHub Release, and the documentation site.

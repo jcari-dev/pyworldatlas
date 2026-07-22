@@ -34,11 +34,21 @@ class AtlasTests(unittest.TestCase):
         self.assertEqual(japan.formal_name, "Japan")
         self.assertFalse(japan.has_distinct_formal_name)
         self.assertEqual(japan.population, 126_529_100)
-        self.assertEqual((japan.currency.code, japan.currency.name), ("JPY", "Yen"))
+        self.assertEqual(
+            (japan.currency.code, japan.currency.name, japan.currency.symbol),
+            ("JPY", "Japanese Yen", "¥"),
+        )
+        self.assertEqual(japan.currency.minor_unit_digits, 0)
         self.assertEqual(japan.calling_codes, ("+81",))
         self.assertEqual(japan.top_level_domain, ".jp")
         self.assertEqual(tuple(language.code for language in japan.languages), ("ja",))
+        self.assertEqual(
+            (japan.languages[0].name, japan.languages[0].script_code),
+            ("Japanese", "Jpan"),
+        )
         self.assertIn("Asia/Tokyo", japan.observed_timezones)
+        self.assertEqual(japan.timezone_ids, ("Asia/Tokyo",))
+        self.assertEqual(japan.postal_code.format, "###-####")
         self.assertEqual(japan.capital_coordinates, japan.capital.coordinates)
 
     def test_discovery_properties_and_card(self):
@@ -56,6 +66,9 @@ class AtlasTests(unittest.TestCase):
         self.assertEqual(card.flag_emoji, "🇯🇵")
         self.assertEqual(card.formal_name, "Japan")
         self.assertEqual(card.language_codes, ("ja",))
+        self.assertEqual(card.anthem_title, "Kimigayo")
+        self.assertEqual(card.demonym, "Japanese (singular and plural)")
+        self.assertEqual(card.timezone_ids, ("Asia/Tokyo",))
         self.assertEqual(card.to_dict()["country"]["alpha2"], "JP")
         self.atlas.close()
         self.assertIn('"flag_emoji": "🇯🇵"', card.to_json())
@@ -200,6 +213,65 @@ class AtlasTests(unittest.TestCase):
     def test_search_and_filter(self):
         self.assertEqual(self.atlas.search_countries("vatican")[0].country.alpha2, "VA")
         self.assertIn("Japan", [c.name for c in self.atlas.countries(continent="Asia")])
+        self.assertEqual(
+            tuple(country.alpha2 for country in self.atlas.countries(currency_code="jpy")),
+            ("JP",),
+        )
+        self.assertIn("JP", {country.alpha2 for country in self.atlas.countries(language_code="ja")})
+        self.assertIn("JP", {country.alpha2 for country in self.atlas.countries(script_code="Jpan")})
+        self.assertIn(
+            "JP",
+            {country.alpha2 for country in self.atlas.countries(timezone_id="Asia/Tokyo")},
+        )
+
+    def test_reference_facts_are_typed_and_sourced(self):
+        japan = self.atlas.country("Japan")
+        self.assertEqual(
+            (japan.anthem.title, japan.anthem.english_title),
+            ("Kimigayo", "His Majesty’s Reign"),
+        )
+        self.assertEqual(japan.anthem.source.id, "cia-world-factbook-2025")
+        self.assertEqual(japan.demonym.adjective, "Japanese")
+
+        brazil = self.atlas.country("Brazil")
+        self.assertEqual(
+            (brazil.motto.text, brazil.motto.english_text, brazil.motto.language_code),
+            ("Ordem e Progresso", "Order and Progress", "pt"),
+        )
+        self.assertEqual(brazil.motto.source.id, "wikidata-national-mottos-2026-07-22")
+        self.assertIn("reviewed-national-mottos", {source.id for source in brazil.sources})
+        self.assertIsNone(self.atlas.country("China").motto)
+
+        countries = self.atlas.countries()
+        self.assertEqual(sum(country.anthem is not None for country in countries), 234)
+        self.assertEqual(sum(country.motto is not None for country in countries), 32)
+        self.assertEqual(sum(country.demonym is not None for country in countries), 227)
+
+    def test_rankings_and_nearest_capitals(self):
+        population = self.atlas.rank_countries("population", limit=3)
+        self.assertEqual(
+            tuple(result.country.alpha2 for result in population),
+            ("CN", "IN", "US"),
+        )
+        self.assertEqual((population[0].position, population[0].unit), (1, "people"))
+        self.assertIn('"metric": "population"', population[0].to_json())
+
+        density = self.atlas.rank("density", limit=3, descending=False)
+        self.assertEqual(tuple(result.position for result in density), (1, 2, 3))
+        self.assertLessEqual(density[0].value, density[1].value)
+
+        nearest = self.atlas.nearest_capitals("Tokyo", country="JP", limit=3)
+        self.assertEqual(
+            tuple(result.country.alpha2 for result in nearest),
+            ("KR", "KP", "CN"),
+        )
+        self.assertGreater(nearest[0].distance, 0)
+        self.assertEqual(nearest[0].to_dict()["capital"]["name"], "Seoul")
+        self.assertIn('"distance":', nearest[0].to_json())
+        with self.assertRaisesRegex(ValueError, "metric"):
+            self.atlas.rank_countries("happiness")
+        with self.assertRaisesRegex(ValueError, "positive integer"):
+            self.atlas.rank_countries("population", limit=True)
 
     def test_reviewed_neighbors_and_shared_neighbors(self):
         self.assertEqual(
@@ -272,7 +344,7 @@ class AtlasTests(unittest.TestCase):
 
     def test_dataset_versions(self):
         info = self.atlas.dataset_info()
-        self.assertEqual((info.library_version, info.schema_version, info.dataset_version), ("0.5.0", 5, "2026.07.21.5"))
+        self.assertEqual((info.library_version, info.schema_version, info.dataset_version), ("0.6.0", 6, "2026.07.22.6"))
         self.assertEqual(info.country_count, 248)
 
     def test_english_formal_names_are_sourced_and_discoverable(self):

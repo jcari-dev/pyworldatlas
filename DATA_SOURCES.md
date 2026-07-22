@@ -30,9 +30,10 @@ GeoNames-only identity rows outside that scope are excluded rather than inferred
 
 - Purpose: capitals, coordinates, major cities, country population snapshots,
   currencies, language codes, calling codes, top-level domains, alternate names,
-  and area cross-check.
+  postal-code formats, timezone records, and area cross-check.
 - Official URL: https://download.geonames.org/export/dump/
-- Snapshot: `countryInfo.txt` and `cities15000.zip`, captured 2026-07-20 with SHA-256 manifests.
+- Snapshot: `countryInfo.txt` and `cities15000.zip`, captured 2026-07-20;
+  `timeZones.txt`, captured 2026-07-22; all have SHA-256 manifests.
 - License: Creative Commons Attribution 4.0.
 - Refresh: reviewed before each dataset release.
 - Limitations: capital feature codes do not model every multi-capital arrangement.
@@ -40,6 +41,9 @@ GeoNames-only identity rows outside that scope are excluded rather than inferred
 The captured intersection provides 241 usable primary-capital records and 6,265
 populated-place records: places at or above the configured 100,000-person
 threshold, plus retained capitals.
+
+The timezone table contributes 417 records across 246 profiles. GeoNames also
+provides postal-code display formats for 176 profiles.
 
 ## UNGEGN List of Country Names
 
@@ -57,12 +61,13 @@ threshold, plus retained capitals.
 
 ## Unicode CLDR 48.2
 
-- Purpose: one localized territory display name and language-selection record
-  for every country or area.
+- Purpose: localized territory display names, currency names/symbols/minor
+  units, language names, and likely scripts.
 - Official URL: https://unicode.org/Public/cldr/48.2/
 - Snapshot: a compact 248-row extraction from `cldr-common-48.2.zip`, retaining
   the archive URL/checksum and exact locale/XPath locators.
-- Extractor: `pipeline/scripts/extract_cldr_country_identity.py`.
+- Extractors: `pipeline/scripts/extract_cldr_country_identity.py` and
+  `pipeline/scripts/extract_cldr_reference_data.py`.
 - License: Unicode License v3.
 - Coverage: 248 / 248 local display names across 80 languages and 21 scripts;
   244 selections use an official, de-facto official, or regional official
@@ -70,20 +75,45 @@ threshold, plus retained capitals.
 - Limitations: CLDR territory labels are localized display names. They are not
   automatically diplomatic formal names, and the API labels them accordingly.
 
-## CIA World Factbook country-name profiles
+## IANA Language Subtag Registry
 
-- Purpose: base English formal-name layer.
+- Purpose: English language-name fallback for captured codes not labelled by CLDR.
+- Official URL: https://www.iana.org/assignments/language-subtag-registry/
+- Snapshot: registry dated 2026-06-14, captured 2026-07-22 with SHA-256 manifest.
+- Terms: protocol registry data is provided under the IANA/IETF CC0 1.0
+  licensing statement at https://www.iana.org/help/licensing-terms.
+- Use: description fallback only; no official-language status is inferred.
+
+## CIA World Factbook structured profiles
+
+- Purpose: base English formal-name layer, anthem titles, and English demonyms.
 - Official URL: https://www.cia.gov/the-world-factbook/
 - Structured snapshot: `factbook.json` commit
   `8662a8b17a784841ab4528631b04090eb2f183eb`, reduced deterministically to the
-  `Government > Country name` fields for 240 matching profiles.
+  structured `Government > Country name`, `Government > National anthem`, and
+  `People and Society > Nationality` fields.
 - Extractor: `pipeline/scripts/extract_factbook_country_identity.py`.
 - Terms: public domain under the CIA site policy and the structured
   repository's public-domain dedication.
 - Coverage: 195 distinct long forms and 45 profiles where the source supplies
-  no distinct long form, so the sourced short form is retained.
+  no distinct long form, 234 anthem-title profiles, and 227 demonym profiles.
 - Limitations: AX, BQ, GF, GP, MQ, RE, UM, and YT are outside the captured
   source intersection and remain `None`.
+- Exclusions: lyrics, audio, contributor credits, adoption histories, and
+  profile narrative text are not extracted.
+
+## Wikidata national-motto statements
+
+- Purpose: reviewed source-listed national motto labels.
+- Query endpoint: https://query.wikidata.org/sparql
+- Snapshot: 2026-07-22, with exact query, response checksum, statement IDs,
+  ranks, and multilingual labels retained.
+- License: Creative Commons CC0 1.0.
+- Review: every captured item-valued statement has an explicit decision in
+  `build_data/reviewed/national_motto_decisions.csv`.
+- Coverage: 32 included profiles.
+- Limitation: the package does not infer legal status and excludes unreviewed,
+  conflicting, historical, imprecisely labelled, or duplicate statements.
 
 ## United Nations Protocol and Liaison Service
 
@@ -137,6 +167,10 @@ Flag emoji are calculated from the UN/ISO alpha-2 code. Population density is
 the captured GeoNames population divided by the captured area value. Discovery
 cards, deterministic samples, and flashcards only select, arrange, or calculate
 from already attributed profile fields; they add no external country facts.
+
+Country rankings sort documented fields or transparent derived counts/ratios.
+Nearest-capital results use the package's great-circle distance calculation.
+These are exploration tools, not evaluations of countries or people.
 
 The sampling algorithm ranks M49 identifiers with SHA-256 and never calls a
 remote service. Flashcard wording is package code under the project license;

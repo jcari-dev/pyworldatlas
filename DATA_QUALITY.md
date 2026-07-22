@@ -18,7 +18,7 @@ Raw snapshots are immutable and checksummed. Familiar common-name overrides
 retain the official UN M49 value and are reviewed in
 `pipeline/config/overrides.json`.
 
-The 0.5.0 dataset includes 248 countries and areas from the captured UN M49
+The 0.6.0 dataset includes 248 countries and areas from the captured UN M49
 scope, 241 primary-capital records, and 6,265 populated-place records. The
 place table contains records at or above 100,000 population plus retained
 capitals. Seven areas expose a missing capital as `None`. GeoNames-only
@@ -56,6 +56,19 @@ Current profile coverage is 248 population snapshots, 247 currency records,
 domains, and 242 profiles with at least one observed timezone. These are source
 snapshots, not live or exhaustive registries.
 
+Version 0.6 adds 234 anthem-title profiles, 32 reviewed source-listed mottos,
+227 English demonym profiles, 417 country-level timezone records across 246
+profiles, 176 postal-code formats, and 722 country-language metadata records
+across 245 profiles. The builder pins each source snapshot and requires an
+explicit decision for every captured motto statement. Language associations
+are source metadata, not legal-language determinations. Motto records do not
+infer official, traditional, constitutional, or statutory status.
+
+Anthem records contain titles only. Lyrics, audio, contributor credits,
+adoption histories, and narrative text are excluded. Missing motto or anthem
+records describe the current reviewed source coverage; they do not claim that a
+country has no motto or anthem.
+
 The land-border build compares GeoNames neighbor records with shared segments
 from Natural Earth 1:50m map-unit polygons. It requires explicit decisions for
 every source difference, canonicalizes each accepted pair, rejects self-edges
@@ -64,7 +77,9 @@ and unknown endpoints, and tests runtime symmetry. The current graph contains
 inclusions. Eighty-five entities have no accepted land border.
 
 The graph represents topological adjacency only. It does not supply border
-geometry, length, maritime boundaries, or road routes. Generalized source
+geometry, length, maritime boundaries, or road routes. Geometry, GeoJSON,
+bounding boxes, centroids, and point-in-country lookup are deferred beyond the
+planned 0.7 physical-geography milestone. Generalized source
 geometry, small territories, enclaves, and disputed areas are handled according
 to [BOUNDARIES_AND_DISPUTES.md](BOUNDARIES_AND_DISPUTES.md).
 

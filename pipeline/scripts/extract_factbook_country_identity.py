@@ -1,8 +1,9 @@
-"""Extract compact country-name facts from a pinned factbook.json checkout.
+"""Extract compact country-reference facts from a pinned Factbook checkout.
 
 The source repository contains structured transcriptions of the public-domain
-CIA World Factbook. This script retains only name fields used by PyWorldAtlas;
-it does not copy narrative profile text.
+CIA World Factbook. This script retains country-name fields, national-anthem
+titles, and English nationality terms used by PyWorldAtlas. It does not copy
+lyrics, contributor credits, adoption history, or profile narrative text.
 """
 
 from __future__ import annotations
@@ -37,6 +38,20 @@ def clean_text(value: str | None) -> str | None:
     if value.casefold() in {"na", "none"}:
         return None
     return value or None
+
+
+def split_anthem_title(value: str | None) -> tuple[str | None, str | None]:
+    """Split the Factbook's compact title and parenthetical English label."""
+    cleaned = clean_text(value)
+    if cleaned is None:
+        return (None, None)
+    normalized = cleaned.translate(str.maketrans({"“": '"', "”": '"'})).strip()
+    title_part, separator, english_part = normalized.rpartition(" (")
+    if separator and english_part.endswith(")"):
+        title = title_part.strip().strip('"').strip()
+        english = english_part[:-1].strip().strip('"').strip()
+        return (title or None, english or None)
+    return (normalized.strip('"').strip() or None, None)
 
 
 def canonical_country_codes(root: Path) -> set[str]:
@@ -80,6 +95,19 @@ def extract(root: Path, checkout: Path) -> dict[str, object]:
             item = names.get(name)
             return clean_text(item.get("text")) if isinstance(item, dict) else None
 
+        anthem_fields = payload.get("Government", {}).get("National anthem(s)", {})
+        anthem_source_text = (
+            clean_text(anthem_fields.get("title", {}).get("text"))
+            if isinstance(anthem_fields, dict)
+            else None
+        )
+        anthem_title, anthem_english_title = split_anthem_title(anthem_source_text)
+        nationality = payload.get("People and Society", {}).get("Nationality", {})
+
+        def nationality_field(name: str) -> str | None:
+            item = nationality.get(name) if isinstance(nationality, dict) else None
+            return clean_text(item.get("text")) if isinstance(item, dict) else None
+
         if not names:
             continue
         seen.add(country_code)
@@ -90,8 +118,18 @@ def extract(root: Path, checkout: Path) -> dict[str, object]:
                 "conventional_formal_name": field("conventional long form"),
                 "local_short_name": field("local short form"),
                 "local_formal_name": field("local long form"),
+                "anthem_title": anthem_title,
+                "anthem_english_title": anthem_english_title,
+                "anthem_source_text": anthem_source_text,
+                "demonym_noun": nationality_field("noun"),
+                "demonym_adjective": nationality_field("adjective"),
                 "source_path": path.relative_to(checkout).as_posix(),
                 "source_locator": "Government > Country name",
+                "source_locators": {
+                    "country_names": "Government > Country name",
+                    "anthem": "Government > National anthem(s) > title",
+                    "demonym": "People and Society > Nationality",
+                },
                 "source_sha256": file_sha256(path),
             }
         )

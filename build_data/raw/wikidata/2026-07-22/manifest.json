@@ -1,0 +1,17 @@
+{
+  "source_id": "wikidata-national-mottos-2026-07-22",
+  "source_version": "2026-07-22 query snapshot",
+  "retrieved_at": "2026-07-22T00:00:00Z",
+  "endpoint": "https://query.wikidata.org/sparql",
+  "query": {
+    "path": "pipeline/queries/wikidata_national_mottos.rq",
+    "sha256": "37c7d9d0d818c33f586b5e10d3e06487c49cb11b794c6873ab399f97318463e0"
+  },
+  "file": {
+    "path": "national-mottos.json",
+    "sha256": "4af587a6f19febd169b99850669ecdc426ac2b86ef5399e3eab2f5e51d3e448c",
+    "size_bytes": 973347
+  },
+  "rights": "Creative Commons CC0 1.0",
+  "rights_url": "https://www.wikidata.org/wiki/Wikidata:Licensing"
+}

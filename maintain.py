@@ -107,6 +107,21 @@ def status(*, write: bool = True) -> None:
             )
     if "population_profiles" in coverage:
         lines.insert(-1, f"Profile fields: {coverage['population_profiles']} population / {coverage['currency_profiles']} currency / {coverage['language_profiles']} language-code records")
+    if "anthem_titles" in coverage:
+        lines.insert(
+            -1,
+            "Reference facts: "
+            f"{coverage['anthem_titles']} anthem titles / "
+            f"{coverage['mottos']} reviewed mottos / "
+            f"{coverage['demonyms']} English demonym profiles",
+        )
+        lines.insert(
+            -1,
+            "Practical profiles: "
+            f"{coverage['timezone_profiles']} timezone profiles / "
+            f"{coverage['postal_code_formats']} postal formats / "
+            f"{coverage['currency_symbols']} currency symbols",
+        )
     if "reviewed_land_borders" in coverage:
         lines.insert(-1, f"Reviewed land borders: {coverage['reviewed_land_borders']} / borderless entities: {coverage['countries_with_no_land_borders']}")
     print("\n".join(lines))

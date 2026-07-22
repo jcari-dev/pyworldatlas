@@ -13,9 +13,9 @@
   ],
   "derived_file": {
     "path": "country_identity.json",
-    "sha256": "7127b6a1e653b93984fd821236ab408377b8b43e135de2b4b60a47974460e77c",
-    "size_bytes": 102817
+    "sha256": "4f05fc72f0e63f87c9963967c2576cbb01f93de41684e07fedfb44a2bb93a6ee",
+    "size_bytes": 212402
   },
   "extractor": "pipeline/scripts/extract_factbook_country_identity.py",
-  "scope": "Country-name fields only; narrative profile content is not copied."
+  "scope": "Country-name fields, anthem titles, and English nationality terms; lyrics, contributor credits, adoption history, and narrative profile content are not copied."
 }

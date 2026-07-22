@@ -1,38 +1,40 @@
 # Roadmap
 
-PyWorldAtlas advances through installable, documented releases. Version 0.1.0
-established the dependency-free runtime, generated database, and captured
-248-country-and-area UN M49 scope.
+PyWorldAtlas advances through installable, documented releases with explicit
+data boundaries. Versions 0.1 through 0.5 established the generated offline
+database, typed profiles, coordinates and distances, reviewed land-border
+tools, complete selected local identities, English formal names, and the
+educational/editorial policy.
 
-Release 0.2.1 completed the rich-profile and coordinate milestone: population and
-currency context, language and calling-code metadata, direct city coordinates,
-dependency-free distance, bearing, and midpoint calculations, flag emoji,
-discovery cards, stable sampling, and structured flashcards. It also includes
-the first five reviewed official local names. Version 0.3.0
-added 319 reviewed land borders, neighbors, shared neighbors, shortest paths,
-crossing counts, connected components, and borderless-entity discovery. Version
-0.3.1 adds explicit reachability checks, path name and code conveniences, and
-graph-derived flashcards.
+## 0.6.0 — Country reference and discovery
 
-The 0.4 development milestone completed the country-identity layer. Its local display
-layer covers all 248 countries and areas across 80 languages and 21 scripts.
-Ten selected records currently add reviewed UNGEGN national official forms and
-source-provided romanization. A separate sourced English formal-name layer
-covers 240 profiles: 195 distinct long forms and 45 source-equal short/formal
-forms, with eight explicit source-scope gaps. The declared data scope is
-complete and merged to `main`. These features are included in version 0.5.0.
+The 0.6 release candidate adds:
 
-Version 0.5.0 publishes the completed country-identity work and establishes the
-package's educational and editorial policy. It audits the public data model,
-source roles, geographic conventions, examples, documentation, correction
-process, and release gate. It adds no current-affairs, opinion, or speculative
-narrative dataset.
+- 234 national-anthem title profiles, without lyrics, audio, credits, or dates.
+- 32 explicitly reviewed source-listed national mottos.
+- 227 English demonym profiles.
+- CLDR currency names, symbols, and minor-unit metadata.
+- Language names and likely scripts for the captured country-language records.
+- 417 country-level timezone records across 246 profiles.
+- 176 postal-code formats.
+- Exact currency, language, script, and timezone filters.
+- Typed country rankings and nearest-capital results.
+- A documentation-first example gallery and focused reference guides.
 
-Version 0.6.0 then considers sourced anthem titles, mottos, and clearly labelled
-reference dates without lyrics or an oversimplified universal date field.
-Geometry, statistics, institutions, exports, and full-world hardening follow.
+## 0.7.0 — Physical geography
 
-`ROADMAP_STATUS.md` records generated evidence. The detailed execution boundary
-and release gates live in the versioned `RELEASE_*_STATUS.md` files. The current
-identity contract is `COUNTRY_IDENTITY_DATA_SPEC.md`; the governing editorial
-contract is `EDUCATIONAL_AND_NEUTRALITY_POLICY.md`.
+The planned 0.7 scope is land and water area, coastline length, highest and
+lowest points, elevation, named major rivers/lakes/mountains, reviewed Köppen
+climate classifications, and rankings derived from those physical fields.
+Every field family needs a pinned, legally usable source and an honest coverage
+gate before it enters the package.
+
+## Deferred beyond 0.7
+
+Country boundary geometry, GeoJSON export, bounding boxes, centroids, and
+point-in-country lookup are explicitly deferred. Reference dates and anthem
+contributors/adoption histories also remain outside the current contract.
+
+`ROADMAP_STATUS.md` contains generated implementation evidence. Release gates
+and publication instructions are maintained in the version-specific status
+documents and `RELEASING.md`.

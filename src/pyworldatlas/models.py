@@ -216,6 +216,10 @@ class SourceReference:
     name: str
     homepage: str
     retrieved_at: str
+    version: str | None = None
+    license_name: str | None = None
+    license_url: str | None = None
+    notes: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -224,13 +228,77 @@ class Currency:
 
     code: str
     name: str | None = None
+    symbol: str | None = None
+    minor_unit_digits: int | None = None
+    source: SourceReference | None = None
 
 
 @dataclass(frozen=True, slots=True)
 class Language:
-    """A language code associated with a country in the captured source."""
+    """A language associated with a country in the captured sources."""
 
     code: str
+    primary_code: str | None = None
+    name: str | None = None
+    script_code: str | None = None
+    source: SourceReference | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class Timezone:
+    """A country timezone and its captured January, July, and raw offsets."""
+
+    id: str
+    january_utc_offset_hours: float
+    july_utc_offset_hours: float
+    raw_utc_offset_hours: float
+    source: SourceReference | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class PostalCodeFormat:
+    """A source-provided postal-code display format and validation expression."""
+
+    format: str
+    regex: str | None = None
+    source: SourceReference | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class NationalAnthem:
+    """A national-anthem title without lyrics, audio, or contributor data."""
+
+    title: str
+    english_title: str | None
+    source: SourceReference
+    source_locator: str
+
+
+@dataclass(frozen=True, slots=True)
+class NationalMotto:
+    """A reviewed source-listed national motto and selected language label.
+
+    The record does not infer a legal status. ``english_text`` is the captured
+    English label when the source supplies one; it may preserve the original
+    phrase instead of translating it.
+    """
+
+    text: str
+    language_code: str
+    english_text: str | None
+    source: SourceReference
+    source_locator: str
+
+
+@dataclass(frozen=True, slots=True)
+class Demonym:
+    """Source-preserved noun and adjective forms for a country or area."""
+
+    noun: str | None
+    adjective: str | None
+    language_code: str
+    source: SourceReference
+    source_locator: str
 
 
 def _jsonable(value: Any) -> Any:
@@ -254,6 +322,43 @@ class CountryReference:
     alpha2: str
     alpha3: str | None
     numeric: str | None
+
+
+@dataclass(frozen=True, slots=True)
+class CountryRanking:
+    """One deterministic position in a country ranking."""
+
+    position: int
+    country: CountryReference
+    metric: str
+    value: int | float
+    unit: str
+
+    def to_dict(self) -> dict[str, Any]:
+        """Return JSON-compatible primitives for this ranking row."""
+        return _jsonable(self)
+
+    def to_json(self, indent: int | None = None) -> str:
+        """Serialize this ranking row as JSON."""
+        return json.dumps(self.to_dict(), ensure_ascii=False, indent=indent)
+
+
+@dataclass(frozen=True, slots=True)
+class CapitalDistance:
+    """A capital ordered by great-circle distance from an origin."""
+
+    country: CountryReference
+    capital: Capital
+    distance: float
+    unit: str
+
+    def to_dict(self) -> dict[str, Any]:
+        """Return JSON-compatible primitives for this distance result."""
+        return _jsonable(self)
+
+    def to_json(self, indent: int | None = None) -> str:
+        """Serialize this distance result as JSON."""
+        return json.dumps(self.to_dict(), ensure_ascii=False, indent=indent)
 
 
 @dataclass(frozen=True, slots=True)
@@ -355,6 +460,10 @@ class CountryDiscoveryCard:
     local_names: tuple[LocalizedName, ...]
     major_city_count: int
     source_ids: tuple[str, ...]
+    anthem_title: str | None = None
+    motto_text: str | None = None
+    demonym: str | None = None
+    timezone_ids: tuple[str, ...] = ()
 
     def to_dict(self) -> dict[str, Any]:
         """Return JSON-compatible primitives for this discovery card."""
@@ -392,6 +501,11 @@ class Country:
     top_level_domain: str | None = None
     observed_timezones: tuple[str, ...] = ()
     formal_name: str | None = None
+    anthems: tuple[NationalAnthem, ...] = ()
+    mottos: tuple[NationalMotto, ...] = ()
+    demonyms: tuple[Demonym, ...] = ()
+    timezones: tuple[Timezone, ...] = ()
+    postal_code: PostalCodeFormat | None = None
 
     @property
     def alpha2(self) -> str:
@@ -464,6 +578,29 @@ class Country:
     def currency_code(self) -> str | None:
         """Return the captured currency code, or ``None`` when unavailable."""
         return self.currency.code if self.currency else None
+
+    @property
+    def anthem(self) -> NationalAnthem | None:
+        """Return the first sourced anthem-title record, when available."""
+        return self.anthems[0] if self.anthems else None
+
+    @property
+    def motto(self) -> NationalMotto | None:
+        """Return the first reviewed source-listed motto, when available."""
+        return self.mottos[0] if self.mottos else None
+
+    @property
+    def demonym(self) -> Demonym | None:
+        """Return the English demonym record, when available."""
+        return next(
+            (record for record in self.demonyms if record.language_code == "en"),
+            self.demonyms[0] if self.demonyms else None,
+        )
+
+    @property
+    def timezone_ids(self) -> tuple[str, ...]:
+        """Return all captured country timezone identifiers."""
+        return tuple(timezone.id for timezone in self.timezones)
 
     @property
     def major_city_count(self) -> int:
@@ -553,6 +690,10 @@ class Country:
             local_names=self.local_names,
             major_city_count=self.major_city_count,
             source_ids=tuple(source.id for source in self.sources),
+            anthem_title=self.anthem.title if self.anthem else None,
+            motto_text=self.motto.text if self.motto else None,
+            demonym=self.demonym.noun if self.demonym else None,
+            timezone_ids=self.timezone_ids,
         )
 
     def to_dict(self, include_history: bool = False) -> dict[str, Any]:

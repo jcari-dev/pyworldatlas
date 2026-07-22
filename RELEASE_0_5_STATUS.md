@@ -8,7 +8,8 @@ version is 5, and the dataset identifier is 2026.07.21.5.
 
 PyWorldAtlas is a purely educational package that provides offline access to
 factual geographic data. It does not provide political commentary, promote a
-viewpoint, rank people or places, or decide geographic disagreements.
+viewpoint, make qualitative judgments about people or places, or decide
+geographic disagreements.
 
 ## Included
 

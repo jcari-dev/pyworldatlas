@@ -18,16 +18,29 @@ URL and checksum, deterministic extractor, compact source snapshot, and exact
 locale/XPath locators are retained with the data-building inputs. The Unicode
 license is available at https://www.unicode.org/license.txt.
 
-English formal country names are primarily derived from the country-name fields
-of the CIA World Factbook. CIA states that information on its public website is
-in the public domain unless otherwise indicated. The compact extraction pins
-the structured source revision and contains no Factbook narrative text. See
-https://www.cia.gov/site-policies/.
+Currency names, common symbols, minor-unit digits, language names, and likely
+scripts are also derived from Unicode CLDR 48.2 under the same terms. Language
+names missing from CLDR use descriptions from the IANA Language Subtag Registry
+at https://www.iana.org/assignments/language-subtag-registry/. IANA and IETF
+state that applicable rights in their protocol registry data are dedicated
+under CC0 1.0; see https://www.iana.org/help/licensing-terms.
+
+English formal country names, national-anthem titles, and English demonyms are
+derived from structured fields of the CIA World Factbook. CIA states that
+information on its public website is in the public domain unless otherwise
+indicated. The compact extraction pins the structured source revision and
+contains no lyrics, audio, contributor credits, adoption histories, or
+Factbook narrative text. See https://www.cia.gov/site-policies/.
 
 Three reviewed English formal-name values use exact Wikidata official-name
 statements. Wikidata structured data is released under Creative Commons CC0
 1.0. The query snapshot, statement IDs, ranks, and values are retained. See
 https://www.wikidata.org/wiki/Wikidata:Licensing.
+
+Thirty-two reviewed source-listed national motto records use exact Wikidata
+statements and labels under CC0 1.0. The exact query, response checksum,
+statement IDs, and include/exclude decisions are retained. The package does not
+infer a motto's legal status.
 
 Five short English formal-name excerpts are credited to the United Nations
 Protocol and Liaison Service document *Official Names of the United Nations
