@@ -98,7 +98,7 @@ class PipelineTests(unittest.TestCase):
         cldr_path = ROOT / "build_data/raw/unicode-cldr/48.2/country_identity.json"
         self.assertEqual(
             sha256(cldr_path.read_bytes()).hexdigest(),
-            "aee9f75640517eb10ba830316f5bbf171f6af5b2671a980ff7b367f6456ba780",
+            "033e6b58bf52d0a46f4720fe1d259c9e8ba1ae92e524841bd918c1956c84b252",
         )
         cldr = json.loads(cldr_path.read_text(encoding="utf-8"))
         self.assertEqual(cldr["license_name"], "Unicode License v3")
@@ -142,7 +142,7 @@ class PipelineTests(unittest.TestCase):
         factbook_path = ROOT / "build_data/raw/cia-world-factbook/2025/country_identity.json"
         self.assertEqual(
             sha256(factbook_path.read_bytes()).hexdigest(),
-            "b91155d2742036350fbd8c86668b4413278265a53747a3422aa5b4a4c6f65fb8",
+            "7127b6a1e653b93984fd821236ab408377b8b43e135de2b4b60a47974460e77c",
         )
         wikidata_path = ROOT / "build_data/raw/wikidata/2026-07-21/official-names.json"
         self.assertEqual(
@@ -153,8 +153,8 @@ class PipelineTests(unittest.TestCase):
     def test_database_build_is_reproducible(self):
         write_manifests(ROOT)
         records = normalize(ROOT)
-        first = sha256(build_database(ROOT, records).read_bytes()).hexdigest()
-        second = sha256(build_database(ROOT, records).read_bytes()).hexdigest()
+        first = sha256(build_database(ROOT, records, install=False).read_bytes()).hexdigest()
+        second = sha256(build_database(ROOT, records, install=False).read_bytes()).hexdigest()
         self.assertEqual(first, second)
 
 

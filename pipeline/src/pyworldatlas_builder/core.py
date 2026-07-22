@@ -130,7 +130,11 @@ def write_manifests(root: Path) -> None:
                 raise FileNotFoundError(f"Missing raw snapshot: {path}")
             files.append({"url": url, "path": name, "sha256": _sha(path), "size_bytes": path.stat().st_size})
         manifest = {"source_id": source_id, "source_version": version, "retrieved_at": retrieved_at, "files": files}
-        (folder / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+        (folder / "manifest.json").write_text(
+            json.dumps(manifest, indent=2) + "\n",
+            encoding="utf-8",
+            newline="\n",
+        )
 
     cldr_folder = root / "build_data" / "raw" / "unicode-cldr" / "48.2"
     cldr_snapshot_path = cldr_folder / "country_identity.json"
@@ -155,7 +159,9 @@ def write_manifests(root: Path) -> None:
         "license_url": cldr_snapshot["license_url"],
     }
     (cldr_folder / "manifest.json").write_text(
-        json.dumps(cldr_manifest, indent=2) + "\n", encoding="utf-8"
+        json.dumps(cldr_manifest, indent=2) + "\n",
+        encoding="utf-8",
+        newline="\n",
     )
 
 
@@ -795,7 +801,14 @@ def normalize(root: Path) -> dict[str, object]:
     output = root / "build_data/normalized"
     output.mkdir(parents=True, exist_ok=True)
     for key, records in normalized.items():
-        (output / f"{key}.jsonl").write_text("".join(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n" for row in records), encoding="utf-8")
+        (output / f"{key}.jsonl").write_text(
+            "".join(
+                json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n"
+                for row in records
+            ),
+            encoding="utf-8",
+            newline="\n",
+        )
     return normalized
 
 
@@ -817,8 +830,13 @@ CREATE TABLE field_source (country_id INTEGER NOT NULL, field_path TEXT NOT NULL
 """
 
 
-def build_database(root: Path, normalized: dict[str, object]) -> Path:
-    """Build the deterministic, normalized SQLite runtime database."""
+def build_database(
+    root: Path,
+    normalized: dict[str, object],
+    *,
+    install: bool = True,
+) -> Path:
+    """Build the deterministic SQLite database and optionally install it."""
     output = root / "build_data/output"
     output.mkdir(parents=True, exist_ok=True)
     path = output / "atlas.sqlite3"
@@ -911,9 +929,11 @@ def build_database(root: Path, normalized: dict[str, object]) -> Path:
         raise ValueError("SQLite integrity validation failed")
     con.execute("VACUUM")
     con.close()
-    target = root / "src/pyworldatlas/data/atlas.sqlite3"
-    target.write_bytes(path.read_bytes())
-    return target
+    if install:
+        target = root / "src/pyworldatlas/data/atlas.sqlite3"
+        target.write_bytes(path.read_bytes())
+        return target
+    return path
 
 
 def report(root: Path, normalized: dict[str, object], database: Path) -> None:
@@ -992,7 +1012,11 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
         "database_sha256": _sha(database),
         "validation": "PASS",
     }
-    (reports / "coverage.json").write_text(json.dumps(coverage, indent=2) + "\n", encoding="utf-8")
+    (reports / "coverage.json").write_text(
+        json.dumps(coverage, indent=2) + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
     milestones = [
         {
             "name": "0 — Clean foundation",
@@ -1080,7 +1104,11 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
         "milestones": milestones,
         "coverage": coverage,
     }
-    (reports / "status.json").write_text(json.dumps(status, indent=2) + "\n", encoding="utf-8")
+    (reports / "status.json").write_text(
+        json.dumps(status, indent=2) + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
 
 
 def run(root: Path) -> Path:

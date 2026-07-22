@@ -13,8 +13,8 @@
   ],
   "derived_file": {
     "path": "country_identity.json",
-    "sha256": "b91155d2742036350fbd8c86668b4413278265a53747a3422aa5b4a4c6f65fb8",
-    "size_bytes": 105226
+    "sha256": "7127b6a1e653b93984fd821236ab408377b8b43e135de2b4b60a47974460e77c",
+    "size_bytes": 102817
   },
   "extractor": "pipeline/scripts/extract_factbook_country_identity.py",
   "scope": "Country-name fields only; narrative profile content is not copied."
