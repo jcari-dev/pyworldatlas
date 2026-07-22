@@ -8,7 +8,7 @@ educational/editorial policy.
 
 ## 0.6.0 — Country reference and discovery
 
-The 0.6 release candidate adds:
+The published 0.6 release adds:
 
 - 234 national-anthem title profiles, without lyrics, audio, credits, or dates.
 - 32 explicitly reviewed source-listed national mottos.
@@ -23,11 +23,21 @@ The 0.6 release candidate adds:
 
 ## 0.7.0 — Physical geography
 
-The planned 0.7 scope is land and water area, coastline length, highest and
-lowest points, elevation, named major rivers/lakes/mountains, reviewed Köppen
-climate classifications, and rankings derived from those physical fields.
-Every field family needs a pinned, legally usable source and an honest coverage
-gate before it enters the package.
+The 0.7 release candidate adds:
+
+- Sourced total, land, and water area plus calculated water percentage.
+- Coastline, mean elevation, and named highest and lowest points.
+- Source-listed major rivers and lakes with clear shared-feature semantics.
+- Plain-language climate summaries and represented 1991–2020 Köppen-Geiger
+  classes.
+- Physical filters, feature search, rankings, discovery-card fields, and
+  deterministic flashcards.
+- Pinned inputs, deterministic extraction, exact coverage gates, and a focused
+  physical-geography documentation guide.
+
+A separate “major mountains” inventory is not claimed. The available source
+reliably identifies highest points but does not provide a consistent global
+major-mountain threshold.
 
 ## Deferred beyond 0.7
 

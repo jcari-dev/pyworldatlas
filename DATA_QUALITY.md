@@ -18,7 +18,7 @@ Raw snapshots are immutable and checksummed. Familiar common-name overrides
 retain the official UN M49 value and are reviewed in
 `pipeline/config/overrides.json`.
 
-The 0.6.0 dataset includes 248 countries and areas from the captured UN M49
+The 0.7.0 dataset includes 248 countries and areas from the captured UN M49
 scope, 241 primary-capital records, and 6,265 populated-place records. The
 place table contains records at or above 100,000 population plus retained
 capitals. Seven areas expose a missing capital as `None`. GeoNames-only
@@ -69,6 +69,24 @@ adoption histories, and narrative text are excluded. Missing motto or anthem
 records describe the current reviewed source coverage; they do not claim that a
 country has no motto or anthem.
 
+Version 0.7 adds total-area coverage for all 248 profiles; 238 land-area and
+coastline profiles; 233 numeric water-area profiles; 240 highest points, lowest
+points, and short climate summaries; 166 mean-elevation profiles; 188
+source-listed river records across 80 profiles; 187 source-listed lake records
+across 69 profiles; and Köppen-Geiger classes for 241 profiles. The builder pins
+both source and derived checksums and validates the exact coverage and gap sets.
+
+River and lake collections are source-listed major features, not exhaustive
+inventories. Empty collections do not assert absence. A shared river's length
+or lake's area describes the complete source feature rather than its portion
+inside one country. Highest points are not relabelled as a separate major-
+mountain inventory.
+
+Köppen-Geiger shares are latitude-area-weighted estimates from the 0.1-degree
+1991–2020 raster and generalized map-unit polygons. Classes below 0.1% of a
+profile's represented cells are omitted. These values support broad education,
+not site-level climate determination or forecasting.
+
 The land-border build compares GeoNames neighbor records with shared segments
 from Natural Earth 1:50m map-unit polygons. It requires explicit decisions for
 every source difference, canonicalizes each accepted pair, rejects self-edges
@@ -78,8 +96,8 @@ inclusions. Eighty-five entities have no accepted land border.
 
 The graph represents topological adjacency only. It does not supply border
 geometry, length, maritime boundaries, or road routes. Geometry, GeoJSON,
-bounding boxes, centroids, and point-in-country lookup are deferred beyond the
-planned 0.7 physical-geography milestone. Generalized source
+bounding boxes, centroids, and point-in-country lookup are deferred beyond
+0.7. Generalized source
 geometry, small territories, enclaves, and disputed areas are handled according
 to [BOUNDARIES_AND_DISPUTES.md](BOUNDARIES_AND_DISPUTES.md).
 

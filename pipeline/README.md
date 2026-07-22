@@ -10,8 +10,11 @@ CLDR/UNGEGN local identity per country or area, 10 selected reviewed UNGEGN
 official short/formal records, 240 sourced English formal names, and the
 reviewed land-border graph. Version 0.6 also generates 234 anthem-title
 profiles, 32 reviewed mottos, 227 demonym profiles, 722 country-language
-records, 417 timezone records, and practical currency/postal metadata. Missing
-values remain missing and are reported rather than synthesized.
+records, 417 timezone records, and practical currency/postal metadata. Version
+0.7 adds structured physical profiles, 188 source-listed river records, 187
+source-listed lake records, 240 climate summaries, and Köppen-Geiger classes
+for 241 profiles. Missing values remain missing and are reported rather than
+synthesized.
 
 Run from the repository root:
 

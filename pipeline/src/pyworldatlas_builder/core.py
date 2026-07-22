@@ -28,6 +28,20 @@ EXPECTED_ANTHEM_COUNT = 234
 EXPECTED_DEMONYM_COUNT = 227
 EXPECTED_MOTTO_COUNT = 32
 EXPECTED_TIMEZONE_COUNTRY_COUNT = 246
+EXPECTED_PHYSICAL_PROFILE_COUNT = 240
+EXPECTED_PHYSICAL_TOTAL_AREA_COUNT = 238
+EXPECTED_PHYSICAL_LAND_AREA_COUNT = 238
+EXPECTED_PHYSICAL_WATER_AREA_COUNT = 233
+EXPECTED_COASTLINE_COUNT = 238
+EXPECTED_ELEVATION_EXTREME_COUNT = 240
+EXPECTED_MEAN_ELEVATION_COUNT = 166
+EXPECTED_RIVER_PROFILE_COUNT = 80
+EXPECTED_RIVER_COUNT = 188
+EXPECTED_LAKE_PROFILE_COUNT = 69
+EXPECTED_LAKE_COUNT = 187
+EXPECTED_CLIMATE_SUMMARY_COUNT = 240
+EXPECTED_KOPPEN_PROFILE_COUNT = 241
+EXPECTED_KOPPEN_GAPS = {"BV", "GI", "MH", "MV", "TK", "TV", "UM"}
 EXPECTED_ENGLISH_FORMAL_NAME_GAPS = {
     "AX", "BQ", "GF", "GP", "MQ", "RE", "UM", "YT",
 }
@@ -655,6 +669,191 @@ def parse_factbook_reference_facts(
     return anthems, demonyms
 
 
+def parse_factbook_physical_geography(
+    root: Path, country_codes: set[str]
+) -> list[dict[str, object]]:
+    """Read structured physical facts from the compact Factbook snapshot."""
+    path = root / "build_data/raw/cia-world-factbook/2025/country_identity.json"
+    snapshot = _load_json(path)
+    rows = snapshot.get("records")
+    if not isinstance(rows, list) or len(rows) != EXPECTED_PHYSICAL_PROFILE_COUNT:
+        raise ValueError(f"Unexpected Factbook physical scope in {path}")
+    records: list[dict[str, object]] = []
+    seen: set[str] = set()
+    for row in rows:
+        code = row["country_code"].upper()
+        if code not in country_codes or code in seen:
+            raise ValueError(f"Unknown or duplicate country code in {path}: {code}")
+        physical = row.get("physical_geography")
+        if not isinstance(physical, dict):
+            raise ValueError(f"Missing physical-geography object for {code}")
+        for point_name in ("highest_point", "lowest_point"):
+            point = physical.get(point_name)
+            if point is not None and (
+                not point.get("name")
+                or not isinstance(point.get("elevation_m"), (int, float))
+                or not point.get("source_label")
+            ):
+                raise ValueError(f"Invalid {point_name} for {code}")
+        for collection, feature_type in (("rivers", "river"), ("lakes", "lake")):
+            features = physical.get(collection)
+            if not isinstance(features, list):
+                raise ValueError(f"Invalid {collection} collection for {code}")
+            feature_names: set[str] = set()
+            for feature in features:
+                name = feature.get("name")
+                if (
+                    not name
+                    or feature.get("feature_type") != feature_type
+                    or not feature.get("source_label")
+                    or name.casefold() in feature_names
+                ):
+                    raise ValueError(f"Invalid or duplicate {collection} record for {code}")
+                feature_names.add(name.casefold())
+        seen.add(code)
+        locators = row.get("source_locators", {})
+        records.append({
+            "country_code": code,
+            "source_id": "cia-world-factbook-2025",
+            "source_record_id": row["source_path"],
+            "retrieved_at": "2026-07-22",
+            "data": {
+                **physical,
+                "source_locator": locators.get("physical_geography", "Geography"),
+                "source_locators": {
+                    name: locators.get(name)
+                    for name in (
+                        "area", "coastline", "climate", "elevation", "lakes", "rivers"
+                    )
+                },
+            },
+        })
+
+    checks = {
+        "total area": (
+            sum(record["data"]["total_area_km2"] is not None for record in records),
+            EXPECTED_PHYSICAL_TOTAL_AREA_COUNT,
+        ),
+        "land area": (
+            sum(record["data"]["land_area_km2"] is not None for record in records),
+            EXPECTED_PHYSICAL_LAND_AREA_COUNT,
+        ),
+        "water area": (
+            sum(record["data"]["water_area_km2"] is not None for record in records),
+            EXPECTED_PHYSICAL_WATER_AREA_COUNT,
+        ),
+        "coastline": (
+            sum(record["data"]["coastline_km"] is not None for record in records),
+            EXPECTED_COASTLINE_COUNT,
+        ),
+        "highest point": (
+            sum(record["data"]["highest_point"] is not None for record in records),
+            EXPECTED_ELEVATION_EXTREME_COUNT,
+        ),
+        "lowest point": (
+            sum(record["data"]["lowest_point"] is not None for record in records),
+            EXPECTED_ELEVATION_EXTREME_COUNT,
+        ),
+        "mean elevation": (
+            sum(record["data"]["mean_elevation_m"] is not None for record in records),
+            EXPECTED_MEAN_ELEVATION_COUNT,
+        ),
+        "climate summary": (
+            sum(record["data"]["climate_summary"] is not None for record in records),
+            EXPECTED_CLIMATE_SUMMARY_COUNT,
+        ),
+        "river profiles": (
+            sum(bool(record["data"]["rivers"]) for record in records),
+            EXPECTED_RIVER_PROFILE_COUNT,
+        ),
+        "rivers": (
+            sum(len(record["data"]["rivers"]) for record in records),
+            EXPECTED_RIVER_COUNT,
+        ),
+        "lake profiles": (
+            sum(bool(record["data"]["lakes"]) for record in records),
+            EXPECTED_LAKE_PROFILE_COUNT,
+        ),
+        "lakes": (
+            sum(len(record["data"]["lakes"]) for record in records),
+            EXPECTED_LAKE_COUNT,
+        ),
+    }
+    failures = {
+        name: {"found": found, "expected": expected}
+        for name, (found, expected) in checks.items()
+        if found != expected
+    }
+    if failures:
+        raise ValueError(f"Factbook physical coverage changed: {failures}")
+    return records
+
+
+def parse_koppen_climate_profiles(
+    root: Path, country_codes: set[str]
+) -> list[dict[str, object]]:
+    """Read reviewed country classifications derived from the pinned CC0 map."""
+    path = root / "build_data/raw/koppen-geiger/2023/country_zones.json"
+    snapshot = _load_json(path)
+    if snapshot.get("source_id") != "koppen-geiger-1991-2020":
+        raise ValueError(f"Unexpected Köppen-Geiger source identifier in {path}")
+    rows = snapshot.get("records")
+    if not isinstance(rows, list) or len(rows) != EXPECTED_KOPPEN_PROFILE_COUNT:
+        raise ValueError(f"Unexpected Köppen-Geiger profile scope in {path}")
+    if set(snapshot.get("coverage_gaps", [])) != EXPECTED_KOPPEN_GAPS:
+        raise ValueError(f"Unexpected Köppen-Geiger coverage gaps in {path}")
+    records: list[dict[str, object]] = []
+    seen: set[str] = set()
+    valid_groups = {"Tropical", "Arid", "Temperate", "Cold", "Polar"}
+    for row in rows:
+        code = row["country_code"].upper()
+        zones = row.get("zones")
+        if code not in country_codes or code in seen or not isinstance(zones, list) or not zones:
+            raise ValueError(f"Invalid Köppen-Geiger profile for {code}")
+        previous = float("inf")
+        zone_codes: set[str] = set()
+        for zone in zones:
+            share = zone.get("share_percent")
+            zone_code = zone.get("code")
+            if (
+                not isinstance(share, (int, float))
+                or share < snapshot["minimum_share_percent"]
+                or share > previous
+                or not isinstance(zone_code, str)
+                or re.fullmatch(r"[A-E][A-Za-z]{1,2}", zone_code) is None
+                or zone_code in zone_codes
+                or zone.get("group") not in valid_groups
+                or not zone.get("name")
+            ):
+                raise ValueError(f"Invalid Köppen-Geiger zone for {code}: {zone}")
+            previous = share
+            zone_codes.add(zone_code)
+        if row.get("dominant_code") != zones[0]["code"]:
+            raise ValueError(f"Dominant Köppen-Geiger code is not first for {code}")
+        seen.add(code)
+        records.append({
+            "country_code": code,
+            "source_id": "koppen-geiger-1991-2020",
+            "source_record_id": row["source_record_id"],
+            "retrieved_at": "2026-07-22",
+            "data": {
+                "zones": zones,
+                "dominant_code": row["dominant_code"],
+                "represented_share_percent": row["represented_share_percent"],
+                "reference_period": "1991-2020",
+                "resolution_degrees": snapshot["resolution_degrees"],
+                "minimum_share_percent": snapshot["minimum_share_percent"],
+                "source_locator": row["source_locator"],
+            },
+        })
+    if country_codes - seen != EXPECTED_KOPPEN_GAPS:
+        raise ValueError(
+            "Köppen-Geiger runtime scope mismatch; "
+            f"missing={sorted(country_codes - seen)}"
+        )
+    return records
+
+
 def parse_reviewed_mottos(
     root: Path, country_codes: set[str]
 ) -> list[dict[str, object]]:
@@ -1008,12 +1207,17 @@ def normalize(root: Path) -> dict[str, object]:
     local_names = parse_country_local_names(root, set(un))
     formal_names = parse_english_formal_names(root, set(un))
     anthems, demonyms = parse_factbook_reference_facts(root, set(un))
+    physical_profiles = parse_factbook_physical_geography(root, set(un))
+    climate_profiles = parse_koppen_climate_profiles(root, set(un))
     mottos = parse_reviewed_mottos(root, set(un))
     currency_metadata, language_profiles, timezones = parse_reference_metadata(
         root, set(un), geocountries
     )
     formal_names_by_country = {
         record["country_code"]: record for record in formal_names
+    }
+    physical_by_country = {
+        record["country_code"]: record for record in physical_profiles
     }
     borders = parse_land_borders(root, un, geocountries)
     countries = []
@@ -1024,7 +1228,12 @@ def normalize(root: Path) -> dict[str, object]:
         data = dict(u["data"])
         data.update({
             "name": common.get(code, g["data"]["name"]),
-            "area_km2": g["data"]["area_km2"],
+            "area_km2": (
+                physical_by_country[code]["data"]["total_area_km2"]
+                if code in physical_by_country
+                and physical_by_country[code]["data"]["total_area_km2"] is not None
+                else g["data"]["area_km2"]
+            ),
             "population": g["data"]["population"],
             "top_level_domain": g["data"]["top_level_domain"],
             "currency_code": g["data"]["currency_code"],
@@ -1108,6 +1317,8 @@ def normalize(root: Path) -> dict[str, object]:
         "anthems": anthems,
         "mottos": mottos,
         "demonyms": demonyms,
+        "physical_profiles": physical_profiles,
+        "climate_profiles": climate_profiles,
         "language_profiles": language_profiles,
         "timezones": timezones,
         "capitals": capitals,
@@ -1144,6 +1355,10 @@ CREATE TABLE country_motto (country_id INTEGER NOT NULL, text TEXT NOT NULL, eng
 CREATE TABLE country_demonym (country_id INTEGER NOT NULL, noun TEXT, adjective TEXT, language_code TEXT NOT NULL, source_id TEXT NOT NULL, source_record_id TEXT NOT NULL, source_locator TEXT NOT NULL, PRIMARY KEY(country_id,language_code), FOREIGN KEY(country_id) REFERENCES country(id), FOREIGN KEY(source_id) REFERENCES source(id)) WITHOUT ROWID;
 CREATE TABLE country_language (country_id INTEGER NOT NULL, code TEXT NOT NULL, primary_code TEXT NOT NULL, name TEXT NOT NULL, script_code TEXT, source_id TEXT NOT NULL, source_locator TEXT NOT NULL, PRIMARY KEY(country_id,code), FOREIGN KEY(country_id) REFERENCES country(id), FOREIGN KEY(source_id) REFERENCES source(id)) WITHOUT ROWID;
 CREATE TABLE country_timezone (country_id INTEGER NOT NULL, timezone_id TEXT NOT NULL, january_utc_offset_hours REAL NOT NULL, july_utc_offset_hours REAL NOT NULL, raw_utc_offset_hours REAL NOT NULL, source_id TEXT NOT NULL, PRIMARY KEY(country_id,timezone_id), FOREIGN KEY(country_id) REFERENCES country(id), FOREIGN KEY(source_id) REFERENCES source(id)) WITHOUT ROWID;
+CREATE TABLE country_physical (country_id INTEGER PRIMARY KEY, land_area_km2 REAL, water_area_km2 REAL, coastline_km REAL, mean_elevation_m REAL, highest_point_name TEXT, highest_point_elevation_m REAL, highest_point_is_approximate INTEGER, highest_point_source_label TEXT, lowest_point_name TEXT, lowest_point_elevation_m REAL, lowest_point_is_approximate INTEGER, lowest_point_source_label TEXT, climate_summary TEXT, source_id TEXT NOT NULL, source_record_id TEXT NOT NULL, source_locator TEXT NOT NULL, FOREIGN KEY(country_id) REFERENCES country(id), FOREIGN KEY(source_id) REFERENCES source(id)) WITHOUT ROWID;
+CREATE TABLE country_river (country_id INTEGER NOT NULL, name TEXT NOT NULL, length_km REAL, source_label TEXT NOT NULL, source_id TEXT NOT NULL, source_locator TEXT NOT NULL, PRIMARY KEY(country_id,name), FOREIGN KEY(country_id) REFERENCES country(id), FOREIGN KEY(source_id) REFERENCES source(id)) WITHOUT ROWID;
+CREATE TABLE country_lake (country_id INTEGER NOT NULL, name TEXT NOT NULL, area_km2 REAL, water_type TEXT, source_label TEXT NOT NULL, source_id TEXT NOT NULL, source_locator TEXT NOT NULL, PRIMARY KEY(country_id,name), FOREIGN KEY(country_id) REFERENCES country(id), FOREIGN KEY(source_id) REFERENCES source(id)) WITHOUT ROWID;
+CREATE TABLE country_climate_zone (country_id INTEGER NOT NULL, code TEXT NOT NULL, name TEXT NOT NULL, climate_group TEXT NOT NULL, share_percent REAL NOT NULL, position INTEGER NOT NULL, reference_period TEXT NOT NULL, resolution_degrees REAL NOT NULL, minimum_share_percent REAL NOT NULL, source_id TEXT NOT NULL, source_locator TEXT NOT NULL, PRIMARY KEY(country_id,code), FOREIGN KEY(country_id) REFERENCES country(id), FOREIGN KEY(source_id) REFERENCES source(id)) WITHOUT ROWID;
 CREATE TABLE capital (id INTEGER PRIMARY KEY, country_id INTEGER NOT NULL, name TEXT NOT NULL, normalized_name TEXT NOT NULL, role TEXT NOT NULL, is_primary INTEGER NOT NULL, latitude REAL NOT NULL, longitude REAL NOT NULL, population INTEGER, elevation_m REAL, timezone_id TEXT, geonames_id INTEGER UNIQUE, FOREIGN KEY(country_id) REFERENCES country(id));
 CREATE TABLE city (id INTEGER PRIMARY KEY, country_id INTEGER NOT NULL, name TEXT NOT NULL, normalized_name TEXT NOT NULL, latitude REAL NOT NULL, longitude REAL NOT NULL, population INTEGER, elevation_m REAL, timezone_id TEXT, geonames_id INTEGER UNIQUE, is_capital INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(country_id) REFERENCES country(id));
 CREATE INDEX idx_city_country ON city(country_id);
@@ -1168,7 +1383,7 @@ def build_database(
     epoch = os.environ.get("SOURCE_DATE_EPOCH")
     built_at = datetime.fromtimestamp(int(epoch), timezone.utc).isoformat().replace("+00:00", "Z") if epoch else "2026-07-21T00:00:00Z"
     library_version = _project_version(root)
-    meta = {"schema_version": "6", "dataset_version": "2026.07.22.6", "library_version": library_version, "built_at": built_at}
+    meta = {"schema_version": "7", "dataset_version": "2026.07.22.7", "library_version": library_version, "built_at": built_at}
     con.executemany("INSERT INTO schema_meta VALUES (?,?)", sorted(meta.items()))
     sources = [
         ("geonames", "GeoNames", "https://www.geonames.org/", "2026-07-20", "2026-07-20", "CC BY 4.0", "https://creativecommons.org/licenses/by/4.0/", _sha(root / "build_data/raw/geonames/2026-07-20/manifest.json"), "Country metadata and populated places"),
@@ -1178,7 +1393,8 @@ def build_database(
         ("un-m49", "United Nations M49", "https://unstats.un.org/unsd/methodology/m49/", "2026-07-20", "2026-07-20", None, None, _sha(root / "build_data/raw/un-m49/2026-07-20/manifest.json"), "Canonical identities and regions"),
         ("ungegn-country-names-2017", "UNGEGN List of Country Names", "https://unstats.un.org/unsd/ungegn/working_groups/wg1.cshtml", "E/CONF.105/13/CRP.13 (2017-07-17)", "2026-07-20", None, None, _sha(root / "build_data/raw/ungegn-country-names/2017-07-17/manifest.json"), "Approved national official short and formal country names; reviewed entries transcribed with page locators"),
         ("unicode-cldr-48.2", "Unicode Common Locale Data Repository", "https://cldr.unicode.org/", "48.2", "2026-07-21", "Unicode License v3", "https://www.unicode.org/license.txt", _sha(root / "build_data/raw/unicode-cldr/48.2/manifest.json"), "Localized territory display names and official-language metadata used for complete local identity coverage"),
-        ("cia-world-factbook-2025", "CIA World Factbook structured country profiles", "https://www.cia.gov/the-world-factbook/", "factbook.json@8662a8b17a784841ab4528631b04090eb2f183eb", "2026-07-21", "Public domain", "https://www.cia.gov/site-policies/", _sha(root / "build_data/raw/cia-world-factbook/2025/manifest.json"), "Country names, anthem titles, and English nationality terms; no lyrics or narrative profile content"),
+        ("cia-world-factbook-2025", "CIA World Factbook structured country profiles", "https://www.cia.gov/the-world-factbook/", "factbook.json@8662a8b17a784841ab4528631b04090eb2f183eb", "2026-07-22", "Public domain", "https://www.cia.gov/site-policies/", _sha(root / "build_data/raw/cia-world-factbook/2025/manifest.json"), "Country names, anthem titles, English nationality terms, and structured physical-geography fields; no lyrics or political narrative"),
+        ("koppen-geiger-1991-2020", "Beck et al. Köppen-Geiger climate classification maps", "https://www.gloh2o.org/koppen/", "1991-2020 historical climatology; dataset version 1", "2026-07-22", "CC0 1.0", "https://creativecommons.org/publicdomain/zero/1.0/", _sha(root / "build_data/raw/koppen-geiger/2023/manifest.json"), "Area-weighted country climate-zone shares derived from the 0.1-degree source raster and pinned Natural Earth map units"),
         ("wikidata-official-names-2026-07-21", "Wikidata official-name statements", "https://www.wikidata.org/", "2026-07-21 query snapshot", "2026-07-21", "CC0 1.0", "https://www.wikidata.org/wiki/Wikidata:Licensing", _sha(root / "build_data/raw/wikidata/2026-07-21/manifest.json"), "Three reviewed English formal-name statements used where the public-domain Factbook differs from current UN usage"),
         ("un-protocol-country-names-2025", "UN Protocol official names of United Nations membership", "https://www.un.org/dgacm/en/content/protocol", "2025-02-05", "2026-07-21", "Credited excerpts under UN reuse guidance", "https://shop.un.org/rights-permissions", _sha(root / "build_data/raw/un-protocol/2025-02-05/manifest.json"), "Five short English formal-name excerpts used to resolve current-name differences; source PDF is not redistributed"),
         ("unicode-cldr-48.2-reference", "Unicode CLDR currency and language metadata", "https://cldr.unicode.org/", "48.2", "2026-07-22", "Unicode License v3", "https://www.unicode.org/license.txt", _sha(root / "build_data/raw/unicode-cldr/48.2/manifest.json"), "English currency names and symbols, minor-unit digits, language names, and likely scripts"),
@@ -1195,6 +1411,12 @@ def build_database(
     language_sources: dict[str, set[str]] = defaultdict(set)
     for record in normalized["language_profiles"]:
         language_sources[record["country_code"]].add(record["source_id"])
+    physical_by_code = {
+        record["country_code"]: record for record in normalized["physical_profiles"]
+    }
+    climate_by_code = {
+        record["country_code"]: record for record in normalized["climate_profiles"]
+    }
 
     ids: dict[str, int] = {}
     for ident, record in enumerate(sorted(normalized["countries"], key=lambda r: r["country_code"]), 1):
@@ -1230,6 +1452,22 @@ def build_database(
             field_sources.append((ident, "anthem", "cia-world-factbook-2025", code))
         if code in demonym_codes:
             field_sources.append((ident, "demonyms", "cia-world-factbook-2025", code))
+        if code in physical_by_code:
+            physical_record = physical_by_code[code]
+            field_sources.append((
+                ident,
+                "physical_geography",
+                "cia-world-factbook-2025",
+                physical_record["source_record_id"],
+            ))
+        if code in climate_by_code:
+            climate_record = climate_by_code[code]
+            field_sources.append((
+                ident,
+                "physical_geography.climate.koppen_geiger",
+                "koppen-geiger-1991-2020",
+                climate_record["source_record_id"],
+            ))
         if code in motto_codes:
             field_sources.extend([
                 (ident, "mottos", "wikidata-national-mottos-2026-07-22", code),
@@ -1298,6 +1536,75 @@ def build_database(
             "INSERT INTO country_timezone VALUES (?,?,?,?,?,?)",
             (ids[record["country_code"]], d["timezone_id"], d["january_utc_offset_hours"], d["july_utc_offset_hours"], d["raw_utc_offset_hours"], record["source_id"]),
         )
+    for record in sorted(normalized["physical_profiles"], key=lambda r: r["country_code"]):
+        d = record["data"]
+        highest, lowest = d["highest_point"], d["lowest_point"]
+        con.execute(
+            "INSERT INTO country_physical VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            (
+                ids[record["country_code"]],
+                d["land_area_km2"],
+                d["water_area_km2"],
+                d["coastline_km"],
+                d["mean_elevation_m"],
+                highest["name"] if highest else None,
+                highest["elevation_m"] if highest else None,
+                int(highest["is_approximate"]) if highest else None,
+                highest["source_label"] if highest else None,
+                lowest["name"] if lowest else None,
+                lowest["elevation_m"] if lowest else None,
+                int(lowest["is_approximate"]) if lowest else None,
+                lowest["source_label"] if lowest else None,
+                d["climate_summary"],
+                record["source_id"],
+                record["source_record_id"],
+                d["source_locator"],
+            ),
+        )
+        for river in d["rivers"]:
+            con.execute(
+                "INSERT INTO country_river VALUES (?,?,?,?,?,?)",
+                (
+                    ids[record["country_code"]],
+                    river["name"],
+                    river["length_km"],
+                    river["source_label"],
+                    record["source_id"],
+                    d["source_locators"]["rivers"],
+                ),
+            )
+        for lake in d["lakes"]:
+            con.execute(
+                "INSERT INTO country_lake VALUES (?,?,?,?,?,?,?)",
+                (
+                    ids[record["country_code"]],
+                    lake["name"],
+                    lake["area_km2"],
+                    lake["subtype"],
+                    lake["source_label"],
+                    record["source_id"],
+                    d["source_locators"]["lakes"],
+                ),
+            )
+    for record in sorted(normalized["climate_profiles"], key=lambda r: r["country_code"]):
+        d = record["data"]
+        for position, zone in enumerate(d["zones"], 1):
+            con.execute(
+                "INSERT INTO country_climate_zone VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+                (
+                    ids[record["country_code"]],
+                    zone["code"],
+                    zone["name"],
+                    zone["group"],
+                    zone["share_percent"],
+                    position,
+                    d["reference_period"],
+                    d["resolution_degrees"],
+                    d["minimum_share_percent"],
+                    record["source_id"],
+                    d["source_locator"],
+                ),
+            )
     capital_ids = {record["data"]["geonames_id"] for record in normalized["capitals"]}
     for ident, record in enumerate(sorted(normalized["capitals"], key=lambda r: (r["country_code"], r["data"]["name"])), 1):
         d = record["data"]
@@ -1322,7 +1629,7 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
     reports.mkdir(parents=True, exist_ok=True)
     countries = normalized["countries"]
     coverage = {
-        "dataset_version": "2026.07.22.6",
+        "dataset_version": "2026.07.22.7",
         "countries": len(countries),
         "capitals": len(normalized["capitals"]),
         "major_cities": len(normalized["cities"]),
@@ -1404,6 +1711,61 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
             for record in normalized["borders"]
             for code in (record["country_code"], record["neighbor_code"])
         }),
+        "physical_profiles": len(normalized["physical_profiles"]),
+        "physical_total_area_profiles": sum(
+            record["data"]["total_area_km2"] is not None
+            for record in normalized["physical_profiles"]
+        ),
+        "land_area_profiles": sum(
+            record["data"]["land_area_km2"] is not None
+            for record in normalized["physical_profiles"]
+        ),
+        "water_area_profiles": sum(
+            record["data"]["water_area_km2"] is not None
+            for record in normalized["physical_profiles"]
+        ),
+        "coastline_profiles": sum(
+            record["data"]["coastline_km"] is not None
+            for record in normalized["physical_profiles"]
+        ),
+        "mean_elevation_profiles": sum(
+            record["data"]["mean_elevation_m"] is not None
+            for record in normalized["physical_profiles"]
+        ),
+        "elevation_extreme_profiles": sum(
+            record["data"]["highest_point"] is not None
+            and record["data"]["lowest_point"] is not None
+            for record in normalized["physical_profiles"]
+        ),
+        "river_profiles": sum(
+            bool(record["data"]["rivers"])
+            for record in normalized["physical_profiles"]
+        ),
+        "river_records": sum(
+            len(record["data"]["rivers"])
+            for record in normalized["physical_profiles"]
+        ),
+        "lake_profiles": sum(
+            bool(record["data"]["lakes"])
+            for record in normalized["physical_profiles"]
+        ),
+        "lake_records": sum(
+            len(record["data"]["lakes"])
+            for record in normalized["physical_profiles"]
+        ),
+        "climate_summary_profiles": sum(
+            record["data"]["climate_summary"] is not None
+            for record in normalized["physical_profiles"]
+        ),
+        "koppen_geiger_profiles": len(normalized["climate_profiles"]),
+        "koppen_geiger_zone_records": sum(
+            len(record["data"]["zones"])
+            for record in normalized["climate_profiles"]
+        ),
+        "koppen_geiger_coverage_gaps": sorted(
+            {record["country_code"] for record in countries}
+            - {record["country_code"] for record in normalized["climate_profiles"]}
+        ),
         "database_sha256": _sha(database),
         "validation": "PASS",
     }
@@ -1491,11 +1853,20 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
             "tests": "Source-scope, review-decision, typed-model, ranking, filtering, serialization, documentation, and clean-wheel release gates",
             "dataset": "234 anthem profiles / 32 reviewed mottos / 227 demonym profiles / 246 timezone profiles / 176 postal formats / 722 country-language records",
             "docs": "Reference-facts guide, example gallery, rankings, filters, provenance, coverage boundaries, and runnable examples",
-            "release": "Complete 0.6.0 release candidate; publication pending",
+            "release": "Published as v0.6.0",
+        },
+        {
+            "name": "7 — Physical geography",
+            "version": "0.7.0",
+            "status": "complete",
+            "functions": "Land and water area, coastline, elevation extremes, major rivers and lakes, climate summaries, Köppen-Geiger classes, physical filters, and rankings",
+            "tests": "Pinned-source coverage, typed-model, physical discovery, ranking, serialization, documentation, and release gates",
+            "dataset": f"{coverage['physical_profiles']} physical profiles / {coverage['river_records']} rivers / {coverage['lake_records']} lakes / {coverage['koppen_geiger_profiles']} Köppen-Geiger profiles",
+            "docs": "Physical profile guide, climate methodology, coverage rules, rankings, API reference, and runnable examples",
+            "release": "Complete 0.7.0 release candidate; publication pending",
         },
     ]
     for name, version in [
-        ("7 — Physical geography", "0.7.0"),
         ("8 — Boundary geometry and spatial queries", "0.8.0"),
         ("9 — Advanced education and full-world hardening", "0.9.0"),
         ("Stable offline atlas", "1.0.0"),
@@ -1503,8 +1874,8 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
         milestones.append({"name": name, "version": version, "status": "planned", "functions": "—", "tests": "—", "dataset": "—", "docs": "—", "release": "—"})
     status = {
         "library_version": _project_version(root),
-        "schema_version": 6,
-        "dataset_version": "2026.07.22.6",
+        "schema_version": 7,
+        "dataset_version": "2026.07.22.7",
         "milestones": milestones,
         "coverage": coverage,
     }

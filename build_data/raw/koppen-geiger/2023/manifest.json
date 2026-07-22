@@ -1,0 +1,38 @@
+{
+  "source_id": "koppen-geiger-1991-2020",
+  "source_version": "1991-2020 historical climatology; dataset version 1",
+  "retrieved_at": "2026-07-22T00:00:00Z",
+  "dataset_doi": "https://doi.org/10.6084/m9.figshare.21937571.v1",
+  "article_doi": "https://doi.org/10.1038/s41597-023-02549-6",
+  "license_name": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "source_archive": {
+    "url": "https://ndownloader.figshare.com/files/42602809",
+    "size_bytes": 92221371,
+    "md5": "544e895588b90ecc5903c27f50f4b761",
+    "sha256": "0f43cd0c83a781e29c0e9c43e114f690bb84274bfc78b3dc2c879888b0f60df1"
+  },
+  "files": [
+    {
+      "path": "1991_2020/koppen_geiger_0p1.tif",
+      "sha256": "d03ae67c66b48bc423bb5ebdda2a9a735262e26972576e2bb6a6881dc4e02bf4",
+      "size_bytes": 212597
+    },
+    {
+      "path": "legend.txt",
+      "sha256": "6373d6b522b7b27ec9afbf51dc477a8a9d269074321d51d8e047c23691d67fcb",
+      "size_bytes": 2397
+    },
+    {
+      "path": "country_zones.json",
+      "sha256": "bc59a51670cb6e9ba7953cc910b238aa08b5706ff99cecaa92cc77be735a0137",
+      "size_bytes": 219779
+    }
+  ],
+  "extractor": "pipeline/scripts/extract_koppen_country_zones.py",
+  "method": "Latitude-area-weighted class shares from the 0.1-degree historical raster inside pinned Natural Earth 1:50m map-unit polygons. Classes below 0.1 percent are omitted.",
+  "coverage": {
+    "profiles": 241,
+    "gaps": ["BV", "GI", "MH", "MV", "TK", "TV", "UM"]
+  }
+}

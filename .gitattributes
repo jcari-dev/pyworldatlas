@@ -4,3 +4,6 @@
 # Preserve the exact upstream response bytes covered by the source manifest.
 build_data/raw/wikidata/2026-07-21/official-names.json -text
 build_data/raw/wikidata/2026-07-22/national-mottos.json -text
+
+# Keep the upstream climate legend byte-exact, including source whitespace.
+build_data/raw/koppen-geiger/2023/legend.txt -whitespace

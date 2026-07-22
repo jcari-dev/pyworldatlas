@@ -86,12 +86,13 @@ provides postal-code display formats for 176 profiles.
 
 ## CIA World Factbook structured profiles
 
-- Purpose: base English formal-name layer, anthem titles, and English demonyms.
+- Purpose: base English formal-name layer, anthem titles, English demonyms,
+  area components, coastline, mean elevation, highest/lowest points,
+  source-listed major rivers/lakes, and short climate descriptions.
 - Official URL: https://www.cia.gov/the-world-factbook/
 - Structured snapshot: `factbook.json` commit
   `8662a8b17a784841ab4528631b04090eb2f183eb`, reduced deterministically to the
-  structured `Government > Country name`, `Government > National anthem`, and
-  `People and Society > Nationality` fields.
+  documented identity, reference, and structured physical-geography fields.
 - Extractor: `pipeline/scripts/extract_factbook_country_identity.py`.
 - Terms: public domain under the CIA site policy and the structured
   repository's public-domain dedication.
@@ -99,8 +100,28 @@ provides postal-code display formats for 176 profiles.
   no distinct long form, 234 anthem-title profiles, and 227 demonym profiles.
 - Limitations: AX, BQ, GF, GP, MQ, RE, UM, and YT are outside the captured
   source intersection and remain `None`.
-- Exclusions: lyrics, audio, contributor credits, adoption histories, and
-  profile narrative text are not extracted.
+- Physical coverage: 238 total/land-area and coastline profiles, 233 numeric
+  water-area profiles, 240 highest/lowest-point and climate-summary profiles,
+  166 mean-elevation profiles, 188 river records across 80 profiles, and 187
+  lake records across 69 profiles.
+- Exclusions: lyrics, audio, contributor credits, adoption histories,
+  political narrative, and general profile narrative are not extracted.
+
+## Köppen-Geiger climate classification maps
+
+- Purpose: broad physical-climate classification for country and area profiles.
+- Publication: https://doi.org/10.1038/s41597-023-02549-6
+- Data: https://doi.org/10.6084/m9.figshare.21937571.v1
+- Snapshot: 0.1-degree 1991–2020 historical raster and 30-class legend,
+  Beck et al. dataset version 1, with pinned source and derived checksums.
+- License: the Figshare data release is CC0 1.0.
+- Derivation: raster cell centres are matched to pinned Natural Earth 1:50m
+  map units, weighted by latitude, grouped by runtime profile, and filtered at
+  a minimum represented share of 0.1%.
+- Coverage: 241 / 248 profiles. BV, GI, MH, MV, TK, TV, and UM have no
+  represented cells after the documented intersection rules.
+- Limitations: shares are generalized broad-scale estimates, not local
+  forecasts, property-boundary results, or site-level classifications.
 
 ## Wikidata national-motto statements
 
@@ -145,7 +166,8 @@ provides postal-code display formats for 176 profiles.
 ## Natural Earth
 
 - Purpose: independent land-border topology from shared segments in the 1:50m
-  Admin 0 map-unit polygons.
+  Admin 0 map-unit polygons, plus build-time aggregation of climate raster
+  cells into country profiles.
 - Official URL: https://www.naturalearthdata.com/downloads/50m-cultural-vectors/
 - Snapshot: boundary lines 5.1.0 and country/map-unit archives 5.1.1, captured
   2026-07-21 with SHA-256 manifests.
@@ -155,7 +177,8 @@ provides postal-code display formats for 176 profiles.
   decision in `build_data/reviewed/border_decisions.csv`.
 - Limitations: generalized 1:50m geometry may omit shared segments for small
   territories and enclaves, and Natural Earth applies a documented de facto
-  map convention.
+  map convention. The polygons are not exposed as public boundary geometry in
+  0.7.
 
 The reviewed 0.3.0 graph contains 319 canonical undirected relationships: 315
 cross-source agreements and four explicit inclusions. Two source-only
@@ -164,7 +187,8 @@ relationships are explicitly excluded.
 ## Derived discovery values
 
 Flag emoji are calculated from the UN/ISO alpha-2 code. Population density is
-the captured GeoNames population divided by the captured area value. Discovery
+the captured GeoNames population divided by the sourced total-area value;
+water percentage is water area divided by total area. Discovery
 cards, deterministic samples, and flashcards only select, arrange, or calculate
 from already attributed profile fields; they add no external country facts.
 
@@ -177,3 +201,7 @@ remote service. Flashcard wording is package code under the project license;
 answers retain the provenance and freshness limits of their underlying fields.
 Neighbor and border-count flashcards are calculated from the reviewed 0.3.0
 graph and introduce no additional border claims.
+
+Physical rankings and flashcards reuse the documented physical fields. River
+and lake counts describe source-listed records rather than exhaustive
+inventories. Köppen-Geiger classes reuse the pinned derived country snapshot.

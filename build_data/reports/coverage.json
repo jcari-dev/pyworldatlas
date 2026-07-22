@@ -1,5 +1,5 @@
 {
-  "dataset_version": "2026.07.22.6",
+  "dataset_version": "2026.07.22.7",
   "countries": 248,
   "capitals": 241,
   "major_cities": 6265,
@@ -55,6 +55,29 @@
   "reviewed_land_borders": 319,
   "countries_with_land_borders": 163,
   "countries_with_no_land_borders": 85,
-  "database_sha256": "4efc9dbd68a84c7126c1367689301cddff711b9dc35a5117ecaa4b1f8dc347d8",
+  "physical_profiles": 240,
+  "physical_total_area_profiles": 238,
+  "land_area_profiles": 238,
+  "water_area_profiles": 233,
+  "coastline_profiles": 238,
+  "mean_elevation_profiles": 166,
+  "elevation_extreme_profiles": 240,
+  "river_profiles": 80,
+  "river_records": 188,
+  "lake_profiles": 69,
+  "lake_records": 187,
+  "climate_summary_profiles": 240,
+  "koppen_geiger_profiles": 241,
+  "koppen_geiger_zone_records": 951,
+  "koppen_geiger_coverage_gaps": [
+    "BV",
+    "GI",
+    "MH",
+    "MV",
+    "TK",
+    "TV",
+    "UM"
+  ],
+  "database_sha256": "7b2d50db0e7908031adcd8463509701a1f46cc8cf824bff1d85343b85dfe88f8",
   "validation": "PASS"
 }

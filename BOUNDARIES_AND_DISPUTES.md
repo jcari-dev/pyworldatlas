@@ -27,8 +27,12 @@ in `build_data/reviewed/border_decisions.csv`. Corrections are evaluated against
 the declared source and topology rules.
 
 Country distance remains capital-to-capital distance and must not be interpreted
-as a boundary or centroid measurement. Geometry and point-in-boundary work begin
-in 0.7.0 and require a separate documented source and precision review.
+as a boundary or centroid measurement. Version 0.7 uses pinned generalized map
+units only during development to aggregate Köppen-Geiger raster cells into broad
+country climate profiles; it does not expose those polygons or perform public
+point-in-country lookup. Geometry, GeoJSON, bounding boxes, centroids, and
+point-in-boundary work remain deferred and require a separate documented source,
+licensing, convention, and precision review.
 
 The governing educational and editorial principles are recorded in
 `EDUCATIONAL_AND_NEUTRALITY_POLICY.md`.

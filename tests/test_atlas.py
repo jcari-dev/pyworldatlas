@@ -57,7 +57,7 @@ class AtlasTests(unittest.TestCase):
         self.assertEqual(japan.language_codes, ("ja",))
         self.assertEqual(japan.currency_code, "JPY")
         self.assertEqual(japan.major_city_count, len(japan.major_cities))
-        self.assertAlmostEqual(japan.population_density, 334.879, places=3)
+        self.assertAlmostEqual(japan.population_density, 334.808, places=3)
 
         card = japan.discovery_card()
         self.assertEqual(card.country, japan.reference())
@@ -69,6 +69,9 @@ class AtlasTests(unittest.TestCase):
         self.assertEqual(card.anthem_title, "Kimigayo")
         self.assertEqual(card.demonym, "Japanese (singular and plural)")
         self.assertEqual(card.timezone_ids, ("Asia/Tokyo",))
+        self.assertEqual(card.coastline_km, 29_751)
+        self.assertEqual(card.highest_point.name, "Mount Fuji")
+        self.assertIn("Cfa", card.climate_zone_codes)
         self.assertEqual(card.to_dict()["country"]["alpha2"], "JP")
         self.atlas.close()
         self.assertIn('"flag_emoji": "🇯🇵"', card.to_json())
@@ -102,9 +105,10 @@ class AtlasTests(unittest.TestCase):
         self.assertEqual(cards[0].to_dict()["topic"], "capitals")
         topics = (
             "alpha_2_codes", "alpha_3_codes", "areas", "border_counts", "calling_codes",
-            "continents", "countries_from_capitals", "currencies", "flags",
-            "language_codes", "local_names", "m49_codes", "neighbors", "population_density",
-            "populations", "regions", "top_level_domains",
+            "climate_zones", "coastlines", "continents", "countries_from_capitals",
+            "currencies", "flags", "highest_points", "language_codes", "lakes",
+            "local_names", "m49_codes", "neighbors", "population_density",
+            "populations", "regions", "rivers", "top_level_domains",
         )
         for topic in topics:
             card = self.atlas.flashcards(topic=topic, count=1, seed="lesson")[0]
@@ -273,6 +277,63 @@ class AtlasTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "positive integer"):
             self.atlas.rank_countries("population", limit=True)
 
+    def test_physical_geography_profiles_and_discovery(self):
+        brazil = self.atlas.country("Brazil")
+        self.assertEqual(
+            (brazil.land_area_km2, brazil.water_area_km2, brazil.coastline_km),
+            (8_358_140, 157_630, 7_491),
+        )
+        self.assertAlmostEqual(brazil.water_percent, 1.851, places=3)
+        self.assertEqual(
+            (brazil.highest_point.name, brazil.highest_point.elevation_m),
+            ("Pico da Neblina", 2_994),
+        )
+        self.assertEqual(brazil.rivers[0].name, "Amazon")
+        self.assertEqual(brazil.rivers[0].length_km, 6_400)
+        self.assertEqual(brazil.lakes[0].name, "Lagoa dos Patos")
+        self.assertEqual(brazil.climate.dominant_zone.code, "Aw")
+        self.assertEqual(brazil.climate.reference_period, "1991-2020")
+        self.assertEqual(brazil.climate.summary_source.id, "cia-world-factbook-2025")
+        self.assertEqual(
+            brazil.climate.classification_source.id,
+            "koppen-geiger-1991-2020",
+        )
+
+        switzerland = self.atlas.country("Switzerland")
+        self.assertFalse(switzerland.is_coastal)
+        self.assertTrue(switzerland.is_landlocked)
+        self.assertEqual(switzerland.lowest_point.name, "Lake Maggiore")
+        self.assertIn("ET", switzerland.climate.zone_codes)
+
+        self.assertIn(
+            "Brazil",
+            {country.name for country in self.atlas.countries_with_river("Amazon")},
+        )
+        self.assertEqual(
+            {country.alpha2 for country in self.atlas.countries_with_lake("Geneva")},
+            {"CH", "FR"},
+        )
+        self.assertIn(
+            "CH",
+            {country.alpha2 for country in self.atlas.countries_in_climate_zone("ET")},
+        )
+        self.assertEqual(len(self.atlas.countries(coastal=True)), 193)
+        self.assertEqual(len(self.atlas.countries(coastal=False)), 45)
+        self.assertEqual(len(self.atlas.countries(has_rivers=True)), 80)
+        self.assertEqual(len(self.atlas.countries(has_lakes=True)), 69)
+        self.assertEqual(
+            self.atlas.rank("coastline", limit=1)[0].country.alpha2,
+            "CA",
+        )
+        self.assertEqual(
+            self.atlas.rank("mean_elevation", limit=1)[0].country.alpha2,
+            "TJ",
+        )
+        with self.assertRaisesRegex(ValueError, "Köppen-Geiger"):
+            self.atlas.countries_in_climate_zone("H")
+        with self.assertRaisesRegex(TypeError, "coastal"):
+            self.atlas.countries(coastal="yes")
+
     def test_reviewed_neighbors_and_shared_neighbors(self):
         self.assertEqual(
             tuple(country.name for country in self.atlas.neighbors("France")),
@@ -344,7 +405,7 @@ class AtlasTests(unittest.TestCase):
 
     def test_dataset_versions(self):
         info = self.atlas.dataset_info()
-        self.assertEqual((info.library_version, info.schema_version, info.dataset_version), ("0.6.0", 6, "2026.07.22.6"))
+        self.assertEqual((info.library_version, info.schema_version, info.dataset_version), ("0.7.0", 7, "2026.07.22.7"))
         self.assertEqual(info.country_count, 248)
 
     def test_english_formal_names_are_sourced_and_discoverable(self):

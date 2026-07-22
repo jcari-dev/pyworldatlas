@@ -4,6 +4,8 @@
   "english_formal_names": ["cia-world-factbook-2025", "un-protocol-country-names-2025", "wikidata-official-names-2026-07-21"],
   "anthem_titles": ["cia-world-factbook-2025"],
   "english_demonyms": ["cia-world-factbook-2025"],
+  "physical_geography": ["cia-world-factbook-2025"],
+  "koppen_geiger_climate": ["koppen-geiger-1991-2020", "natural-earth"],
   "national_mottos": ["wikidata-national-mottos-2026-07-22", "reviewed-national-mottos"],
   "local_display_names": ["unicode-cldr-48.2"],
   "national_official_names": ["ungegn-country-names-2017"],
