@@ -46,6 +46,13 @@ The release workflow builds Sphinx from the exact release wheel and replaces the
 generated files in the documentation repository. Source documentation remains
 in this repository under `docs/source/`.
 
+Documentation-only updates do not require a new PyPI version. Changes under
+`docs/` or `examples/` run the dedicated `Documentation` workflow after they
+are merged to `main`. That workflow builds strict HTML and doctests from the
+current checkout before updating the documentation repository. The release
+workflow remains the authoritative path when the package API, data, or version
+changes.
+
 ## Prepare and publish a release
 
 > **Current candidate:** 0.7.0 adds the physical-geography milestone. Publish

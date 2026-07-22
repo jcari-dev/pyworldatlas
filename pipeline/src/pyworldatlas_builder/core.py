@@ -1833,7 +1833,7 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
             "tests": "30 unit/pipeline tests, 221 doctests, clean-wheel examples, and release audit passed",
             "dataset": f"{coverage['local_names']} local identities / {coverage['english_formal_names']} English formal names / {coverage['national_official_local_names']} reviewed local official forms",
             "docs": "Identity guide, fun multilingual examples, evidence levels, source rules, and complete coverage metrics",
-            "release": "Merged to main; included in the 0.5.0 production candidate",
+            "release": "Included in published v0.5.0",
         },
         {
             "name": "5 — Educational scope and publication safety",
@@ -1863,7 +1863,7 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
             "tests": "Pinned-source coverage, typed-model, physical discovery, ranking, serialization, documentation, and release gates",
             "dataset": f"{coverage['physical_profiles']} physical profiles / {coverage['river_records']} rivers / {coverage['lake_records']} lakes / {coverage['koppen_geiger_profiles']} Köppen-Geiger profiles",
             "docs": "Physical profile guide, climate methodology, coverage rules, rankings, API reference, and runnable examples",
-            "release": "Complete 0.7.0 release candidate; publication pending",
+            "release": "Published as v0.7.0",
         },
     ]
     for name, version in [

@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pyworldatlas"
 version = "0.7.0"
-description = "Offline country profiles, coordinate tools, and geography learning utilities"
+description = "Offline country profiles, physical geography, and geographic tools for Python"
 keywords = ["atlas", "countries", "education", "geography", "offline", "world-data"]
 readme = "README.md"
 requires-python = ">=3.10"
