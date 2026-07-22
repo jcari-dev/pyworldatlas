@@ -25,12 +25,22 @@ at https://www.iana.org/assignments/language-subtag-registry/. IANA and IETF
 state that applicable rights in their protocol registry data are dedicated
 under CC0 1.0; see https://www.iana.org/help/licensing-terms.
 
-English formal country names, national-anthem titles, and English demonyms are
-derived from structured fields of the CIA World Factbook. CIA states that
+English formal country names, national-anthem titles, English demonyms, area
+components, coastlines, elevation, source-listed major rivers and lakes, and
+short climate descriptions are derived from structured fields of the CIA World
+Factbook. CIA states that
 information on its public website is in the public domain unless otherwise
 indicated. The compact extraction pins the structured source revision and
 contains no lyrics, audio, contributor credits, adoption histories, or
 Factbook narrative text. See https://www.cia.gov/site-policies/.
+
+Country-level Köppen-Geiger climate classes are derived from the 0.1-degree
+1991–2020 map published with Beck et al., *High-resolution (1 km) Köppen-Geiger
+maps for 1901–2099 based on constrained CMIP6 projections*, Scientific Data
+(2023), https://doi.org/10.1038/s41597-023-02549-6. The source data release at
+https://doi.org/10.6084/m9.figshare.21937571.v1 is dedicated under CC0 1.0.
+The archive checksum, compact raster and legend, deterministic extraction
+method, and derived snapshot checksum are retained.
 
 Three reviewed English formal-name values use exact Wikidata official-name
 statements. Wikidata structured data is released under Creative Commons CC0
@@ -48,7 +58,8 @@ Membership*. The source PDF is not redistributed; its URL, date, checksum, and
 used page locators are recorded. United Nations names and material do not imply
 endorsement. See https://shop.un.org/rights-permissions.
 
-Natural Earth 1:50m Admin 0 data is used to cross-check land-border topology.
+Natural Earth 1:50m Admin 0 data is used to cross-check land-border topology
+and to aggregate climate raster cells into country profiles at build time.
 Natural Earth states that its raster and vector data is in the public domain and
 may be used for personal, educational, and commercial purposes. Source archives,
 embedded versions, URLs, and checksums are retained in the raw-data manifest.

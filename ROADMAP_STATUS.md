@@ -2,9 +2,9 @@
 
 > This file is generated from `build_data/reports/status.json`.
 
-Library version: 0.6.0
-Dataset version: 2026.07.22.6
-Schema version: 6
+Library version: 0.7.0
+Dataset version: 2026.07.22.7
+Schema version: 7
 
 Countries and areas: 248 (UN M49 scope)
 Capitals: 241 / 248
@@ -17,6 +17,9 @@ Profile fields: 248 population / 247 currency / 245 language-code records
 Reference facts: 234 anthem titles / 32 reviewed mottos / 227 English demonym profiles
 Practical profiles: 246 timezone profiles / 176 postal formats / 245 currency symbols
 Reviewed land borders: 319 / borderless entities: 85
+Physical profiles: 240 source profiles / 238 coastlines / 240 elevation-extreme pairs
+Named physical features: 188 rivers across 80 profiles / 187 lakes across 69 profiles
+Climate: 240 summaries / 241 Köppen-Geiger profiles
 Last validation: PASS
 
 | Milestone | Version | Status | Implemented functions | Tests | Dataset coverage | Documentation | Release |
@@ -28,8 +31,8 @@ Last validation: PASS
 | 3.1 — Border API and learning polish | 0.3.1 | complete | Land-route reachability, path name/code conveniences, neighbor flashcards, and border-count flashcards | Deterministic flashcard fixtures, reachability edge cases, examples, and complete release gate | No dataset change; derives from the 319 reviewed relationships | API provenance, connectivity semantics, serialization, flashcards, and examples | Publication state is tracked on GitHub Releases and PyPI |
 | 4 — Official country identity | 0.4.0 | complete | Complete local display names, English formal names, reviewed local official forms, language/script lookup, romanization, and coverage discovery | 30 unit/pipeline tests, 221 doctests, clean-wheel examples, and release audit passed | 248 local identities / 240 English formal names / 10 reviewed local official forms | Identity guide, fun multilingual examples, evidence levels, source rules, and complete coverage metrics | Merged to main; included in the 0.5.0 production candidate |
 | 5 — Educational scope and publication safety | 0.5.0 | complete | Editorial policy, public-field scope audit, respectful contribution and correction process, and policy release checks | Policy-document integrity, public-model scope, source-role, example-language, documentation, and release audits | Reviewed geographic dataset with updated provenance and policy metadata; no new narrative fields | Educational purpose, source scope, geographic conventions, community standards, and correction guidance | Published as v0.5.0 |
-| 6 — Country reference and discovery | 0.6.0 | complete | Anthem titles, reviewed mottos, demonyms, complete timezone profiles, postal formats, richer currency and language metadata, profile filters, rankings, and nearest capitals | Source-scope, review-decision, typed-model, ranking, filtering, serialization, documentation, and clean-wheel release gates | 234 anthem profiles / 32 reviewed mottos / 227 demonym profiles / 246 timezone profiles / 176 postal formats / 722 country-language records | Reference-facts guide, example gallery, rankings, filters, provenance, coverage boundaries, and runnable examples | Complete 0.6.0 release candidate; publication pending |
-| 7 — Physical geography | 0.7.0 | planned | — | — | — | — | — |
+| 6 — Country reference and discovery | 0.6.0 | complete | Anthem titles, reviewed mottos, demonyms, complete timezone profiles, postal formats, richer currency and language metadata, profile filters, rankings, and nearest capitals | Source-scope, review-decision, typed-model, ranking, filtering, serialization, documentation, and clean-wheel release gates | 234 anthem profiles / 32 reviewed mottos / 227 demonym profiles / 246 timezone profiles / 176 postal formats / 722 country-language records | Reference-facts guide, example gallery, rankings, filters, provenance, coverage boundaries, and runnable examples | Published as v0.6.0 |
+| 7 — Physical geography | 0.7.0 | complete | Land and water area, coastline, elevation extremes, major rivers and lakes, climate summaries, Köppen-Geiger classes, physical filters, and rankings | Pinned-source coverage, typed-model, physical discovery, ranking, serialization, documentation, and release gates | 240 physical profiles / 188 rivers / 187 lakes / 241 Köppen-Geiger profiles | Physical profile guide, climate methodology, coverage rules, rankings, API reference, and runnable examples | Complete 0.7.0 release candidate; publication pending |
 | 8 — Boundary geometry and spatial queries | 0.8.0 | planned | — | — | — | — | — |
 | 9 — Advanced education and full-world hardening | 0.9.0 | planned | — | — | — | — | — |
 | Stable offline atlas | 1.0.0 | planned | — | — | — | — | — |

@@ -2,7 +2,7 @@
 
 > A compact, source-aware world atlas for Python that works completely offline.
 
-[![Source 0.6.0](https://img.shields.io/badge/source-0.6.0-1677be)](CHANGELOG.md)
+[![Source 0.7.0](https://img.shields.io/badge/source-0.7.0-1677be)](CHANGELOG.md)
 [![PyPI](https://img.shields.io/pypi/v/pyworldatlas.svg?label=PyPI)](https://pypi.org/project/pyworldatlas/)
 [![Python 3.10–3.14](https://img.shields.io/badge/python-3.10%E2%80%933.14-10233d)](https://www.python.org/)
 [![Runtime dependencies: 0](https://img.shields.io/badge/runtime%20dependencies-0-1b8a6b)](#small-by-design)
@@ -22,11 +22,10 @@ with Atlas() as atlas:
     brazil = atlas.country("Brazil")
 
     print(brazil.flag, brazil.name_in("pt"), brazil.capital.name)
-    print(brazil.anthem.title)                 # Hino Nacional Brasileiro
-    print(brazil.motto.english_text)            # Order and Progress
-    print([row.capital.name for row in atlas.nearest_capitals(
-        "Tokyo", country="JP", limit=3
-    )])
+    print(brazil.highest_point.name, brazil.highest_point.elevation_m)
+    print([river.name for river in brazil.rivers[:3]])
+    print(brazil.climate.dominant_zone.code, brazil.climate.dominant_zone.name)
+    print([country.name for country in atlas.countries_with_river("Amazon")])
 ```
 
 ## Educational purpose and editorial policy
@@ -53,8 +52,10 @@ populated-place records established in earlier releases. Version 0.3.1 makes
 that graph easier to query, teach, and explain. Version 0.5.0 added one sourced
 local-language identity for every record, a separate sourced English
 formal-name layer for 240 profiles, and the package's educational and editorial
-policy. Version 0.6.0 adds country reference facts, practical metadata, profile
-filters, deterministic rankings, and nearest-capital discovery.
+policy. Version 0.6.0 added country reference facts, practical metadata, profile
+filters, deterministic rankings, and nearest-capital discovery. Version 0.7.0
+adds sourced physical geography, represented Köppen-Geiger climate classes,
+feature discovery, physical rankings, and new learning prompts.
 
 | Current dataset | Coverage |
 |---|---:|
@@ -74,14 +75,24 @@ filters, deterministic rankings, and nearest-capital discovery.
 | Postal-code formats | 176 / 248 |
 | Reviewed land borders | 319 undirected relationships |
 | Countries and areas without an accepted land border | 85 |
+| Total-area profiles | 248 / 248 |
+| Land-area profiles | 238 / 248 |
+| Numeric water-area profiles | 233 / 248 |
+| Coastline profiles | 238 / 248 |
+| Highest and lowest points | 240 / 248 each |
+| Mean-elevation profiles | 166 / 248 |
+| Source-listed major rivers | 188 records across 80 profiles |
+| Source-listed major lakes | 187 records across 69 profiles |
+| Plain-language climate summaries | 240 / 248 |
+| Köppen-Geiger climate profiles | 241 / 248 |
 | Runtime dependencies | 0 |
 | Bundled databases | 1 SQLite file |
 
-The 0.6.0 release includes richer currency and language objects, complete
-captured country timezones, postal formats, anthem titles, reviewed mottos,
-demonyms, exact profile filters, typed rankings, and nearest-capital results.
-Boundary geometry, GeoJSON, point-in-country lookup, anthem credits/dates, and
-reference dates remain outside this release.
+The 0.7.0 release adds land/water area, coastline, elevation extremes,
+source-listed major rivers and lakes, climate summaries, Köppen-Geiger classes,
+physical filters, rankings, discovery helpers, and flashcards. Boundary
+geometry, GeoJSON, bounding boxes, centroids, point-in-country lookup, anthem
+credits/dates, and reference dates remain outside this release.
 
 ## Installation
 
@@ -101,7 +112,7 @@ python -m pip install -e . -e pipeline
 You can also test the exact local wheel after running the release build:
 
 ```console
-python -m pip install --no-index --no-deps dist/pyworldatlas-0.6.0-py3-none-any.whl
+python -m pip install --no-index --no-deps dist/pyworldatlas-0.7.0-py3-none-any.whl
 ```
 
 The package runtime supports Python 3.10 through 3.14 during the 0.x release
@@ -121,6 +132,12 @@ series. Python versions are only claimed as release-supported after CI passes.
 | Major cities | `atlas.major_cities("Japan", limit=5)` |
 | Rich profile | `country.population`, `.currency`, `.languages`, `.calling_codes` |
 | Reference facts | `country.anthem`, `.motto`, `.demonym`, `.postal_code` |
+| Physical profile | `country.physical`, `.land_area_km2`, `.coastline_km` |
+| Elevation extremes | `country.highest_point`, `.lowest_point`, `.mean_elevation_m` |
+| Rivers and lakes | `country.rivers`, `.lakes`, `atlas.countries_with_river("Amazon")` |
+| Climate | `country.climate.summary`, `.dominant_zone`, `.zone_codes` |
+| Physical filters | `atlas.countries(coastal=False, koppen_geiger_code="Cfb")` |
+| Physical rankings | `atlas.rank("coastline", limit=10)` |
 | Timezone profiles | `country.timezones`, `.timezone_ids` |
 | Practical filters | `atlas.countries(currency_code="EUR", timezone_id="Europe/Paris")` |
 | Rankings | `atlas.rank("population", limit=10)` |
@@ -325,7 +342,8 @@ JSON-serializable `BorderPathResult`. A missing route is `None`, not an error.
 Maritime proximity, border geometry, border length, and road routing are not
 represented.
 
-The structured flashcard API also supports `neighbors` and `border_counts`.
+The structured flashcard API also supports `neighbors`, `border_counts`,
+`climate_zones`, `coastlines`, `highest_points`, `rivers`, and `lakes`.
 Neighbor answers come directly from the reviewed graph; border counts are the
 number of accepted edges attached to the selected country or area.
 
@@ -348,7 +366,7 @@ At runtime PyWorldAtlas does not:
 
 ## Data you can trace
 
-The 0.6.0 release uses:
+The 0.7.0 release uses:
 
 - **United Nations M49** for canonical identities, standard codes, regions, and
   subregions.
@@ -356,13 +374,16 @@ The 0.6.0 release uses:
   snapshots, currencies, language and calling codes, country-code domains,
   timezone identifiers, postal formats, GeoNames IDs, and one input to border review.
 - **Natural Earth** public-domain 1:50m map units as an independent land-border
-  topology check.
+  topology check and build-time country aggregation layer for climate cells.
 - **Unicode CLDR 48.2** for localized territory display names, currency
   labels/symbols/minor units, language labels, and likely scripts.
 - **IANA Language Subtag Registry** as a language-name fallback for captured
   codes not labelled by CLDR.
 - **CIA World Factbook** public-domain structured fields for the base English
-  formal-name layer, anthem titles, and English demonyms.
+  formal-name layer, anthem titles, English demonyms, area components,
+  coastlines, elevation, source-listed rivers/lakes, and climate summaries.
+- **Beck et al. Köppen-Geiger maps** CC0 data for 1991–2020 represented climate
+  classes and latitude-area-weighted country shares.
 - **United Nations Protocol and Liaison Service** for five current English
   formal-name excerpts where the final Factbook snapshot differs from current
   UN usage.
@@ -407,7 +428,7 @@ with Atlas() as atlas:
 - **Schema version** describes compatibility with the bundled SQLite structure.
 - **Dataset version** identifies the captured source snapshot.
 
-For this release they are `0.6.0`, `6`, and `2026.07.22.6`.
+For this release they are `0.7.0`, `7`, and `2026.07.22.7`.
 
 ## Documentation and roadmap
 
@@ -426,16 +447,17 @@ For this release they are `0.6.0`, `6`, and `2026.07.22.6`.
 - Contribution and factual-correction guide: [CONTRIBUTING.md](CONTRIBUTING.md)
 - 0.5.0 release status: [RELEASE_0_5_STATUS.md](RELEASE_0_5_STATUS.md)
 - 0.6.0 release status: [RELEASE_0_6_STATUS.md](RELEASE_0_6_STATUS.md)
+- 0.7.0 release status: [RELEASE_0_7_STATUS.md](RELEASE_0_7_STATUS.md)
 - Maintainer release process: [RELEASING.md](RELEASING.md)
 
-Version 0.6.0 adds the country-reference and discovery milestone. Version 0.7.0
-is reserved for physical geography. Boundary geometry, GeoJSON, bounding boxes,
-centroids, and point-in-country lookup are deferred beyond 0.7.
+Version 0.7.0 adds the physical-geography milestone. Boundary geometry,
+GeoJSON, bounding boxes, centroids, and point-in-country lookup are deferred to
+a separately reviewed later release.
 
 ## License and attribution
 
 PyWorldAtlas code is available under the [MIT License](LICENSE). GeoNames data
 is provided under CC BY 4.0, Natural Earth and CIA World Factbook data are
-public domain, Wikidata structured data is CC0, and Unicode CLDR data is used
-under the Unicode License v3. Other source terms and notices are recorded in
+public domain, Wikidata and the Köppen-Geiger data release are CC0, and Unicode
+CLDR data is used under the Unicode License v3. Other source terms and notices are recorded in
 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

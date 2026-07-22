@@ -1,7 +1,7 @@
 {
   "source_id": "cia-world-factbook-2025",
   "source_version": "factbook.json@8662a8b17a784841ab4528631b04090eb2f183eb",
-  "retrieved_at": "2026-07-21T00:00:00Z",
+  "retrieved_at": "2026-07-22T00:00:00Z",
   "upstream_name": "CIA World Factbook",
   "upstream_url": "https://www.cia.gov/the-world-factbook/",
   "structured_repository": "https://github.com/factbook/factbook.json",
@@ -13,9 +13,9 @@
   ],
   "derived_file": {
     "path": "country_identity.json",
-    "sha256": "4f05fc72f0e63f87c9963967c2576cbb01f93de41684e07fedfb44a2bb93a6ee",
-    "size_bytes": 212402
+    "sha256": "e5d9778a6beb946d4b179985cac7e06e00f020ee6d686b542d5431e18be45cfe",
+    "size_bytes": 578851
   },
   "extractor": "pipeline/scripts/extract_factbook_country_identity.py",
-  "scope": "Country-name fields, anthem titles, and English nationality terms; lyrics, contributor credits, adoption history, and narrative profile content are not copied."
+  "scope": "Country-name fields, anthem titles, English nationality terms, and structured physical-geography fields. Lyrics, contributor credits, adoption history, political narrative, and unrelated profile text are not copied."
 }

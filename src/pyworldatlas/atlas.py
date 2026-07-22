@@ -15,10 +15,12 @@ from .database import Database
 from .exceptions import (AmbiguousPlaceError, AtlasClosedError, CapitalNotFoundError,
                          CountryNotFoundError, DatasetVersionError, PlaceNotFoundError)
 from .models import (Area, BorderPathResult, Capital, CapitalDistance, City,
-                     Coordinate, Country, CountryCodes, CountryMatch,
-                     CountryRanking, Currency, DatasetInfo, Demonym, Flashcard,
-                     Geography, Language, LocalizedName, NationalAnthem,
-                     NationalMotto, PostalCodeFormat, SourceReference, Timezone)
+                     ClimateProfile, ClimateZone, Coordinate, Country,
+                     CountryCodes, CountryMatch, CountryRanking, Currency,
+                     DatasetInfo, Demonym, ElevationPoint, Flashcard, Geography,
+                     Lake, Language, LocalizedName, NationalAnthem,
+                     NationalMotto, PhysicalGeography, PostalCodeFormat, River,
+                     SourceReference, Timezone)
 
 
 def _flag(alpha2: str) -> str:
@@ -49,17 +51,22 @@ _FLASHCARD_TOPICS = (
     "border_counts",
     "calling_codes",
     "capitals",
+    "climate_zones",
+    "coastlines",
     "continents",
     "countries_from_capitals",
     "currencies",
     "flags",
+    "highest_points",
     "language_codes",
     "local_names",
+    "lakes",
     "m49_codes",
     "neighbors",
     "population_density",
     "populations",
     "regions",
+    "rivers",
     "top_level_domains",
 )
 
@@ -139,8 +146,17 @@ class Atlas:
         language_code: str | None = None,
         script_code: str | None = None,
         timezone_id: str | None = None,
+        coastal: bool | None = None,
+        koppen_geiger_code: str | None = None,
+        has_rivers: bool | None = None,
+        has_lakes: bool | None = None,
     ) -> tuple[Country, ...]:
-        """Return countries alphabetically with optional exact profile filters."""
+        """Return countries alphabetically with optional exact profile filters.
+
+        Physical-data filters only include profiles covered by the relevant
+        source layer. For example, ``coastal=False`` means a sourced coastline
+        of zero kilometres; it does not treat missing coastline data as zero.
+        """
         self._ensure_open()
         clauses, params = [], []
         if continent:
@@ -168,6 +184,29 @@ class Atlas:
                 "id IN (SELECT country_id FROM country_timezone WHERE lower(timezone_id)=lower(?))"
             )
             params.append(timezone_id)
+        if coastal is not None:
+            if not isinstance(coastal, bool):
+                raise TypeError("coastal must be bool or None")
+            comparison = "> 0" if coastal else "= 0"
+            clauses.append(
+                "id IN (SELECT country_id FROM country_physical "
+                f"WHERE coastline_km {comparison})"
+            )
+        if koppen_geiger_code:
+            clauses.append(
+                "id IN (SELECT country_id FROM country_climate_zone "
+                "WHERE upper(code)=upper(?))"
+            )
+            params.append(koppen_geiger_code)
+        for requested, table, label in (
+            (has_rivers, "country_river", "has_rivers"),
+            (has_lakes, "country_lake", "has_lakes"),
+        ):
+            if requested is not None:
+                if not isinstance(requested, bool):
+                    raise TypeError(f"{label} must be bool or None")
+                operator = "IN" if requested else "NOT IN"
+                clauses.append(f"id {operator} (SELECT country_id FROM {table})")
         where = f" WHERE {' AND '.join(clauses)}" if clauses else ""
         rows = self._db.connection.execute(f"SELECT id FROM country{where} ORDER BY name", params).fetchall()
         return tuple(self._load_country(int(row[0])) for row in rows)
@@ -183,11 +222,23 @@ class Atlas:
     ) -> tuple[CountryRanking, ...]:
         """Rank countries by a documented sourced or directly derived metric.
 
-        Supported metrics are ``"population"``, ``"area"``,
-        ``"population_density"``, ``"border_count"``, and
-        ``"major_city_count"``. Missing values are excluded.
+        Supported physical metrics include ``"land_area"``, ``"water_area"``,
+        ``"water_percent"``, ``"coastline"`, ``"mean_elevation"``,
+        ``"highest_elevation"``, ``"lowest_elevation"`, ``"river_count"``,
+        ``"lake_count"``, and ``"climate_zone_count"``. Existing population,
+        total area, density, border, and city metrics remain available. Missing
+        values are excluded.
         """
-        aliases = {"area_km2": "area", "density": "population_density"}
+        aliases = {
+            "area_km2": "area",
+            "density": "population_density",
+            "land_area_km2": "land_area",
+            "water_area_km2": "water_area",
+            "coastline_km": "coastline",
+            "mean_elevation_m": "mean_elevation",
+            "highest_point": "highest_elevation",
+            "lowest_point": "lowest_elevation",
+        }
         normalized_metric = aliases.get(metric.casefold(), metric.casefold())
         units = {
             "population": "people",
@@ -195,11 +246,21 @@ class Atlas:
             "population_density": "people/km²",
             "border_count": "countries",
             "major_city_count": "places",
+            "land_area": "km²",
+            "water_area": "km²",
+            "water_percent": "%",
+            "coastline": "km",
+            "mean_elevation": "m",
+            "highest_elevation": "m",
+            "lowest_elevation": "m",
+            "river_count": "rivers",
+            "lake_count": "lakes",
+            "climate_zone_count": "classes",
         }
         if normalized_metric not in units:
             raise ValueError(
-                "metric must be 'population', 'area', 'population_density', "
-                "'border_count', or 'major_city_count'"
+                "metric must be a documented population, area, border, city, "
+                "coastline, elevation, physical-feature, or climate-zone metric"
             )
         if limit is not None and (
             isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0
@@ -216,8 +277,34 @@ class Atlas:
                 value = country.population_density
             elif normalized_metric == "border_count":
                 value = len(self.neighbors(country.alpha2))
-            else:
+            elif normalized_metric == "major_city_count":
                 value = country.major_city_count
+            elif normalized_metric == "land_area":
+                value = country.land_area_km2
+            elif normalized_metric == "water_area":
+                value = country.water_area_km2
+            elif normalized_metric == "water_percent":
+                value = country.water_percent
+            elif normalized_metric == "coastline":
+                value = country.coastline_km
+            elif normalized_metric == "mean_elevation":
+                value = country.mean_elevation_m
+            elif normalized_metric == "highest_elevation":
+                value = (
+                    country.highest_point.elevation_m if country.highest_point else None
+                )
+            elif normalized_metric == "lowest_elevation":
+                value = country.lowest_point.elevation_m if country.lowest_point else None
+            elif normalized_metric == "river_count":
+                value = len(country.rivers) if country.rivers else None
+            elif normalized_metric == "lake_count":
+                value = len(country.lakes) if country.lakes else None
+            else:
+                value = (
+                    len(country.climate.koppen_geiger_zones)
+                    if country.climate.koppen_geiger_zones
+                    else None
+                )
             if value is not None:
                 ranked.append((country, value))
         ranked.sort(
@@ -236,6 +323,71 @@ class Atlas:
     def rank(self, metric: str, **kwargs: object) -> tuple[CountryRanking, ...]:
         """Alias for :meth:`rank_countries` suited to exploratory sessions."""
         return self.rank_countries(metric, **kwargs)
+
+    def climate_zone_codes(self) -> tuple[str, ...]:
+        """Return every represented Köppen-Geiger code in source legend order."""
+        self._ensure_open()
+        rows = self._db.connection.execute(
+            "SELECT DISTINCT code FROM country_climate_zone"
+        ).fetchall()
+        # SQLite row order is not a scientific legend. The explicit class
+        # sequence makes the public result stable across database rebuilds.
+        order = (
+            "Af", "Am", "Aw", "BWh", "BWk", "BSh", "BSk", "Csa", "Csb",
+            "Csc", "Cwa", "Cwb", "Cwc", "Cfa", "Cfb", "Cfc", "Dsa", "Dsb",
+            "Dsc", "Dsd", "Dwa", "Dwb", "Dwc", "Dwd", "Dfa", "Dfb", "Dfc",
+            "Dfd", "ET", "EF",
+        )
+        present = {str(row[0]) for row in rows}
+        return tuple(code for code in order if code in present)
+
+    def countries_in_climate_zone(self, code: str) -> tuple[Country, ...]:
+        """Return profiles containing the exact Köppen-Geiger class ``code``."""
+        if code.casefold() not in {
+            item.casefold() for item in self.climate_zone_codes()
+        }:
+            raise ValueError(
+                f"Unknown or unrepresented Köppen-Geiger code {code!r}"
+            )
+        return self.countries(koppen_geiger_code=code)
+
+    def countries_with_river(self, name: str | None = None) -> tuple[Country, ...]:
+        """Return profiles with source-listed major rivers.
+
+        When ``name`` is supplied, it is matched case-insensitively against the
+        concise feature name and retained source label. Results are alphabetical.
+        """
+        self._ensure_open()
+        if name is None:
+            return self.countries(has_rivers=True)
+        query = f"%{name.casefold()}%"
+        rows = self._db.connection.execute(
+            """SELECT DISTINCT c.id FROM country c
+               JOIN country_river r ON r.country_id=c.id
+               WHERE lower(r.name) LIKE ? OR lower(r.source_label) LIKE ?
+               ORDER BY c.name""",
+            (query, query),
+        ).fetchall()
+        return tuple(self._load_country(int(row[0])) for row in rows)
+
+    def countries_with_lake(self, name: str | None = None) -> tuple[Country, ...]:
+        """Return profiles with source-listed major lakes.
+
+        When ``name`` is supplied, it is matched case-insensitively against the
+        concise feature name and retained source label. Results are alphabetical.
+        """
+        self._ensure_open()
+        if name is None:
+            return self.countries(has_lakes=True)
+        query = f"%{name.casefold()}%"
+        rows = self._db.connection.execute(
+            """SELECT DISTINCT c.id FROM country c
+               JOIN country_lake l ON l.country_id=c.id
+               WHERE lower(l.name) LIKE ? OR lower(l.source_label) LIKE ?
+               ORDER BY c.name""",
+            (query, query),
+        ).fetchall()
+        return tuple(self._load_country(int(row[0])) for row in rows)
 
     def countries_with_local_names(
         self,
@@ -453,9 +605,11 @@ class Atlas:
         """Return deterministic, immutable geography flashcards.
 
         Supported topics are ``alpha_2_codes``, ``alpha_3_codes``, ``areas``,
-        ``border_counts``, ``calling_codes``, ``capitals``, ``continents``,
+        ``border_counts``, ``calling_codes``, ``capitals``, ``climate_zones``,
+        ``coastlines``, ``continents``,
         ``countries_from_capitals``, ``currencies``, ``flags``,
-        ``language_codes``, ``local_names``, ``m49_codes``, ``neighbors``,
+        ``highest_points``, ``language_codes``, ``lakes``, ``local_names``,
+        ``m49_codes``, ``neighbors``, ``rivers``,
         ``population_density``, ``populations``, ``regions``, and
         ``top_level_domains``. Countries missing the answer required by a topic
         are excluded before sampling. An impossible count raises
@@ -487,16 +641,24 @@ class Atlas:
             return country.area_km2 is not None
         if topic == "calling_codes":
             return bool(country.calling_codes)
+        if topic == "climate_zones":
+            return country.climate.dominant_zone is not None
+        if topic == "coastlines":
+            return country.coastline_km is not None
         if topic == "continents":
             return country.continent is not None
         if topic == "currencies":
             return country.currency is not None
         if topic == "flags":
             return country.flag_emoji is not None
+        if topic == "highest_points":
+            return country.highest_point is not None
         if topic == "language_codes":
             return bool(country.language_codes)
         if topic == "local_names":
             return bool(country.local_names)
+        if topic == "lakes":
+            return bool(country.lakes)
         if topic == "m49_codes":
             return country.codes.numeric is not None
         if topic == "neighbors":
@@ -508,6 +670,8 @@ class Atlas:
             return country.population is not None
         if topic == "regions":
             return country.region is not None
+        if topic == "rivers":
+            return bool(country.rivers)
         if topic == "top_level_domains":
             return country.top_level_domain is not None
         return True
@@ -549,6 +713,34 @@ class Atlas:
             prompt, answer = f"Which continent contains {country.name}?", country.continent
         elif topic == "regions":
             prompt, answer = f"Which UN region contains {country.name}?", country.region
+        elif topic == "climate_zones":
+            zone = country.climate.dominant_zone
+            prompt = (
+                f"Which Köppen-Geiger class has the largest represented share "
+                f"of {country.name}?"
+            )
+            answer = f"{zone.code} — {zone.name}"
+        elif topic == "coastlines":
+            prompt = f"What coastline length is listed for {country.name}?"
+            answer = f"{country.coastline_km:g} km"
+        elif topic == "highest_points":
+            point = country.highest_point
+            prompt = f"What is the highest point listed for {country.name}?"
+            answer = f"{point.name} ({point.elevation_m:g} m)"
+        elif topic == "rivers":
+            river = country.rivers[0]
+            prompt = f"Name a source-listed major river associated with {country.name}."
+            answer = (
+                f"{river.name} ({river.length_km:g} km)"
+                if river.length_km is not None else river.name
+            )
+        elif topic == "lakes":
+            lake = country.lakes[0]
+            prompt = f"Name a source-listed major lake associated with {country.name}."
+            answer = (
+                f"{lake.name} ({lake.area_km2:g} km²)"
+                if lake.area_km2 is not None else lake.name
+            )
         elif topic == "local_names":
             local_name = next(
                 (name for name in country.local_names if name.language_code != "en"),
@@ -692,7 +884,100 @@ class Atlas:
         )
         source_by_id = {source.id: source for source in sources}
         local_names = self._load_local_names().get(country_id, ())
-        geography = Geography(row["continent"], row["region"], row["subregion"], Area(row["total_area_km2"]))
+        physical_row = self._db.connection.execute(
+            "SELECT * FROM country_physical WHERE country_id=?", (country_id,)
+        ).fetchone()
+        river_rows = self._db.connection.execute(
+            "SELECT * FROM country_river WHERE country_id=? ORDER BY length_km DESC, name",
+            (country_id,),
+        ).fetchall()
+        lake_rows = self._db.connection.execute(
+            "SELECT * FROM country_lake WHERE country_id=? ORDER BY area_km2 DESC, name",
+            (country_id,),
+        ).fetchall()
+        climate_rows = self._db.connection.execute(
+            "SELECT * FROM country_climate_zone WHERE country_id=? ORDER BY position",
+            (country_id,),
+        ).fetchall()
+        zones = tuple(
+            ClimateZone(
+                item["code"], item["name"], item["climate_group"],
+                item["share_percent"],
+            )
+            for item in climate_rows
+        )
+        climate = ClimateProfile(
+            summary=physical_row["climate_summary"] if physical_row else None,
+            koppen_geiger_zones=zones,
+            reference_period=climate_rows[0]["reference_period"] if climate_rows else None,
+            resolution_degrees=climate_rows[0]["resolution_degrees"] if climate_rows else None,
+            minimum_share_percent=(
+                climate_rows[0]["minimum_share_percent"] if climate_rows else None
+            ),
+            summary_source=source_by_id.get("cia-world-factbook-2025"),
+            classification_source=source_by_id.get("koppen-geiger-1991-2020"),
+        )
+        highest_point = (
+            ElevationPoint(
+                physical_row["highest_point_name"],
+                physical_row["highest_point_elevation_m"],
+                bool(physical_row["highest_point_is_approximate"]),
+                physical_row["highest_point_source_label"],
+            )
+            if physical_row and physical_row["highest_point_name"]
+            else None
+        )
+        lowest_point = (
+            ElevationPoint(
+                physical_row["lowest_point_name"],
+                physical_row["lowest_point_elevation_m"],
+                bool(physical_row["lowest_point_is_approximate"]),
+                physical_row["lowest_point_source_label"],
+            )
+            if physical_row and physical_row["lowest_point_name"]
+            else None
+        )
+        physical = PhysicalGeography(
+            coastline_km=physical_row["coastline_km"] if physical_row else None,
+            mean_elevation_m=(
+                physical_row["mean_elevation_m"] if physical_row else None
+            ),
+            highest_point=highest_point,
+            lowest_point=lowest_point,
+            rivers=tuple(
+                River(item["name"], item["length_km"], item["source_label"])
+                for item in river_rows
+            ),
+            lakes=tuple(
+                Lake(
+                    item["name"], item["area_km2"], item["water_type"],
+                    item["source_label"],
+                )
+                for item in lake_rows
+            ),
+            climate=climate,
+            source=source_by_id.get("cia-world-factbook-2025"),
+            source_locator=physical_row["source_locator"] if physical_row else None,
+        )
+        land_area = physical_row["land_area_km2"] if physical_row else None
+        water_area = physical_row["water_area_km2"] if physical_row else None
+        total_area = row["total_area_km2"]
+        water_percent = (
+            water_area / total_area * 100
+            if water_area is not None
+            and total_area is not None
+            and total_area > 0
+            and water_area <= total_area
+            else None
+        )
+        geography = Geography(
+            continent=row["continent"],
+            region=row["region"],
+            subregion=row["subregion"],
+            area=Area(total_area, land_area, water_area, water_percent),
+            landlocked=physical.is_landlocked,
+            physical=physical,
+        )
         currency = (
             Currency(
                 row["currency_code"], row["currency_name"], row["currency_symbol"],

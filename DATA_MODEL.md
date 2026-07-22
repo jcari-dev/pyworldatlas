@@ -1,20 +1,25 @@
 # Data model
 
-Schema 5 stores normalized countries, names, capitals, populated places, source
+Schema 7 stores normalized countries, names, capitals, populated places, source
 references, local identity names, and canonical undirected land-border pairs in
 SQLite. Profile columns add population,
 currency, language codes, calling codes, country-code top-level domains, and
-area. Sourced English formal names use ``country_name`` rows with
-``kind = 'formal'`` and field-level provenance. Country, capital, city,
-coordinate, currency, language, and source values
-are returned as immutable dataclasses.
+area. Structured physical facts use `country_physical`, `country_river`,
+`country_lake`, and `country_climate_zone` rows. Sourced English formal names
+use `country_name` rows with `kind = 'formal'` and field-level provenance.
+Public country, place, reference, and physical values are immutable dataclasses.
 
-Schema 5 removes the unused entity-status column. The public model contains
-only sourced geographic fields that the package actively uses.
+The public model contains only sourced geographic fields that the package
+actively uses.
 
 Country discovery features add immutable `CountryReference`, `Flashcard`, and
 `CountryDiscoveryCard`, and `BorderPathResult` result models. They are runtime views over existing
 profile values and do not add database tables or duplicate source records.
+
+Physical geography adds immutable `ElevationPoint`, `River`, `Lake`,
+`ClimateZone`, `ClimateProfile`, and `PhysicalGeography` models. Area components
+remain grouped under `Geography.area`; the other physical values are grouped
+under `Geography.physical` and exposed through `Country` conveniences.
 
 ``Country.name`` is the familiar English display identity,
 ``Country.official_name`` is the canonical UN M49 identity, and
@@ -26,7 +31,8 @@ most one GeoNames primary capital for each country or area. Exact city lookup
 uses the bundled populated-place table. Distance, bearing, and midpoint results
 are calculated at runtime from stored WGS84 coordinates and are not persisted.
 Flag emoji are derived from alpha-2 codes. Population density is calculated as
-snapshot population divided by sourced area. Stable samples and flashcards use
+snapshot population divided by sourced total area; water percentage is water
+area divided by total area. Stable samples and flashcards use
 a versioned SHA-256 ranking over M49 identifiers; they never mutate profiles or
 store lesson state.
 
@@ -46,12 +52,20 @@ language and script identifiers, any sourced formal form or romanization,
 source reference, and exact locator. Country convenience methods only project
 these records; they never translate or generate a fallback.
 
+Each `country_physical` row holds optional area components, coastline, mean
+elevation, named highest/lowest points, a plain-language climate summary, and
+direct source provenance. River and lake child rows are source-listed major
+features, not exhaustive inventories. Climate-zone child rows contain one
+represented Köppen-Geiger class and its latitude-area-weighted share. The
+reference period, source resolution, and extraction threshold are retained in
+the physical row.
+
 Missing scalar values are `None`; missing collections are empty tuples. Country
 profiles are normalized records rather than opaque JSON documents. The public
 model does not classify entity recognition or legal status. The words
 *country* and *area* reflect the documented source scope and are not intended
 to provide a broader classification.
 
-`Country.sources` lists the sources that contributed to a profile. It does not
-yet provide a value-by-value provenance map. Every local identity carries its
-own source reference and locator in `LocalizedName`.
+`Country.sources` lists the sources that contributed to a profile. Direct
+provenance is available on local identity, reference-fact, physical, and climate
+models. Other core fields still use the profile-level source summary.

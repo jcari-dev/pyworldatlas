@@ -152,7 +152,11 @@ class Coordinate:
 
 @dataclass(frozen=True, slots=True)
 class Area:
-    """Country area measurements in square kilometres."""
+    """Country area measurements in square kilometres.
+
+    ``water_percent`` is derived from ``water_km2 / total_km2`` when both
+    source values are available. Missing components remain ``None``.
+    """
 
     total_km2: float | None = None
     land_km2: float | None = None
@@ -162,8 +166,122 @@ class Area:
 
 
 @dataclass(frozen=True, slots=True)
+class ElevationPoint:
+    """A named highest or lowest point and its elevation above sea level.
+
+    A negative value is below sea level. ``is_approximate`` preserves an
+    explicit approximation in the source; the numeric value is not made more
+    precise by the package. ``source_label`` retains the exact compact label
+    from which the structured fields were parsed.
+    """
+
+    name: str
+    elevation_m: float
+    is_approximate: bool = False
+    source_label: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class River:
+    """A source-listed major river associated with a country profile.
+
+    ``length_km`` is the full river length reported by the source, including
+    for rivers shared across countries. It is not the length inside this one
+    profile. ``source_label`` preserves shared/source/mouth context.
+    """
+
+    name: str
+    length_km: float | None
+    source_label: str
+
+
+@dataclass(frozen=True, slots=True)
+class Lake:
+    """A source-listed major lake associated with a country profile.
+
+    ``area_km2`` is the full lake area reported by the source, including for a
+    shared lake. ``water_type`` is ``"freshwater"`` or ``"saltwater"`` when
+    the source supplies that classification.
+    """
+
+    name: str
+    area_km2: float | None
+    water_type: str | None
+    source_label: str
+
+
+@dataclass(frozen=True, slots=True)
+class ClimateZone:
+    """A Köppen-Geiger class detected within a country or area profile.
+
+    ``share_percent`` is a latitude-area-weighted share derived from the
+    source's 0.1-degree 1991-2020 raster and pinned map-unit polygons. Classes
+    below the documented extraction threshold are omitted.
+    """
+
+    code: str
+    name: str
+    group: str
+    share_percent: float
+
+
+@dataclass(frozen=True, slots=True)
+class ClimateProfile:
+    """A plain-language climate summary and reviewed Köppen-Geiger classes."""
+
+    summary: str | None = None
+    koppen_geiger_zones: tuple[ClimateZone, ...] = ()
+    reference_period: str | None = None
+    resolution_degrees: float | None = None
+    minimum_share_percent: float | None = None
+    summary_source: SourceReference | None = None
+    classification_source: SourceReference | None = None
+
+    @property
+    def dominant_zone(self) -> ClimateZone | None:
+        """Return the largest represented Köppen-Geiger class, if available."""
+        return self.koppen_geiger_zones[0] if self.koppen_geiger_zones else None
+
+    @property
+    def zone_codes(self) -> tuple[str, ...]:
+        """Return represented Köppen-Geiger codes in descending area share."""
+        return tuple(zone.code for zone in self.koppen_geiger_zones)
+
+
+@dataclass(frozen=True, slots=True)
+class PhysicalGeography:
+    """Structured physical facts extracted for a country or area profile.
+
+    Rivers and lakes are source-listed major features, not exhaustive
+    inventories. A missing tuple means that the source did not list a feature;
+    it does not assert that the feature does not exist.
+    """
+
+    coastline_km: float | None = None
+    mean_elevation_m: float | None = None
+    highest_point: ElevationPoint | None = None
+    lowest_point: ElevationPoint | None = None
+    rivers: tuple[River, ...] = ()
+    lakes: tuple[Lake, ...] = ()
+    climate: ClimateProfile = ClimateProfile()
+    source: SourceReference | None = None
+    source_locator: str | None = None
+
+    @property
+    def is_coastal(self) -> bool | None:
+        """Return whether the sourced coastline is positive, or ``None``."""
+        return self.coastline_km > 0 if self.coastline_km is not None else None
+
+    @property
+    def is_landlocked(self) -> bool | None:
+        """Return whether the source reports zero coastline, or ``None``."""
+        coastal = self.is_coastal
+        return None if coastal is None else not coastal
+
+
+@dataclass(frozen=True, slots=True)
 class Geography:
-    """Core geographic classification and measurements."""
+    """Core geographic classification and physical measurements."""
 
     continent: str | None
     region: str | None
@@ -171,6 +289,7 @@ class Geography:
     area: Area = Area()
     centroid: Coordinate | None = None
     landlocked: bool | None = None
+    physical: PhysicalGeography = PhysicalGeography()
 
 
 @dataclass(frozen=True, slots=True)
@@ -464,6 +583,9 @@ class CountryDiscoveryCard:
     motto_text: str | None = None
     demonym: str | None = None
     timezone_ids: tuple[str, ...] = ()
+    coastline_km: float | None = None
+    highest_point: ElevationPoint | None = None
+    climate_zone_codes: tuple[str, ...] = ()
 
     def to_dict(self) -> dict[str, Any]:
         """Return JSON-compatible primitives for this discovery card."""
@@ -536,6 +658,71 @@ class Country:
     def area_km2(self) -> float | None:
         """Return sourced total area in square kilometres, when available."""
         return self.geography.area.total_km2
+
+    @property
+    def land_area_km2(self) -> float | None:
+        """Return sourced land area in square kilometres, when available."""
+        return self.geography.area.land_km2
+
+    @property
+    def water_area_km2(self) -> float | None:
+        """Return sourced inland-water area in square kilometres, when available."""
+        return self.geography.area.water_km2
+
+    @property
+    def water_percent(self) -> float | None:
+        """Return the derived percentage of total area recorded as water."""
+        return self.geography.area.water_percent
+
+    @property
+    def physical(self) -> PhysicalGeography:
+        """Return structured physical-geography facts for this profile."""
+        return self.geography.physical
+
+    @property
+    def coastline_km(self) -> float | None:
+        """Return sourced coastline length in kilometres, when available."""
+        return self.physical.coastline_km
+
+    @property
+    def mean_elevation_m(self) -> float | None:
+        """Return sourced mean elevation above sea level, when available."""
+        return self.physical.mean_elevation_m
+
+    @property
+    def highest_point(self) -> ElevationPoint | None:
+        """Return the sourced named highest point, when available."""
+        return self.physical.highest_point
+
+    @property
+    def lowest_point(self) -> ElevationPoint | None:
+        """Return the sourced named lowest point, when available."""
+        return self.physical.lowest_point
+
+    @property
+    def rivers(self) -> tuple[River, ...]:
+        """Return source-listed major rivers; this is not an exhaustive inventory."""
+        return self.physical.rivers
+
+    @property
+    def lakes(self) -> tuple[Lake, ...]:
+        """Return source-listed major lakes; this is not an exhaustive inventory."""
+        return self.physical.lakes
+
+    @property
+    def climate(self) -> ClimateProfile:
+        """Return the climate summary and represented Köppen-Geiger classes."""
+        return self.physical.climate
+
+    @property
+    def is_coastal(self) -> bool | None:
+        """Return whether the source reports a positive coastline, or ``None``."""
+        return self.physical.is_coastal
+
+    @property
+    def is_landlocked(self) -> bool | None:
+        """Return whether the source reports zero coastline, or ``None``."""
+        return self.physical.is_landlocked
 
     @property
     def flag_emoji(self) -> str | None:
@@ -694,6 +881,9 @@ class Country:
             motto_text=self.motto.text if self.motto else None,
             demonym=self.demonym.noun if self.demonym else None,
             timezone_ids=self.timezone_ids,
+            coastline_km=self.coastline_km,
+            highest_point=self.highest_point,
+            climate_zone_codes=self.climate.zone_codes,
         )
 
     def to_dict(self, include_history: bool = False) -> dict[str, Any]:

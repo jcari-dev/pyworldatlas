@@ -124,6 +124,26 @@ def status(*, write: bool = True) -> None:
         )
     if "reviewed_land_borders" in coverage:
         lines.insert(-1, f"Reviewed land borders: {coverage['reviewed_land_borders']} / borderless entities: {coverage['countries_with_no_land_borders']}")
+    if "physical_profiles" in coverage:
+        lines.insert(
+            -1,
+            "Physical profiles: "
+            f"{coverage['physical_profiles']} source profiles / "
+            f"{coverage['coastline_profiles']} coastlines / "
+            f"{coverage['elevation_extreme_profiles']} elevation-extreme pairs",
+        )
+        lines.insert(
+            -1,
+            "Named physical features: "
+            f"{coverage['river_records']} rivers across {coverage['river_profiles']} profiles / "
+            f"{coverage['lake_records']} lakes across {coverage['lake_profiles']} profiles",
+        )
+        lines.insert(
+            -1,
+            "Climate: "
+            f"{coverage['climate_summary_profiles']} summaries / "
+            f"{coverage['koppen_geiger_profiles']} Köppen-Geiger profiles",
+        )
     print("\n".join(lines))
     if write:
         table = ["| Milestone | Version | Status | Implemented functions | Tests | Dataset coverage | Documentation | Release |", "|---|---:|---|---|---|---|---|---|"]

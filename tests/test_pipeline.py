@@ -13,12 +13,19 @@ from pyworldatlas_builder.core import (
     EXPECTED_ENGLISH_FORMAL_NAME_COUNT,
     EXPECTED_LOCAL_NAME_COUNT,
     EXPECTED_MOTTO_COUNT,
+    EXPECTED_PHYSICAL_PROFILE_COUNT,
+    EXPECTED_RIVER_COUNT,
+    EXPECTED_LAKE_COUNT,
+    EXPECTED_KOPPEN_PROFILE_COUNT,
+    EXPECTED_KOPPEN_GAPS,
     EXPECTED_TIMEZONE_COUNTRY_COUNT,
     build_database,
     normalize,
     parse_un_m49,
     parse_country_local_names,
     parse_english_formal_names,
+    parse_factbook_physical_geography,
+    parse_koppen_climate_profiles,
     write_manifests,
 )
 
@@ -46,6 +53,12 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(len(records["anthems"]), EXPECTED_ANTHEM_COUNT)
         self.assertEqual(len(records["mottos"]), EXPECTED_MOTTO_COUNT)
         self.assertEqual(len(records["demonyms"]), EXPECTED_DEMONYM_COUNT)
+        self.assertEqual(
+            len(records["physical_profiles"]), EXPECTED_PHYSICAL_PROFILE_COUNT
+        )
+        self.assertEqual(
+            len(records["climate_profiles"]), EXPECTED_KOPPEN_PROFILE_COUNT
+        )
         self.assertEqual(
             len({record["country_code"] for record in records["timezones"]}),
             EXPECTED_TIMEZONE_COUNTRY_COUNT,
@@ -154,7 +167,7 @@ class PipelineTests(unittest.TestCase):
         factbook_path = ROOT / "build_data/raw/cia-world-factbook/2025/country_identity.json"
         self.assertEqual(
             sha256(factbook_path.read_bytes()).hexdigest(),
-            "4f05fc72f0e63f87c9963967c2576cbb01f93de41684e07fedfb44a2bb93a6ee",
+            "e5d9778a6beb946d4b179985cac7e06e00f020ee6d686b542d5431e18be45cfe",
         )
         wikidata_path = ROOT / "build_data/raw/wikidata/2026-07-21/official-names.json"
         self.assertEqual(
@@ -172,6 +185,12 @@ class PipelineTests(unittest.TestCase):
                 "ea6f8bdcc259c21c562e8f7e7e0b0457cb89403bed60c76aac49ccee9a9ed18c",
             "build_data/raw/wikidata/2026-07-22/national-mottos.json":
                 "4af587a6f19febd169b99850669ecdc426ac2b86ef5399e3eab2f5e51d3e448c",
+            "build_data/raw/koppen-geiger/2023/1991_2020/koppen_geiger_0p1.tif":
+                "d03ae67c66b48bc423bb5ebdda2a9a735262e26972576e2bb6a6881dc4e02bf4",
+            "build_data/raw/koppen-geiger/2023/legend.txt":
+                "6373d6b522b7b27ec9afbf51dc477a8a9d269074321d51d8e047c23691d67fcb",
+            "build_data/raw/koppen-geiger/2023/country_zones.json":
+                "bc59a51670cb6e9ba7953cc910b238aa08b5706ff99cecaa92cc77be735a0137",
         }
         for relative_path, expected_hash in expected_hashes.items():
             self.assertEqual(
@@ -197,6 +216,36 @@ class PipelineTests(unittest.TestCase):
             }),
             153,
         )
+
+    def test_physical_and_climate_layers_are_pinned_and_complete(self):
+        country_codes = set(parse_un_m49(ROOT))
+        physical = parse_factbook_physical_geography(ROOT, country_codes)
+        climate = parse_koppen_climate_profiles(ROOT, country_codes)
+
+        self.assertEqual(len(physical), EXPECTED_PHYSICAL_PROFILE_COUNT)
+        self.assertEqual(
+            sum(len(record["data"]["rivers"]) for record in physical),
+            EXPECTED_RIVER_COUNT,
+        )
+        self.assertEqual(
+            sum(len(record["data"]["lakes"]) for record in physical),
+            EXPECTED_LAKE_COUNT,
+        )
+        self.assertEqual(len(climate), EXPECTED_KOPPEN_PROFILE_COUNT)
+        self.assertEqual(
+            country_codes - {record["country_code"] for record in climate},
+            EXPECTED_KOPPEN_GAPS,
+        )
+        self.assertTrue(
+            all(
+                record["data"]["zones"][0]["code"]
+                == record["data"]["dominant_code"]
+                for record in climate
+            )
+        )
+        brazil = next(record for record in physical if record["country_code"] == "BR")
+        self.assertEqual(brazil["data"]["highest_point"]["name"], "Pico da Neblina")
+        self.assertEqual(brazil["data"]["rivers"][0]["name"], "Amazon")
 
     def test_database_build_is_reproducible(self):
         write_manifests(ROOT)
