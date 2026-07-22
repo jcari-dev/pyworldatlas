@@ -3,9 +3,9 @@ Project status
 
 .. THIS FILE IS GENERATED. DO NOT EDIT DIRECTLY.
 
-Library version: 0.4.0
-Dataset version: 2026.07.21.4
-Schema version: 4
+Library version: 0.5.0
+Dataset version: 2026.07.21.5
+Schema version: 5
 
 Countries and areas: 248 (UN M49 scope)
 Capitals: 241 / 248

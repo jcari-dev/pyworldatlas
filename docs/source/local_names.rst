@@ -9,7 +9,7 @@ translation service.
 Coverage at a glance
 --------------------
 
-The 0.4.0 development dataset separates four claims that are easy to confuse:
+The 0.5.0 dataset separates four claims that are easy to confuse:
 
 .. list-table::
    :header-rows: 1
@@ -199,7 +199,7 @@ identity layer by BCP 47 language code or ISO 15924 script code:
    25
 
 Results are alphabetical. Each country or area currently contributes exactly
-one selected local identity, matching the deliberately small 0.4.0 contract.
+one selected local identity, matching the deliberately small identity contract.
 
 How the language is selected
 ----------------------------
@@ -233,14 +233,14 @@ Source and review rules
 - Keep display names and national official names as different evidence levels.
 - Keep formal names and romanizations missing until the authoritative source
   supplies them.
-- Never infer a political or legal status from a localized display label.
+- Never infer a broader legal classification from a localized display label.
 
 The English ``Country.formal_name`` layer follows its own source policy. Do not
 use it as a substitute for ``official_name_in(language_code)``; the latter is a
 local-language field with a stricter national-official evidence kind.
 
 See :doc:`data_sources` for licensing, versioning, and source roles. The full
-contract and later anthem, motto, and civic-event boundaries are recorded in
+contract and later anthem, motto, and reference-date boundaries are recorded in
 ``COUNTRY_IDENTITY_DATA_SPEC.md`` at the repository root.
 
 Try the example

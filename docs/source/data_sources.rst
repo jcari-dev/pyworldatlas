@@ -6,6 +6,21 @@ pipeline downloads raw snapshots, records checksums, normalizes independent
 records, validates them, and generates the SQLite database. The installed
 runtime never contacts these services.
 
+Field-specific source policy
+----------------------------
+
+Each source is selected for a specific field. The project prefers established
+standards bodies, international statistical and naming publications, openly
+licensed geographic datasets, and primary institutional records when they are
+appropriate for that field. Commentary, anonymous compilations, unsupported
+claims, and advocacy material are not used as dataset authorities.
+
+No source is presented as universally neutral or complete. A source may reflect
+a particular date or naming convention. PyWorldAtlas records those limitations,
+uses independent cross-checks where useful, and publishes review decisions.
+Including a source value is not an endorsement of the source organization or a
+broader interpretation. See :doc:`educational_principles`.
+
 United Nations M49
 ------------------
 
@@ -77,7 +92,7 @@ Natural Earth
 **Known limitation**
    Natural Earth is generalized cartographic data. Very small territories and
    enclaves may not retain a shared segment at 1:50m, and its map units express
-   a documented de facto worldview. It is used as a cross-check, not as an
+   a documented map convention. It is used as a cross-check, not as an
    unreviewed authority.
 
 Reviewed border decisions
@@ -213,8 +228,8 @@ provenance, coverage, and freshness limits of their underlying profile fields.
 Neighbor and border-count flashcards are calculated from the reviewed graph and
 introduce no additional border claims.
 
-Source priority in the 0.4.0 development checkout
--------------------------------------------------
+Source priority in the 0.5.0 release
+------------------------------------
 
 .. list-table::
    :header-rows: 1

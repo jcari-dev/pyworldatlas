@@ -5,12 +5,16 @@ PyWorldAtlas is a compact, source-aware world atlas for Python. It provides
 typed country, capital, and city records from one bundled SQLite database and
 works without an API key, runtime download, or third-party dependency.
 
-**Documented version:** 0.4.0 | **Dataset:** 2026.07.21.4 | **Python:** 3.10–3.14 |
+It is a purely educational package for offline access to factual geographic
+data. It does not provide political commentary or opinion. See
+:doc:`educational_principles` for the formal policy.
+
+**Documented version:** 0.5.0 | **Dataset:** 2026.07.21.5 | **Python:** 3.10–3.14 |
 **Runtime dependencies:** 0
 
 .. note::
 
-   The 0.4.0 development checkout contains 248 countries and areas, 241 capital records,
+   The 0.5.0 release contains 248 countries and areas, 241 capital records,
    6,265 populated-place records, and 319 reviewed land-border relationships.
    Local identity names cover all 248 records across 80 languages and 21
    scripts. Ten selected records currently include reviewed UNGEGN national
@@ -48,6 +52,8 @@ Documentation
 -------------
 
 - Follow the :doc:`quickstart` for a guided first session.
+- Read :doc:`educational_principles` for the project's purpose and publication
+  boundaries.
 - Explore immediate neighbors and shortest land routes in :doc:`borders`.
 - Read :doc:`country_profile` for the complete current data model.
 - Build lessons with :doc:`discovery` cards, stable samples, and flashcards.
@@ -114,6 +120,7 @@ Current coverage
    :caption: Start here
 
    why
+   educational_principles
    installation
    quickstart
 

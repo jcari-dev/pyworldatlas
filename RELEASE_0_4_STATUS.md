@@ -1,6 +1,6 @@
-# PyWorldAtlas 0.4.0 development status
+# PyWorldAtlas 0.4 country-identity development status
 
-Version 0.4.0 is the country-identity milestone. Its declared data layers are
+The 0.4 series is the country-identity milestone. Its declared data layers are
 implemented and the local release gate passes. It remains a development
 candidate until the changes are committed, reviewed, and published.
 
@@ -42,6 +42,7 @@ the eight uncovered areas.
 ## Current version boundary
 
 - Library version: `0.4.0`
+- Publication: included in `0.5.0`
 - Schema version: `4`
 - Dataset version: `2026.07.21.4`
 - Runtime dependencies: `0`
@@ -63,16 +64,14 @@ page locator. Romanization is stored only when printed by the source.
 Right-to-left entries are reviewed separately. Extracted PDF text alone is not
 accepted because bidirectional layout can reverse or drop characters.
 
-## Remaining before release
+## Publication note
 
-- Perform a final human review of documentation examples and source claims.
-- Commit the candidate, review the branch diff, and merge it through the normal
-  repository workflow.
-- Publish the GitHub release, PyPI distribution, and documentation site from the
-  reviewed tag.
+The country-identity candidate was reviewed and merged to `main`. The existing
+`v0.4.0` tag is retained and is not reused. The completed identity features are
+published as part of version 0.5.0.
 
 Expanding the 10-record national-official local layer is valuable later work,
-but it is no longer a hidden prerequisite for the declared 0.4.0 coverage.
+but it is no longer a hidden prerequisite for the declared 0.4 coverage.
 
 ## Local validation result
 
@@ -80,8 +79,9 @@ On 2026-07-21, ``python maintain.py prepare-release 0.4.0`` passed all 30
 runtime/pipeline tests, a clean wheel installation, every executable example,
 strict Sphinx HTML, 221 doctests, and the release wheel-content audit.
 
-National anthem titles, mottos, and clearly labelled civic events are specified
-for the next minor release. They are not part of the 0.4.0 public API.
+Version 0.5.0 establishes the educational and editorial policy.
+National anthem titles, mottos, and clearly labelled reference dates move to 0.6.0
+and are not part of the 0.4 country-identity public API.
 
 ## Development gate
 
@@ -93,11 +93,11 @@ python maintain.py test
 python maintain.py docs
 ```
 
-The release gate may be run during development as a quality check:
+The complete gate may be run during development as a quality check:
 
 ```console
-python maintain.py prepare-release 0.4.0
+python maintain.py check
 ```
 
-Passing it confirms the local release candidate. Publishing still requires a
-reviewed commit, release notes, and the normal GitHub/PyPI release workflow.
+The 0.5.0 release gate and publication commands are documented in
+`RELEASING.md`.

@@ -48,15 +48,53 @@ in this repository under `docs/source/`.
 
 ## Prepare and publish a release
 
-> **Current candidate:** the local `0.4.0` release gate passes. Tag only after
-> the candidate is committed, reviewed, merged to `main`, and green in CI.
+> **Current candidate:** 0.5.0 includes the merged country-identity milestone
+> and the educational-use policy. The existing `v0.4.0` tag is retained and
+> must not be reused. Publish 0.5.0 only after its pull request is merged to
+> `main` and CI is green.
+
+### Current 0.5.0 sequence
+
+From the repository root on the `release/0.5.0` branch:
+
+```console
+python maintain.py prepare-release 0.5.0
+git status
+git add -A
+git commit -m "Prepare PyWorldAtlas 0.5.0"
+git push -u origin release/0.5.0
+```
+
+On GitHub, open a pull request with:
+
+- Base branch: `main`
+- Compare branch: `release/0.5.0`
+- Title: `Release PyWorldAtlas 0.5.0`
+
+Wait for every CI job to pass, review the file and source changes, and merge the
+pull request. Do not create the release tag from the feature branch.
+
+After the merge, return to the terminal and tag the exact merged `main` commit:
+
+```console
+git switch main
+git pull --ff-only origin main
+python maintain.py prepare-release 0.5.0
+git status
+git tag -a v0.5.0 -m "Release 0.5.0"
+git push origin v0.5.0
+```
+
+The tag starts the release workflow. Approve the protected `pypi` environment
+when GitHub requests it. The workflow must finish all four jobs: build,
+PyPI publication, GitHub Release creation, and documentation deployment.
 
 For example, to publish the next planned feature release, run the local release
 gate first:
 
 ```console
 python maintain.py bootstrap
-python maintain.py prepare-release 0.4.0
+python maintain.py prepare-release 0.5.0
 ```
 
 If Windows reports that an existing file under `dist` is in use, close the
@@ -64,20 +102,22 @@ terminal, upload dialog, or file preview holding it. To run the same release
 gate without replacing that directory, choose another ignored output path:
 
 ```console
-python maintain.py prepare-release 0.4.0 --output-dir build/release-dist
+python maintain.py prepare-release 0.5.0 --output-dir build/release-dist
 ```
 
 Review `release-manifest.json` and `SHA256SUMS` in the selected output directory.
 Install that wheel into a disposable local environment if a final manual smoke
-test is useful. Merge the release candidate to `main`, confirm that CI is green
-and the working tree is clean, then create and push the release tag:
+test is useful.
 
-```console
-git status
-git tag -a v0.4.0 -m "Release 0.4.0"
-git push origin main
-git push origin v0.4.0
-```
+For every data or documentation release, also confirm that:
+
+- Each public field has a clear educational purpose and declared source role.
+- Sensitive claims have the review required by
+  `EDUCATIONAL_AND_NEUTRALITY_POLICY.md`.
+- Examples and release notes use respectful, factual language.
+- Naming and border conventions are attributed rather than endorsed.
+- `CODE_OF_CONDUCT.md`, source notices, limitations, and correction guidance
+  remain publicly linked.
 
 The tag workflow publishes the wheel and source distribution to PyPI, creates a
 GitHub Release with checksums and the release manifest, and deploys the Sphinx
@@ -87,7 +127,7 @@ Verify the public package in a new environment:
 
 ```console
 py -3.10 -m venv .venv-live
-.venv-live\Scripts\python -m pip install --no-cache-dir pyworldatlas==0.4.0
+.venv-live\Scripts\python -m pip install --no-cache-dir pyworldatlas==0.5.0
 .venv-live\Scripts\python -c "from pyworldatlas import Atlas; a=Atlas(); print(len(a), len(a.countries_with_formal_names()), a.country('Republic of Türkiye').alpha2); a.close()"
 ```
 
@@ -110,6 +150,10 @@ Never reuse, delete, or move a published version tag. If publication fails
 before PyPI accepts the version, repair the workflow and rerun it. If PyPI has
 accepted the version, preserve it and use a patch release for any code or
 metadata correction.
+
+Version 0.5.0 establishes the package's purely educational scope. It must pass
+the policy-integrity tests alongside the ordinary runtime, pipeline,
+documentation, and clean-wheel gates.
 
 Never tag a dirty branch or an unmerged candidate. The tag-triggered workflow
 is the single path to PyPI, the GitHub Release, and the documentation site.

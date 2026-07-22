@@ -1,6 +1,19 @@
 Data quality and limitations
 ============================
 
+Educational and editorial quality
+---------------------------------
+
+PyWorldAtlas provides offline factual geography for education and reference.
+It does not provide political commentary or opinion. Every field needs a clear
+learning purpose, a defined source role, and documented limitations. Missing
+values are not replaced with unsupported assumptions.
+
+The current dataset intentionally excludes current affairs, political opinion,
+identity-based generalizations, comparisons of people or cultures, and
+speculative narrative. New field families must satisfy the review in
+:doc:`educational_principles` before collection begins.
+
 Validation layers
 -----------------
 
@@ -112,13 +125,13 @@ Interpretation cautions
 - Seven areas have no usable primary-capital record in the current source
   intersection, so their capital is ``None``.
 - GeoNames-only identities outside the captured UN M49 scope are excluded.
-  This is a source-priority rule, not a statement about sovereignty.
-- Political entity type is not classified by the current source model. Every
-  profile therefore uses ``CountryStatus.OTHER``.
+  This is a source-scope decision.
+- The public model does not expose an entity-recognition or legal-status
+  classification.
 - Border relationships are topological claims, not boundary geometry. Border
   length, point-in-country, and map rendering remain outside this release.
-- Political names and classifications follow documented source conventions and
-  do not imply a position on disputed sovereignty.
+- Names and classifications follow documented source conventions.
+- Terms such as *country* and *area* are practical dataset labels.
 
 Run the validation suite
 ------------------------

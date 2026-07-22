@@ -731,7 +731,6 @@ def normalize(root: Path) -> dict[str, object]:
             "calling_codes": g["data"]["calling_codes"],
             "language_codes": g["data"]["language_codes"],
             "geonames_id": g["data"]["geonames_id"],
-            "status": "other",
         })
         formal_record = formal_names_by_country.get(code)
         if formal_record is None:
@@ -804,7 +803,7 @@ SCHEMA = """
 PRAGMA foreign_keys=ON;
 CREATE TABLE schema_meta (key TEXT PRIMARY KEY, value TEXT NOT NULL) WITHOUT ROWID;
 CREATE TABLE source (id TEXT PRIMARY KEY, name TEXT NOT NULL, homepage TEXT NOT NULL, version TEXT, retrieved_at TEXT NOT NULL, license_name TEXT, license_url TEXT, checksum_sha256 TEXT, notes TEXT) WITHOUT ROWID;
-CREATE TABLE country (id INTEGER PRIMARY KEY, alpha2 TEXT NOT NULL UNIQUE, alpha3 TEXT UNIQUE, numeric_code TEXT UNIQUE, name TEXT NOT NULL, official_name TEXT, status TEXT NOT NULL, continent TEXT, region TEXT, subregion TEXT, geonames_id INTEGER, total_area_km2 REAL, population INTEGER, top_level_domain TEXT, currency_code TEXT, currency_name TEXT, calling_codes TEXT NOT NULL, language_codes TEXT NOT NULL);
+CREATE TABLE country (id INTEGER PRIMARY KEY, alpha2 TEXT NOT NULL UNIQUE, alpha3 TEXT UNIQUE, numeric_code TEXT UNIQUE, name TEXT NOT NULL, official_name TEXT, continent TEXT, region TEXT, subregion TEXT, geonames_id INTEGER, total_area_km2 REAL, population INTEGER, top_level_domain TEXT, currency_code TEXT, currency_name TEXT, calling_codes TEXT NOT NULL, language_codes TEXT NOT NULL);
 CREATE TABLE country_border (country1_id INTEGER NOT NULL, country2_id INTEGER NOT NULL, review_status TEXT NOT NULL, evidence_sources TEXT NOT NULL, review_note TEXT, PRIMARY KEY(country1_id,country2_id), FOREIGN KEY(country1_id) REFERENCES country(id), FOREIGN KEY(country2_id) REFERENCES country(id), CHECK(country1_id < country2_id)) WITHOUT ROWID;
 CREATE INDEX idx_country_border_second ON country_border(country2_id);
 CREATE TABLE country_name (country_id INTEGER NOT NULL, name TEXT NOT NULL, normalized_name TEXT NOT NULL, language_code TEXT, kind TEXT NOT NULL, preferred INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(country_id,name,kind), FOREIGN KEY(country_id) REFERENCES country(id));
@@ -830,7 +829,7 @@ def build_database(root: Path, normalized: dict[str, object]) -> Path:
     epoch = os.environ.get("SOURCE_DATE_EPOCH")
     built_at = datetime.fromtimestamp(int(epoch), timezone.utc).isoformat().replace("+00:00", "Z") if epoch else "2026-07-21T00:00:00Z"
     library_version = _project_version(root)
-    meta = {"schema_version": "4", "dataset_version": "2026.07.21.4", "library_version": library_version, "built_at": built_at}
+    meta = {"schema_version": "5", "dataset_version": "2026.07.21.5", "library_version": library_version, "built_at": built_at}
     con.executemany("INSERT INTO schema_meta VALUES (?,?)", sorted(meta.items()))
     sources = [
         ("geonames", "GeoNames", "https://www.geonames.org/", "2026-07-20", "2026-07-20", "CC BY 4.0", "https://creativecommons.org/licenses/by/4.0/", _sha(root / "build_data/raw/geonames/2026-07-20/manifest.json"), "Country metadata and populated places"),
@@ -849,7 +848,7 @@ def build_database(root: Path, normalized: dict[str, object]) -> Path:
     for ident, record in enumerate(sorted(normalized["countries"], key=lambda r: r["country_code"]), 1):
         code, data = record["country_code"], record["data"]
         ids[code] = ident
-        con.execute("INSERT INTO country VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (ident, code, data["alpha3"], data["numeric_code"], data["name"], data["official_name"], data["status"], data["continent"], data["region"], data["subregion"], data["geonames_id"], data["area_km2"], data["population"], data["top_level_domain"], data["currency_code"], data["currency_name"], json.dumps(data["calling_codes"], ensure_ascii=False), json.dumps(data["language_codes"], ensure_ascii=False)))
+        con.execute("INSERT INTO country VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (ident, code, data["alpha3"], data["numeric_code"], data["name"], data["official_name"], data["continent"], data["region"], data["subregion"], data["geonames_id"], data["area_km2"], data["population"], data["top_level_domain"], data["currency_code"], data["currency_name"], json.dumps(data["calling_codes"], ensure_ascii=False), json.dumps(data["language_codes"], ensure_ascii=False)))
         field_sources = [
             (ident, "identity", "un-m49", data["numeric_code"]),
             (ident, "capitals", "geonames", str(data["geonames_id"])),
@@ -922,7 +921,7 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
     reports.mkdir(parents=True, exist_ok=True)
     countries = normalized["countries"]
     coverage = {
-        "dataset_version": "2026.07.21.4",
+        "dataset_version": "2026.07.21.5",
         "countries": len(countries),
         "capitals": len(normalized["capitals"]),
         "major_cities": len(normalized["cities"]),
@@ -1048,26 +1047,36 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
         {
             "name": "4 — Official country identity",
             "version": "0.4.0",
-            "status": "in progress",
+            "status": "complete",
             "functions": "Complete local display names, English formal names, reviewed local official forms, language/script lookup, romanization, and coverage discovery",
             "tests": "30 unit/pipeline tests, 221 doctests, clean-wheel examples, and release audit passed",
             "dataset": f"{coverage['local_names']} local identities / {coverage['english_formal_names']} English formal names / {coverage['national_official_local_names']} reviewed local official forms",
             "docs": "Identity guide, fun multilingual examples, evidence levels, source rules, and complete coverage metrics",
-            "release": "Local 0.4.0 release gate passed; commit, review, and publication pending",
+            "release": "Merged to main; included in the 0.5.0 production candidate",
+        },
+        {
+            "name": "5 — Educational scope and publication safety",
+            "version": "0.5.0",
+            "status": "complete",
+            "functions": "Editorial policy, public-field scope audit, respectful contribution and correction process, and policy release checks",
+            "tests": "Policy-document integrity, public-model scope, source-role, example-language, documentation, and release audits",
+            "dataset": "Reviewed geographic dataset with updated provenance and policy metadata; no new narrative fields",
+            "docs": "Educational purpose, source scope, geographic conventions, community standards, and correction guidance",
+            "release": "Complete 0.5.0 release candidate; publication pending",
         },
     ]
     for name, version in [
-        ("5 — National symbols and civic facts", "0.5.0"),
-        ("6 — Geometry", "0.6.0"),
-        ("7 — Statistics and institutions", "0.7.0"),
-        ("8 — Advanced education and export", "0.8.0"), ("9 — Full-world hardening", "0.9.0"),
+        ("6 — National symbols and reference facts", "0.6.0"),
+        ("7 — Geometry", "0.7.0"),
+        ("8 — Statistics and institutions", "0.8.0"),
+        ("9 — Advanced education, export, and full-world hardening", "0.9.0"),
         ("Stable offline atlas", "1.0.0"),
     ]:
         milestones.append({"name": name, "version": version, "status": "planned", "functions": "—", "tests": "—", "dataset": "—", "docs": "—", "release": "—"})
     status = {
         "library_version": _project_version(root),
-        "schema_version": 4,
-        "dataset_version": "2026.07.21.4",
+        "schema_version": 5,
+        "dataset_version": "2026.07.21.5",
         "milestones": milestones,
         "coverage": coverage,
     }

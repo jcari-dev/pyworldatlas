@@ -1,7 +1,7 @@
 {
-  "library_version": "0.4.0",
-  "schema_version": 4,
-  "dataset_version": "2026.07.21.4",
+  "library_version": "0.5.0",
+  "schema_version": 5,
+  "dataset_version": "2026.07.21.5",
   "milestones": [
     {
       "name": "0 \u2014 Clean foundation",
@@ -56,25 +56,25 @@
     {
       "name": "4 \u2014 Official country identity",
       "version": "0.4.0",
-      "status": "in progress",
+      "status": "complete",
       "functions": "Complete local display names, English formal names, reviewed local official forms, language/script lookup, romanization, and coverage discovery",
       "tests": "30 unit/pipeline tests, 221 doctests, clean-wheel examples, and release audit passed",
       "dataset": "248 local identities / 240 English formal names / 10 reviewed local official forms",
       "docs": "Identity guide, fun multilingual examples, evidence levels, source rules, and complete coverage metrics",
-      "release": "Local 0.4.0 release gate passed; commit, review, and publication pending"
+      "release": "Merged to main; included in the 0.5.0 production candidate"
     },
     {
-      "name": "5 \u2014 National symbols and civic facts",
+      "name": "5 \u2014 Educational scope and publication safety",
       "version": "0.5.0",
-      "status": "planned",
-      "functions": "\u2014",
-      "tests": "\u2014",
-      "dataset": "\u2014",
-      "docs": "\u2014",
-      "release": "\u2014"
+      "status": "complete",
+      "functions": "Editorial policy, public-field scope audit, respectful contribution and correction process, and policy release checks",
+      "tests": "Policy-document integrity, public-model scope, source-role, example-language, documentation, and release audits",
+      "dataset": "Reviewed geographic dataset with updated provenance and policy metadata; no new narrative fields",
+      "docs": "Educational purpose, source scope, geographic conventions, community standards, and correction guidance",
+      "release": "Complete 0.5.0 release candidate; publication pending"
     },
     {
-      "name": "6 \u2014 Geometry",
+      "name": "6 \u2014 National symbols and reference facts",
       "version": "0.6.0",
       "status": "planned",
       "functions": "\u2014",
@@ -84,7 +84,7 @@
       "release": "\u2014"
     },
     {
-      "name": "7 \u2014 Statistics and institutions",
+      "name": "7 \u2014 Geometry",
       "version": "0.7.0",
       "status": "planned",
       "functions": "\u2014",
@@ -94,7 +94,7 @@
       "release": "\u2014"
     },
     {
-      "name": "8 \u2014 Advanced education and export",
+      "name": "8 \u2014 Statistics and institutions",
       "version": "0.8.0",
       "status": "planned",
       "functions": "\u2014",
@@ -104,7 +104,7 @@
       "release": "\u2014"
     },
     {
-      "name": "9 \u2014 Full-world hardening",
+      "name": "9 \u2014 Advanced education, export, and full-world hardening",
       "version": "0.9.0",
       "status": "planned",
       "functions": "\u2014",
@@ -125,7 +125,7 @@
     }
   ],
   "coverage": {
-    "dataset_version": "2026.07.21.4",
+    "dataset_version": "2026.07.21.5",
     "countries": 248,
     "capitals": 241,
     "major_cities": 6265,
@@ -167,7 +167,7 @@
     "reviewed_land_borders": 319,
     "countries_with_land_borders": 163,
     "countries_with_no_land_borders": 85,
-    "database_sha256": "7926de71c414ae0fff58d77b12cc521e944b9772c125c9f5fecd033bd24e3f22",
+    "database_sha256": "4379055373bd3cff885750097b06eb6d4b5695bae7220449f0a5e8d7979ff0da",
     "validation": "PASS"
   }
 }

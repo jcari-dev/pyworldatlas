@@ -1,17 +1,29 @@
 # Data quality
 
+## Educational and editorial quality
+
+PyWorldAtlas provides offline factual geography for education and reference.
+It does not provide political commentary or opinion. Every field must have a
+clear learning purpose, a defined source role, and documented limitations.
+Missing values are not replaced with unsupported assumptions.
+
+The current dataset intentionally excludes current affairs, political opinion,
+identity-based generalizations, comparisons of people or cultures, and
+speculative narrative. New field families must satisfy the review in
+`EDUCATIONAL_AND_NEUTRALITY_POLICY.md` before collection begins.
+
 The pipeline validates required identifiers, every stored coordinate, explicit
 capital coverage, SQLite integrity, foreign keys, and deterministic ordering.
 Raw snapshots are immutable and checksummed. Familiar common-name overrides
 retain the official UN M49 value and are reviewed in
 `pipeline/config/overrides.json`.
 
-The 0.4.0 development checkout includes 248 countries and areas from the captured UN M49
+The 0.5.0 dataset includes 248 countries and areas from the captured UN M49
 scope, 241 primary-capital records, and 6,265 populated-place records. The
 place table contains records at or above 100,000 population plus retained
 capitals. Seven areas expose a missing capital as `None`. GeoNames-only
-identities outside the UN M49 snapshot are excluded; this source-priority rule
-is not a statement about sovereignty.
+identities outside the UN M49 snapshot are excluded; this is a source-scope
+decision.
 
 The current dataset requires exactly one local identity for each of the 248
 country and area records. It spans 80 languages and 21 scripts. Validation
@@ -55,3 +67,7 @@ The graph represents topological adjacency only. It does not supply border
 geometry, length, maritime boundaries, or road routes. Generalized source
 geometry, small territories, enclaves, and disputed areas are handled according
 to [BOUNDARIES_AND_DISPUTES.md](BOUNDARIES_AND_DISPUTES.md).
+
+These boundaries are publication-safety rules as well as data limitations.
+Factual corrections are welcomed when they identify the affected field, source,
+date, and reason the current value is inaccurate within the documented scope.

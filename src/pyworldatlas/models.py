@@ -3,21 +3,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, fields, is_dataclass
-from enum import Enum
 import json
 from math import asin, atan2, cos, degrees, isclose, radians, sin, sqrt
 from typing import Any
-
-
-class CountryStatus(str, Enum):
-    """Political/entity classification used by the bundled dataset."""
-
-    SOVEREIGN_STATE = "sovereign_state"
-    DEPENDENCY = "dependency"
-    TERRITORY = "territory"
-    SPECIAL_AREA = "special_area"
-    DISPUTED = "disputed"
-    OTHER = "other"
 
 
 @dataclass(frozen=True, slots=True)
@@ -246,8 +234,6 @@ class Language:
 
 
 def _jsonable(value: Any) -> Any:
-    if isinstance(value, Enum):
-        return value.value
     if is_dataclass(value):
         return {field.name: _jsonable(getattr(value, field.name)) for field in fields(value)}
     if isinstance(value, tuple):
@@ -394,7 +380,6 @@ class Country:
     aliases: tuple[str, ...]
     codes: CountryCodes
     flag: str
-    status: CountryStatus
     geography: Geography
     capitals: tuple[Capital, ...]
     major_cities: tuple[City, ...]

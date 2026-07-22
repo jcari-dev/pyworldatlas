@@ -7,11 +7,12 @@ English formal names, and one selected local identity for every country or
 area. It is designed for accurate display, search, education, and serialization
 without guessing a constitutional name, translation, or romanization.
 
-Version 0.4.0 is the official-name milestone. National anthem titles, mottos,
-and clearly labelled civic dates are the next milestone and are defined below
-so that later data does not force an incompatible API.
+The 0.4 development milestone completed the official-name layer. Version 0.5.0
+publishes that work with the educational and editorial audit. National anthem titles,
+mottos, and clearly labelled reference dates move to 0.6.0 and are defined below so
+that later data does not force an incompatible API.
 
-## Version 0.4.0 release boundary
+## Country-identity release boundary
 
 The release has three explicit coverage layers:
 
@@ -168,7 +169,7 @@ Generated reports must expose at least:
 
 Documentation must place these numbers beside every coverage claim.
 
-## Next milestone: national symbols and civic facts
+## Version 0.6.0: national symbols and reference facts
 
 The following models are reserved for a later minor release after their source
 matrix is approved. They are not part of the 0.4.0 API.
@@ -190,7 +191,7 @@ matrix is approved. They are not part of the 0.4.0 API.
 - Official or traditional status, stated explicitly.
 - Per-record source reference.
 
-### Civic event
+### Reference date
 
 A country does not receive one context-free `foundation_date`. Instead, each
 record identifies the event it dates, for example:
@@ -206,7 +207,6 @@ No event is included merely to choose a side in a disputed historical claim.
 
 ## Release rule
 
-The 0.4.0 tag is created only after the declared English and local coverage,
-tests, coverage report, examples, HTML documentation, doctests, wheel smoke
-tests, and source audit all pass. Development batches remain source checkouts
-until then.
+The country-identity layer ships in 0.5.0 only after the declared English and
+local coverage, tests, coverage report, examples, HTML documentation, doctests,
+wheel smoke tests, policy checks, and source audit all pass.

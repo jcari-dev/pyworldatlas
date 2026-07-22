@@ -160,6 +160,6 @@ from silently changing a shared geographic record. Use :meth:`Country.to_dict
    Population is a source snapshot rather than a live estimate. Language values
    are source codes, and ``observed_timezones`` contains zones seen on bundled
    capital/major-city records rather than claiming exhaustive legal coverage.
-   The current sources do not classify political entity type, so every
-   ``Country.status`` is ``CountryStatus.OTHER``. Government, leaders,
-   historical statistics, and culture remain later work.
+   The public model does not expose an entity-recognition or legal-status
+   classification. The words *country* and *area* follow the documented source
+   scope.
