@@ -6,6 +6,7 @@
 [![Python 3.10–3.14](https://img.shields.io/badge/Python-3.10%E2%80%933.14-3776ab)](https://www.python.org/)
 [![CI](https://github.com/jcari-dev/pyworldatlas/actions/workflows/ci.yml/badge.svg)](https://github.com/jcari-dev/pyworldatlas/actions/workflows/ci.yml)
 [![Documentation](https://img.shields.io/badge/docs-online-317f78)](https://jcari-dev.github.io/pyworldatlas-documentation/)
+[![Playground](https://img.shields.io/badge/playground-run%20Python-9a762f)](https://jcari-dev.github.io/pyworldatlas-documentation/playground.html)
 [![License: MIT](https://img.shields.io/badge/license-MIT-607087)](https://github.com/jcari-dev/pyworldatlas/blob/main/LICENSE)
 
 PyWorldAtlas turns a bundled, source-aware geographic database into ordinary
@@ -16,6 +17,7 @@ neighbors, rankings, and learning tools without an API key or runtime download.
 **248 profiles · 6,265 populated places · 319 reviewed land borders · 0 runtime dependencies**
 
 [Documentation](https://jcari-dev.github.io/pyworldatlas-documentation/) ·
+[Playground](https://jcari-dev.github.io/pyworldatlas-documentation/playground.html) ·
 [Five-minute tour](https://jcari-dev.github.io/pyworldatlas-documentation/explore.html) ·
 [API reference](https://jcari-dev.github.io/pyworldatlas-documentation/api.html) ·
 [Data sources](https://jcari-dev.github.io/pyworldatlas-documentation/data_sources.html) ·
@@ -216,6 +218,7 @@ read-only SQLite database. At runtime it does not:
 The documentation includes executable examples, interpretation notes, coverage
 boundaries, source provenance, and the complete public API.
 
+- [Run Python in the browser](https://jcari-dev.github.io/pyworldatlas-documentation/playground.html)
 - [Explore the atlas in five minutes](https://jcari-dev.github.io/pyworldatlas-documentation/explore.html)
 - [60-second quickstart](https://jcari-dev.github.io/pyworldatlas-documentation/quickstart.html)
 - [Country profiles](https://jcari-dev.github.io/pyworldatlas-documentation/country_profile.html)
