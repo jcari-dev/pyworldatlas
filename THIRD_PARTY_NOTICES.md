@@ -71,3 +71,8 @@ Twitter, Inc. and other contributors and are licensed under CC BY 4.0. These
 documentation-only assets are not included in the installed Python package.
 See https://github.com/jdecked/twemoji and
 https://creativecommons.org/licenses/by/4.0/.
+
+The optional documentation playground loads Pyodide from jsDelivr at runtime
+to execute Python in the browser. Pyodide is licensed under MPL 2.0 and is not
+included in the PyWorldAtlas wheel. See https://pyodide.org/ and
+https://github.com/pyodide/pyodide.

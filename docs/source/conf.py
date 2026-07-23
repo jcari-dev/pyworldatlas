@@ -30,6 +30,7 @@ html_context = {
 }
 html_static_path = ["_static"]
 html_css_files = ["pyworldatlas.css"]
+html_js_files = ["playground.js"]
 rst_prolog = """
 .. role:: atlas-flag
    :class: atlas-flag
