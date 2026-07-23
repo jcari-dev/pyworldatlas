@@ -219,6 +219,7 @@ The documentation includes executable examples, interpretation notes, coverage
 boundaries, source provenance, and the complete public API.
 
 - [Run Python in the browser](https://jcari-dev.github.io/pyworldatlas-documentation/playground.html)
+- [Python recipe gallery](https://jcari-dev.github.io/pyworldatlas-documentation/recipes.html)
 - [Explore the atlas in five minutes](https://jcari-dev.github.io/pyworldatlas-documentation/explore.html)
 - [60-second quickstart](https://jcari-dev.github.io/pyworldatlas-documentation/quickstart.html)
 - [Country profiles](https://jcari-dev.github.io/pyworldatlas-documentation/country_profile.html)
