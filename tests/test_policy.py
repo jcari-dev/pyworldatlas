@@ -18,6 +18,7 @@ class EducationalPolicyTests(unittest.TestCase):
             encoding="utf-8"
         )
         docs_index = (ROOT / "docs/source/index.rst").read_text(encoding="utf-8")
+        recipes = (ROOT / "docs/source/recipes.rst").read_text(encoding="utf-8")
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         worker = (ROOT / "docs/source/_static/playground-worker.mjs").read_text(
             encoding="utf-8"
@@ -31,9 +32,17 @@ class EducationalPolicyTests(unittest.TestCase):
             playground,
         )
         self.assertIn("playground", docs_index)
+        self.assertIn("recipes", docs_index)
         self.assertIn("/playground.html", readme)
+        self.assertIn("/recipes.html", readme)
         self.assertIn("micropip.install", worker)
         self.assertIn("new Worker", interface)
+
+        preset_ids = re.findall(r'\n\s+id: "([^"]+)"', interface)
+        recipe_links = re.findall(r"playground\.html#recipe=([a-z-]+)", recipes)
+        self.assertEqual(len(preset_ids), 14)
+        self.assertEqual(len(set(preset_ids)), 14)
+        self.assertTrue(set(recipe_links).issubset(preset_ids))
 
     def test_browser_playground_examples_execute(self):
         interface = (ROOT / "docs/source/_static/playground.js").read_text(
@@ -45,7 +54,7 @@ class EducationalPolicyTests(unittest.TestCase):
             flags=re.DOTALL,
         )
 
-        self.assertEqual(len(examples), 6)
+        self.assertEqual(len(examples), 14)
         for number, example in enumerate(examples, 1):
             with self.subTest(example=number), redirect_stdout(StringIO()):
                 exec(
