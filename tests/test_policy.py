@@ -18,6 +18,7 @@ class EducationalPolicyTests(unittest.TestCase):
             encoding="utf-8"
         )
         docs_index = (ROOT / "docs/source/index.rst").read_text(encoding="utf-8")
+        docs_config = (ROOT / "docs/source/conf.py").read_text(encoding="utf-8")
         recipes = (ROOT / "docs/source/recipes.rst").read_text(encoding="utf-8")
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         worker = (ROOT / "docs/source/_static/playground-worker.mjs").read_text(
@@ -37,6 +38,8 @@ class EducationalPolicyTests(unittest.TestCase):
         self.assertIn("/recipes.html", readme)
         self.assertIn("micropip.install", worker)
         self.assertIn("new Worker", interface)
+        self.assertIn('{"defer": "defer"}', docs_config)
+        self.assertIn("Python startup timed out", interface)
 
         preset_ids = re.findall(r'\n\s+id: "([^"]+)"', interface)
         recipe_links = re.findall(r"playground\.html#recipe=([a-z-]+)", recipes)
