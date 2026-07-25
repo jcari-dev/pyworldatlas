@@ -42,6 +42,10 @@ class EducationalPolicyTests(unittest.TestCase):
         self.assertIn("https://cdn.jsdelivr.net/pyodide/", worker)
         self.assertIn('const PYODIDE_VERSION = "314.0.3"', worker)
         self.assertNotIn("import { loadPyodide }", worker)
+        self.assertIn('sys.platform == "emscripten"', worker)
+        self.assertIn('kwargs["uri"] = False', worker)
+        self.assertIn("Preparing browser-safe dataset access", worker)
+        self.assertIn("json.dumps(_details)", worker)
         initialize = worker[worker.index("async function initialize") :]
         self.assertLess(
             initialize.index("Starting the browser Python worker"),
