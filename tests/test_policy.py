@@ -37,9 +37,20 @@ class EducationalPolicyTests(unittest.TestCase):
         self.assertIn("/playground.html", readme)
         self.assertIn("/recipes.html", readme)
         self.assertIn("micropip.install", worker)
+        self.assertIn("import(`${provider.moduleBase}pyodide.mjs`)", worker)
+        self.assertIn("https://unpkg.com/pyodide@", worker)
+        self.assertIn("https://cdn.jsdelivr.net/pyodide/", worker)
+        self.assertIn('const PYODIDE_VERSION = "314.0.3"', worker)
+        self.assertNotIn("import { loadPyodide }", worker)
+        initialize = worker[worker.index("async function initialize") :]
+        self.assertLess(
+            initialize.index("Starting the browser Python worker"),
+            initialize.index("loadBrowserPython()"),
+        )
         self.assertIn("new Worker", interface)
         self.assertIn('{"defer": "defer"}', docs_config)
         self.assertIn("Python startup timed out", interface)
+        self.assertIn("within 45 seconds", interface)
 
         preset_ids = re.findall(r'\n\s+id: "([^"]+)"', interface)
         recipe_links = re.findall(r"playground\.html#recipe=([a-z-]+)", recipes)
