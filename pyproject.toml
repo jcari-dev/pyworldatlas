@@ -5,8 +5,8 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pyworldatlas"
 version = "0.7.0"
-description = "Offline country profiles, physical geography, and geographic tools for Python"
-keywords = ["atlas", "countries", "education", "geography", "offline", "world-data"]
+description = "Offline country profiles, physical geography, cities, distances, and learning tools"
+keywords = ["atlas", "classroom", "countries", "education", "geography", "learning", "offline", "world-data"]
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
@@ -37,6 +37,9 @@ Source = "https://github.com/jcari-dev/pyworldatlas"
 Issues = "https://github.com/jcari-dev/pyworldatlas/issues"
 Changelog = "https://jcari-dev.github.io/pyworldatlas-documentation/changelog.html"
 Policy = "https://jcari-dev.github.io/pyworldatlas-documentation/educational_principles.html"
+Playground = "https://jcari-dev.github.io/pyworldatlas-documentation/playground.html"
+Roadmap = "https://jcari-dev.github.io/pyworldatlas-documentation/roadmap.html"
+Security = "https://github.com/jcari-dev/pyworldatlas/security/policy"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

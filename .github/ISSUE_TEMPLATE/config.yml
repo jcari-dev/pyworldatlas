@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://jcari-dev.github.io/pyworldatlas-documentation/
+    about: Read the guides, recipes, data notes, and API reference.
+  - name: Browser playground
+    url: https://jcari-dev.github.io/pyworldatlas-documentation/playground.html
+    about: Try the published package before filing a usage question.

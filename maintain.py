@@ -9,6 +9,7 @@ import os
 from pathlib import Path
 import re
 import shutil
+import site
 import subprocess
 import sys
 import tarfile
@@ -149,7 +150,9 @@ def status(*, write: bool = True) -> None:
         table = ["| Milestone | Version | Status | Implemented functions | Tests | Dataset coverage | Documentation | Release |", "|---|---:|---|---|---|---|---|---|"]
         table += [f"| {m['name']} | {m['version']} | {m['status']} | {m['functions']} | {m['tests']} | {m['dataset']} | {m['docs']} | {m['release']} |" for m in data["milestones"]]
         markdown = "# Roadmap status\n\n> This file is generated from `build_data/reports/status.json`.\n\n" + "\n".join(lines[2:]) + "\n\n" + "\n".join(table) + "\n"
-        (ROOT / "ROADMAP_STATUS.md").write_text(markdown, encoding="utf-8")
+        (ROOT / "ROADMAP_STATUS.md").write_text(
+            markdown, encoding="utf-8", newline="\n"
+        )
         generated = ROOT / "docs/source/_generated"
         generated.mkdir(parents=True, exist_ok=True)
         rst_lines = [
@@ -252,7 +255,9 @@ def status(*, write: bool = True) -> None:
             "",
         ]
         rst = "\n".join(rst_lines)
-        (generated / "project_status.rst").write_text(rst, encoding="utf-8")
+        (generated / "project_status.rst").write_text(
+            rst, encoding="utf-8", newline="\n"
+        )
 
 
 def build_wheel() -> Path:
@@ -335,6 +340,12 @@ def docs(wheel: Path | None = None) -> None:
             str(python), "-m", "pip", "install", "--force-reinstall",
             "--no-index", "--no-deps", str(wheel),
         ], env=env)
+        tool_paths = [path for path in site.getsitepackages() if Path(path).exists()]
+        if site.ENABLE_USER_SITE:
+            user_site = site.getusersitepackages()
+            if isinstance(user_site, str) and Path(user_site).exists():
+                tool_paths.append(user_site)
+        env["PYTHONPATH"] = os.pathsep.join(tool_paths)
     try:
         run([str(python), "-m", "sphinx", "-W", "--keep-going", "-b", "html", "docs/source", "docs/_build/html"], env=env)
         run([str(python), "-m", "sphinx", "-W", "--keep-going", "-b", "doctest", "docs/source", "docs/_build/doctest"], env=env)
@@ -481,6 +492,7 @@ def audit_sdist(sdist: Path) -> None:
         "DATA_QUALITY.md",
         "DATA_SOURCES.md",
         "EDUCATIONAL_AND_NEUTRALITY_POLICY.md",
+        "SECURITY.md",
         "THIRD_PARTY_NOTICES.md",
     }
     with tarfile.open(sdist, "r:gz") as archive:

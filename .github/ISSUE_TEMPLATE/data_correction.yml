@@ -1,0 +1,73 @@
+name: Factual data correction
+description: Propose a sourced correction to an existing geographic field.
+title: "Data: "
+labels: []
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        PyWorldAtlas reviews corrections against the documented source role for each field. Please provide an exact locator, not only a homepage.
+  - type: input
+    id: profile
+    attributes:
+      label: Country or area
+      placeholder: Japan (JP)
+    validations:
+      required: true
+  - type: input
+    id: field
+    attributes:
+      label: Field
+      placeholder: highest_point.elevation_m
+    validations:
+      required: true
+  - type: textarea
+    id: correction
+    attributes:
+      label: Current and proposed values
+      description: State the current value, proposed value, and why the change is needed.
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source name and URL
+    validations:
+      required: true
+  - type: input
+    id: locator
+    attributes:
+      label: Exact source locator
+      description: Page, table, entry, statement identifier, or another precise locator.
+    validations:
+      required: true
+  - type: input
+    id: date
+    attributes:
+      label: Publication or snapshot date
+    validations:
+      required: true
+  - type: input
+    id: terms
+    attributes:
+      label: Reuse terms
+      description: License or terms that permit the proposed use.
+    validations:
+      required: true
+  - type: textarea
+    id: conflict
+    attributes:
+      label: Conflicting sources or context
+      description: Note any known disagreement with the current or another reliable source.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: The proposal is factual and relevant to the documented field.
+          required: true
+        - label: The source is stable, attributable, and reusable for this purpose.
+          required: true
+        - label: The report contains no private information or advocacy material.
+          required: true

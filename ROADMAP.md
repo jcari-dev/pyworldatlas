@@ -1,50 +1,52 @@
 # Roadmap
 
-PyWorldAtlas advances through installable, documented releases with explicit
-data boundaries. Versions 0.1 through 0.5 established the generated offline
-database, typed profiles, coordinates and distances, reviewed land-border
-tools, complete selected local identities, English formal names, and the
-educational/editorial policy.
+PyWorldAtlas grows through small, installable releases with explicit data,
+documentation, and compatibility boundaries. Planned work is not part of the
+public API until it is implemented, tested, documented, and published.
 
-## 0.6.0 — Country reference and discovery
+## Current release: 0.7
 
-The published 0.6 release adds:
+Version 0.7 completes the first rich offline country profile. It includes
+country identity and local names, capitals and major cities, coordinates and
+distance tools, reviewed land neighbors, practical reference facts, physical
+geography, climate classes, rankings, and deterministic learning tools.
 
-- 234 national-anthem title profiles, without lyrics, audio, credits, or dates.
-- 32 explicitly reviewed source-listed national mottos.
-- 227 English demonym profiles.
-- CLDR currency names, symbols, and minor-unit metadata.
-- Language names and likely scripts for the captured country-language records.
-- 417 country-level timezone records across 246 profiles.
-- 176 postal-code formats.
-- Exact currency, language, script, and timezone filters.
-- Typed country rankings and nearest-capital results.
-- A documentation-first example gallery and focused reference guides.
+The complete shipped coverage is generated in [ROADMAP_STATUS.md](ROADMAP_STATUS.md).
 
-## 0.7.0 — Physical geography
+## Next milestone: 0.8 — Education and usability
 
-The published 0.7 release adds:
+The 0.8 goal is to make the existing atlas easier and more enjoyable to use,
+especially for learners and teachers. The highest-value candidates are:
 
-- Sourced total, land, and water area plus calculated water percentage.
-- Coastline, mean elevation, and named highest and lowest points.
-- Source-listed major rivers and lakes with clear shared-feature semantics.
-- Plain-language climate summaries and represented 1991–2020 Köppen-Geiger
-  classes.
-- Physical filters, feature search, rankings, discovery-card fields, and
-  deterministic flashcards.
-- Pinned inputs, deterministic extraction, exact coverage gates, and a focused
-  physical-geography documentation guide.
+- Simple city search and nearby-city discovery.
+- Clear, readable country summaries for terminals, notebooks, and lessons.
+- Friendly coordinate helpers for common geography activities.
+- Deterministic multiple-choice questions built from sourced facts.
+- Beginner-focused examples, classroom recipes, and playground improvements.
+- API naming, error-message, typing, accessibility, and browser-runtime polish.
 
-A separate “major mountains” inventory is not claimed. The available source
-reliably identifies highest points but does not provide a consistent global
-major-mountain threshold.
+This milestone should reuse the validated dataset wherever possible. Any new
+field still requires the same source, license, coverage, and neutrality review
+as earlier releases.
 
-## Deferred beyond 0.7
+## 0.9 — Hardening for a stable API
 
-Country boundary geometry, GeoJSON export, bounding boxes, centroids, and
-point-in-country lookup are explicitly deferred. Reference dates and anthem
-contributors/adoption histories also remain outside the current contract.
+Version 0.9 is reserved for consistency, performance, documentation coverage,
+typing, packaging, and full release-candidate testing. Its purpose is to remove
+surprises before the stable contract rather than introduce a large new data
+surface.
 
-`ROADMAP_STATUS.md` contains generated implementation evidence. Release gates
-and publication instructions are maintained in the version-specific status
-documents and `RELEASING.md`.
+## 1.0 — Stable offline atlas
+
+Version 1.0 represents a documented, dependable public API with reproducible
+data builds, supported upgrade guidance, and complete release automation.
+
+## Deferred work
+
+Boundary geometry, GeoJSON export, bounding boxes, polygon centroids, and
+point-in-country lookup are not scheduled for 0.8. They add meaningful package
+size, licensing, modeling, and boundary-interpretation work and may be better
+suited to an optional post-1.0 extension.
+
+Anthem lyrics, audio, contributor histories, and adoption dates also remain
+outside the current data contract.

@@ -1866,12 +1866,40 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
             "release": "Published as v0.7.0",
         },
     ]
-    for name, version in [
-        ("8 — Boundary geometry and spatial queries", "0.8.0"),
-        ("9 — Advanced education and full-world hardening", "0.9.0"),
-        ("Stable offline atlas", "1.0.0"),
-    ]:
-        milestones.append({"name": name, "version": version, "status": "planned", "functions": "—", "tests": "—", "dataset": "—", "docs": "—", "release": "—"})
+    milestones.extend(
+        [
+            {
+                "name": "8 — Education and usability",
+                "version": "0.8.0",
+                "status": "planned",
+                "functions": "City discovery, readable country summaries, coordinate helpers, deterministic learning activities, and API usability polish",
+                "tests": "Public API, browser runtime, accessibility, examples, typing, and supported-Python release gates",
+                "dataset": "Prefer derived use of the existing reviewed dataset; new fields require separate source and coverage review",
+                "docs": "Beginner guides, classroom recipes, playground examples, and complete API documentation",
+                "release": "—",
+            },
+            {
+                "name": "9 — Stable-API hardening",
+                "version": "0.9.0",
+                "status": "planned",
+                "functions": "API consistency, performance, typing, packaging, and compatibility polish",
+                "tests": "Full release-candidate matrix and upgrade-path validation",
+                "dataset": "Reproducibility and coverage hardening without a broad new field family",
+                "docs": "Stable-API review, migration guidance, and complete reference audit",
+                "release": "—",
+            },
+            {
+                "name": "Stable offline atlas",
+                "version": "1.0.0",
+                "status": "planned",
+                "functions": "—",
+                "tests": "—",
+                "dataset": "—",
+                "docs": "—",
+                "release": "—",
+            },
+        ]
+    )
     status = {
         "library_version": _project_version(root),
         "schema_version": 7,

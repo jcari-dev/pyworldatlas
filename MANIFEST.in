@@ -5,4 +5,5 @@ include CONTRIBUTING.md
 include DATA_QUALITY.md
 include DATA_SOURCES.md
 include EDUCATIONAL_AND_NEUTRALITY_POLICY.md
+include SECURITY.md
 include THIRD_PARTY_NOTICES.md

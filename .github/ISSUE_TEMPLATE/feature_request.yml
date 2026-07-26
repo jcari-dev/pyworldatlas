@@ -1,0 +1,47 @@
+name: Feature request
+description: Suggest a focused improvement to the public package or documentation.
+title: "Feature: "
+labels: []
+assignees: []
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What should become easier?
+      description: Describe the learning or development task, not only a proposed method name.
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: Example Python
+      description: Show what an easy-to-understand API could look like.
+      render: python
+    validations:
+      required: true
+  - type: dropdown
+    id: data
+    attributes:
+      label: Does this require new data?
+      options:
+        - No, it uses existing package data
+        - Yes, it requires a new source or field
+        - Unsure
+    validations:
+      required: true
+  - type: textarea
+    id: value
+    attributes:
+      label: Educational or practical value
+      description: Who benefits, and what could they build or learn?
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I checked the documentation and existing issues first.
+          required: true
+        - label: The request fits an offline factual geography package.
+          required: true
