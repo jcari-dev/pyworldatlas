@@ -383,7 +383,9 @@ def prepare_release(version: str, output_dir: Path | None = None) -> None:
     docs_config = (ROOT / "docs/source/conf.py").read_text(encoding="utf-8")
     if f'release = "{version}"' not in docs_config:
         raise RuntimeError("docs/source/conf.py does not match pyproject.toml")
-    if f"## {version} " not in (ROOT / "CHANGELOG.md").read_text(encoding="utf-8"):
+    changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+    heading = rf"^## {re.escape(version)}\s*$"
+    if re.search(heading, changelog, flags=re.MULTILINE) is None:
         raise RuntimeError(f"CHANGELOG.md has no {version} release heading")
 
     print("[1/5] Runtime and pipeline tests")

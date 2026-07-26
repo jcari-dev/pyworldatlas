@@ -139,6 +139,37 @@ class AtlasTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "exceeds"):
             self.atlas.flashcards(topic="local_names", count=249)
 
+    def test_deterministic_multiple_choice_quiz(self):
+        self.assertIn("local_names", self.atlas.learning_topics())
+        questions = self.atlas.quiz(
+            topic="local_names", count=2, choices=4, seed=42
+        )
+        self.assertEqual(
+            tuple(question.country.alpha2 for question in questions),
+            ("KW", "BS"),
+        )
+        self.assertEqual(
+            questions,
+            self.atlas.quiz(topic="local_names", count=2, choices=4, seed=42),
+        )
+        for question in questions:
+            self.assertEqual(len(question.choices), 4)
+            self.assertIn(question.answer, question.choices)
+            self.assertTrue(question.is_correct(question.answer))
+            self.assertTrue(question.is_correct(question.answer_number))
+            self.assertFalse(question.is_correct(99))
+            self.assertEqual(question.to_dict()["answer"], question.answer)
+            self.assertIn('"choices":', question.to_json())
+        with self.assertRaisesRegex(ValueError, "distinct answers"):
+            self.atlas.quiz(
+                topic="continents",
+                count=1,
+                choices=4,
+                continent="Asia",
+            )
+        with self.assertRaisesRegex(ValueError, "between 2 and 6"):
+            self.atlas.quiz(topic="capitals", count=1, choices=1)
+
     def test_coordinate_calculations(self):
         london = Coordinate(51.5074, -0.1278)
         paris = Coordinate(48.8566, 2.3522)
@@ -157,6 +188,24 @@ class AtlasTests(unittest.TestCase):
             Coordinate(0, math.inf)
         with self.assertRaises(ValueError):
             london.distance_to(paris, unit="lightyears")
+
+    def test_coordinate_display_and_compass_helpers(self):
+        tokyo = Coordinate(35.6895, 139.6917)
+        london = Coordinate(51.5074, -0.1278)
+        paris = Coordinate(48.8566, 2.3522)
+
+        self.assertEqual(tokyo.hemispheres, ("N", "E"))
+        self.assertEqual(tokyo.format(), "35.6895° N, 139.6917° E")
+        self.assertEqual(
+            tokyo.dms(),
+            "35° 41′ 22.2″ N, 139° 41′ 30.1″ E",
+        )
+        self.assertEqual(london.compass_direction_to(paris), "SSE")
+        self.assertEqual(london.compass_direction_to(paris, points=8), "SE")
+        with self.assertRaisesRegex(ValueError, "between 0 and 8"):
+            tokyo.format(precision=9)
+        with self.assertRaisesRegex(ValueError, "4, 8, or 16"):
+            london.compass_direction_to(paris, points=12)
 
     def test_undefined_geodesic_operations(self):
         point = Coordinate(0, 0)
@@ -191,6 +240,33 @@ class AtlasTests(unittest.TestCase):
         with self.assertRaises(AmbiguousPlaceError):
             self.atlas.city("London")
 
+    def test_city_search_and_nearby_discovery(self):
+        matches = self.atlas.search_cities("santo", country="DO", limit=3)
+        self.assertEqual(
+            tuple(city.name for city in matches),
+            ("Santo Domingo", "Santo Domingo Oeste", "Santo Domingo Este"),
+        )
+        self.assertEqual(str(matches[0]), "Santo Domingo (DO)")
+        self.assertEqual(matches[0].label, "Santo Domingo (DO)")
+        self.assertEqual(self.atlas.search_cities("not-a-real-city"), ())
+
+        nearby = self.atlas.nearest_cities(
+            "Santo Domingo",
+            origin_country="DO",
+            within_country="DO",
+            limit=3,
+        )
+        self.assertEqual(
+            tuple(result.city.name for result in nearby),
+            ("Santo Domingo Este", "Bella Vista", "Santo Domingo Oeste"),
+        )
+        self.assertTrue(all(result.country.alpha2 == "DO" for result in nearby))
+        self.assertTrue(nearby[0].distance < nearby[-1].distance)
+        self.assertEqual(nearby[0].to_dict()["city"]["country_code"], "DO")
+        self.assertIn('"distance":', nearby[0].to_json())
+        with self.assertRaisesRegex(ValueError, "positive integer"):
+            self.atlas.search_cities("santo", limit=0)
+
     def test_country_and_capital_distance_inputs(self):
         japan = self.atlas.country("Japan")
         france = self.atlas.country("France")
@@ -214,8 +290,30 @@ class AtlasTests(unittest.TestCase):
         for country in self.atlas:
             self.assertEqual(self.atlas.country(country.name).alpha2, country.alpha2)
 
+    def test_readable_country_summary(self):
+        brazil = self.atlas.country("Brazil")
+        summary = brazil.summary()
+        self.assertTrue(summary.startswith("🇧🇷 Brazil · Brasil"))
+        self.assertIn("Capital: Brasília", summary)
+        self.assertIn("Anthem title: Hino Nacional Brasileiro", summary)
+        self.assertIn("Motto: Ordem e Progresso · Order and Progress", summary)
+        self.assertIn("Highest point: Pico da Neblina (2,994 m)", summary)
+        self.assertIn("Source-listed rivers: Amazon", summary)
+
+        japan = self.atlas.country("Japan")
+        self.assertTrue(japan.summary(local_language="ja").startswith("🇯🇵 Japan · 日本"))
+        heading = japan.summary(local_language="es").splitlines()[0]
+        self.assertNotIn(" · 日本", heading)
+
     def test_search_and_filter(self):
         self.assertEqual(self.atlas.search_countries("vatican")[0].country.alpha2, "VA")
+        self.assertEqual(self.atlas.search_countries("not-a-country"), ())
+        with self.assertRaisesRegex(TypeError, "query must be a string"):
+            self.atlas.search_countries(None)
+        with self.assertRaisesRegex(ValueError, "at least one"):
+            self.atlas.search_countries("  ")
+        with self.assertRaisesRegex(ValueError, "positive integer"):
+            self.atlas.search_countries("japan", limit=0)
         self.assertIn("Japan", [c.name for c in self.atlas.countries(continent="Asia")])
         self.assertEqual(
             tuple(country.alpha2 for country in self.atlas.countries(currency_code="jpy")),
@@ -405,7 +503,7 @@ class AtlasTests(unittest.TestCase):
 
     def test_dataset_versions(self):
         info = self.atlas.dataset_info()
-        self.assertEqual((info.library_version, info.schema_version, info.dataset_version), ("0.7.0", 7, "2026.07.22.7"))
+        self.assertEqual((info.library_version, info.schema_version, info.dataset_version), ("0.8.0", 7, "2026.07.22.7"))
         self.assertEqual(info.country_count, 248)
 
     def test_english_formal_names_are_sourced_and_discoverable(self):

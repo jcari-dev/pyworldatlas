@@ -1871,12 +1871,12 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
             {
                 "name": "8 — Education and usability",
                 "version": "0.8.0",
-                "status": "planned",
-                "functions": "City discovery, readable country summaries, coordinate helpers, deterministic learning activities, and API usability polish",
-                "tests": "Public API, browser runtime, accessibility, examples, typing, and supported-Python release gates",
-                "dataset": "Prefer derived use of the existing reviewed dataset; new fields require separate source and coverage review",
-                "docs": "Beginner guides, classroom recipes, playground examples, and complete API documentation",
-                "release": "—",
+                "status": "complete",
+                "functions": "Readable country summaries, city-name and proximity discovery, coordinate display helpers, discoverable learning topics, and deterministic multiple-choice questions",
+                "tests": "Public API behavior, deterministic quiz construction, coordinate formatting, city discovery, serialization, examples, browser runtime, documentation, and supported-Python release gates",
+                "dataset": "Reuses the complete reviewed 0.7 dataset without changing schema or coverage",
+                "docs": "Learning guide, classroom recipes, refreshed playground, usability examples, polished docstrings, and complete API reference",
+                "release": "Published as v0.8.0",
             },
             {
                 "name": "9 — Stable-API hardening",

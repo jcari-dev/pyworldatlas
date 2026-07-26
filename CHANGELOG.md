@@ -1,6 +1,24 @@
 # Changelog
 
-## 0.7.0 — 2026-07-22
+## 0.8.0
+
+- Added `Country.summary()` for readable multilingual country introductions
+  built from existing sourced profile fields.
+- Added deterministic multiple-choice questions through `Atlas.quiz()` and the
+  immutable, serializable `QuizQuestion` model.
+- Added `Atlas.learning_topics()` so applications and lessons can discover the
+  topics shared by flashcards and quizzes.
+- Added partial `Atlas.search_cities()` lookup and `Atlas.nearest_cities()`
+  proximity discovery with typed `CityDistance` results.
+- Added decimal-degree formatting, degrees/minutes/seconds formatting,
+  hemisphere labels, and compass directions to `Coordinate`.
+- Added compact human-readable city labels.
+- Expanded beginner examples, classroom recipes, the browser playground, API
+  documentation, and docstrings around the education and usability workflows.
+- Reorganized the documentation as a coherent learning path and retained the
+  complete source, missingness, and geographic-interpretation guidance.
+
+## 0.7.0
 
 - Added sourced total, land, and water area; coastline; mean elevation; and
   named highest and lowest points.
@@ -20,7 +38,7 @@
   point-in-country lookup, and a separate major-mountain inventory outside this
   release.
 
-## 0.6.0 — 2026-07-22
+## 0.6.0
 
 - Added 234 source-provided national-anthem title profiles without lyrics,
   audio, contributor credits, or adoption histories.
@@ -46,7 +64,7 @@
 - Deferred reference dates, anthem credits/dates, boundary geometry, GeoJSON,
   bounding boxes, centroids, and point-in-country lookup.
 
-## 0.5.0 — 2026-07-21
+## 0.5.0
 
 - Added one sourced local-language identity for all 248 countries and areas,
   spanning 80 languages and 21 writing systems.
@@ -81,7 +99,7 @@
 - Included the completed country-identity milestone in 0.5.0 rather than moving
   or reusing a public version tag.
 
-## 0.3.1 — 2026-07-21
+## 0.3.1
 
 - Added `Atlas.has_land_route()` for explicit land-graph reachability checks.
 - Added `names` and `alpha2_codes` conveniences to `BorderPathResult`.
@@ -89,7 +107,7 @@
 - Expanded the border, discovery, API, serialization, and source guides with
   provenance, return-value, connectivity, and edge-case explanations.
 
-## 0.3.0 — 2026-07-21
+## 0.3.0
 
 - Added 319 reviewed, undirected land-border relationships across the existing
   248-country-and-area scope.
@@ -104,7 +122,7 @@
 - Upgraded the generated dataset to schema 3 and consolidated validation into
   focused examples and automated tests.
 
-## 0.2.1 — 2026-07-21
+## 0.2.1
 
 - First production candidate for the complete 0.2 country-profile, coordinate,
   and discovery feature set.
@@ -131,7 +149,7 @@
 - Upgraded the generated dataset to schema 2 while preserving 0.1.0 lookup,
   country, capital, city, and collection behavior.
 
-## 0.1.0 — 2026-07-20
+## 0.1.0
 
 - Rebuilt the project from scratch around a standard-library runtime and one generated SQLite database.
 - Added lookup, aliases, standard identifiers, and UN regions for 248 countries and areas.

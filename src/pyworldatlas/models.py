@@ -74,7 +74,12 @@ class LocalizedName:
 
 @dataclass(frozen=True, slots=True)
 class Coordinate:
-    """A signed WGS84 coordinate in decimal degrees."""
+    """A signed WGS84 coordinate in decimal degrees.
+
+    Use :meth:`format` for a compact classroom-friendly label, :meth:`dms` for
+    degrees/minutes/seconds, and the calculation methods for great-circle
+    distance and direction. Latitude always comes before longitude.
+    """
 
     latitude: float
     longitude: float
@@ -89,8 +94,64 @@ class Coordinate:
         """Return ``(latitude, longitude)``."""
         return (self.latitude, self.longitude)
 
+    @property
+    def hemispheres(self) -> tuple[str, str]:
+        """Return the latitude and longitude hemispheres, such as ``("N", "E")``."""
+        return (
+            "N" if self.latitude >= 0 else "S",
+            "E" if self.longitude >= 0 else "W",
+        )
+
+    def format(self, *, precision: int = 4) -> str:
+        """Return signed coordinates as an easy-to-read hemisphere label.
+
+        ``Coordinate(35.6895, 139.6917).format()`` returns
+        ``"35.6895° N, 139.6917° E"``. ``precision`` controls decimal places
+        and must be an integer from 0 through 8.
+        """
+        if isinstance(precision, bool) or not isinstance(precision, int):
+            raise TypeError("precision must be an integer")
+        if not 0 <= precision <= 8:
+            raise ValueError("precision must be between 0 and 8")
+        latitude_hemisphere, longitude_hemisphere = self.hemispheres
+        return (
+            f"{abs(self.latitude):.{precision}f}° {latitude_hemisphere}, "
+            f"{abs(self.longitude):.{precision}f}° {longitude_hemisphere}"
+        )
+
+    def dms(self, *, seconds_precision: int = 1) -> str:
+        """Return degrees, minutes, and seconds with hemisphere letters.
+
+        ``seconds_precision`` controls decimal places on the seconds value and
+        must be an integer from 0 through 6.
+        """
+        if isinstance(seconds_precision, bool) or not isinstance(seconds_precision, int):
+            raise TypeError("seconds_precision must be an integer")
+        if not 0 <= seconds_precision <= 6:
+            raise ValueError("seconds_precision must be between 0 and 6")
+
+        def component(value: float, hemisphere: str) -> str:
+            total_seconds = round(abs(value) * 3600, seconds_precision)
+            degrees_value = int(total_seconds // 3600)
+            remaining = total_seconds - degrees_value * 3600
+            minutes_value = int(remaining // 60)
+            seconds_value = remaining - minutes_value * 60
+            seconds = f"{seconds_value:.{seconds_precision}f}"
+            return f"{degrees_value}° {minutes_value}′ {seconds}″ {hemisphere}"
+
+        latitude_hemisphere, longitude_hemisphere = self.hemispheres
+        return (
+            f"{component(self.latitude, latitude_hemisphere)}, "
+            f"{component(self.longitude, longitude_hemisphere)}"
+        )
+
     def distance_to(self, other: Coordinate, *, unit: str = "km") -> float:
-        """Return the great-circle distance to ``other`` using WGS84 mean radius."""
+        """Return great-circle distance using the WGS84 mean Earth radius.
+
+        ``unit`` accepts kilometres (``"km"``), statute miles (``"mi"``), or
+        nautical miles (``"nmi"``). This is a surface measurement, not a road
+        or flight route.
+        """
         lat1, lon1, lat2, lon2 = map(radians, (self.latitude, self.longitude, other.latitude, other.longitude))
         delta_lat, delta_lon = lat2 - lat1, lon2 - lon1
         haversine = sin(delta_lat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(delta_lon / 2) ** 2
@@ -124,7 +185,12 @@ class Coordinate:
         return coincident, antipodal
 
     def bearing_to(self, other: Coordinate) -> float:
-        """Return the initial bearing to ``other`` in degrees from true north."""
+        """Return the initial bearing to ``other`` in degrees from true north.
+
+        The bearing is in the half-open range ``[0, 360)`` and may change along
+        a great-circle path. Coincident and antipodal points have no unique
+        initial bearing and raise :class:`ValueError`.
+        """
         coincident, antipodal = self._relative_position(other)
         if coincident:
             raise ValueError("initial bearing is undefined for coincident coordinates")
@@ -135,6 +201,27 @@ class Coordinate:
         y = sin(delta_lon) * cos(lat2)
         x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(delta_lon)
         return (degrees(atan2(y, x)) + 360.0) % 360.0
+
+    def compass_direction_to(self, other: Coordinate, *, points: int = 16) -> str:
+        """Return a compass direction such as ``"SE"`` for the initial bearing.
+
+        ``points`` selects a 4-, 8-, or 16-point compass rose. The result
+        describes the initial great-circle direction, which can change along a
+        long route.
+        """
+        labels = {
+            4: ("N", "E", "S", "W"),
+            8: ("N", "NE", "E", "SE", "S", "SW", "W", "NW"),
+            16: (
+                "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+                "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW",
+            ),
+        }
+        if points not in labels:
+            raise ValueError("points must be 4, 8, or 16")
+        step = 360 / points
+        index = int((self.bearing_to(other) + step / 2) // step) % points
+        return labels[points][index]
 
     def midpoint_to(self, other: Coordinate) -> Coordinate:
         """Return the spherical midpoint on the great-circle path to ``other``."""
@@ -314,7 +401,12 @@ class Capital:
 
 @dataclass(frozen=True, slots=True)
 class City:
-    """A major populated place sourced from GeoNames."""
+    """An immutable bundled populated place.
+
+    Every city has a display name, country code, and WGS84 coordinates.
+    Population, elevation, timezone, capital roles, alternate names, and the
+    GeoNames identifier are optional snapshot fields.
+    """
 
     name: str
     country_code: str
@@ -325,6 +417,14 @@ class City:
     capital_roles: tuple[str, ...] = ()
     alternate_names: tuple[str, ...] = ()
     geonames_id: int | None = None
+
+    @property
+    def label(self) -> str:
+        """Return a compact place label such as ``"Tokyo (JP)"``."""
+        return f"{self.name} ({self.country_code})"
+
+    def __str__(self) -> str:
+        return self.label
 
 
 @dataclass(frozen=True, slots=True)
@@ -481,6 +581,28 @@ class CapitalDistance:
 
 
 @dataclass(frozen=True, slots=True)
+class CityDistance:
+    """A nearby populated place and its great-circle distance from an origin.
+
+    The compact country reference disambiguates city names. ``unit`` records
+    the unit requested from :meth:`pyworldatlas.Atlas.nearest_cities`.
+    """
+
+    country: CountryReference
+    city: City
+    distance: float
+    unit: str
+
+    def to_dict(self) -> dict[str, Any]:
+        """Return JSON-compatible primitives for this nearby-city result."""
+        return _jsonable(self)
+
+    def to_json(self, indent: int | None = None) -> str:
+        """Serialize this nearby-city result without escaping Unicode text."""
+        return json.dumps(self.to_dict(), ensure_ascii=False, indent=indent)
+
+
+@dataclass(frozen=True, slots=True)
 class BorderPathResult:
     """A shortest path through the reviewed land-border graph.
 
@@ -548,6 +670,59 @@ class Flashcard:
 
     def to_json(self, indent: int | None = None) -> str:
         """Serialize this flashcard as JSON without escaping Unicode text."""
+        return json.dumps(self.to_dict(), ensure_ascii=False, indent=indent)
+
+
+@dataclass(frozen=True, slots=True)
+class QuizQuestion:
+    """A deterministic multiple-choice geography question.
+
+    Choices are stored in display order and ``answer`` is always one of them.
+    Use :attr:`answer_number` for a one-based classroom answer key or
+    :meth:`is_correct` to check either a displayed answer or choice number.
+    """
+
+    topic: str
+    prompt: str
+    choices: tuple[str, ...]
+    answer: str
+    country: CountryReference
+
+    def __post_init__(self) -> None:
+        if len(self.choices) < 2:
+            raise ValueError("a quiz question must contain at least two choices")
+        normalized = tuple(choice.casefold() for choice in self.choices)
+        if len(set(normalized)) != len(normalized):
+            raise ValueError("quiz choices must be unique")
+        if self.answer not in self.choices:
+            raise ValueError("answer must be present in choices")
+
+    @property
+    def answer_number(self) -> int:
+        """Return the correct choice number using one-based classroom numbering."""
+        return self.choices.index(self.answer) + 1
+
+    def is_correct(self, choice: str | int) -> bool:
+        """Check an answer string or a one-based choice number.
+
+        Text matching ignores surrounding whitespace and letter case. Invalid
+        choice numbers return ``False``; unsupported input types raise
+        :class:`TypeError`.
+        """
+        if isinstance(choice, bool):
+            raise TypeError("choice must be an answer string or one-based integer")
+        if isinstance(choice, int):
+            return 1 <= choice <= len(self.choices) and self.choices[choice - 1] == self.answer
+        if isinstance(choice, str):
+            return choice.strip().casefold() == self.answer.strip().casefold()
+        raise TypeError("choice must be an answer string or one-based integer")
+
+    def to_dict(self) -> dict[str, Any]:
+        """Return JSON-compatible primitives for this question."""
+        return _jsonable(self)
+
+    def to_json(self, indent: int | None = None) -> str:
+        """Serialize this question without escaping Unicode text."""
         return json.dumps(self.to_dict(), ensure_ascii=False, indent=indent)
 
 
@@ -885,6 +1060,87 @@ class Country:
             highest_point=self.highest_point,
             climate_zone_codes=self.climate.zone_codes,
         )
+
+    def summary(self, *, local_language: str | None = None) -> str:
+        """Return a readable, multiline introduction to this country profile.
+
+        The summary favors useful classroom facts and omits unavailable values.
+        Pass a language code to request a particular bundled local name; with
+        no code, the selected non-English local identity is used when present.
+        This is a presentation helper rather than a serialization format—use
+        :meth:`to_dict` when field names and machine-readable values matter.
+        """
+        local_name = (
+            self.local_name(local_language)
+            if local_language is not None
+            else next(
+                (
+                    name
+                    for name in self.local_names
+                    if name.short_name.casefold() != self.name.casefold()
+                ),
+                None,
+            )
+        )
+        heading = f"{self.flag_emoji or ''} {self.name}".strip()
+        if local_name is not None and local_name.short_name.casefold() != self.name.casefold():
+            heading += f" · {local_name.short_name}"
+        lines = [heading]
+
+        if self.has_distinct_formal_name:
+            lines.append(f"Formal name: {self.formal_name}")
+        if self.capital is not None:
+            lines.append(f"Capital: {self.capital.name}")
+        location = tuple(
+            value for value in (self.continent, self.subregion) if value
+        )
+        if location:
+            lines.append(f"Location: {' · '.join(dict.fromkeys(location))}")
+        if self.population is not None:
+            lines.append(f"Population snapshot: {self.population:,}")
+        if self.currency is not None:
+            currency = self.currency.name or self.currency.code
+            details = [self.currency.code]
+            if self.currency.symbol and self.currency.symbol != self.currency.code:
+                details.append(self.currency.symbol)
+            lines.append(f"Currency: {currency} ({', '.join(details)})")
+        if self.languages:
+            languages = ", ".join(
+                f"{language.name} ({language.code})"
+                if language.name and language.name != language.code
+                else language.code
+                for language in self.languages
+            )
+            lines.append(f"Languages: {languages}")
+        if self.anthem is not None:
+            anthem = self.anthem.title
+            if self.anthem.english_title and self.anthem.english_title != anthem:
+                anthem += f" · {self.anthem.english_title}"
+            lines.append(f"Anthem title: {anthem}")
+        if self.motto is not None:
+            motto = self.motto.text
+            if self.motto.english_text and self.motto.english_text != motto:
+                motto += f" · {self.motto.english_text}"
+            lines.append(f"Motto: {motto}")
+        if self.highest_point is not None:
+            lines.append(
+                f"Highest point: {self.highest_point.name} "
+                f"({self.highest_point.elevation_m:,.0f} m)"
+            )
+        if self.climate.dominant_zone is not None:
+            zone = self.climate.dominant_zone
+            lines.append(f"Dominant climate class: {zone.code} · {zone.name}")
+        if self.rivers:
+            lines.append(
+                "Source-listed rivers: "
+                + ", ".join(river.name for river in self.rivers[:3])
+            )
+        if self.lakes:
+            lines.append(
+                "Source-listed lakes: "
+                + ", ".join(lake.name for lake in self.lakes[:3])
+            )
+        return "\n".join(lines)
 
     def to_dict(self, include_history: bool = False) -> dict[str, Any]:
         """Serialize this profile to JSON-compatible primitives.

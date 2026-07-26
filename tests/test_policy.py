@@ -13,6 +13,12 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class EducationalPolicyTests(unittest.TestCase):
+    def test_changelog_release_headings_do_not_include_dates(self):
+        dated_heading = r"(?m)^(?:## )?\d+\.\d+\.\d+.*\b20\d{2}-\d{2}-\d{2}\b"
+        for path in (ROOT / "CHANGELOG.md", ROOT / "docs/source/changelog.rst"):
+            with self.subTest(path=path):
+                self.assertNotRegex(path.read_text(encoding="utf-8"), dated_heading)
+
     def test_repository_presentation_is_current(self):
         obsolete = {
             "MIGRATION_FROM_0.0.md",
