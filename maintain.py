@@ -150,7 +150,7 @@ def status(*, write: bool = True) -> None:
         table = ["| Milestone | Version | Status | Implemented functions | Tests | Dataset coverage | Documentation | Release |", "|---|---:|---|---|---|---|---|---|"]
         table += [f"| {m['name']} | {m['version']} | {m['status']} | {m['functions']} | {m['tests']} | {m['dataset']} | {m['docs']} | {m['release']} |" for m in data["milestones"]]
         markdown = "# Roadmap status\n\n> This file is generated from `build_data/reports/status.json`.\n\n" + "\n".join(lines[2:]) + "\n\n" + "\n".join(table) + "\n"
-        (ROOT / "ROADMAP_STATUS.md").write_text(
+        (ROOT / "docs/project/ROADMAP_STATUS.md").write_text(
             markdown, encoding="utf-8", newline="\n"
         )
         generated = ROOT / "docs/source/_generated"

@@ -1,4 +1,4 @@
-# Country identity data specification
+# Country identity data reference
 
 ## Purpose
 

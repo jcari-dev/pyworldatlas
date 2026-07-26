@@ -11,7 +11,8 @@ country identity and local names, capitals and major cities, coordinates and
 distance tools, reviewed land neighbors, practical reference facts, physical
 geography, climate classes, rankings, and deterministic learning tools.
 
-The complete shipped coverage is generated in [ROADMAP_STATUS.md](ROADMAP_STATUS.md).
+The complete shipped coverage is generated in the
+[roadmap status](docs/project/ROADMAP_STATUS.md).
 
 ## Next milestone: 0.8 — Education and usability
 

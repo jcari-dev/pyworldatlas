@@ -1,4 +1,4 @@
-# Land-border data scope
+# Land-border data policy
 
 PyWorldAtlas provides land-border relationships for geographic learning. The
 graph records a reproducible convention from documented source snapshots. It

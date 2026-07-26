@@ -1,4 +1,4 @@
-# Data sources
+# Data source policy
 
 ## Field-specific source policy
 

@@ -5,7 +5,7 @@ Questions and focused contributions are welcome from first-time contributors
 and experienced maintainers alike.
 
 All participation follows the
-[educational and neutrality policy](EDUCATIONAL_AND_NEUTRALITY_POLICY.md) and
+[educational and neutrality policy](docs/project/EDUCATIONAL_AND_NEUTRALITY_POLICY.md) and
 [code of conduct](CODE_OF_CONDUCT.md).
 
 ## Good ways to contribute
@@ -73,4 +73,5 @@ personal disputes are outside the repository's educational purpose.
   or unrelated generated files.
 - Confirm `python maintain.py check` passes.
 
-Release publication is performed by maintainers using [RELEASING.md](RELEASING.md).
+Release publication is performed by maintainers using the
+[release process](docs/project/RELEASING.md).

@@ -27,6 +27,28 @@ class EducationalPolicyTests(unittest.TestCase):
         }
         self.assertFalse(any((ROOT / name).exists() for name in obsolete))
 
+        references = {
+            "BOUNDARIES_AND_DISPUTES.md",
+            "COUNTRY_IDENTITY_DATA_SPEC.md",
+            "DATA_MODEL.md",
+            "DATA_QUALITY.md",
+            "DATA_SOURCES.md",
+            "EDUCATIONAL_AND_NEUTRALITY_POLICY.md",
+            "RELEASING.md",
+            "ROADMAP_STATUS.md",
+        }
+        for name in references:
+            self.assertFalse((ROOT / name).exists(), name)
+            self.assertTrue((ROOT / "docs/project" / name).is_file(), name)
+
+        for stem in (
+            "baseline_0_2_0",
+            "country_discovery_pilot_0_2_0",
+            "release_candidate_0_2_0",
+        ):
+            self.assertFalse((ROOT / "build_data/reports" / f"{stem}.json").exists())
+            self.assertFalse((ROOT / "build_data/reports" / f"{stem}.md").exists())
+
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         roadmap = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
         status = json.loads(
@@ -116,7 +138,9 @@ class EducationalPolicyTests(unittest.TestCase):
                 )
 
     def test_policy_is_published_in_the_repository_and_documentation(self):
-        policy = (ROOT / "EDUCATIONAL_AND_NEUTRALITY_POLICY.md").read_text(
+        policy = (
+            ROOT / "docs/project/EDUCATIONAL_AND_NEUTRALITY_POLICY.md"
+        ).read_text(
             encoding="utf-8"
         )
         conduct = (ROOT / "CODE_OF_CONDUCT.md").read_text(encoding="utf-8")
@@ -132,7 +156,9 @@ class EducationalPolicyTests(unittest.TestCase):
         ):
             self.assertIn(heading, policy)
         self.assertIn("Unacceptable participation", conduct)
-        self.assertIn("EDUCATIONAL_AND_NEUTRALITY_POLICY.md", readme)
+        self.assertIn(
+            "docs/project/EDUCATIONAL_AND_NEUTRALITY_POLICY.md", readme
+        )
         self.assertIn("educational_principles", docs_index)
 
     def test_country_profile_has_no_unused_classification(self):
