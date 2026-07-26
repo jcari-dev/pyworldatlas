@@ -25,6 +25,11 @@ changes. The newest published release appears first.
   workflows.
 - Reorganized the documentation as a coherent learning path while preserving
   source, missingness, and geographic-interpretation guidance.
+- Added concise browser-tab titles, a globe favicon, canonical page metadata,
+  social preview metadata, a generated sitemap, and crawler guidance for the
+  public documentation site.
+- Refined the shared GitHub and PyPI README introduction and made repository
+  links portable across both renderers.
 
 0.7.0
 -----

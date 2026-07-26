@@ -13,6 +13,26 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class EducationalPolicyTests(unittest.TestCase):
+    def test_documentation_discovery_metadata_is_published(self):
+        docs_config = (ROOT / "docs/source/conf.py").read_text(encoding="utf-8")
+        layout = (ROOT / "docs/source/_templates/layout.html").read_text(
+            encoding="utf-8"
+        )
+        robots = (ROOT / "docs/source/robots.txt").read_text(encoding="utf-8")
+
+        self.assertIn("html_baseurl", docs_config)
+        self.assertIn('html_favicon = "_static/globe.svg"', docs_config)
+        self.assertIn('templates_path = ["_templates"]', docs_config)
+        self.assertIn('app.connect("html-page-context", _set_page_url)', docs_config)
+        self.assertIn('app.connect("build-finished", _write_sitemap)', docs_config)
+        self.assertIn("| PyWorldAtlas</title>", layout)
+        self.assertNotIn("&mdash;", layout)
+        self.assertIn('name="description"', layout)
+        self.assertIn('property="og:title"', layout)
+        self.assertIn('type="application/ld+json"', layout)
+        self.assertIn("/sitemap.xml", robots)
+        self.assertTrue((ROOT / "docs/source/_static/globe.svg").is_file())
+
     def test_changelog_release_headings_do_not_include_dates(self):
         dated_heading = r"(?m)^(?:## )?\d+\.\d+\.\d+.*\b20\d{2}-\d{2}-\d{2}\b"
         for path in (ROOT / "CHANGELOG.md", ROOT / "docs/source/changelog.rst"):
