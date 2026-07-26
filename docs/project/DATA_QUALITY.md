@@ -1,4 +1,4 @@
-# Data quality
+# Data quality policy
 
 ## Educational and editorial quality
 

@@ -119,7 +119,7 @@ boundary geometry.
 
 The project provides factual geography and transparent calculations, not
 political commentary or opinion. Read the
-[educational and neutrality policy](EDUCATIONAL_AND_NEUTRALITY_POLICY.md) for
+[educational and neutrality policy](docs/project/EDUCATIONAL_AND_NEUTRALITY_POLICY.md) for
 the formal publication standard.
 
 ## Coverage at a glance
@@ -151,7 +151,7 @@ the Beck et al. Köppen-Geiger dataset.
 
 - [Data sources and freshness](https://jcari-dev.github.io/pyworldatlas-documentation/data_sources.html)
 - [Data quality and limitations](https://jcari-dev.github.io/pyworldatlas-documentation/data_quality.html)
-- [Educational purpose and editorial policy](EDUCATIONAL_AND_NEUTRALITY_POLICY.md)
+- [Educational purpose and editorial policy](docs/project/EDUCATIONAL_AND_NEUTRALITY_POLICY.md)
 - [Third-party notices](THIRD_PARTY_NOTICES.md)
 
 ## Documentation and community

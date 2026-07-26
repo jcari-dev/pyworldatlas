@@ -1,4 +1,4 @@
-# Releasing PyWorldAtlas
+# Maintainer release process
 
 This repository builds, tests, publishes, and deploys each release from one Git
 tag. PyPI publishing uses short-lived Trusted Publishing credentials; no PyPI

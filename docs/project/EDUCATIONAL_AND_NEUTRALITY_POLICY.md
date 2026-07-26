@@ -1,4 +1,4 @@
-# Educational purpose and editorial policy
+# Educational and editorial policy
 
 ## Purpose
 

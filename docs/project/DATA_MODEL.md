@@ -1,4 +1,4 @@
-# Data model
+# Data model reference
 
 Schema 7 stores normalized countries, names, capitals, populated places, source
 references, local identity names, and canonical undirected land-border pairs in
