@@ -13,7 +13,7 @@ body:
     attributes:
       label: PyWorldAtlas version
       description: Run `python -c "import pyworldatlas; print(pyworldatlas.__version__)"`.
-      placeholder: 0.7.0
+      placeholder: 0.8.0
     validations:
       required: true
   - type: input

@@ -12,6 +12,7 @@
 
 [Documentation](https://jcari-dev.github.io/pyworldatlas-documentation/) ·
 [Playground](https://jcari-dev.github.io/pyworldatlas-documentation/playground.html) ·
+[Learning lab](https://jcari-dev.github.io/pyworldatlas-documentation/learning.html) ·
 [Five-minute tour](https://jcari-dev.github.io/pyworldatlas-documentation/explore.html) ·
 [Recipes](https://jcari-dev.github.io/pyworldatlas-documentation/recipes.html) ·
 [API reference](https://jcari-dev.github.io/pyworldatlas-documentation/api.html)
@@ -40,18 +41,23 @@ from pyworldatlas import Atlas
 
 with Atlas() as atlas:
     brazil = atlas.country("Brazil")
-
-    print(brazil.flag, brazil.name_in("pt"), "—", brazil.capital.name)
-    print(brazil.highest_point.name, f"{brazil.highest_point.elevation_m:,.0f} m")
-    print(", ".join(river.name for river in brazil.rivers[:3]))
-    print(brazil.climate.dominant_zone.code, brazil.climate.dominant_zone.name)
+    print(brazil.summary())
 ```
 
 ```text
-🇧🇷 Brasil — Brasília
-Pico da Neblina 2,994 m
-Amazon, Río de la Plata/Paraná, Tocantins
-Aw Tropical, savannah
+🇧🇷 Brazil · Brasil
+Formal name: Federative Republic of Brazil
+Capital: Brasília
+Location: Americas · South America
+Population snapshot: 209,469,333
+Currency: Brazilian Real (BRL, R$)
+Languages: English (en), Spanish (es), French (fr), Portuguese (pt-BR)
+Anthem title: Hino Nacional Brasileiro · Brazilian National Anthem
+Motto: Ordem e Progresso · Order and Progress
+Highest point: Pico da Neblina (2,994 m)
+Dominant climate class: Aw · Tropical, savannah
+Source-listed rivers: Amazon, Río de la Plata/Paraná, Tocantins
+Source-listed lakes: Lagoa dos Patos, Lagoa Mirim
 ```
 
 `Atlas` opens a bundled, read-only SQLite database. Results are immutable,
@@ -65,9 +71,9 @@ remain usable after the atlas is closed.
 | Country profiles | Codes, names, capitals, population, currencies, languages, timezones, postal formats, anthem titles, reviewed mottos, and demonyms |
 | Names and writing systems | English identities, selected local-language names, scripts, reviewed official forms, and source-provided romanization |
 | Physical geography | Land and water area, coastline, elevation extremes, rivers, lakes, and climate summaries |
-| Places and measurement | 6,265 cities and capitals with coordinates, distance, initial bearing, and midpoint calculations |
+| Places and measurement | 6,265 cities and capitals with search, nearby-place discovery, readable coordinates, distance, compass direction, bearing, and midpoint calculations |
 | Land connections | Reviewed neighbors, shared neighbors, shortest border paths, crossings, and connected components |
-| Learning tools | Stable country samples, deterministic flashcards, rankings, discovery cards, and Unicode-preserving JSON |
+| Learning tools | Readable profiles, stable samples, flashcards, deterministic multiple-choice questions, rankings, discovery cards, and Unicode-preserving JSON |
 
 ## Explore with small, readable programs
 
@@ -87,8 +93,13 @@ with Atlas() as atlas:
     tokyo = atlas.city("Tokyo", country="JP")
     paris = atlas.city("Paris", country="FR")
 
+    print(tokyo.coordinates.format())
+    print(tokyo.coordinates.dms())
     print(f"{atlas.distance_between(tokyo, paris):,.0f} km")
-    print(f"{tokyo.coordinates.bearing_to(paris.coordinates):.1f}°")
+    print(tokyo.coordinates.compass_direction_to(paris.coordinates))
+
+    nearby = atlas.nearest_cities(tokyo, within_country="JP", limit=3)
+    print([result.city.name for result in nearby])
 
     route = atlas.border_path("Portugal", "China")
     print(" → ".join(route.names))
@@ -98,11 +109,13 @@ Build a repeatable lesson:
 
 ```python
 with Atlas() as atlas:
-    countries = atlas.sample_countries(count=5, continent="Africa", seed=42)
-    cards = atlas.flashcards(topic="capitals", count=5, seed=42)
+    questions = atlas.quiz(topic="local_names", count=5, seed=42)
 
-    for card in cards:
-        print(card.prompt, "→", card.answer)
+    for question in questions:
+        print(question.prompt)
+        for number, choice in enumerate(question.choices, 1):
+            print(f"  {number}. {choice}")
+        print("Answer:", question.answer_number)
 ```
 
 Distances are great-circle surface measurements, not road or flight routes.
@@ -112,7 +125,7 @@ boundary geometry.
 ## Built for learning
 
 - **Offline:** lessons and programs do not depend on an external service.
-- **Repeatable:** seeded samples and flashcards produce stable results.
+- **Repeatable:** seeded samples, flashcards, and quizzes produce stable results.
 - **Source-aware:** provenance and coverage limits are documented.
 - **Beginner-friendly:** common tasks use small Python objects and methods.
 - **Honest about missing data:** unavailable values remain `None` or empty tuples.
@@ -124,7 +137,7 @@ the formal publication standard.
 
 ## Coverage at a glance
 
-Library `0.7.0` includes dataset `2026.07.22.7` and schema `7`.
+Library `0.8.0` includes dataset `2026.07.22.7` and schema `7`.
 
 | Dataset area | Coverage |
 |---|---:|
@@ -157,6 +170,7 @@ the Beck et al. Köppen-Geiger dataset.
 ## Documentation and community
 
 - [Run Python in the browser](https://jcari-dev.github.io/pyworldatlas-documentation/playground.html)
+- [Try the classroom-friendly learning lab](https://jcari-dev.github.io/pyworldatlas-documentation/learning.html)
 - [Browse complete recipes](https://jcari-dev.github.io/pyworldatlas-documentation/recipes.html)
 - [Read the country-profile guide](https://jcari-dev.github.io/pyworldatlas-documentation/country_profile.html)
 - [Explore physical geography](https://jcari-dev.github.io/pyworldatlas-documentation/physical_geography.html)

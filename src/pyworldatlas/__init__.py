@@ -7,18 +7,18 @@ from .exceptions import (AmbiguousCountryError, AmbiguousPlaceError, AtlasClosed
                          DatasetError, DatasetIntegrityError, DatasetNotFoundError,
                          DatasetVersionError, PlaceNotFoundError)
 from .models import (Area, BorderPathResult, Capital, CapitalDistance, City,
-                     ClimateProfile, ClimateZone, Coordinate, Country,
+                     CityDistance, ClimateProfile, ClimateZone, Coordinate, Country,
                      CountryCodes, CountryDiscoveryCard, CountryMatch,
                      CountryRanking, CountryReference, Currency, DatasetInfo,
                      Demonym, ElevationPoint, Flashcard, Geography, Lake,
                      Language, LocalizedName, NationalAnthem, NationalMotto,
-                     PhysicalGeography, PostalCodeFormat, River,
+                     PhysicalGeography, PostalCodeFormat, QuizQuestion, River,
                      SourceReference, Timezone)
 
 __all__ = [
     "Atlas", "Country", "CountryCodes", "CountryReference", "CountryDiscoveryCard",
-    "BorderPathResult", "CountryRanking", "CapitalDistance",
-    "LocalizedName", "Flashcard",
+    "BorderPathResult", "CountryRanking", "CapitalDistance", "CityDistance",
+    "LocalizedName", "Flashcard", "QuizQuestion",
     "Coordinate", "Area", "Geography", "Capital", "City", "Currency", "Language", "CountryMatch",
     "PhysicalGeography", "ElevationPoint", "River", "Lake", "ClimateProfile", "ClimateZone",
     "NationalAnthem", "NationalMotto", "Demonym", "Timezone", "PostalCodeFormat",

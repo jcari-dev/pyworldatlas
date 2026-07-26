@@ -1,8 +1,8 @@
 project = "PyWorldAtlas"
 author = "PyWorldAtlas maintainers"
 copyright = "2026, PyWorldAtlas maintainers"
-release = "0.7.0"
-version = "0.7"
+release = "0.8.0"
+version = "0.8"
 extensions = [
     "sphinx.ext.autodoc", "sphinx.ext.autosummary", "sphinx.ext.napoleon",
     "sphinx.ext.doctest", "sphinx.ext.viewcode", "sphinx.ext.intersphinx",
@@ -13,7 +13,8 @@ autodoc_member_order = "bysource"
 nitpicky = True
 nitpick_ignore = [("py:class", "pathlib.Path")]
 html_theme = "sphinx_rtd_theme"
-html_title = "PyWorldAtlas 0.7.0"
+pygments_style = "friendly"
+html_title = "PyWorldAtlas 0.8.0"
 html_short_title = "PyWorldAtlas"
 html_theme_options = {
     "prev_next_buttons_location": "bottom",
@@ -37,6 +38,9 @@ rst_prolog = """
 
 .. role:: atlas-kicker
    :class: atlas-kicker
+
+.. role:: atlas-example-label
+   :class: atlas-example-label
 
 .. |flag-br| image:: /_static/twemoji/1f1e7-1f1f7.svg
    :class: atlas-flag-image

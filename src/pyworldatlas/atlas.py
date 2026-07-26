@@ -15,11 +15,11 @@ from .database import Database
 from .exceptions import (AmbiguousPlaceError, AtlasClosedError, CapitalNotFoundError,
                          CountryNotFoundError, DatasetVersionError, PlaceNotFoundError)
 from .models import (Area, BorderPathResult, Capital, CapitalDistance, City,
-                     ClimateProfile, ClimateZone, Coordinate, Country,
+                     CityDistance, ClimateProfile, ClimateZone, Coordinate, Country,
                      CountryCodes, CountryMatch, CountryRanking, Currency,
                      DatasetInfo, Demonym, ElevationPoint, Flashcard, Geography,
                      Lake, Language, LocalizedName, NationalAnthem,
-                     NationalMotto, PhysicalGeography, PostalCodeFormat, River,
+                     NationalMotto, PhysicalGeography, PostalCodeFormat, QuizQuestion, River,
                      SourceReference, Timezone)
 
 
@@ -42,6 +42,18 @@ def _stable_country_sample(
         return sha256(payload).digest(), identifier
 
     return tuple(sorted(candidates, key=rank)[:count])
+
+
+def _stable_text_order(
+    values: tuple[str, ...], *, seed: int | str, namespace: str
+) -> tuple[str, ...]:
+    """Order text deterministically without depending on global random state."""
+
+    def rank(value: str) -> tuple[bytes, str]:
+        payload = f"pyworldatlas:0.8:{namespace}:{seed}:{value}".encode("utf-8")
+        return sha256(payload).digest(), value
+
+    return tuple(sorted(values, key=rank))
 
 
 _FLASHCARD_TOPICS = (
@@ -72,7 +84,14 @@ _FLASHCARD_TOPICS = (
 
 
 class Atlas:
-    """Explore the bundled atlas without network access or runtime dependencies."""
+    """Open and explore the bundled, read-only world atlas.
+
+    With no arguments, :class:`Atlas` uses the SQLite dataset shipped inside
+    the package. Pass ``database_path`` only when working with a compatible
+    database built by the PyWorldAtlas pipeline. A context manager closes the
+    database promptly; already materialized immutable models remain usable.
+    Runtime lookups and calculations require no network access.
+    """
 
     def __init__(self, database_path: str | Path | None = None) -> None:
         self._db = Database(database_path)
@@ -91,7 +110,10 @@ class Atlas:
         return str(row[0]) if row else ""
 
     def dataset_info(self) -> DatasetInfo:
-        """Return independent library, schema, and dataset versions."""
+        """Return the installed library, database schema, and dataset versions.
+
+        Record these values when a lesson or calculation must be reproducible.
+        """
         self._ensure_open()
         return DatasetInfo(__version__, SCHEMA_VERSION, self._meta("dataset_version"), len(self), self._meta("built_at"))
 
@@ -105,7 +127,13 @@ class Atlas:
         return int(row[0][0]) if len(row) == 1 else None
 
     def country(self, query: str) -> Country:
-        """Resolve a country by common name, alias, alpha-2, alpha-3, or M49 code."""
+        """Return one country profile resolved from a name or standard code.
+
+        ``query`` may be a familiar English name, indexed alias, alpha-2 code,
+        alpha-3 code, or three-digit M49 code. Matching is case-insensitive and
+        accent-tolerant. A missing or non-unique query raises
+        :class:`CountryNotFoundError`, with suggestions when available.
+        """
         self._ensure_open()
         country_id = self._country_id(query)
         if country_id is None:
@@ -115,16 +143,31 @@ class Atlas:
         return self._load_country(country_id)
 
     def get(self, query: str, default: Country | None = None) -> Country | None:
-        """Safely resolve a country, returning ``default`` when it is absent."""
+        """Return a matching country, or ``default`` instead of raising.
+
+        Use :meth:`country` when a missing profile should be treated as an
+        error. ``default`` is returned for both missing and non-unique queries.
+        """
         try:
             return self.country(query)
         except CountryNotFoundError:
             return default
 
     def search_countries(self, query: str, *, limit: int = 20) -> tuple[CountryMatch, ...]:
-        """Return deterministic ranked partial-name matches."""
+        """Return ranked partial-name matches for human-entered text.
+
+        Matching is case-insensitive and accent-tolerant. Exact matches rank
+        before prefixes and substrings. The returned tuple is empty when no
+        indexed name matches; use :meth:`country` for exact resolution.
+        """
         self._ensure_open()
+        if not isinstance(query, str):
+            raise TypeError("query must be a string")
         normalized = normalize_name(query)
+        if not normalized:
+            raise ValueError("query must contain at least one letter or number")
+        if isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0:
+            raise ValueError("limit must be a positive integer")
         rows = self._db.connection.execute(
             """SELECT country_id, name, normalized_name FROM country_name
                WHERE normalized_name LIKE ? ORDER BY normalized_name, country_id""", (f"%{normalized}%",)).fetchall()
@@ -152,6 +195,9 @@ class Atlas:
         has_lakes: bool | None = None,
     ) -> tuple[Country, ...]:
         """Return countries alphabetically with optional exact profile filters.
+
+        Filters can be combined and use AND semantics. With no filters, every
+        bundled profile is returned in display-name order.
 
         Physical-data filters only include profiles covered by the relevant
         source layer. For example, ``coastal=False`` means a sourced coastline
@@ -593,6 +639,15 @@ class Atlas:
             self.countries(continent=continent, region=region), count, seed
         )
 
+    def learning_topics(self) -> tuple[str, ...]:
+        """Return topics supported by :meth:`flashcards` and :meth:`quiz`.
+
+        The tuple is stable, alphabetized, and safe to use for menus, lesson
+        builders, or playground controls.
+        """
+        self._ensure_open()
+        return _FLASHCARD_TOPICS
+
     def flashcards(
         self,
         *,
@@ -631,6 +686,79 @@ class Atlas:
         )
         selected = _stable_country_sample(candidates, count, seed)
         return tuple(self._flashcard(country, topic) for country in selected)
+
+    def quiz(
+        self,
+        *,
+        topic: str,
+        count: int,
+        choices: int = 4,
+        continent: str | None = None,
+        region: str | None = None,
+        seed: int | str = 0,
+    ) -> tuple[QuizQuestion, ...]:
+        """Build deterministic multiple-choice questions from sourced facts.
+
+        ``topic`` accepts every value returned by :meth:`learning_topics`.
+        ``choices`` must be an integer from 2 through 6. Questions, distractors,
+        and answer positions remain stable for the same dataset, filters, and
+        seed, making answer keys reproducible across supported Python versions.
+
+        The method raises :class:`ValueError` when the filtered profiles do not
+        provide enough distinct answers for the requested number of choices.
+        No scoring, learner data, or session state is stored.
+        """
+        if topic not in _FLASHCARD_TOPICS:
+            allowed = ", ".join(_FLASHCARD_TOPICS)
+            raise ValueError(f"unsupported quiz topic {topic!r}; choose from {allowed}")
+        if isinstance(choices, bool) or not isinstance(choices, int):
+            raise TypeError("choices must be an integer")
+        if not 2 <= choices <= 6:
+            raise ValueError("choices must be between 2 and 6")
+
+        candidates = tuple(
+            country
+            for country in self.countries(continent=continent, region=region)
+            if self._has_flashcard_answer(country, topic)
+        )
+        selected = _stable_country_sample(candidates, count, seed)
+        cards = tuple(self._flashcard(country, topic) for country in candidates)
+        distinct_answers: dict[str, str] = {}
+        for card in cards:
+            distinct_answers.setdefault(card.answer.casefold(), card.answer)
+        if len(distinct_answers) < choices:
+            raise ValueError(
+                f"topic {topic!r} has only {len(distinct_answers)} distinct answers "
+                f"for the selected filters; {choices} choices were requested"
+            )
+
+        questions = []
+        for country in selected:
+            card = self._flashcard(country, topic)
+            distractors = tuple(
+                answer
+                for normalized, answer in distinct_answers.items()
+                if normalized != card.answer.casefold()
+            )
+            namespace = f"quiz-distractors:{topic}:{country.alpha2}"
+            picked = _stable_text_order(
+                distractors, seed=seed, namespace=namespace
+            )[: choices - 1]
+            ordered_choices = _stable_text_order(
+                (card.answer, *picked),
+                seed=seed,
+                namespace=f"quiz-choices:{topic}:{country.alpha2}",
+            )
+            questions.append(
+                QuizQuestion(
+                    topic=topic,
+                    prompt=card.prompt,
+                    choices=ordered_choices,
+                    answer=card.answer,
+                    country=card.country,
+                )
+            )
+        return tuple(questions)
 
     def _has_flashcard_answer(self, country: Country, topic: str) -> bool:
         if topic in {"capitals", "countries_from_capitals"}:
@@ -758,12 +886,70 @@ class Atlas:
         return Flashcard(topic, prompt, str(answer), reference)
 
     def major_cities(self, country: str, *, limit: int | None = None) -> tuple[City, ...]:
-        """Return major cities for a country, ordered by population and name."""
+        """Return populated places for a country, ordered by population and name.
+
+        ``limit=None`` returns every bundled place for the country. The records
+        come from the package snapshot and are not live population estimates.
+        """
         result = self.country(country).major_cities
-        return result if limit is None else result[:limit]
+        if limit is None:
+            return result
+        if isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0:
+            raise ValueError("limit must be a positive integer or None")
+        return result[:limit]
+
+    def search_cities(
+        self,
+        query: str,
+        *,
+        country: str | None = None,
+        limit: int = 20,
+    ) -> tuple[City, ...]:
+        """Return ranked city-name matches from the bundled place table.
+
+        Matching is case-insensitive and accent-tolerant. Exact names rank
+        first, followed by prefix and substring matches; population breaks
+        ties. Pass ``country`` as a familiar country name or code to narrow the
+        search. An empty result is returned when nothing matches.
+        """
+        self._ensure_open()
+        if not isinstance(query, str):
+            raise TypeError("query must be a string")
+        normalized = normalize_name(query)
+        if not normalized:
+            raise ValueError("query must contain at least one letter or number")
+        if isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0:
+            raise ValueError("limit must be a positive integer")
+
+        params: list[object] = [f"%{normalized}%"]
+        where = "c.normalized_name LIKE ?"
+        if country is not None:
+            country_id = self._country_id(self.country(country).alpha2)
+            where += " AND c.country_id = ?"
+            params.append(country_id)
+        rows = self._db.connection.execute(
+            f"""SELECT c.*, co.alpha2 FROM city c
+                JOIN country co ON co.id = c.country_id
+                WHERE {where}""",
+            params,
+        ).fetchall()
+
+        def rank(row: object) -> tuple[object, ...]:
+            candidate = row["normalized_name"]
+            score = 100 if candidate == normalized else 80 if candidate.startswith(normalized) else 50
+            population = row["population"] if row["population"] is not None else -1
+            return (-score, -population, row["name"].casefold(), row["alpha2"], row["geonames_id"])
+
+        return tuple(self._city_from_row(row) for row in sorted(rows, key=rank)[:limit])
 
     def city(self, query: str, *, country: str | None = None) -> City:
-        """Resolve an exact city name, optionally constrained to a country."""
+        """Return one exact bundled city, optionally limited to a country.
+
+        Matching is case-insensitive and accent-tolerant. Pass a familiar
+        country name or code when the city name is shared. Missing names raise
+        :class:`PlaceNotFoundError`; ambiguous names raise
+        :class:`AmbiguousPlaceError` with example matches.
+        """
         self._ensure_open()
         normalized = normalize_name(query)
         params: list[object] = [normalized]
@@ -787,7 +973,10 @@ class Atlas:
         return self._city_from_row(rows[0])
 
     def coordinates(self, query: str, *, country: str | None = None) -> Coordinate:
-        """Return coordinates for an exact city lookup."""
+        """Return WGS84 coordinates for an exact bundled city lookup.
+
+        This is shorthand for ``atlas.city(query, country=country).coordinates``.
+        """
         return self.city(query, country=country).coordinates
 
     def distance_between(
@@ -801,8 +990,11 @@ class Atlas:
     ) -> float:
         """Return great-circle distance between city, model, or coordinate inputs.
 
-        String inputs are exact bundled-city names. Pass :class:`Country`
-        objects for capital-to-capital country distance.
+        Accepted inputs are exact bundled-city names, :class:`City`,
+        :class:`Capital`, :class:`Country`, :class:`Coordinate`, or
+        ``(latitude, longitude)`` tuples. Country objects use their primary
+        capitals. ``unit`` accepts ``"km"``, ``"mi"``, or ``"nmi"``.
+        The result is a surface measurement, not a road or flight route.
         """
         start = self._coordinates_of(first, country=first_country)
         finish = self._coordinates_of(second, country=second_country)
@@ -822,6 +1014,8 @@ class Atlas:
         String origins use the exact city lookup and may be constrained with
         ``country``. Pass a :class:`Country` to measure from its primary
         capital or a :class:`Coordinate` for an arbitrary starting point.
+        ``unit`` accepts ``"km"``, ``"mi"``, or ``"nmi"``. Results are ordered
+        nearest first with deterministic name tie-breaking.
         """
         if isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0:
             raise ValueError("limit must be a positive integer")
@@ -838,6 +1032,61 @@ class Atlas:
                 CapitalDistance(candidate.reference(), capital, distance, unit)
             )
         results.sort(key=lambda result: (result.distance, result.country.name))
+        return tuple(results[:limit])
+
+    def nearest_cities(
+        self,
+        origin: str | Country | Capital | City | Coordinate | tuple[float, float],
+        *,
+        limit: int = 5,
+        unit: str = "km",
+        origin_country: str | None = None,
+        within_country: str | None = None,
+        include_origin: bool = False,
+    ) -> tuple[CityDistance, ...]:
+        """Return bundled populated places nearest to an origin.
+
+        String origins are exact city names and can be disambiguated with
+        ``origin_country``. ``within_country`` limits results to one country or
+        area. By default, records at the origin's exact coordinates are omitted.
+        Distances are great-circle surface measurements, not road distances.
+        """
+        if isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0:
+            raise ValueError("limit must be a positive integer")
+        if not isinstance(include_origin, bool):
+            raise TypeError("include_origin must be a bool")
+        start = self._coordinates_of(origin, country=origin_country)
+        start.distance_to(start, unit=unit)
+
+        params: list[object] = []
+        where = ""
+        if within_country is not None:
+            country_id = self._country_id(self.country(within_country).alpha2)
+            where = "WHERE c.country_id = ?"
+            params.append(country_id)
+        rows = self._db.connection.execute(
+            f"""SELECT c.*, co.alpha2 FROM city c
+                JOIN country co ON co.id = c.country_id
+                {where}""",
+            params,
+        ).fetchall()
+
+        results = []
+        for row in rows:
+            city = self._city_from_row(row)
+            distance = start.distance_to(city.coordinates, unit=unit)
+            if not include_origin and distance <= 1e-9:
+                continue
+            country = self._load_country(int(row["country_id"])).reference()
+            results.append(CityDistance(country, city, distance, unit))
+        results.sort(
+            key=lambda result: (
+                result.distance,
+                result.country.name,
+                result.city.name,
+                result.city.geonames_id or 0,
+            )
+        )
         return tuple(results[:limit])
 
     def _coordinates_of(
@@ -1122,7 +1371,11 @@ class Atlas:
         return iter(self.countries())
 
     def close(self) -> None:
-        """Close the atlas connection."""
+        """Close the read-only database connection.
+
+        Calling ``close()`` more than once is safe. Queries on a closed atlas
+        raise :class:`AtlasClosedError`; models returned earlier remain usable.
+        """
         if not self._closed:
             self._db.close()
             self._closed = True
