@@ -145,6 +145,28 @@ class EducationalPolicyTests(unittest.TestCase):
         self.assertEqual(len(set(preset_ids)), 14)
         self.assertTrue(set(recipe_links).issubset(preset_ids))
 
+    def test_documentation_has_one_primary_onboarding_path(self):
+        docs_index = (ROOT / "docs/source/index.rst").read_text(encoding="utf-8")
+        start_here = docs_index.split(":caption: Start here", 1)[1].split(
+            ".. toctree::", 1
+        )[0]
+        redirect = (ROOT / "docs/source/explore.html").read_text(encoding="utf-8")
+        docs_config = (ROOT / "docs/source/conf.py").read_text(encoding="utf-8")
+
+        self.assertEqual(
+            [
+                line.strip()
+                for line in start_here.splitlines()
+                if line.startswith("   ") and line.strip()
+            ],
+            ["quickstart", "playground", "installation"],
+        )
+        self.assertFalse((ROOT / "docs/source/explore.rst").exists())
+        self.assertIn("url=quickstart.html", redirect)
+        self.assertIn(
+            'html_extra_path = ["robots.txt", "explore.html"]', docs_config
+        )
+
     def test_browser_playground_examples_execute(self):
         interface = (ROOT / "docs/source/_static/playground.js").read_text(
             encoding="utf-8"

@@ -11,10 +11,9 @@
 **248 profiles · 6,265 populated places · 319 reviewed land borders · 0 runtime dependencies**
 
 [Documentation](https://jcari-dev.github.io/pyworldatlas-documentation/) ·
+[Quickstart](https://jcari-dev.github.io/pyworldatlas-documentation/quickstart.html) ·
 [Playground](https://jcari-dev.github.io/pyworldatlas-documentation/playground.html) ·
-[Learning lab](https://jcari-dev.github.io/pyworldatlas-documentation/learning.html) ·
-[Five-minute tour](https://jcari-dev.github.io/pyworldatlas-documentation/explore.html) ·
-[Recipes](https://jcari-dev.github.io/pyworldatlas-documentation/recipes.html) ·
+[Examples](https://jcari-dev.github.io/pyworldatlas-documentation/recipes.html) ·
 [API reference](https://jcari-dev.github.io/pyworldatlas-documentation/api.html)
 
 > **No installation needed:** open the
