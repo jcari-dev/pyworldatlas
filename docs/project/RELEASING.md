@@ -55,27 +55,28 @@ changes.
 
 ## Prepare and publish a release
 
-> **Current candidate:** 0.8.0 adds the education-and-usability milestone.
-> Publish 0.8.0 only after its pull request is merged to
+> **Current candidate:** 0.8.1 is a documentation-presentation patch for the
+> published education-and-usability milestone. Publish 0.8.1 only after its
+> pull request is merged to
 > `main` and CI is green.
 
-### Current 0.8.0 sequence
+### Current 0.8.1 sequence
 
-From the repository root on the `release/0.8.0` branch:
+From the repository root on the `codex/docs-seo-polish` branch:
 
 ```console
-python maintain.py prepare-release 0.8.0
+python maintain.py prepare-release 0.8.1
 git status
 git add -A
-git commit -m "Prepare PyWorldAtlas 0.8.0"
-git push -u origin release/0.8.0
+git commit -m "Prepare PyWorldAtlas 0.8.1"
+git push -u origin codex/docs-seo-polish
 ```
 
 On GitHub, open a pull request with:
 
 - Base branch: `main`
-- Compare branch: `release/0.8.0`
-- Title: `Release PyWorldAtlas 0.8.0`
+- Compare branch: `codex/docs-seo-polish`
+- Title: `Release PyWorldAtlas 0.8.1`
 
 Wait for every CI job to pass, review the file and source changes, and merge the
 pull request. Do not create the release tag from the feature branch.
@@ -85,10 +86,10 @@ After the merge, return to the terminal and tag the exact merged `main` commit:
 ```console
 git switch main
 git pull --ff-only origin main
-python maintain.py prepare-release 0.8.0
+python maintain.py prepare-release 0.8.1
 git status
-git tag -a v0.8.0 -m "Release 0.8.0"
-git push origin v0.8.0
+git tag -a v0.8.1 -m "Release 0.8.1"
+git push origin v0.8.1
 ```
 
 The tag starts the release workflow. Approve the protected `pypi` environment
@@ -100,7 +101,7 @@ gate first:
 
 ```console
 python maintain.py bootstrap
-python maintain.py prepare-release 0.8.0
+python maintain.py prepare-release 0.8.1
 ```
 
 If Windows reports that an existing file under `dist` is in use, close the
@@ -108,7 +109,7 @@ terminal, upload dialog, or file preview holding it. To run the same release
 gate without replacing that directory, choose another ignored output path:
 
 ```console
-python maintain.py prepare-release 0.8.0 --output-dir build/release-dist
+python maintain.py prepare-release 0.8.1 --output-dir build/release-dist
 ```
 
 Review `release-manifest.json` and `SHA256SUMS` in the selected output directory.
@@ -133,7 +134,7 @@ Verify the public package in a new environment:
 
 ```console
 py -3.10 -m venv .venv-live
-.venv-live\Scripts\python -m pip install --no-cache-dir pyworldatlas==0.8.0
+.venv-live\Scripts\python -m pip install --no-cache-dir pyworldatlas==0.8.1
 .venv-live\Scripts\python -c "from pyworldatlas import Atlas; a=Atlas(); print(a.country('Japan').summary()); print(a.quiz(topic='capitals', count=1, seed=8)[0].choices); a.close()"
 ```
 
@@ -157,10 +158,10 @@ before PyPI accepts the version, repair the workflow and rerun it. If PyPI has
 accepted the version, preserve it and use a patch release for any code or
 metadata correction.
 
-Version 0.8.0 preserves the reviewed dataset while adding country summaries,
-city discovery, coordinate display helpers, and deterministic quizzes. It must
-pass the policy-integrity tests alongside the runtime, pipeline, browser,
-documentation, and clean-wheel gates.
+Version 0.8.1 preserves the reviewed 0.8.0 API and dataset while improving
+documentation titles, discovery metadata, the favicon, and the shared GitHub
+and PyPI README. It must pass the policy-integrity tests alongside the runtime,
+pipeline, browser, documentation, and clean-wheel gates.
 
 Never tag a dirty branch or an unmerged candidate. The tag-triggered workflow
 is the single path to PyPI, the GitHub Release, and the documentation site.
