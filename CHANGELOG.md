@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.8.1
+
+- Added concise browser-tab titles, a globe favicon, canonical page metadata,
+  social preview metadata, a generated sitemap, and crawler guidance for the
+  public documentation site.
+- Refined the shared GitHub and PyPI README introduction and made repository
+  links portable across both renderers.
+
 ## 0.8.0
 
 - Added `Country.summary()` for readable multilingual country introductions

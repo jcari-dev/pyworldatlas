@@ -1,4 +1,4 @@
-# PyWorldAtlas
+# PyWorldAtlas: offline world geography for Python
 
 > Offline country profiles, physical geography, cities, distances, and learning tools for Python.
 
@@ -6,7 +6,7 @@
 [![Python 3.10–3.14](https://img.shields.io/badge/Python-3.10%E2%80%933.14-3776ab)](https://www.python.org/)
 [![CI](https://github.com/jcari-dev/pyworldatlas/actions/workflows/ci.yml/badge.svg)](https://github.com/jcari-dev/pyworldatlas/actions/workflows/ci.yml)
 [![Documentation](https://img.shields.io/badge/docs-online-317f78)](https://jcari-dev.github.io/pyworldatlas-documentation/)
-[![License: MIT](https://img.shields.io/badge/license-MIT-607087)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/license-MIT-607087)](https://github.com/jcari-dev/pyworldatlas/blob/main/LICENSE)
 
 **248 profiles · 6,265 populated places · 319 reviewed land borders · 0 runtime dependencies**
 
@@ -21,9 +21,11 @@
 > [browser playground](https://jcari-dev.github.io/pyworldatlas-documentation/playground.html)
 > and run the guided Python examples.
 
-PyWorldAtlas turns one bundled, source-aware geographic database into ordinary
-Python objects. It is designed for developers, classrooms, and curious learners
-who want useful world data without an API key or runtime download.
+PyWorldAtlas is an offline world-geography Python package built around one
+bundled, source-aware database. It turns country profiles, physical geography,
+cities, distances, borders, and learning tools into ordinary Python objects for
+developers, classrooms, and curious learners. No API key or runtime download is
+required.
 
 ## Install
 
@@ -132,12 +134,12 @@ boundary geometry.
 
 The project provides factual geography and transparent calculations, not
 political commentary or opinion. Read the
-[educational and neutrality policy](docs/project/EDUCATIONAL_AND_NEUTRALITY_POLICY.md) for
+[educational and neutrality policy](https://github.com/jcari-dev/pyworldatlas/blob/main/docs/project/EDUCATIONAL_AND_NEUTRALITY_POLICY.md) for
 the formal publication standard.
 
 ## Coverage at a glance
 
-Library `0.8.0` includes dataset `2026.07.22.7` and schema `7`.
+Library `0.8.1` includes dataset `2026.07.22.7` and schema `7`.
 
 | Dataset area | Coverage |
 |---|---:|
@@ -164,8 +166,8 @@ the Beck et al. Köppen-Geiger dataset.
 
 - [Data sources and freshness](https://jcari-dev.github.io/pyworldatlas-documentation/data_sources.html)
 - [Data quality and limitations](https://jcari-dev.github.io/pyworldatlas-documentation/data_quality.html)
-- [Educational purpose and editorial policy](docs/project/EDUCATIONAL_AND_NEUTRALITY_POLICY.md)
-- [Third-party notices](THIRD_PARTY_NOTICES.md)
+- [Educational purpose and editorial policy](https://github.com/jcari-dev/pyworldatlas/blob/main/docs/project/EDUCATIONAL_AND_NEUTRALITY_POLICY.md)
+- [Third-party notices](https://github.com/jcari-dev/pyworldatlas/blob/main/THIRD_PARTY_NOTICES.md)
 
 ## Documentation and community
 
@@ -175,12 +177,15 @@ the Beck et al. Köppen-Geiger dataset.
 - [Read the country-profile guide](https://jcari-dev.github.io/pyworldatlas-documentation/country_profile.html)
 - [Explore physical geography](https://jcari-dev.github.io/pyworldatlas-documentation/physical_geography.html)
 - [Review the API](https://jcari-dev.github.io/pyworldatlas-documentation/api.html)
-- [See the roadmap](ROADMAP.md)
+- [See the roadmap](https://github.com/jcari-dev/pyworldatlas/blob/main/ROADMAP.md)
 
 Questions, factual corrections, documentation improvements, and focused code
-contributions are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md), follow
-the [code of conduct](CODE_OF_CONDUCT.md), and report security concerns through
-[SECURITY.md](SECURITY.md).
+contributions are welcome. Start with
+[CONTRIBUTING.md](https://github.com/jcari-dev/pyworldatlas/blob/main/CONTRIBUTING.md),
+follow the
+[code of conduct](https://github.com/jcari-dev/pyworldatlas/blob/main/CODE_OF_CONDUCT.md),
+and report security concerns through
+[SECURITY.md](https://github.com/jcari-dev/pyworldatlas/blob/main/SECURITY.md).
 
 ## Development
 
@@ -195,6 +200,7 @@ audits the release contents.
 
 ## License
 
-PyWorldAtlas code is available under the [MIT License](LICENSE). Bundled data
+PyWorldAtlas code is available under the
+[MIT License](https://github.com/jcari-dev/pyworldatlas/blob/main/LICENSE). Bundled data
 retains its original terms and attribution; see
-[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+[THIRD_PARTY_NOTICES.md](https://github.com/jcari-dev/pyworldatlas/blob/main/THIRD_PARTY_NOTICES.md).

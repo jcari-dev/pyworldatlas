@@ -1,0 +1,47 @@
+{% extends "!layout.html" %}
+
+{% block htmltitle %}
+  {%- if pagename == master_doc -%}
+    <title>PyWorldAtlas | Offline World Geography for Python</title>
+  {%- else -%}
+    <title>{{ title|striptags|e }} | PyWorldAtlas</title>
+  {%- endif -%}
+{% endblock %}
+
+{% block extrahead %}
+  {{ super() }}
+  {%- if pagename == master_doc -%}
+    {%- set page_description = seo_description -%}
+    {%- set page_title = "PyWorldAtlas | Offline World Geography for Python" -%}
+  {%- else -%}
+    {%- set page_description = (title|striptags ~ " in PyWorldAtlas, the offline Python package for country profiles, physical geography, cities, distances, and classroom learning.") -%}
+    {%- set page_title = (title|striptags ~ " | PyWorldAtlas") -%}
+  {%- endif %}
+  <meta name="description" content="{{ page_description|e }}" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="PyWorldAtlas" />
+  <meta property="og:title" content="{{ page_title|e }}" />
+  <meta property="og:description" content="{{ page_description|e }}" />
+  <meta property="og:url" content="{{ pageurl|e }}" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="{{ page_title|e }}" />
+  <meta name="twitter:description" content="{{ page_description|e }}" />
+  {%- if pagename == master_doc %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareSourceCode",
+    "name": "PyWorldAtlas",
+    "description": "{{ seo_description|e }}",
+    "url": "{{ site_url|e }}",
+    "codeRepository": "https://github.com/jcari-dev/pyworldatlas",
+    "downloadUrl": "https://pypi.org/project/pyworldatlas/",
+    "programmingLanguage": "Python",
+    "runtimePlatform": "Python 3.10 through 3.14",
+    "version": "{{ current_version|e }}",
+    "license": "https://opensource.org/license/mit/"
+  }
+  </script>
+  {%- endif %}
+{% endblock %}
