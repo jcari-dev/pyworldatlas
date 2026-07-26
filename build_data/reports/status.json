@@ -94,23 +94,23 @@
       "release": "Published as v0.7.0"
     },
     {
-      "name": "8 \u2014 Boundary geometry and spatial queries",
+      "name": "8 \u2014 Education and usability",
       "version": "0.8.0",
       "status": "planned",
-      "functions": "\u2014",
-      "tests": "\u2014",
-      "dataset": "\u2014",
-      "docs": "\u2014",
+      "functions": "City discovery, readable country summaries, coordinate helpers, deterministic learning activities, and API usability polish",
+      "tests": "Public API, browser runtime, accessibility, examples, typing, and supported-Python release gates",
+      "dataset": "Prefer derived use of the existing reviewed dataset; new fields require separate source and coverage review",
+      "docs": "Beginner guides, classroom recipes, playground examples, and complete API documentation",
       "release": "\u2014"
     },
     {
-      "name": "9 \u2014 Advanced education and full-world hardening",
+      "name": "9 \u2014 Stable-API hardening",
       "version": "0.9.0",
       "status": "planned",
-      "functions": "\u2014",
-      "tests": "\u2014",
-      "dataset": "\u2014",
-      "docs": "\u2014",
+      "functions": "API consistency, performance, typing, packaging, and compatibility polish",
+      "tests": "Full release-candidate matrix and upgrade-path validation",
+      "dataset": "Reproducibility and coverage hardening without a broad new field family",
+      "docs": "Stable-API review, migration guidance, and complete reference audit",
       "release": "\u2014"
     },
     {

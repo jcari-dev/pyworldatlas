@@ -1,0 +1,63 @@
+name: Bug report
+description: Report reproducible package behavior that appears incorrect.
+title: "Bug: "
+labels: []
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a problem. Please provide a small reproduction and remove private information.
+  - type: input
+    id: version
+    attributes:
+      label: PyWorldAtlas version
+      description: Run `python -c "import pyworldatlas; print(pyworldatlas.__version__)"`.
+      placeholder: 0.7.0
+    validations:
+      required: true
+  - type: input
+    id: python
+    attributes:
+      label: Python version
+      placeholder: 3.12.4
+    validations:
+      required: true
+  - type: input
+    id: platform
+    attributes:
+      label: Operating system
+      placeholder: Windows 11, macOS 15, Ubuntu 24.04
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Explain the expected behavior and the actual behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Provide the smallest complete Python example that demonstrates the problem.
+      render: python
+    validations:
+      required: true
+  - type: textarea
+    id: traceback
+    attributes:
+      label: Traceback or output
+      render: shell
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I tested with the latest published version.
+          required: true
+        - label: I removed secrets and private information.
+          required: true
+        - label: This is not a security vulnerability.
+          required: true

@@ -13,6 +13,41 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class EducationalPolicyTests(unittest.TestCase):
+    def test_repository_presentation_is_current(self):
+        obsolete = {
+            "MIGRATION_FROM_0.0.md",
+            "MILESTONE_0_1_REPORT.md",
+            "RELEASE_0_2_STATUS.md",
+            "RELEASE_0_3_STATUS.md",
+            "RELEASE_0_3_1_STATUS.md",
+            "RELEASE_0_4_STATUS.md",
+            "RELEASE_0_5_STATUS.md",
+            "RELEASE_0_6_STATUS.md",
+            "RELEASE_0_7_STATUS.md",
+        }
+        self.assertFalse(any((ROOT / name).exists() for name in obsolete))
+
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        roadmap = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
+        status = json.loads(
+            (ROOT / "build_data/reports/status.json").read_text(encoding="utf-8")
+        )
+
+        self.assertIn("browser playground", readme)
+        self.assertIn("classrooms", readme)
+        self.assertIn("0.8 — Education and usability", roadmap)
+        self.assertIn("not scheduled for 0.8", roadmap)
+        self.assertEqual(status["milestones"][-3]["name"], "8 — Education and usability")
+
+        for path in (
+            "SECURITY.md",
+            ".github/PULL_REQUEST_TEMPLATE.md",
+            ".github/ISSUE_TEMPLATE/bug_report.yml",
+            ".github/ISSUE_TEMPLATE/data_correction.yml",
+            ".github/ISSUE_TEMPLATE/feature_request.yml",
+        ):
+            self.assertTrue((ROOT / path).is_file(), path)
+
     def test_browser_playground_is_versioned_and_published(self):
         playground = (ROOT / "docs/source/playground.rst").read_text(
             encoding="utf-8"
