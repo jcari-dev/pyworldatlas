@@ -18,7 +18,7 @@ Raw snapshots are immutable and checksummed. Familiar common-name overrides
 retain the official UN M49 value and are reviewed in
 `pipeline/config/overrides.json`.
 
-The 0.8.1 package includes 248 countries and areas from the captured UN M49
+The 0.9.0 package includes 248 countries and areas from the captured UN M49
 scope, 241 primary-capital records, and 6,265 populated-place records. The
 place table contains records at or above 100,000 population plus retained
 capitals. Seven areas expose a missing capital as `None`. GeoNames-only
@@ -100,6 +100,15 @@ bounding boxes, centroids, and point-in-country lookup are deferred beyond
 0.7. Generalized source
 geometry, small territories, enclaves, and disputed areas are handled according
 to [BOUNDARIES_AND_DISPUTES.md](BOUNDARIES_AND_DISPUTES.md).
+
+The optional 0.9 map editions contain one integrity-hashed record for every
+profile. Overview uses 20 arc-minute and Standard uses 5 arc-minute ETOPO
+sampling. Automated gates verify exact 248-profile coverage, readable payloads,
+grid dimensions, non-empty display masks, source metadata, and clean-wheel
+installation. These are generalized educational surfaces. Tiny islands,
+coastlines, rivers, and climate transitions may be simplified or displaced by
+the source resolution; the maps are not suitable for navigation or local
+decision-making.
 
 These boundaries are publication-safety rules as well as data limitations.
 Factual corrections are welcomed when they identify the affected field, source,

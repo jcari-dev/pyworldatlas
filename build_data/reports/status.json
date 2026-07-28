@@ -1,5 +1,5 @@
 {
-  "library_version": "0.8.1",
+  "library_version": "0.9.0",
   "schema_version": 7,
   "dataset_version": "2026.07.22.7",
   "milestones": [
@@ -104,14 +104,14 @@
       "release": "Published as v0.8.0"
     },
     {
-      "name": "9 \u2014 Stable-API hardening",
+      "name": "9 \u2014 Optional interactive maps",
       "version": "0.9.0",
-      "status": "planned",
-      "functions": "API consistency, performance, typing, packaging, and compatibility polish",
-      "tests": "Full release-candidate matrix and upgrade-path validation",
-      "dataset": "Reproducibility and coverage hardening without a broad new field family",
-      "docs": "Stable-API review, migration guidance, and complete reference audit",
-      "release": "\u2014"
+      "status": "complete",
+      "functions": "Optional offline 3D elevation and climate maps, browser display, HTML export, river overlays, and capital markers",
+      "tests": "Complete map-pack coverage, record integrity, viewer controls, offline HTML, clean-wheel rendering, documentation, and release gates",
+      "dataset": "248 Overview maps / 248 Standard maps from pinned elevation, climate, outline, and river snapshots",
+      "docs": "Map-edition guide, installation choices, viewer API, source limits, examples, and release instructions",
+      "release": "Prepared for v0.9.0"
     },
     {
       "name": "Stable offline atlas",
@@ -204,7 +204,7 @@
       "TV",
       "UM"
     ],
-    "database_sha256": "7bfa00f89af5a61b89e2d2e4b638ed6541430afaecd8f7a563c166eef8db6b70",
+    "database_sha256": "a5e959736090e4cf3242c93dac9131ab0cf48072776a7ccb96407981aa59b47a",
     "validation": "PASS"
   }
 }

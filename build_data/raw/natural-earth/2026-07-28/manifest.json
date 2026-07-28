@@ -1,0 +1,21 @@
+{
+  "source_id": "natural-earth-map-viewer",
+  "source_version": "Natural Earth 5.1.x, 1:10m",
+  "retrieved_at": "2026-07-28T00:00:00Z",
+  "license_name": "Public domain",
+  "license_url": "https://www.naturalearthdata.com/about/terms-of-use/",
+  "files": [
+    {
+      "url": "https://naturalearth.s3.amazonaws.com/10m_cultural/ne_10m_admin_0_map_units.zip",
+      "path": "ne_10m_admin_0_map_units.zip",
+      "sha256": "45bebe2aaf8bf42b9daf4428594925bcb11eabd32fe9dc6e0acf681438053eb5",
+      "size_bytes": 5003719
+    },
+    {
+      "url": "https://naturalearth.s3.amazonaws.com/10m_physical/ne_10m_rivers_lake_centerlines.zip",
+      "path": "ne_10m_rivers_lake_centerlines.zip",
+      "sha256": "ded71b01870855ccfe19b51f2ec14c9bb48fae23c0e9f3c11974d426433b5c38",
+      "size_bytes": 2079507
+    }
+  ]
+}

@@ -5,7 +5,8 @@ from .atlas import Atlas
 from .exceptions import (AmbiguousCountryError, AmbiguousPlaceError, AtlasClosedError,
                          AtlasError, CapitalNotFoundError, CountryNotFoundError,
                          DatasetError, DatasetIntegrityError, DatasetNotFoundError,
-                         DatasetVersionError, PlaceNotFoundError)
+                         DatasetVersionError, MapSupportNotInstalledError,
+                         PlaceNotFoundError)
 from .models import (Area, BorderPathResult, Capital, CapitalDistance, City,
                      CityDistance, ClimateProfile, ClimateZone, Coordinate, Country,
                      CountryCodes, CountryDiscoveryCard, CountryMatch,
@@ -26,5 +27,6 @@ __all__ = [
     "DatasetError", "DatasetNotFoundError", "DatasetVersionError",
     "DatasetIntegrityError", "CountryNotFoundError", "AmbiguousCountryError",
     "PlaceNotFoundError", "AmbiguousPlaceError", "CapitalNotFoundError",
+    "MapSupportNotInstalledError",
     "SCHEMA_VERSION", "__version__",
 ]

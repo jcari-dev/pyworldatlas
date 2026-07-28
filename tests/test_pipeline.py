@@ -191,6 +191,14 @@ class PipelineTests(unittest.TestCase):
                 "6373d6b522b7b27ec9afbf51dc477a8a9d269074321d51d8e047c23691d67fcb",
             "build_data/raw/koppen-geiger/2023/country_zones.json":
                 "bc59a51670cb6e9ba7953cc910b238aa08b5706ff99cecaa92cc77be735a0137",
+            "build_data/raw/etopo-2022/2026-07-28/etopo-2022-5arcmin.nc":
+                "fe35017f8cf4d77dbb00677a99d6b96a0e235fac295b52029174943d3d9afe9a",
+            "build_data/raw/natural-earth/2026-07-21/ne_50m_rivers_lake_centerlines.zip":
+                "c607d9d7e7702827a7996fff6dc17b87a338c5ed3b52d12c402e0c9669cc7b56",
+            "build_data/raw/natural-earth/2026-07-28/ne_10m_admin_0_map_units.zip":
+                "45bebe2aaf8bf42b9daf4428594925bcb11eabd32fe9dc6e0acf681438053eb5",
+            "build_data/raw/natural-earth/2026-07-28/ne_10m_rivers_lake_centerlines.zip":
+                "ded71b01870855ccfe19b51f2ec14c9bb48fae23c0e9f3c11974d426433b5c38",
         }
         for relative_path, expected_hash in expected_hashes.items():
             self.assertEqual(

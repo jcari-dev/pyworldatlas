@@ -6,8 +6,8 @@ from xml.sax.saxutils import escape
 project = "PyWorldAtlas"
 author = "PyWorldAtlas maintainers"
 copyright = "2026, PyWorldAtlas maintainers"
-release = "0.8.1"
-version = "0.8"
+release = "0.9.0"
+version = "0.9"
 extensions = [
     "sphinx.ext.autodoc", "sphinx.ext.autosummary", "sphinx.ext.napoleon",
     "sphinx.ext.doctest", "sphinx.ext.viewcode", "sphinx.ext.intersphinx",
@@ -19,7 +19,7 @@ nitpicky = True
 nitpick_ignore = [("py:class", "pathlib.Path")]
 html_theme = "sphinx_rtd_theme"
 pygments_style = "friendly"
-html_title = "PyWorldAtlas 0.8.1"
+html_title = "PyWorldAtlas 0.9.0"
 html_short_title = "PyWorldAtlas"
 html_baseurl = "https://jcari-dev.github.io/pyworldatlas-documentation/"
 html_favicon = "_static/globe.svg"
@@ -38,8 +38,8 @@ html_context = {
     "current_version": release,
     "site_url": html_baseurl,
     "seo_description": (
-        "Explore 248 country profiles, cities, physical geography, distances, "
-        "borders, and learning tools offline with the PyWorldAtlas Python package."
+        "Explore 248 country profiles, optional 3D maps, physical geography, "
+        "cities, distances, and learning tools offline with PyWorldAtlas."
     ),
 }
 html_static_path = ["_static"]

@@ -44,3 +44,6 @@ class AmbiguousPlaceError(AtlasError, LookupError):
 class CapitalNotFoundError(PlaceNotFoundError):
     """Raised when a capital query has no match."""
 
+
+class MapSupportNotInstalledError(AtlasError):
+    """Raised when an optional map viewer or map-data pack is unavailable."""

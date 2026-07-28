@@ -83,9 +83,10 @@ class EducationalPolicyTests(unittest.TestCase):
 
         self.assertIn("browser playground", readme)
         self.assertIn("classrooms", readme)
-        self.assertIn("0.8 — Education and usability", roadmap)
-        self.assertIn("not scheduled for 0.8", roadmap)
-        self.assertEqual(status["milestones"][-3]["name"], "8 — Education and usability")
+        self.assertIn("0.9 — Optional interactive maps", roadmap)
+        self.assertIn("does not publish their coordinates", roadmap)
+        self.assertEqual(status["milestones"][-2]["name"], "9 — Optional interactive maps")
+        self.assertEqual(status["milestones"][-2]["status"], "complete")
 
         for path in (
             "SECURITY.md",
@@ -166,6 +167,20 @@ class EducationalPolicyTests(unittest.TestCase):
         self.assertIn(
             'html_extra_path = ["robots.txt", "explore.html"]', docs_config
         )
+
+    def test_map_showcase_is_published_on_both_front_pages(self):
+        docs_index = (ROOT / "docs/source/index.rst").read_text(encoding="utf-8")
+        maps = (ROOT / "docs/source/maps.rst").read_text(encoding="utf-8")
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        image = ROOT / "docs/source/_static/iceland-standard-map.svg"
+
+        self.assertTrue(image.is_file())
+        self.assertGreater(image.stat().st_size, 40_000)
+        self.assertIn("iceland-standard-map.svg", docs_index)
+        self.assertIn("iceland-standard-map.svg", maps)
+        self.assertIn("iceland-standard-map.svg", readme)
+        self.assertIn('atlas.map("Iceland").show()', docs_index)
+        self.assertIn('atlas.map("Iceland").show()', readme)
 
     def test_browser_playground_examples_execute(self):
         interface = (ROOT / "docs/source/_static/playground.js").read_text(
@@ -248,7 +263,10 @@ class EducationalPolicyTests(unittest.TestCase):
             (ROOT / "pipeline/config/field_sources.json").read_text(encoding="utf-8")
         )
         declared_sources = {
-            source_id for source_ids in matrix.values() for source_id in source_ids
+            source_id
+            for field, source_ids in matrix.items()
+            if field != "optional_map_surfaces"
+            for source_id in source_ids
         }
         with Atlas() as atlas:
             runtime_sources = {
@@ -257,6 +275,15 @@ class EducationalPolicyTests(unittest.TestCase):
                 for source in country.sources
             }
         self.assertEqual(set(runtime_sources), declared_sources)
+        self.assertEqual(
+            set(matrix["optional_map_surfaces"]),
+            {
+                "geonames",
+                "koppen-geiger-1991-2020",
+                "natural-earth-map-viewer",
+                "noaa-etopo-2022-ice-surface",
+            },
+        )
         self.assertTrue(
             all(
                 source.name

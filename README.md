@@ -1,6 +1,6 @@
 # PyWorldAtlas: offline world geography for Python
 
-> Offline country profiles, physical geography, cities, distances, and learning tools for Python.
+> Offline country profiles, physical geography, optional 3D maps, distances, and learning tools for Python.
 
 [![PyPI](https://img.shields.io/pypi/v/pyworldatlas.svg?label=PyPI&color=287aa3)](https://pypi.org/project/pyworldatlas/)
 [![Python 3.10–3.14](https://img.shields.io/badge/Python-3.10%E2%80%933.14-3776ab)](https://www.python.org/)
@@ -8,11 +8,12 @@
 [![Documentation](https://img.shields.io/badge/docs-online-317f78)](https://jcari-dev.github.io/pyworldatlas-documentation/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-607087)](https://github.com/jcari-dev/pyworldatlas/blob/main/LICENSE)
 
-**248 profiles · 6,265 populated places · 319 reviewed land borders · 0 runtime dependencies**
+**248 profiles · 248 optional 3D maps · 6,265 populated places · 0 core runtime dependencies**
 
 [Documentation](https://jcari-dev.github.io/pyworldatlas-documentation/) ·
 [Quickstart](https://jcari-dev.github.io/pyworldatlas-documentation/quickstart.html) ·
 [Playground](https://jcari-dev.github.io/pyworldatlas-documentation/playground.html) ·
+[3D maps](https://jcari-dev.github.io/pyworldatlas-documentation/maps.html) ·
 [Examples](https://jcari-dev.github.io/pyworldatlas-documentation/recipes.html) ·
 [API reference](https://jcari-dev.github.io/pyworldatlas-documentation/api.html)
 
@@ -22,9 +23,15 @@
 
 PyWorldAtlas is an offline world-geography Python package built around one
 bundled, source-aware database. It turns country profiles, physical geography,
-cities, distances, borders, and learning tools into ordinary Python objects for
-developers, classrooms, and curious learners. No API key or runtime download is
-required.
+cities, distances, borders, optional 3D maps, and learning tools into ordinary
+Python objects for developers, classrooms, and curious learners. No API key is
+required, and installed features work offline.
+
+[![PyWorldAtlas Standard 3D elevation map of Iceland](https://raw.githubusercontent.com/jcari-dev/pyworldatlas/main/docs/source/_static/iceland-standard-map.svg)](https://jcari-dev.github.io/pyworldatlas-documentation/maps.html)
+
+*Iceland rendered by the Standard map edition with elevation, coastline,
+Reykjavík, a river overlay, and source notes. Select the image for the map
+guide.*
 
 ## Install
 
@@ -34,6 +41,15 @@ python -m pip install --upgrade pyworldatlas
 
 PyWorldAtlas supports Python 3.10 through 3.14. The installed package works
 offline and has no third-party runtime dependencies.
+
+Add the recommended global 3D map edition when you want interactive terrain:
+
+```console
+python -m pip install --upgrade "pyworldatlas[maps]"
+```
+
+Use `pyworldatlas[maps-overview]` for the smaller Overview edition. Map data is
+optional and never enlarges the ordinary package installation.
 
 ## Meet a country
 
@@ -65,6 +81,23 @@ Source-listed lakes: Lagoa dos Patos, Lagoa Mirim
 typed models rather than loosely structured dictionaries, and loaded records
 remain usable after the atlas is closed.
 
+## Open the terrain
+
+```python
+from pyworldatlas import Atlas
+
+with Atlas() as atlas:
+    atlas.map("Iceland").show()
+```
+
+The one-line call opens a local, rotatable 3D map in the default browser with
+elevation, Köppen-Geiger climate coloring, rivers, the country outline, and the
+primary capital. The viewer and data remain offline after installation. Use
+`atlas.map("Iceland").write_html("iceland-map.html")` to create a standalone
+document for a lesson or presentation.
+
+[Compare the map editions and learn the API](https://jcari-dev.github.io/pyworldatlas-documentation/maps.html).
+
 ## What you can explore
 
 | Area | Included capabilities |
@@ -72,6 +105,7 @@ remain usable after the atlas is closed.
 | Country profiles | Codes, names, capitals, population, currencies, languages, timezones, postal formats, anthem titles, reviewed mottos, and demonyms |
 | Names and writing systems | English identities, selected local-language names, scripts, reviewed official forms, and source-provided romanization |
 | Physical geography | Land and water area, coastline, elevation extremes, rivers, lakes, and climate summaries |
+| Interactive maps | Optional offline 3D elevation and climate surfaces for all 248 profiles, with rivers and capitals |
 | Places and measurement | 6,265 cities and capitals with search, nearby-place discovery, readable coordinates, distance, compass direction, bearing, and midpoint calculations |
 | Land connections | Reviewed neighbors, shared neighbors, shortest border paths, crossings, and connected components |
 | Learning tools | Readable profiles, stable samples, flashcards, deterministic multiple-choice questions, rankings, discovery cards, and Unicode-preserving JSON |
@@ -138,7 +172,7 @@ the formal publication standard.
 
 ## Coverage at a glance
 
-Library `0.8.1` includes dataset `2026.07.22.7` and schema `7`.
+Library `0.9.0` includes dataset `2026.07.22.7` and schema `7`.
 
 | Dataset area | Coverage |
 |---|---:|
@@ -150,6 +184,7 @@ Library `0.8.1` includes dataset `2026.07.22.7` and schema `7`.
 | Reviewed land-border relationships | 319 |
 | Highest and lowest points | 240 / 248 |
 | Köppen-Geiger climate profiles | 241 / 248 |
+| Overview and Standard map coverage | 248 / 248 each |
 
 See the generated [project status](https://jcari-dev.github.io/pyworldatlas-documentation/_generated/project_status.html)
 for complete coverage and [data quality](https://jcari-dev.github.io/pyworldatlas-documentation/data_quality.html)
@@ -161,7 +196,7 @@ Field families use defined source roles rather than one unreviewed compilation.
 The builder retains source snapshots, checksums, review decisions, and exact
 coverage gates. Sources include United Nations M49, GeoNames, Unicode CLDR,
 UNGEGN, Natural Earth, the CIA World Factbook, Wikidata, IANA registries, and
-the Beck et al. Köppen-Geiger dataset.
+the Beck et al. Köppen-Geiger dataset, and NOAA NCEI ETOPO 2022.
 
 - [Data sources and freshness](https://jcari-dev.github.io/pyworldatlas-documentation/data_sources.html)
 - [Data quality and limitations](https://jcari-dev.github.io/pyworldatlas-documentation/data_quality.html)
@@ -175,6 +210,7 @@ the Beck et al. Köppen-Geiger dataset.
 - [Browse complete recipes](https://jcari-dev.github.io/pyworldatlas-documentation/recipes.html)
 - [Read the country-profile guide](https://jcari-dev.github.io/pyworldatlas-documentation/country_profile.html)
 - [Explore physical geography](https://jcari-dev.github.io/pyworldatlas-documentation/physical_geography.html)
+- [Open interactive 3D maps](https://jcari-dev.github.io/pyworldatlas-documentation/maps.html)
 - [Review the API](https://jcari-dev.github.io/pyworldatlas-documentation/api.html)
 - [See the roadmap](https://github.com/jcari-dev/pyworldatlas/blob/main/ROADMAP.md)
 
@@ -193,9 +229,9 @@ python maintain.py bootstrap
 python maintain.py check
 ```
 
-`maintain.py check` runs tests, builds both distributions, installs the wheel in
-isolation, executes examples, builds strict documentation and doctests, and
-audits the release contents.
+`maintain.py check` runs tests, builds the core and optional-map distributions,
+installs the wheels in isolation, renders an offline map, executes examples,
+builds strict documentation and doctests, and audits the release contents.
 
 ## License
 
