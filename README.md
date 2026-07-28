@@ -27,7 +27,7 @@ cities, distances, borders, optional 3D maps, and learning tools into ordinary
 Python objects for developers, classrooms, and curious learners. No API key is
 required, and installed features work offline.
 
-[![PyWorldAtlas Standard 3D elevation map of Iceland](https://raw.githubusercontent.com/jcari-dev/pyworldatlas/main/docs/source/_static/iceland-standard-map.svg)](https://jcari-dev.github.io/pyworldatlas-documentation/maps.html)
+[![PyWorldAtlas Standard 3D elevation map of Iceland](https://raw.githubusercontent.com/jcari-dev/pyworldatlas/main/docs/source/_static/iceland-standard-map.jpg)](https://jcari-dev.github.io/pyworldatlas-documentation/maps.html)
 
 *Iceland rendered by the Standard map edition with elevation, coastline,
 Reykjavík, a river overlay, and source notes. Select the image for the map
