@@ -24,22 +24,26 @@ The canonical source repository is `jcari-dev/pyworldatlas`. Pushes and pull
 requests to `main` run CI on Python 3.10 through 3.14, plus the complete wheel,
 example, map-rendering, and documentation gate on Python 3.12.
 
-Create a protected GitHub environment named `pypi`. Requiring maintainer
-approval before deployment is recommended.
+Create four protected GitHub environments. Requiring maintainer approval before
+deployment is recommended.
 
-On the **Publishing** page for each of the four PyPI projects, configure the
-same GitHub Actions trusted publisher:
-
-| Setting | Value |
+| PyPI project | GitHub environment |
 |---|---|
-| Owner | `jcari-dev` |
-| Repository | `pyworldatlas` |
-| Workflow | `release.yml` |
-| Environment | `pypi` |
+| `pyworldatlas` | `pypi` |
+| `pyworldatlas-mapview` | `pypi-mapview` |
+| `pyworldatlas-mapdata-overview` | `pypi-maps-overview` |
+| `pyworldatlas-mapdata-standard` | `pypi-maps-standard` |
 
-For a companion project that does not exist yet, create a pending trusted
+On the **Publishing** page for each PyPI project, configure a GitHub Actions
+trusted publisher with owner `jcari-dev`, repository `pyworldatlas`, workflow
+`release.yml`, and the environment listed above. The distinct environment names
+allow all three new companion projects to be registered as pending publishers
+at the same time.
+
+For a companion project that does not exist yet, create its pending trusted
 publisher on PyPI before pushing the first release tag. The first successful
-publication creates the project.
+publication creates the project. Each publishing job receives only the two
+distribution files that belong to its project.
 
 ## Documentation deployment
 
@@ -93,7 +97,7 @@ git tag -a v0.9.0 -m "Release 0.9.0"
 git push origin v0.9.0
 ```
 
-The tag starts the release workflow. Approve the protected `pypi` environment
+The tag starts the release workflow. Approve the protected PyPI environments
 when GitHub requests it. The workflow must complete these outcomes:
 
 1. Build and audit four wheels and four source distributions.

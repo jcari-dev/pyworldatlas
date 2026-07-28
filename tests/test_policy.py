@@ -182,6 +182,34 @@ class EducationalPolicyTests(unittest.TestCase):
         self.assertIn('atlas.map("Iceland").show()', docs_index)
         self.assertIn('atlas.map("Iceland").show()', readme)
 
+    def test_each_pypi_project_has_an_isolated_publish_job(self):
+        workflow = (ROOT / ".github/workflows/release.yml").read_text(
+            encoding="utf-8"
+        )
+
+        for environment in (
+            "pypi",
+            "pypi-mapview",
+            "pypi-maps-overview",
+            "pypi-maps-standard",
+        ):
+            with self.subTest(environment=environment):
+                self.assertIn(f"name: {environment}", workflow)
+
+        for artifact in (
+            "pypi-core-distributions",
+            "pypi-mapview-distributions",
+            "pypi-mapdata-overview-distributions",
+            "pypi-mapdata-standard-distributions",
+        ):
+            with self.subTest(artifact=artifact):
+                self.assertEqual(workflow.count(f"name: {artifact}"), 2)
+
+        self.assertEqual(
+            workflow.count("uses: pypa/gh-action-pypi-publish@release/v1"),
+            4,
+        )
+
     def test_browser_playground_examples_execute(self):
         interface = (ROOT / "docs/source/_static/playground.js").read_text(
             encoding="utf-8"

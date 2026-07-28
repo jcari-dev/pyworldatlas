@@ -34,13 +34,41 @@ jobs:
             dist/*.tar.gz
       - uses: actions/upload-artifact@v5
         with:
+          name: pypi-core-distributions
+          path: |
+            dist/pyworldatlas-*.whl
+            dist/pyworldatlas-*.tar.gz
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v5
+        with:
+          name: pypi-mapview-distributions
+          path: |
+            dist/pyworldatlas_mapview-*.whl
+            dist/pyworldatlas_mapview-*.tar.gz
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v5
+        with:
+          name: pypi-mapdata-overview-distributions
+          path: |
+            dist/pyworldatlas_mapdata_overview-*.whl
+            dist/pyworldatlas_mapdata_overview-*.tar.gz
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v5
+        with:
+          name: pypi-mapdata-standard-distributions
+          path: |
+            dist/pyworldatlas_mapdata_standard-*.whl
+            dist/pyworldatlas_mapdata_standard-*.tar.gz
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v5
+        with:
           name: release-metadata
           path: |
             dist/release-manifest.json
             dist/SHA256SUMS
 
-  publish-pypi:
-    name: Publish to PyPI
+  publish-pypi-core:
+    name: Publish core package to PyPI
     needs: build
     runs-on: ubuntu-latest
     environment:
@@ -51,13 +79,66 @@ jobs:
     steps:
       - uses: actions/download-artifact@v6
         with:
-          name: python-package-distributions
+          name: pypi-core-distributions
+          path: dist
+      - uses: pypa/gh-action-pypi-publish@release/v1
+
+  publish-pypi-mapview:
+    name: Publish map viewer to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi-mapview
+      url: https://pypi.org/p/pyworldatlas-mapview
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v6
+        with:
+          name: pypi-mapview-distributions
+          path: dist
+      - uses: pypa/gh-action-pypi-publish@release/v1
+
+  publish-pypi-mapdata-overview:
+    name: Publish overview map data to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi-maps-overview
+      url: https://pypi.org/p/pyworldatlas-mapdata-overview
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v6
+        with:
+          name: pypi-mapdata-overview-distributions
+          path: dist
+      - uses: pypa/gh-action-pypi-publish@release/v1
+
+  publish-pypi-mapdata-standard:
+    name: Publish standard map data to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi-maps-standard
+      url: https://pypi.org/p/pyworldatlas-mapdata-standard
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v6
+        with:
+          name: pypi-mapdata-standard-distributions
           path: dist
       - uses: pypa/gh-action-pypi-publish@release/v1
 
   github-release:
     name: Create GitHub release
-    needs: [build, publish-pypi]
+    needs:
+      - build
+      - publish-pypi-core
+      - publish-pypi-mapview
+      - publish-pypi-mapdata-overview
+      - publish-pypi-mapdata-standard
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -78,7 +159,12 @@ jobs:
 
   deploy-docs:
     name: Deploy documentation
-    needs: [build, publish-pypi]
+    needs:
+      - build
+      - publish-pypi-core
+      - publish-pypi-mapview
+      - publish-pypi-mapdata-overview
+      - publish-pypi-mapdata-standard
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
