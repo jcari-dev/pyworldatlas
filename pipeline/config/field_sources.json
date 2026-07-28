@@ -16,5 +16,6 @@
   "regions": ["un-m49"],
   "capitals": ["geonames"],
   "major_cities": ["geonames"],
-  "land_borders": ["geonames", "natural-earth", "reviewed-borders"]
+  "land_borders": ["geonames", "natural-earth", "reviewed-borders"],
+  "optional_map_surfaces": ["noaa-etopo-2022-ice-surface", "natural-earth-map-viewer", "koppen-geiger-1991-2020", "geonames"]
 }

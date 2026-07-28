@@ -1,0 +1,21 @@
+{
+  "source_id": "noaa-etopo-2022-ice-surface",
+  "source_version": "ETOPO 2022 v1, 60 arc-second ice-surface elevation sampled every 5 cells",
+  "retrieved_at": "2026-07-28T00:00:00Z",
+  "dataset_doi": "https://doi.org/10.25921/fd45-gt74",
+  "license_name": "CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "not_for_navigation": true,
+  "files": [
+    {
+      "url": "https://oceanwatch.pifsc.noaa.gov/erddap/griddap/ETOPO_2022_v1_60s.nc?z%5B(-90):5:(90)%5D%5B(0):5:(359.98333333333335)%5D",
+      "path": "etopo-2022-5arcmin.nc",
+      "sha256": "fe35017f8cf4d77dbb00677a99d6b96a0e235fac295b52029174943d3d9afe9a",
+      "size_bytes": 37382780
+    }
+  ],
+  "derived_editions": {
+    "overview": "20 arc-minute sampling from the pinned 5 arc-minute subset",
+    "standard": "5 arc-minute sampling from the pinned subset"
+  }
+}

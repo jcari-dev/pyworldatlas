@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.9.0
+
+- Added optional offline 3D country maps through `Atlas.map()` and the
+  browser-opening `CountryMap.show()` interface.
+- Added Overview and Standard global map editions covering all 248 existing
+  profiles with 20 and 5 arc-minute elevation sampling, respectively.
+- Added elevation and Köppen-Geiger climate surface modes, generalized country
+  outlines, source-provided river centerlines, and primary-capital markers.
+- Added standalone offline HTML export and direct access to the underlying
+  Plotly figure for notebooks and customization.
+- Kept the core wheel dependency-free by publishing the viewer and each map
+  edition as separately installable companion distributions.
+- Added reproducible map-pack generation, complete coverage and integrity
+  tests, clean multi-wheel installation, and map-aware release automation.
+- Documented installation choices, exact wheel sizes, sources, resolution,
+  generalization limits, and the non-navigational educational scope.
+- Added a real Standard-edition Iceland render to the GitHub/PyPI README and
+  documentation front page, linked directly to the interactive map guide.
+
 ## 0.8.1
 
 - Added concise browser-tab titles, a globe favicon, canonical page metadata,

@@ -1,29 +1,34 @@
 # Maintainer release process
 
-This repository builds, tests, publishes, and deploys each release from one Git
-tag. PyPI publishing uses short-lived Trusted Publishing credentials; no PyPI
-API token is stored in GitHub.
+PyWorldAtlas builds, verifies, publishes, and documents each release from one
+Git tag. PyPI publishing uses short-lived Trusted Publishing credentials; no
+PyPI API token is stored in GitHub.
 
-A `v0.1.0` tag and release artifacts preserve the rebuilt baseline. Verify that
-the intended version appears in the package index before running its
-installation smoke test.
+## What version 0.9 publishes
 
-## Repository setup
+The 0.9 release consists of four coordinated PyPI projects:
 
-The canonical source repository is `jcari-dev/pyworldatlas`. Verify the remote
-from a terminal in the repository root:
+| Project | Purpose |
+|---|---|
+| `pyworldatlas` | Dependency-free core package and atlas database |
+| `pyworldatlas-mapview` | Plotly-based browser viewer |
+| `pyworldatlas-mapdata-overview` | Compact global map edition |
+| `pyworldatlas-mapdata-standard` | Recommended global map edition |
 
-```console
-git remote -v
-```
+All four projects use the same version. The `maps-overview` and `maps` extras
+on the core package install the correct viewer and data project.
 
-Pushes and pull requests to `main` run CI on Python 3.10 through 3.14 and the
-complete wheel, example, and documentation gate on Python 3.12.
+## One-time repository setup
 
-## Production PyPI publisher
+The canonical source repository is `jcari-dev/pyworldatlas`. Pushes and pull
+requests to `main` run CI on Python 3.10 through 3.14, plus the complete wheel,
+example, map-rendering, and documentation gate on Python 3.12.
 
-On the existing PyPI project's **Publishing** page, add a GitHub Actions trusted
-publisher with:
+Create a protected GitHub environment named `pypi`. Requiring maintainer
+approval before deployment is recommended.
+
+On the **Publishing** page for each of the four PyPI projects, configure the
+same GitHub Actions trusted publisher:
 
 | Setting | Value |
 |---|---|
@@ -32,136 +37,108 @@ publisher with:
 | Workflow | `release.yml` |
 | Environment | `pypi` |
 
-Create a protected GitHub environment named `pypi` and require your approval
-before deployment.
+For a companion project that does not exist yet, create a pending trusted
+publisher on PyPI before pushing the first release tag. The first successful
+publication creates the project.
 
 ## Documentation deployment
 
 Create a fine-grained GitHub personal access token restricted to
 `jcari-dev/pyworldatlas-documentation` with **Contents: Read and write**. Add it
-to the `pyworldatlas` repository as an Actions secret named
-`DOCS_DEPLOY_TOKEN`.
+to the source repository as an Actions secret named `DOCS_DEPLOY_TOKEN`.
 
-The release workflow builds Sphinx from the exact release wheel and replaces the
-generated files in the documentation repository. Source documentation remains
-in this repository under `docs/source/`.
+The release workflow builds Sphinx from the exact release wheels and replaces
+the generated files in the documentation repository. Source documentation
+remains in this repository under `docs/source/`.
 
-Documentation-only updates do not require a new PyPI version. Changes under
-`docs/` or `examples/` run the dedicated `Documentation` workflow after they
-are merged to `main`. That workflow builds strict HTML and doctests from the
-current checkout before updating the documentation repository. The release
-workflow remains the authoritative path when the package API, data, or version
-changes.
+Documentation-only changes do not require a new PyPI version. Changes to the
+documentation, examples, runtime documentation surface, or map viewer run the
+dedicated documentation workflow after they are merged to `main`.
 
-## Prepare and publish a release
+## Prepare version 0.9.0
 
-> **Current candidate:** 0.8.1 is a documentation-presentation patch for the
-> published education-and-usability milestone. Publish 0.8.1 only after its
-> pull request is merged to
-> `main` and CI is green.
-
-### Current 0.8.1 sequence
-
-From the repository root on the `codex/docs-seo-polish` branch:
+From the repository root on `release/0.9.0`:
 
 ```console
-python maintain.py prepare-release 0.8.1
+python maintain.py bootstrap
+python maintain.py prepare-release 0.9.0
 git status
 git add -A
-git commit -m "Prepare PyWorldAtlas 0.8.1"
-git push -u origin codex/docs-seo-polish
+git commit -m "Prepare PyWorldAtlas 0.9.0"
+git push -u origin release/0.9.0
 ```
 
-On GitHub, open a pull request with:
+Open a pull request from `release/0.9.0` into `main`. Wait for every CI job to
+pass, review the changed source and generated artifacts, and merge the pull
+request. Do not create the release tag from the release branch.
 
-- Base branch: `main`
-- Compare branch: `codex/docs-seo-polish`
-- Title: `Release PyWorldAtlas 0.8.1`
+If Windows reports that a file under `dist` is in use, close the terminal,
+upload dialog, or file preview holding it. A separate ignored output directory
+can also be used:
 
-Wait for every CI job to pass, review the file and source changes, and merge the
-pull request. Do not create the release tag from the feature branch.
+```console
+python maintain.py prepare-release 0.9.0 --output-dir build/release-dist
+```
 
-After the merge, return to the terminal and tag the exact merged `main` commit:
+## Tag and publish
+
+After the pull request is merged, tag the exact merged `main` commit:
 
 ```console
 git switch main
 git pull --ff-only origin main
-python maintain.py prepare-release 0.8.1
+python maintain.py prepare-release 0.9.0
 git status
-git tag -a v0.8.1 -m "Release 0.8.1"
-git push origin v0.8.1
+git tag -a v0.9.0 -m "Release 0.9.0"
+git push origin v0.9.0
 ```
 
 The tag starts the release workflow. Approve the protected `pypi` environment
-when GitHub requests it. The workflow must finish all four jobs: build,
-PyPI publication, GitHub Release creation, and documentation deployment.
+when GitHub requests it. The workflow must complete these outcomes:
 
-For example, to publish the next planned feature release, run the local release
-gate first:
+1. Build and audit four wheels and four source distributions.
+2. Publish all four coordinated projects to PyPI.
+3. Create the GitHub Release with distributions, checksums, and manifest.
+4. Build and deploy the public documentation from the release wheels.
 
-```console
-python maintain.py bootstrap
-python maintain.py prepare-release 0.8.1
-```
+## Verify the public release
 
-If Windows reports that an existing file under `dist` is in use, close the
-terminal, upload dialog, or file preview holding it. To run the same release
-gate without replacing that directory, choose another ignored output path:
+Create a clean environment and install the recommended map edition from PyPI:
 
 ```console
-python maintain.py prepare-release 0.8.1 --output-dir build/release-dist
+py -3.10 -m venv .venv-live
+.venv-live\Scripts\python -m pip install --no-cache-dir "pyworldatlas[maps]==0.9.0"
+.venv-live\Scripts\python -c "from pyworldatlas import Atlas; a=Atlas(); m=a.map('Brazil'); print(a.dataset_info().library_version, m.quality, m.resolution_arc_minutes); p=m.write_html('brazil-map.html'); print(p); a.close()"
 ```
 
-Review `release-manifest.json` and `SHA256SUMS` in the selected output directory.
-Install that wheel into a disposable local environment if a final manual smoke
-test is useful.
+Open `brazil-map.html` and confirm that the terrain rotates and both Elevation
+and Climate controls work. Then verify:
 
-For every data or documentation release, also confirm that:
+- <https://github.com/jcari-dev/pyworldatlas/actions>
+- <https://github.com/jcari-dev/pyworldatlas/releases>
+- <https://pypi.org/project/pyworldatlas/>
+- <https://pypi.org/project/pyworldatlas-mapview/>
+- <https://pypi.org/project/pyworldatlas-mapdata-overview/>
+- <https://pypi.org/project/pyworldatlas-mapdata-standard/>
+- <https://jcari-dev.github.io/pyworldatlas-documentation/>
+
+## Release rules
+
+For every data or documentation release, confirm that:
 
 - Each public field has a clear educational purpose and declared source role.
 - Sensitive claims have the review required by
   `EDUCATIONAL_AND_NEUTRALITY_POLICY.md`.
 - Examples and release notes use respectful, factual language.
 - Naming and border conventions are attributed rather than endorsed.
-- `CODE_OF_CONDUCT.md`, source notices, limitations, and correction guidance
+- Source notices, limitations, correction guidance, and community standards
   remain publicly linked.
 
-The tag workflow publishes the wheel and source distribution to PyPI, creates a
-GitHub Release with checksums and the release manifest, and deploys the Sphinx
-site.
-
-Verify the public package in a new environment:
-
-```console
-py -3.10 -m venv .venv-live
-.venv-live\Scripts\python -m pip install --no-cache-dir pyworldatlas==0.8.1
-.venv-live\Scripts\python -c "from pyworldatlas import Atlas; a=Atlas(); print(a.country('Japan').summary()); print(a.quiz(topic='capitals', count=1, seed=8)[0].choices); a.close()"
-```
-
-Finally, verify the public pages:
-
-- <https://github.com/jcari-dev/pyworldatlas/actions>
-- <https://github.com/jcari-dev/pyworldatlas/releases>
-- <https://pypi.org/project/pyworldatlas/>
-- <https://jcari-dev.github.io/pyworldatlas-documentation/>
-
-## Future releases
-
-For each feature or data release, update `pyproject.toml`,
-`src/pyworldatlas/_version.py`, `docs/source/conf.py`, and `CHANGELOG.md` together.
-Regenerate the data/status artifacts when coverage changes, run
-`python maintain.py prepare-release VERSION`, and publish a matching `vVERSION`
-tag only after CI is green.
+Keep `pyproject.toml`, `src/pyworldatlas/_version.py`, companion-project
+versions, `docs/source/conf.py`, and `CHANGELOG.md` synchronized. Regenerate
+status artifacts when package or coverage metadata changes.
 
 Never reuse, delete, or move a published version tag. If publication fails
 before PyPI accepts the version, repair the workflow and rerun it. If PyPI has
-accepted the version, preserve it and use a patch release for any code or
-metadata correction.
-
-Version 0.8.1 preserves the reviewed 0.8.0 API and dataset while improving
-documentation titles, discovery metadata, the favicon, and the shared GitHub
-and PyPI README. It must pass the policy-integrity tests alongside the runtime,
-pipeline, browser, documentation, and clean-wheel gates.
-
-Never tag a dirty branch or an unmerged candidate. The tag-triggered workflow
-is the single path to PyPI, the GitHub Release, and the documentation site.
+accepted the version, preserve it and publish corrections as a patch release.
+Never tag a dirty branch or an unmerged candidate.

@@ -65,6 +65,23 @@ may be used for personal, educational, and commercial purposes. Source archives,
 embedded versions, URLs, and checksums are retained in the raw-data manifest.
 See https://www.naturalearthdata.com/about/terms-of-use/.
 
+The optional 0.9 map packages also use generalized Natural Earth 1:10m Admin 0
+map-unit outlines and river/lake centerlines. Overview uses the smaller 1:50m
+river layer. These public-domain vectors are transformed into per-profile map
+records and are not exposed as a boundary-geometry API.
+
+Optional-map elevation is derived from the NOAA NCEI ETOPO 2022 60 arc-second
+ice-surface global relief model, sampled at 5 arc-minutes for Standard and 20
+arc-minutes for Overview. NOAA dedicates ETOPO 2022 under CC0 1.0 and states
+that it is not suitable for navigation. The source subset, request URL,
+checksum, and transformation are pinned. See
+https://doi.org/10.25921/fd45-gt74.
+
+The optional browser viewer uses Plotly.js through the Plotly Python package.
+Plotly.js is copyright Plotly, Inc. and contributors and is licensed under the
+MIT License. The generated standalone HTML embeds the installed renderer so a
+displayed map does not contact a CDN. See https://github.com/plotly/plotly.js.
+
 The documentation includes a small set of Twemoji flag SVGs from release
 17.0.2 for consistent showcase rendering. Twemoji graphics are copyright
 Twitter, Inc. and other contributors and are licensed under CC BY 4.0. These

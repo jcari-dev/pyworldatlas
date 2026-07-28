@@ -7,7 +7,7 @@ from functools import lru_cache
 from hashlib import sha256
 import json
 from pathlib import Path
-from typing import Iterator
+from typing import TYPE_CHECKING, Iterator
 
 from ._normalization import normalize_name
 from ._version import SCHEMA_VERSION, __version__
@@ -21,6 +21,9 @@ from .models import (Area, BorderPathResult, Capital, CapitalDistance, City,
                      Lake, Language, LocalizedName, NationalAnthem,
                      NationalMotto, PhysicalGeography, PostalCodeFormat, QuizQuestion, River,
                      SourceReference, Timezone)
+
+if TYPE_CHECKING:
+    from pyworldatlas_mapview import CountryMap
 
 
 def _flag(alpha2: str) -> str:
@@ -152,6 +155,48 @@ class Atlas:
             return self.country(query)
         except CountryNotFoundError:
             return default
+
+    def map(
+        self,
+        country: str | Country,
+        *,
+        quality: str = "auto",
+    ) -> "CountryMap":
+        """Return an interactive offline 3D map for a country profile.
+
+        ``country`` accepts the same names and codes as :meth:`country`, or an
+        already loaded :class:`Country`. ``quality="auto"`` prefers Standard
+        map data when installed and otherwise uses Overview data.
+
+        The returned map opens in the default browser when its ``show()``
+        method is called. Install ``pyworldatlas[maps]`` for Standard maps or
+        ``pyworldatlas[maps-overview]`` for the smaller Overview edition.
+        """
+        self._ensure_open()
+        if isinstance(country, str):
+            profile = self.country(country)
+        elif isinstance(country, Country):
+            profile = country
+        else:
+            raise TypeError("country must be a country name, code, or Country")
+        try:
+            from pyworldatlas_mapview import CountryMap
+        except ModuleNotFoundError as error:
+            from .exceptions import MapSupportNotInstalledError
+
+            if error.name == "pyworldatlas_mapview":
+                raise MapSupportNotInstalledError(
+                    'Map support is not installed. Run: pip install "pyworldatlas[maps]"'
+                ) from error
+            raise
+        try:
+            result = CountryMap.from_country(profile, quality=quality)
+            result.quality
+            return result
+        except RuntimeError as error:
+            from .exceptions import MapSupportNotInstalledError
+
+            raise MapSupportNotInstalledError(str(error)) from error
 
     def search_countries(self, query: str, *, limit: int = 20) -> tuple[CountryMatch, ...]:
         """Return ranked partial-name matches for human-entered text.

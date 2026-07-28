@@ -184,6 +184,27 @@ The reviewed 0.3.0 graph contains 319 canonical undirected relationships: 315
 cross-source agreements and four explicit inclusions. Two source-only
 relationships are explicitly excluded.
 
+The optional 0.9 map packs use the pinned 1:10m Admin 0 map-unit and river
+layers for visualization coverage across all 248 profiles. Overview uses the
+smaller 1:50m river layer. Map geometry is simplified into private display
+records; it is not returned as GeoJSON or public boundary coordinates.
+
+## NOAA NCEI ETOPO 2022
+
+- Purpose: optional 3D elevation surfaces.
+- Official dataset: https://doi.org/10.25921/fd45-gt74
+- Access service: NOAA PIFSC ERDDAP dataset `ETOPO_2022_v1_60s`.
+- Snapshot: global 60 arc-second ice-surface elevation sampled every five
+  source cells, captured 2026-07-28 as NetCDF classic with a SHA-256 manifest.
+- License: CC0 1.0.
+- Derived editions: Standard retains 5 arc-minute sampling; Overview samples
+  the same snapshot at 20 arc-minutes.
+- Vertical reference: EGM2008 height in metres, positive upward.
+- Limitations: generalized educational relief only; not for navigation,
+  engineering, property, hazard, or site-level elevation decisions. Coastal
+  source cells can cross a generalized outline, so implausible deep-ocean
+  samples inside a display mask are represented at sea level.
+
 ## Derived discovery values
 
 Flag emoji are calculated from the UN/ISO alpha-2 code. Population density is
@@ -201,6 +222,10 @@ remote service. Flashcard wording is package code under the project license;
 answers retain the provenance and freshness limits of their underlying fields.
 Neighbor and border-count flashcards are calculated from the reviewed 0.3.0
 graph and introduce no additional border claims.
+
+Optional maps combine only the pinned ETOPO, Natural Earth, Köppen-Geiger, and
+existing capital-coordinate layers. They do not infer political status,
+publish legal boundaries, or add unsourced country facts.
 
 Physical rankings and flashcards reuse the documented physical fields. River
 and lake counts describe source-listed records rather than exhaustive
