@@ -2,7 +2,7 @@
 
 > This file is generated from `build_data/reports/status.json`.
 
-Library version: 0.9.0
+Library version: 0.9.1
 Dataset version: 2026.07.22.7
 Schema version: 7
 
@@ -34,5 +34,5 @@ Last validation: PASS
 | 6 — Country reference and discovery | 0.6.0 | complete | Anthem titles, reviewed mottos, demonyms, complete timezone profiles, postal formats, richer currency and language metadata, profile filters, rankings, and nearest capitals | Source-scope, review-decision, typed-model, ranking, filtering, serialization, documentation, and clean-wheel release gates | 234 anthem profiles / 32 reviewed mottos / 227 demonym profiles / 246 timezone profiles / 176 postal formats / 722 country-language records | Reference-facts guide, example gallery, rankings, filters, provenance, coverage boundaries, and runnable examples | Published as v0.6.0 |
 | 7 — Physical geography | 0.7.0 | complete | Land and water area, coastline, elevation extremes, major rivers and lakes, climate summaries, Köppen-Geiger classes, physical filters, and rankings | Pinned-source coverage, typed-model, physical discovery, ranking, serialization, documentation, and release gates | 240 physical profiles / 188 rivers / 187 lakes / 241 Köppen-Geiger profiles | Physical profile guide, climate methodology, coverage rules, rankings, API reference, and runnable examples | Published as v0.7.0 |
 | 8 — Education and usability | 0.8.0 | complete | Readable country summaries, city-name and proximity discovery, coordinate display helpers, discoverable learning topics, and deterministic multiple-choice questions | Public API behavior, deterministic quiz construction, coordinate formatting, city discovery, serialization, examples, browser runtime, documentation, and supported-Python release gates | Reuses the complete reviewed 0.7 dataset without changing schema or coverage | Learning guide, classroom recipes, refreshed playground, usability examples, polished docstrings, and complete API reference | Published as v0.8.0 |
-| 9 — Optional interactive maps | 0.9.0 | complete | Optional offline 3D elevation and climate maps, browser display, HTML export, river overlays, and capital markers | Complete map-pack coverage, record integrity, viewer controls, offline HTML, clean-wheel rendering, documentation, and release gates | 248 Overview maps / 248 Standard maps from pinned elevation, climate, outline, and river snapshots | Map-edition guide, installation choices, viewer API, source limits, examples, and release instructions | Prepared for v0.9.0 |
+| 9 — Optional interactive maps | 0.9.1 | complete | Optional offline 3D elevation and climate maps, browser display, HTML export, river overlays, and capital markers | Complete map-pack coverage, record integrity, viewer controls, offline HTML, clean-wheel rendering, documentation, and release gates | 248 Overview maps / 248 Standard maps from pinned elevation, climate, outline, and river snapshots | Map-edition guide, installation choices, viewer API, source limits, examples, and release instructions | Prepared for v0.9.1 |
 | Stable offline atlas | 1.0.0 | planned | — | — | — | — | — |
