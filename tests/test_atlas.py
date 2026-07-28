@@ -503,7 +503,7 @@ class AtlasTests(unittest.TestCase):
 
     def test_dataset_versions(self):
         info = self.atlas.dataset_info()
-        self.assertEqual((info.library_version, info.schema_version, info.dataset_version), ("0.9.0", 7, "2026.07.22.7"))
+        self.assertEqual((info.library_version, info.schema_version, info.dataset_version), ("0.9.1", 7, "2026.07.22.7"))
         self.assertEqual(info.country_count, 248)
 
     def test_english_formal_names_are_sourced_and_discoverable(self):

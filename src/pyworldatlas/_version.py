@@ -1,4 +1,4 @@
 """Version constants for PyWorldAtlas."""
 
-__version__ = "0.9.0"
+__version__ = "0.9.1"
 SCHEMA_VERSION = 7

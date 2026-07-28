@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.9.1
+
+- Published the optional map viewer and both global map editions through
+  isolated Trusted Publishing jobs.
+- Kept the 0.9 map API and dataset unchanged while correcting the coordinated
+  package release configuration.
+
 ## 0.9.0
 
 - Added optional offline 3D country maps through `Atlas.map()` and the
