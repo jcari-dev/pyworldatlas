@@ -18,7 +18,7 @@ Raw snapshots are immutable and checksummed. Familiar common-name overrides
 retain the official UN M49 value and are reviewed in
 `pipeline/config/overrides.json`.
 
-The 0.9.1 package includes 248 countries and areas from the captured UN M49
+The 0.9.2 package includes 248 countries and areas from the captured UN M49
 scope, 241 primary-capital records, and 6,265 populated-place records. The
 place table contains records at or above 100,000 population plus retained
 capitals. Seven areas expose a missing capital as `None`. GeoNames-only

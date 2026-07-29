@@ -93,6 +93,35 @@ class MapViewerTests(unittest.TestCase):
         self.assertIn("Capital", names)
         self.assertEqual(len(figure.layout.updatemenus[0].buttons), 2)
 
+    def test_map_controls_adjust_height_and_optional_labels(self) -> None:
+        with Atlas() as atlas:
+            iceland = atlas.map("Iceland", quality="standard")
+        figure = iceland.figure()
+
+        self.assertEqual(
+            [step.label for step in figure.layout.sliders[0].steps],
+            ["0.5×", "1×", "1.5×", "2×", "3×"],
+        )
+        self.assertEqual(figure.layout.sliders[0].active, 1)
+        self.assertEqual(
+            [button.label for button in figure.layout.updatemenus[1].buttons],
+            ["Capital only", "All names", "River names", "Hide names"],
+        )
+        self.assertLess(figure.layout.updatemenus[0].y, 1)
+        self.assertLess(figure.layout.updatemenus[1].y, figure.layout.updatemenus[0].y)
+        annotations = figure.layout.scene.annotations
+        self.assertEqual(annotations[0].text, "<b>Reykjavík</b>")
+        self.assertTrue(annotations[0].visible)
+        self.assertEqual(
+            {annotation.text for annotation in annotations[1:]},
+            {"<b>Þjórsá</b>"},
+        )
+        self.assertTrue(all(not annotation.visible for annotation in annotations[1:]))
+
+        capital = next(trace for trace in figure.data if trace.name == "Capital")
+        self.assertEqual(capital.marker.size, 8)
+        self.assertEqual(capital.marker.line.color, "#ffffff")
+
     def test_show_opens_a_standalone_local_html_document(self) -> None:
         with Atlas() as atlas:
             brazil = atlas.map("Brazil", quality="overview")

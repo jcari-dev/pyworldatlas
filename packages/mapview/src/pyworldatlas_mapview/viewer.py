@@ -22,6 +22,14 @@ _PACKAGES = {
     "standard": "pyworldatlas_mapdata_standard",
 }
 
+_TERRAIN_HEIGHTS = (
+    ("0.5×", 0.08),
+    ("1×", 0.16),
+    ("1.5×", 0.24),
+    ("2×", 0.32),
+    ("3×", 0.48),
+)
+
 _ELEVATION_SCALE = (
     (0.00, "#16796f"),
     (0.12, "#55a868"),
@@ -237,9 +245,10 @@ class CountryMap:
     def figure(self) -> object:
         """Return a ready-to-display ``plotly.graph_objects.Figure``.
 
-        The figure contains elevation and climate surface controls, a country
-        outline, source-provided river centerlines, and the primary capital
-        when coordinates are available.
+        The figure contains elevation and climate surface controls, terrain
+        height choices, optional river and capital labels, a country outline,
+        source-provided river centerlines, and the primary capital when
+        coordinates are available.
         """
         import plotly.graph_objects as go
 
@@ -289,6 +298,7 @@ class CountryMap:
             ),
         ]
         river_parts = [river["points"] for river in payload["rivers"]]
+        river_annotations: list[dict[str, object]] = []
         if river_parts:
             river_x, river_y, river_z = _flatten_lines(
                 river_parts, longitudes, latitudes, elevation, 55
@@ -310,37 +320,219 @@ class CountryMap:
                     showlegend=True,
                 )
             )
+            longest_river_parts: dict[str, list[list[float]]] = {}
+            for river in payload["rivers"]:
+                name = str(river["name"])
+                points = river["points"]
+                if not points:
+                    continue
+                if len(points) > len(longest_river_parts.get(name, [])):
+                    longest_river_parts[name] = points
+            for name, points in longest_river_parts.items():
+                longitude, latitude = points[len(points) // 2]
+                river_annotations.append(
+                    {
+                        "x": longitude,
+                        "y": latitude,
+                        "z": _nearest_elevation(
+                            longitude,
+                            latitude,
+                            longitudes,
+                            latitudes,
+                            elevation,
+                        )
+                        + 110,
+                        "text": f"<b>{name}</b>",
+                        "showarrow": False,
+                        "visible": False,
+                        "bgcolor": "rgba(255, 255, 255, 0.88)",
+                        "bordercolor": "#168aad",
+                        "borderpad": 3,
+                        "font": {"color": "#075985", "size": 12},
+                    }
+                )
+        capital_annotation: dict[str, object] | None = None
         if self.capital_latitude is not None and self.capital_longitude is not None:
             capital_longitude = self.capital_longitude
             while capital_longitude < longitudes[0]:
                 capital_longitude += 360.0
             while capital_longitude > longitudes[-1]:
                 capital_longitude -= 360.0
+            capital_elevation = _nearest_elevation(
+                capital_longitude,
+                self.capital_latitude,
+                longitudes,
+                latitudes,
+                elevation,
+            )
             traces.append(
                 go.Scatter3d(
                     x=[capital_longitude],
                     y=[self.capital_latitude],
-                    z=[
-                        _nearest_elevation(
-                            capital_longitude,
-                            self.capital_latitude,
-                            longitudes,
-                            latitudes,
-                            elevation,
-                        )
-                        + 120
-                    ],
-                    text=[self.capital_name],
-                    mode="markers+text",
-                    textposition="top center",
-                    marker={"color": "#d1495b", "size": 5, "symbol": "diamond"},
-                    hovertemplate=f"{self.capital_name}<extra>Capital</extra>",
+                    z=[capital_elevation + 125],
+                    mode="markers",
+                    marker={
+                        "color": "#ff3b68",
+                        "size": 8,
+                        "symbol": "diamond",
+                        "line": {"color": "#ffffff", "width": 3},
+                    },
+                    hovertemplate=(
+                        f"<b>{self.capital_name}</b><br>Capital of {self.country_name}"
+                        "<extra></extra>"
+                    ),
                     name="Capital",
                     showlegend=False,
                 )
             )
+            capital_annotation = {
+                "x": capital_longitude,
+                "y": self.capital_latitude,
+                "z": capital_elevation + 125,
+                "text": f"<b>{self.capital_name}</b>",
+                "showarrow": True,
+                "arrowhead": 2,
+                "arrowcolor": "#b42346",
+                "ax": 0,
+                "ay": -34,
+                "visible": True,
+                "bgcolor": "rgba(255, 255, 255, 0.94)",
+                "bordercolor": "#ff3b68",
+                "borderpad": 4,
+                "font": {"color": "#7f1734", "size": 13},
+            }
         present = sorted(int(index) for index in payload["climateLegend"])
+        map_annotations = (
+            ([capital_annotation] if capital_annotation is not None else [])
+            + river_annotations
+        )
+        capital_annotation_index = 0 if capital_annotation is not None else None
+        river_annotation_indexes = tuple(
+            range(1 if capital_annotation is not None else 0, len(map_annotations))
+        )
+
+        def label_visibility(
+            *, capital: bool, rivers: bool
+        ) -> dict[str, bool]:
+            visibility: dict[str, bool] = {}
+            if capital_annotation_index is not None:
+                visibility[
+                    f"scene.annotations[{capital_annotation_index}].visible"
+                ] = capital
+            for index in river_annotation_indexes:
+                visibility[f"scene.annotations[{index}].visible"] = rivers
+            return visibility
+
+        label_buttons: list[dict[str, object]] = []
+        if capital_annotation_index is not None:
+            label_buttons.extend(
+                [
+                    {
+                        "label": "Capital only",
+                        "method": "relayout",
+                        "args": [label_visibility(capital=True, rivers=False)],
+                    },
+                    {
+                        "label": "All names",
+                        "method": "relayout",
+                        "args": [label_visibility(capital=True, rivers=True)],
+                    },
+                    {
+                        "label": "River names",
+                        "method": "relayout",
+                        "args": [label_visibility(capital=False, rivers=True)],
+                    },
+                    {
+                        "label": "Hide names",
+                        "method": "relayout",
+                        "args": [label_visibility(capital=False, rivers=False)],
+                    },
+                ]
+            )
+        elif river_annotation_indexes:
+            label_buttons.extend(
+                [
+                    {
+                        "label": "Hide names",
+                        "method": "relayout",
+                        "args": [label_visibility(capital=False, rivers=False)],
+                    },
+                    {
+                        "label": "River names",
+                        "method": "relayout",
+                        "args": [label_visibility(capital=False, rivers=True)],
+                    },
+                ]
+            )
         figure = go.Figure(data=traces)
+        update_menus: list[dict[str, object]] = [
+            {
+                "type": "buttons",
+                "direction": "right",
+                "x": 0.03,
+                "y": 0.99,
+                "showactive": True,
+                "buttons": [
+                    {
+                        "label": "Elevation",
+                        "method": "restyle",
+                        "args": [
+                            {
+                                "surfacecolor": [elevation],
+                                "colorscale": [list(_ELEVATION_SCALE)],
+                                "cmin": [minimum],
+                                "cmax": [maximum],
+                                "colorbar": [
+                                    {
+                                        "title": {"text": "Elevation (m)"},
+                                        "thickness": 14,
+                                        "len": 0.68,
+                                    }
+                                ],
+                            },
+                            [0],
+                        ],
+                    },
+                    {
+                        "label": "Climate",
+                        "method": "restyle",
+                        "args": [
+                            {
+                                "surfacecolor": [climate],
+                                "colorscale": [_climate_scale()],
+                                "cmin": [0.5],
+                                "cmax": [30.5],
+                                "colorbar": [
+                                    {
+                                        "title": {"text": "Climate"},
+                                        "tickvals": present,
+                                        "ticktext": [
+                                            payload["climateLegend"][str(index)]["code"]
+                                            for index in present
+                                        ],
+                                        "thickness": 14,
+                                        "len": 0.68,
+                                    }
+                                ],
+                            },
+                            [0],
+                        ],
+                    },
+                ],
+            }
+        ]
+        if label_buttons:
+            update_menus.append(
+                {
+                    "type": "dropdown",
+                    "direction": "down",
+                    "x": 0.03,
+                    "y": 0.89,
+                    "showactive": True,
+                    "active": 0,
+                    "buttons": label_buttons,
+                }
+            )
         figure.update_layout(
             title={
                 "text": f"{self.country_name} · {self.quality.title()} 3D map",
@@ -348,12 +540,13 @@ class CountryMap:
                 "xanchor": "left",
             },
             template="plotly_white",
-            margin={"l": 0, "r": 20, "t": 88, "b": 58},
-            legend={"orientation": "h", "y": 1.02, "x": 0.72},
+            margin={"l": 0, "r": 20, "t": 122, "b": 66},
+            legend={"orientation": "h", "y": 1.08, "x": 0.76},
             uirevision=f"pyworldatlas-{self.alpha2}-{self.quality}",
             scene={
                 "aspectmode": "manual",
                 "aspectratio": {"x": 1, "y": 0.92, "z": 0.16},
+                "annotations": map_annotations,
                 "camera": {
                     "eye": {"x": 0.35, "y": -0.55, "z": 0.68},
                     "projection": {"type": "orthographic"},
@@ -362,50 +555,25 @@ class CountryMap:
                 "yaxis": {"title": "Latitude", "showbackground": False},
                 "zaxis": {"title": "", "showticklabels": False, "showbackground": False},
             },
-            updatemenus=[
+            updatemenus=update_menus,
+            sliders=[
                 {
-                    "type": "buttons",
-                    "direction": "right",
-                    "x": 0.03,
-                    "y": 1.02,
-                    "showactive": True,
-                    "buttons": [
+                    "active": 1,
+                    "x": 0.35,
+                    "y": 1.08,
+                    "len": 0.3,
+                    "currentvalue": {
+                        "prefix": "Terrain height: ",
+                        "font": {"size": 12, "color": "#334e68"},
+                    },
+                    "pad": {"t": 22},
+                    "steps": [
                         {
-                            "label": "Elevation",
-                            "method": "restyle",
-                            "args": [
-                                {
-                                    "surfacecolor": [elevation],
-                                    "colorscale": [list(_ELEVATION_SCALE)],
-                                    "cmin": [minimum],
-                                    "cmax": [maximum],
-                                    "colorbar": [{"title": {"text": "Elevation (m)"}, "thickness": 14, "len": 0.68}],
-                                },
-                                [0],
-                            ],
-                        },
-                        {
-                            "label": "Climate",
-                            "method": "restyle",
-                            "args": [
-                                {
-                                    "surfacecolor": [climate],
-                                    "colorscale": [_climate_scale()],
-                                    "cmin": [0.5],
-                                    "cmax": [30.5],
-                                    "colorbar": [
-                                        {
-                                            "title": {"text": "Climate"},
-                                            "tickvals": present,
-                                            "ticktext": [payload["climateLegend"][str(index)]["code"] for index in present],
-                                            "thickness": 14,
-                                            "len": 0.68,
-                                        }
-                                    ],
-                                },
-                                [0],
-                            ],
-                        },
+                            "label": label,
+                            "method": "relayout",
+                            "args": [{"scene.aspectratio.z": height}],
+                        }
+                        for label, height in _TERRAIN_HEIGHTS
                     ],
                 }
             ],

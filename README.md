@@ -27,7 +27,7 @@ cities, distances, borders, optional 3D maps, and learning tools into ordinary
 Python objects for developers, classrooms, and curious learners. No API key is
 required, and installed features work offline.
 
-[![PyWorldAtlas Standard 3D elevation map of Iceland](https://raw.githubusercontent.com/jcari-dev/pyworldatlas/main/docs/source/_static/iceland-standard-map.jpg)](https://jcari-dev.github.io/pyworldatlas-documentation/maps.html)
+[![PyWorldAtlas Standard 3D elevation map of Iceland](https://raw.githubusercontent.com/jcari-dev/pyworldatlas/main/docs/source/_static/iceland-standard-map.png)](https://jcari-dev.github.io/pyworldatlas-documentation/maps.html)
 
 *Iceland rendered by the Standard map edition with elevation, coastline,
 Reykjavík, a river overlay, and source notes. Select the image for the map
@@ -92,9 +92,10 @@ with Atlas() as atlas:
 
 The one-line call opens a local, rotatable 3D map in the default browser with
 elevation, Köppen-Geiger climate coloring, rivers, the country outline, and the
-primary capital. The viewer and data remain offline after installation. Use
-`atlas.map("Iceland").write_html("iceland-map.html")` to create a standalone
-document for a lesson or presentation.
+primary capital. Adjust terrain height, show every bundled river name, or hide
+labels for a clean presentation view. The viewer and data remain offline after
+installation. Use `atlas.map("Iceland").write_html("iceland-map.html")` to
+create a standalone document for a lesson or presentation.
 
 [Compare the map editions and learn the API](https://jcari-dev.github.io/pyworldatlas-documentation/maps.html).
 
@@ -105,7 +106,7 @@ document for a lesson or presentation.
 | Country profiles | Codes, names, capitals, population, currencies, languages, timezones, postal formats, anthem titles, reviewed mottos, and demonyms |
 | Names and writing systems | English identities, selected local-language names, scripts, reviewed official forms, and source-provided romanization |
 | Physical geography | Land and water area, coastline, elevation extremes, rivers, lakes, and climate summaries |
-| Interactive maps | Optional offline 3D elevation and climate surfaces for all 248 profiles, with rivers and capitals |
+| Interactive maps | Optional offline 3D elevation and climate surfaces for all 248 profiles, with terrain-height controls and selectable river and capital labels |
 | Places and measurement | 6,265 cities and capitals with search, nearby-place discovery, readable coordinates, distance, compass direction, bearing, and midpoint calculations |
 | Land connections | Reviewed neighbors, shared neighbors, shortest border paths, crossings, and connected components |
 | Learning tools | Readable profiles, stable samples, flashcards, deterministic multiple-choice questions, rankings, discovery cards, and Unicode-preserving JSON |
@@ -172,7 +173,7 @@ the formal publication standard.
 
 ## Coverage at a glance
 
-Library `0.9.1` includes dataset `2026.07.22.7` and schema `7`.
+Library `0.9.2` includes dataset `2026.07.22.7` and schema `7`.
 
 | Dataset area | Coverage |
 |---|---:|
