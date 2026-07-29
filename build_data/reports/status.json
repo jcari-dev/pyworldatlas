@@ -111,7 +111,7 @@
       "tests": "Complete map-pack coverage, record integrity, viewer controls, offline HTML, clean-wheel rendering, documentation, and release gates",
       "dataset": "248 Overview maps / 248 Standard maps from pinned elevation, climate, outline, and river snapshots",
       "docs": "Map-edition guide, installation choices, viewer API, source limits, examples, and release instructions",
-      "release": "Prepared for v0.9.0"
+      "release": "Published in v0.9.0"
     },
     {
       "name": "Stable offline atlas",

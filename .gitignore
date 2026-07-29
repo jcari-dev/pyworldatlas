@@ -1,14 +1,34 @@
+# Python caches and test output
 __pycache__/
 *.py[cod]
 *.egg-info/
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.tox/
+.nox/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# Local environments and editor settings
 /.venv*/
 /.tmp-*/
-dist/
-build/
-docs/_build/
-build_data/normalized/
-build_data/output/
-build_data/reports/logs/
 /.agents/
+/.idea/
 /.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Package and documentation builds
+/dist/
+/build/
+/docs/_build/
+
+# Regenerated pipeline output
+/build_data/normalized/
+/build_data/output/
+/build_data/reports/logs/
