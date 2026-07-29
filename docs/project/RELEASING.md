@@ -57,18 +57,21 @@ remains in this repository under `docs/source/`.
 
 Documentation-only changes do not require a new PyPI version. Changes to the
 documentation, examples, runtime documentation surface, or map viewer run the
-dedicated documentation workflow after they are merged to `main`.
+dedicated documentation workflow after they are merged to `main`. That workflow
+deploys only when the version in the source tree is already available on PyPI;
+new-release documentation is deployed by the release workflow after package
+publication succeeds.
 
-## Prepare version 0.9.2
+## Prepare version 0.9.3
 
 From the repository root on a focused release branch:
 
 ```console
 python maintain.py bootstrap
-python maintain.py prepare-release 0.9.2
+python maintain.py prepare-release 0.9.3
 git status
 git add -A
-git commit -m "Prepare PyWorldAtlas 0.9.2"
+git commit -m "Prepare PyWorldAtlas 0.9.3"
 git push -u origin HEAD
 ```
 
@@ -81,7 +84,7 @@ upload dialog, or file preview holding it. A separate ignored output directory
 can also be used:
 
 ```console
-python maintain.py prepare-release 0.9.2 --output-dir build/release-dist
+python maintain.py prepare-release 0.9.3 --output-dir build/release-dist
 ```
 
 ## Tag and publish
@@ -91,10 +94,10 @@ After the pull request is merged, tag the exact merged `main` commit:
 ```console
 git switch main
 git pull --ff-only origin main
-python maintain.py prepare-release 0.9.2
+python maintain.py prepare-release 0.9.3
 git status
-git tag -a v0.9.2 -m "Release 0.9.2"
-git push origin v0.9.2
+git tag -a v0.9.3 -m "Release 0.9.3"
+git push origin v0.9.3
 ```
 
 The tag starts the release workflow. Approve the protected PyPI environments
@@ -111,7 +114,7 @@ Create a clean environment and install the recommended map edition from PyPI:
 
 ```console
 py -3.10 -m venv .venv-live
-.venv-live\Scripts\python -m pip install --no-cache-dir "pyworldatlas[maps]==0.9.2"
+.venv-live\Scripts\python -m pip install --no-cache-dir "pyworldatlas[maps]==0.9.3"
 .venv-live\Scripts\python -c "from pyworldatlas import Atlas; a=Atlas(); m=a.map('Brazil'); print(a.dataset_info().library_version, m.quality, m.resolution_arc_minutes); p=m.write_html('brazil-map.html'); print(p); a.close()"
 ```
 

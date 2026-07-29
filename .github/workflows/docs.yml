@@ -34,13 +34,26 @@ jobs:
         run: python -m pip install -r docs/requirements.txt -e . -e packages/mapview -e packages/mapdata-overview -e packages/mapdata-standard
       - name: Build and test documentation
         run: python maintain.py docs
+      - name: Check published package version
+        id: pypi
+        shell: bash
+        run: |
+          VERSION="$(python -c 'import pyworldatlas; print(pyworldatlas.__version__)')"
+          if python -c "import urllib.request; urllib.request.urlopen('https://pypi.org/pypi/pyworldatlas/${VERSION}/json', timeout=15)"; then
+            echo "published=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "published=false" >> "$GITHUB_OUTPUT"
+            echo "PyWorldAtlas ${VERSION} is not published yet; the release workflow will deploy these docs after publication."
+          fi
       - name: Check out documentation repository
+        if: steps.pypi.outputs.published == 'true'
         uses: actions/checkout@v6
         with:
           repository: jcari-dev/pyworldatlas-documentation
           token: ${{ secrets.DOCS_DEPLOY_TOKEN }}
           path: documentation-site
       - name: Publish generated HTML
+        if: steps.pypi.outputs.published == 'true'
         run: |
           rsync --archive --delete --exclude=.git docs/_build/html/ documentation-site/
           touch documentation-site/.nojekyll

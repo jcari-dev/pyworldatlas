@@ -36,7 +36,7 @@ guide.*
 ## Install
 
 ```console
-python -m pip install --upgrade pyworldatlas
+python -m pip install pyworldatlas
 ```
 
 PyWorldAtlas supports Python 3.10 through 3.14. The installed package works
@@ -45,11 +45,12 @@ offline and has no third-party runtime dependencies.
 Add the recommended global 3D map edition when you want interactive terrain:
 
 ```console
-python -m pip install --upgrade "pyworldatlas[maps]"
+python -m pip install "pyworldatlas[maps]"
 ```
 
 Use `pyworldatlas[maps-overview]` for the smaller Overview edition. Map data is
-optional and never enlarges the ordinary package installation.
+optional, so the core installation stays unchanged. To replace an older
+installation, add `--upgrade` to the same command.
 
 ## Meet a country
 
@@ -173,7 +174,7 @@ the formal publication standard.
 
 ## Coverage at a glance
 
-Library `0.9.2` includes dataset `2026.07.22.7` and schema `7`.
+Library `0.9.3` includes dataset `2026.07.22.7` and schema `7`.
 
 | Dataset area | Coverage |
 |---|---:|
@@ -196,8 +197,8 @@ for interpretation limits.
 Field families use defined source roles rather than one unreviewed compilation.
 The builder retains source snapshots, checksums, review decisions, and exact
 coverage gates. Sources include United Nations M49, GeoNames, Unicode CLDR,
-UNGEGN, Natural Earth, the CIA World Factbook, Wikidata, IANA registries, and
-the Beck et al. Köppen-Geiger dataset, and NOAA NCEI ETOPO 2022.
+UNGEGN, Natural Earth, the CIA World Factbook, Wikidata, IANA registries, the
+Beck et al. Köppen-Geiger dataset, and NOAA NCEI ETOPO 2022.
 
 - [Data sources and freshness](https://jcari-dev.github.io/pyworldatlas-documentation/data_sources.html)
 - [Data quality and limitations](https://jcari-dev.github.io/pyworldatlas-documentation/data_quality.html)
