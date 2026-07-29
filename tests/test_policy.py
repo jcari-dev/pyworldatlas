@@ -180,7 +180,7 @@ class EducationalPolicyTests(unittest.TestCase):
         self.assertEqual(image.read_bytes()[:3], b"\xff\xd8\xff")
         self.assertGreater(compatibility_image.stat().st_size, 90_000)
         self.assertIn(
-            'viewBox="0 0 1250 1050"',
+            'viewBox="0 0 2407 1615"',
             compatibility_image.read_text(encoding="utf-8"),
         )
         self.assertIn("iceland-standard-map.jpg", docs_index)
