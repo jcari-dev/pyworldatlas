@@ -164,11 +164,33 @@ class EducationalPolicyTests(unittest.TestCase):
             ["quickstart", "playground", "installation"],
         )
         self.assertFalse((ROOT / "docs/source/explore.rst").exists())
-        self.assertIn("url=quickstart.html", redirect)
+        self.assertIn("url=index.html#explore-the-atlas", redirect)
         self.assertIn(
             'html_extra_path = ["robots.txt", "explore.html", ".gitignore"]',
             docs_config,
         )
+
+    def test_installation_and_api_are_reader_friendly(self):
+        installation = (ROOT / "docs/source/installation.rst").read_text(
+            encoding="utf-8"
+        )
+        api = (ROOT / "docs/source/api.rst").read_text(encoding="utf-8")
+        maps = (ROOT / "docs/source/maps.rst").read_text(encoding="utf-8")
+        styles = (ROOT / "docs/source/_static/pyworldatlas.css").read_text(
+            encoding="utf-8"
+        )
+        rendered_installation = re.sub(r"\s+", " ", installation)
+
+        self.assertIn("python -m pip install pyworldatlas", installation)
+        self.assertIn(
+            "only needed when replacing an older installed version",
+            rendered_installation,
+        )
+        self.assertIn("Find the right object", api)
+        self.assertIn("How to read an entry", api)
+        self.assertIn("Country profile", api)
+        self.assertIn(".rst-content dl.py.class > dd > dl.py", styles)
+        self.assertNotIn("Drau", maps)
 
     def test_map_warning_is_specific_and_candid(self):
         maps = (ROOT / "docs/source/maps.rst").read_text(encoding="utf-8")

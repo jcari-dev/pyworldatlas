@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.9.3
+
+- Reorganized the API reference around common tasks and gave every generated
+  class, method, and property a consistent, readable layout.
+- Clarified first-time installation, optional map editions, and the separate
+  command for upgrading an existing installation.
+- Refreshed the Explore section and polished the shared GitHub and PyPI project
+  page without changing the public API or dataset.
+
 ## 0.9.2
 
 - Added terrain-height controls and selectable capital and river labels to the
