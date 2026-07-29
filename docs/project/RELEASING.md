@@ -57,7 +57,10 @@ remains in this repository under `docs/source/`.
 
 Documentation-only changes do not require a new PyPI version. Changes to the
 documentation, examples, runtime documentation surface, or map viewer run the
-dedicated documentation workflow after they are merged to `main`.
+dedicated documentation workflow after they are merged to `main`. That workflow
+deploys only when the version in the source tree is already available on PyPI;
+new-release documentation is deployed by the release workflow after package
+publication succeeds.
 
 ## Prepare version 0.9.3
 

@@ -8,6 +8,8 @@
   command for upgrading an existing installation.
 - Refreshed the Explore section and polished the shared GitHub and PyPI project
   page without changing the public API or dataset.
+- Kept documentation deployment aligned with PyPI so the browser playground
+  never advertises an unpublished package version.
 
 ## 0.9.2
 

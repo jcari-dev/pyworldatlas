@@ -212,10 +212,18 @@ class EducationalPolicyTests(unittest.TestCase):
         generated_ignore = (ROOT / "docs/source/.gitignore").read_text(
             encoding="utf-8"
         )
+        workflow = (ROOT / ".github/workflows/docs.yml").read_text(
+            encoding="utf-8"
+        )
 
         self.assertIn('"-d", "docs/_build/doctrees/html"', maintainer)
         self.assertIn('"-d", "docs/_build/doctrees/doctest"', maintainer)
         self.assertIn("/.doctrees/", generated_ignore)
+        self.assertIn("https://pypi.org/pypi/pyworldatlas/${VERSION}/json", workflow)
+        self.assertEqual(
+            workflow.count("if: steps.pypi.outputs.published == 'true'"),
+            2,
+        )
 
     def test_map_showcase_is_published_on_both_front_pages(self):
         docs_index = (ROOT / "docs/source/index.rst").read_text(encoding="utf-8")
