@@ -441,8 +441,16 @@ def docs(wheel: Path | None = None) -> None:
                 tool_paths.append(user_site)
         env["PYTHONPATH"] = os.pathsep.join(tool_paths)
     try:
-        run([str(python), "-m", "sphinx", "-W", "--keep-going", "-b", "html", "docs/source", "docs/_build/html"], env=env)
-        run([str(python), "-m", "sphinx", "-W", "--keep-going", "-b", "doctest", "docs/source", "docs/_build/doctest"], env=env)
+        run([
+            str(python), "-m", "sphinx", "-W", "--keep-going",
+            "-d", "docs/_build/doctrees/html",
+            "-b", "html", "docs/source", "docs/_build/html",
+        ], env=env)
+        run([
+            str(python), "-m", "sphinx", "-W", "--keep-going",
+            "-d", "docs/_build/doctrees/doctest",
+            "-b", "doctest", "docs/source", "docs/_build/doctest",
+        ], env=env)
     finally:
         if temporary is not None:
             temporary.cleanup()

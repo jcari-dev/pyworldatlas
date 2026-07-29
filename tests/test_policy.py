@@ -87,6 +87,7 @@ class EducationalPolicyTests(unittest.TestCase):
         self.assertIn("does not publish their coordinates", roadmap)
         self.assertEqual(status["milestones"][-2]["name"], "9 — Optional interactive maps")
         self.assertEqual(status["milestones"][-2]["status"], "complete")
+        self.assertEqual(status["milestones"][-2]["release"], "Published in v0.9.0")
 
         for path in (
             "SECURITY.md",
@@ -165,8 +166,34 @@ class EducationalPolicyTests(unittest.TestCase):
         self.assertFalse((ROOT / "docs/source/explore.rst").exists())
         self.assertIn("url=quickstart.html", redirect)
         self.assertIn(
-            'html_extra_path = ["robots.txt", "explore.html"]', docs_config
+            'html_extra_path = ["robots.txt", "explore.html", ".gitignore"]',
+            docs_config,
         )
+
+    def test_map_warning_is_specific_and_candid(self):
+        maps = (ROOT / "docs/source/maps.rst").read_text(encoding="utf-8")
+        rendered_words = re.sub(r"\s+", " ", maps)
+        other_pages = "\n".join(
+            path.read_text(encoding="utf-8")
+            for path in (ROOT / "docs/source").glob("*.rst")
+            if path.name != "maps.rst"
+        )
+
+        self.assertIn(".. warning::", maps)
+        self.assertIn("Experimental feature", maps)
+        self.assertIn("bug-shaped headache", rendered_words)
+        self.assertNotIn("Experimental feature", other_pages)
+        self.assertNotIn("bug-shaped headache", other_pages)
+
+    def test_documentation_deploy_excludes_build_caches(self):
+        maintainer = (ROOT / "maintain.py").read_text(encoding="utf-8")
+        generated_ignore = (ROOT / "docs/source/.gitignore").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertIn('"-d", "docs/_build/doctrees/html"', maintainer)
+        self.assertIn('"-d", "docs/_build/doctrees/doctest"', maintainer)
+        self.assertIn("/.doctrees/", generated_ignore)
 
     def test_map_showcase_is_published_on_both_front_pages(self):
         docs_index = (ROOT / "docs/source/index.rst").read_text(encoding="utf-8")
