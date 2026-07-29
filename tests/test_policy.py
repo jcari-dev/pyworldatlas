@@ -172,20 +172,20 @@ class EducationalPolicyTests(unittest.TestCase):
         docs_index = (ROOT / "docs/source/index.rst").read_text(encoding="utf-8")
         maps = (ROOT / "docs/source/maps.rst").read_text(encoding="utf-8")
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
-        image = ROOT / "docs/source/_static/iceland-standard-map.jpg"
+        image = ROOT / "docs/source/_static/iceland-standard-map.png"
         compatibility_image = ROOT / "docs/source/_static/iceland-standard-map.svg"
 
         self.assertTrue(image.is_file())
-        self.assertGreater(image.stat().st_size, 60_000)
-        self.assertEqual(image.read_bytes()[:3], b"\xff\xd8\xff")
-        self.assertGreater(compatibility_image.stat().st_size, 90_000)
+        self.assertGreater(image.stat().st_size, 300_000)
+        self.assertEqual(image.read_bytes()[:8], b"\x89PNG\r\n\x1a\n")
+        self.assertGreater(compatibility_image.stat().st_size, 400_000)
         self.assertIn(
-            'viewBox="0 0 2407 1615"',
+            'viewBox="0 0 1702 1138"',
             compatibility_image.read_text(encoding="utf-8"),
         )
-        self.assertIn("iceland-standard-map.jpg", docs_index)
-        self.assertIn("iceland-standard-map.jpg", maps)
-        self.assertIn("iceland-standard-map.jpg", readme)
+        self.assertIn("iceland-standard-map.png", docs_index)
+        self.assertIn("iceland-standard-map.png", maps)
+        self.assertIn("iceland-standard-map.png", readme)
         self.assertIn('atlas.map("Iceland").show()', docs_index)
         self.assertIn('atlas.map("Iceland").show()', readme)
 

@@ -53,6 +53,14 @@ OUTPUTS = {
 _NC_TYPE_WIDTH = {1: 1, 2: 1, 3: 2, 4: 4, 5: 4, 6: 8}
 _NC_ARRAY_TYPE = {1: "b", 2: "b", 3: "h", 4: "i", 5: "f", 6: "d"}
 
+# Natural Earth 5.1 labels the downstream Þjórsá feature as "Drau" even
+# though its geometry continues the Icelandic river and its dissolve key is
+# ``303Thjrs``. The corrected name is verified against Iceland's national
+# natural-science institute: https://www.ni.is/en/geology/water/rivers
+_RIVER_NAME_CORRECTIONS = {
+    "1159116727": "Þjórsá",
+}
+
 
 @dataclass(frozen=True)
 class NetCdfVariable:
@@ -353,9 +361,16 @@ def _sample_climate(image: Image.Image, longitude: float, latitude: float) -> in
 def _river_parts(path: Path) -> list[tuple[str, list[tuple[float, float]], tuple[float, float, float, float]]]:
     result = []
     for record, parts in _load_shapefile(path):
-        name = next(
-            (_clean(record.get(field)) for field in ("name_en", "NAME_EN", "name", "NAME") if _clean(record.get(field))),
-            "River",
+        name = _RIVER_NAME_CORRECTIONS.get(
+            _clean(record.get("ne_id")),
+            next(
+                (
+                    _clean(record.get(field))
+                    for field in ("name_en", "NAME_EN", "name", "NAME")
+                    if _clean(record.get(field))
+                ),
+                "River",
+            ),
         )
         for part in parts:
             if len(part) < 2:
