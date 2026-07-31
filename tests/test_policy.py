@@ -230,21 +230,27 @@ class EducationalPolicyTests(unittest.TestCase):
         maps = (ROOT / "docs/source/maps.rst").read_text(encoding="utf-8")
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         image = ROOT / "docs/source/_static/iceland-standard-map.png"
+        animation = ROOT / "docs/source/_static/iceland-rotation.gif"
         compatibility_image = ROOT / "docs/source/_static/iceland-standard-map.svg"
 
         self.assertTrue(image.is_file())
         self.assertGreater(image.stat().st_size, 300_000)
         self.assertEqual(image.read_bytes()[:8], b"\x89PNG\r\n\x1a\n")
+        self.assertTrue(animation.is_file())
+        self.assertGreater(animation.stat().st_size, 1_000_000)
+        self.assertIn(animation.read_bytes()[:6], {b"GIF87a", b"GIF89a"})
         self.assertGreater(compatibility_image.stat().st_size, 400_000)
         self.assertIn(
             'viewBox="0 0 1702 1138"',
             compatibility_image.read_text(encoding="utf-8"),
         )
         self.assertIn("iceland-standard-map.png", docs_index)
-        self.assertIn("iceland-standard-map.png", maps)
-        self.assertIn("iceland-standard-map.png", readme)
-        self.assertIn('atlas.map("Iceland").show()', docs_index)
-        self.assertIn('atlas.map("Iceland").show()', readme)
+        self.assertIn("iceland-rotation.gif", docs_index)
+        self.assertIn("iceland-rotation.gif", maps)
+        self.assertIn("iceland-rotation.gif", readme)
+        self.assertIn('atlas.map("Iceland").show(auto_rotate=True)', docs_index)
+        self.assertIn('atlas.map("Iceland").show(auto_rotate=True)', readme)
+        self.assertIn("tools/create_map_gif.py", maps)
 
     def test_each_pypi_project_has_an_isolated_publish_job(self):
         workflow = (ROOT / ".github/workflows/release.yml").read_text(

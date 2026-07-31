@@ -382,6 +382,8 @@ def demo_maps(wheels: list[Path]) -> None:
         clean_env = os.environ.copy()
         clean_env.pop("PYTHONPATH", None)
         clean_env["PYTHONUTF8"] = "1"
+        tool_paths = [path for path in site.getsitepackages() if Path(path).exists()]
+        clean_env["PYTHONPATH"] = os.pathsep.join(tool_paths)
         distribution_directory = wheels[0].parent
         run(
             [
@@ -392,7 +394,12 @@ def demo_maps(wheels: list[Path]) -> None:
                 "--no-index",
                 "--find-links",
                 str(distribution_directory),
-                f"pyworldatlas[maps,maps-overview]=={project_version()}",
+                "--no-deps",
+                "--force-reinstall",
+                f"pyworldatlas=={project_version()}",
+                f"pyworldatlas-mapview=={project_version()}",
+                f"pyworldatlas-mapdata-overview=={project_version()}",
+                f"pyworldatlas-mapdata-standard=={project_version()}",
             ],
             env=clean_env,
         )

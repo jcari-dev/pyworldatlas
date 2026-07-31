@@ -27,11 +27,11 @@ cities, distances, borders, optional 3D maps, and learning tools into ordinary
 Python objects for developers, classrooms, and curious learners. No API key is
 required, and installed features work offline.
 
-[![PyWorldAtlas Standard 3D elevation map of Iceland](https://raw.githubusercontent.com/jcari-dev/pyworldatlas/main/docs/source/_static/iceland-standard-map.png)](https://jcari-dev.github.io/pyworldatlas-documentation/maps.html)
+[![Animated PyWorldAtlas Standard 3D elevation map of Iceland](https://raw.githubusercontent.com/jcari-dev/pyworldatlas/main/docs/source/_static/iceland-rotation.gif)](https://jcari-dev.github.io/pyworldatlas-documentation/maps.html)
 
-*Iceland rendered by the Standard map edition with elevation, coastline,
-Reykjavík, a river overlay, and source notes. Select the image for the map
-guide.*
+*One complete rotation of Iceland rendered by the Standard map edition with
+elevation, coastline, Reykjavík, a river overlay, and source notes. Select the
+animation for the map guide.*
 
 ## Install
 
@@ -88,15 +88,17 @@ remain usable after the atlas is closed.
 from pyworldatlas import Atlas
 
 with Atlas() as atlas:
-    atlas.map("Iceland").show()
+    atlas.map("Iceland").show(auto_rotate=True)
 ```
 
 The one-line call opens a local, rotatable 3D map in the default browser with
 elevation, Köppen-Geiger climate coloring, rivers, the country outline, and the
 primary capital. Adjust terrain height, show every bundled river name, or hide
-labels for a clean presentation view. The viewer and data remain offline after
-installation. Use `atlas.map("Iceland").write_html("iceland-map.html")` to
-create a standalone document for a lesson or presentation.
+labels for a clean presentation view. Play or pause rotation, adjust its speed,
+and download a high-resolution PNG of the current angle. The viewer and data
+remain offline after installation. Use
+`atlas.map("Iceland").write_html("iceland-map.html", auto_rotate=True)` to
+create a standalone rotating document for a lesson or presentation.
 
 [Compare the map editions and learn the API](https://jcari-dev.github.io/pyworldatlas-documentation/maps.html).
 
@@ -107,7 +109,7 @@ create a standalone document for a lesson or presentation.
 | Country profiles | Codes, names, capitals, population, currencies, languages, timezones, postal formats, anthem titles, reviewed mottos, and demonyms |
 | Names and writing systems | English identities, selected local-language names, scripts, reviewed official forms, and source-provided romanization |
 | Physical geography | Land and water area, coastline, elevation extremes, rivers, lakes, and climate summaries |
-| Interactive maps | Optional offline 3D elevation and climate surfaces for all 248 profiles, with terrain-height controls and selectable river and capital labels |
+| Interactive maps | Optional offline 3D elevation and climate surfaces for all 248 profiles, with rotation and speed controls, crisp PNG export, terrain-height settings, and selectable labels |
 | Places and measurement | 6,265 cities and capitals with search, nearby-place discovery, readable coordinates, distance, compass direction, bearing, and midpoint calculations |
 | Land connections | Reviewed neighbors, shared neighbors, shortest border paths, crossings, and connected components |
 | Learning tools | Readable profiles, stable samples, flashcards, deterministic multiple-choice questions, rankings, discovery cards, and Unicode-preserving JSON |
@@ -174,7 +176,7 @@ the formal publication standard.
 
 ## Coverage at a glance
 
-Library `0.9.3` includes dataset `2026.07.22.7` and schema `7`.
+Library `0.9.4` includes dataset `2026.07.22.7` and schema `7`.
 
 | Dataset area | Coverage |
 |---|---:|

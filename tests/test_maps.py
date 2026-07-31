@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import re
 import sqlite3
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -131,11 +132,43 @@ class MapViewerTests(unittest.TestCase):
             html = result.read_text(encoding="utf-8")
             self.assertIn("Brazil 3D map", html)
             self.assertIn("plotly.js", html)
+            self.assertIn("Map motion and export controls", html)
+            self.assertIn("Download PNG", html)
+            self.assertIn("prefers-reduced-motion", html)
+            self.assertIn('width: 1600', html)
+            self.assertIn('height: 900', html)
+            self.assertIn('scale: 2', html)
             self.assertNotRegex(html, r'<script[^>]+src=["\']https?://')
         with patch("webbrowser.open", return_value=True) as opened:
-            shown = brazil.show()
+            shown = brazil.show(auto_rotate=True, rotation_speed=1.5)
         opened.assert_called_once_with(shown.as_uri(), new=2)
         self.assertTrue(shown.is_file())
+        shown_html = shown.read_text(encoding="utf-8")
+        self.assertIn("if (true && !reducedMotion)", shown_html)
+        self.assertIn("speedInput.value = String(1.5)", shown_html)
+
+    def test_rotation_options_are_validated(self) -> None:
+        with Atlas() as atlas:
+            brazil = atlas.map("Brazil", quality="overview")
+        for speed in (0, 3.1, float("inf"), float("nan")):
+            with self.subTest(speed=speed):
+                with self.assertRaises(ValueError):
+                    brazil.to_html(rotation_speed=speed)
+        with self.assertRaises(TypeError):
+            brazil.to_html(auto_rotate="yes")  # type: ignore[arg-type]
+        with self.assertRaises(TypeError):
+            brazil.to_html(rotation_speed=True)
+
+    def test_documentation_gif_tool_has_a_standalone_help_command(self) -> None:
+        result = subprocess.run(
+            [sys.executable, str(ROOT / "tools/create_map_gif.py"), "--help"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        self.assertIn("360-degree PyWorldAtlas map rotation", result.stdout)
+        self.assertIn("--output", result.stdout)
 
 
 if __name__ == "__main__":
