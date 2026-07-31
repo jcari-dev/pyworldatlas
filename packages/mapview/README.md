@@ -6,8 +6,9 @@ PyWorldAtlas map extras. Install it through `pyworldatlas[maps]` or
 
 The viewer opens a local, rotatable 3D elevation and climate map with country
 outlines, river overlays, terrain-height controls, and selectable capital and
-river labels. Maps remain offline after installation and can be saved as
-standalone HTML documents.
+river labels. The standalone browser view also provides automatic rotation,
+adjustable speed, and high-resolution PNG export. Maps remain offline after
+installation and can be saved as self-contained HTML documents.
 
 See the [interactive map guide](https://jcari-dev.github.io/pyworldatlas-documentation/maps.html)
 for installation choices, examples, sources, and limitations.

@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.9.4
+
+- Added play, pause, and adjustable-speed rotation controls to standalone 3D
+  maps while respecting reduced-motion preferences.
+- Added an explicit high-resolution PNG download for the current map view and
+  configured Plotly's existing image action to use the same crisp output.
+- Added `auto_rotate` and `rotation_speed` options to HTML export and
+  browser display without changing map data or core-package dependencies.
+- Added a maintainer GIF utility for producing optimized project-page
+  animations from real map figures.
+- Expanded the README, map guide, API documentation, and release tests around
+  motion, export, accessibility, and documentation media.
+
 ## 0.9.3
 
 - Reorganized the API reference around common tasks and gave every generated
