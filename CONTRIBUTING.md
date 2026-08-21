@@ -36,8 +36,8 @@ Before submitting a pull request, run the complete gate:
 python maintain.py check
 ```
 
-The complete gate runs the runtime and pipeline tests, builds both package
-distributions, installs the wheel in isolation, executes the examples, builds
+The complete gate runs the runtime and pipeline tests, builds all four package
+distributions, installs the wheels in isolation, executes the examples, builds
 strict documentation and doctests, and audits release contents.
 
 ## Factual corrections

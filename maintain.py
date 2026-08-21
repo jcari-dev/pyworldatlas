@@ -356,6 +356,7 @@ def build_release_distributions(
 
 
 def demo(wheel: Path | None = None) -> Path:
+    """Install the core wheel alone and exercise its user-facing entry points."""
     wheel = wheel or build_wheel()
     with tempfile.TemporaryDirectory(prefix="pyworldatlas-demo-") as folder:
         environment = Path(folder) / "venv"
@@ -368,6 +369,53 @@ def demo(wheel: Path | None = None) -> Path:
             str(python), "-m", "pip", "install", "--force-reinstall",
             "--no-index", "--no-deps", str(wheel),
         ], env=clean_env)
+        console = environment / (
+            "Scripts/pyworldatlas.exe" if os.name == "nt" else "bin/pyworldatlas"
+        )
+        expected_version = f"PyWorldAtlas {project_version()}"
+        for command in (
+            [str(python), "-m", "pyworldatlas", "--version"],
+            [str(console), "--version"],
+        ):
+            result = subprocess.run(
+                command,
+                cwd=ROOT,
+                check=True,
+                env=clean_env,
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+            )
+            if result.stdout.strip() != expected_version or result.stderr:
+                raise RuntimeError(
+                    f"Installed command returned unexpected output: {result!r}"
+                )
+        country = subprocess.run(
+            [str(console), "country", "Japan"],
+            cwd=ROOT,
+            check=True,
+            env=clean_env,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+        )
+        if "Japan (JP)" not in country.stdout or "Capital: Tokyo" not in country.stdout:
+            raise RuntimeError(
+                f"Installed country command returned unexpected output: {country!r}"
+            )
+        missing = subprocess.run(
+            [str(console), "country", "Atlantis"],
+            cwd=ROOT,
+            check=False,
+            env=clean_env,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+        )
+        if missing.returncode != 1 or "Traceback" in missing.stderr:
+            raise RuntimeError(
+                f"Installed command did not handle a missing country cleanly: {missing!r}"
+            )
         for example in sorted((ROOT / "examples").glob("*.py")):
             run([str(python), str(example)], env=clean_env)
     return wheel

@@ -42,6 +42,18 @@ python -m pip install pyworldatlas
 PyWorldAtlas supports Python 3.10 through 3.14. The installed package works
 offline and has no third-party runtime dependencies.
 
+Confirm the installation or make a quick terminal lookup:
+
+```console
+pyworldatlas --version
+pyworldatlas country Japan
+pyworldatlas search guinea
+```
+
+The command is a small companion to the Python API. It reads the same bundled
+database and prints concise messages instead of Python tracebacks for ordinary
+lookup errors. Run `pyworldatlas --help` for every command.
+
 Add the recommended global 3D map edition when you want interactive terrain:
 
 ```console
@@ -176,7 +188,7 @@ the formal publication standard.
 
 ## Coverage at a glance
 
-Library `0.9.4` includes dataset `2026.07.22.7` and schema `7`.
+Library `0.9.5` includes dataset `2026.07.22.7` and schema `7`.
 
 | Dataset area | Coverage |
 |---|---:|

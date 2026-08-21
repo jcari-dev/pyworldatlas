@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyworldatlas"
-version = "0.9.4"
+version = "0.9.5"
 description = "Offline country profiles, physical geography, 3D maps, distances, and learning tools"
 keywords = ["atlas", "classroom", "countries", "education", "geography", "learning", "offline", "world-data"]
 readme = "README.md"
@@ -30,14 +30,17 @@ classifiers = [
   "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
+[project.scripts]
+pyworldatlas = "pyworldatlas.__main__:main"
+
 [project.optional-dependencies]
 maps-overview = [
-  "pyworldatlas-mapview==0.9.4",
-  "pyworldatlas-mapdata-overview==0.9.4",
+  "pyworldatlas-mapview==0.9.5",
+  "pyworldatlas-mapdata-overview==0.9.5",
 ]
 maps = [
-  "pyworldatlas-mapview==0.9.4",
-  "pyworldatlas-mapdata-standard==0.9.4",
+  "pyworldatlas-mapview==0.9.5",
+  "pyworldatlas-mapdata-standard==0.9.5",
 ]
 
 [project.urls]

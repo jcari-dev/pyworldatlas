@@ -12,8 +12,10 @@ from typing import TYPE_CHECKING, Iterator
 from ._normalization import normalize_name
 from ._version import SCHEMA_VERSION, __version__
 from .database import Database
-from .exceptions import (AmbiguousPlaceError, AtlasClosedError, CapitalNotFoundError,
-                         CountryNotFoundError, DatasetVersionError, PlaceNotFoundError)
+from .exceptions import (AmbiguousCountryError, AmbiguousPlaceError,
+                         AtlasClosedError, CapitalNotFoundError,
+                         CountryNotFoundError, DatasetVersionError,
+                         PlaceNotFoundError)
 from .models import (Area, BorderPathResult, Capital, CapitalDistance, City,
                      CityDistance, ClimateProfile, ClimateZone, Coordinate, Country,
                      CountryCodes, CountryMatch, CountryRanking, Currency,
@@ -120,30 +122,58 @@ class Atlas:
         self._ensure_open()
         return DatasetInfo(__version__, SCHEMA_VERSION, self._meta("dataset_version"), len(self), self._meta("built_at"))
 
-    def _country_id(self, query: str) -> int | None:
+    def _country_ids(self, query: str) -> tuple[int, ...]:
         self._ensure_open()
+        code_rows = self._db.connection.execute(
+            """SELECT id FROM country
+               WHERE upper(alpha2)=upper(?) OR upper(alpha3)=upper(?)
+                  OR numeric_code=?
+               ORDER BY id""",
+            (query, query, query),
+        ).fetchall()
+        if code_rows:
+            return tuple(int(row[0]) for row in code_rows)
+
         normalized = normalize_name(query)
-        row = self._db.connection.execute(
-            """SELECT id FROM country WHERE upper(alpha2)=upper(?) OR upper(alpha3)=upper(?)
-               OR numeric_code=? OR id IN (SELECT country_id FROM country_name WHERE normalized_name=?)
-               ORDER BY id LIMIT 2""", (query, query, query, normalized)).fetchall()
-        return int(row[0][0]) if len(row) == 1 else None
+        name_rows = self._db.connection.execute(
+            """SELECT DISTINCT country_id FROM country_name
+               WHERE normalized_name=? ORDER BY country_id""",
+            (normalized,),
+        ).fetchall()
+        return tuple(int(row[0]) for row in name_rows)
+
+    def _country_id(self, query: str) -> int | None:
+        ids = self._country_ids(query)
+        return ids[0] if len(ids) == 1 else None
 
     def country(self, query: str) -> Country:
         """Return one country profile resolved from a name or standard code.
 
         ``query`` may be a familiar English name, indexed alias, alpha-2 code,
         alpha-3 code, or three-digit M49 code. Matching is case-insensitive and
-        accent-tolerant. A missing or non-unique query raises
-        :class:`CountryNotFoundError`, with suggestions when available.
+        accent-tolerant. Missing queries raise :class:`CountryNotFoundError`,
+        with suggestions when available. A name shared by multiple profiles
+        raises :class:`AmbiguousCountryError` and lists the matches.
         """
         self._ensure_open()
-        country_id = self._country_id(query)
-        if country_id is None:
+        if not isinstance(query, str):
+            raise TypeError("query must be a string")
+        if not normalize_name(query):
+            raise ValueError("query must contain at least one letter or number")
+        country_ids = self._country_ids(query)
+        if not country_ids:
             suggestions = ", ".join(match.country.name for match in self.search_countries(query, limit=3))
             hint = f" Try: {suggestions}." if suggestions else ""
-            raise CountryNotFoundError(f"No unambiguous country matches {query!r}.{hint}")
-        return self._load_country(country_id)
+            raise CountryNotFoundError(f"No country matches {query!r}.{hint}")
+        if len(country_ids) > 1:
+            matches = ", ".join(
+                f"{country.name} ({country.alpha2})"
+                for country in (self._load_country(item) for item in country_ids)
+            )
+            raise AmbiguousCountryError(
+                f"Country name {query!r} is ambiguous; matches include {matches}"
+            )
+        return self._load_country(country_ids[0])
 
     def get(self, query: str, default: Country | None = None) -> Country | None:
         """Return a matching country, or ``default`` instead of raising.
@@ -153,7 +183,7 @@ class Atlas:
         """
         try:
             return self.country(query)
-        except CountryNotFoundError:
+        except (CountryNotFoundError, AmbiguousCountryError):
             return default
 
     def map(

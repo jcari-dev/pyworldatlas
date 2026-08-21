@@ -26,11 +26,11 @@ class DatasetIntegrityError(DatasetError):
 
 
 class CountryNotFoundError(AtlasError, LookupError):
-    """Raised when a country query has no match."""
+    """Raised when a country query has no exact match."""
 
 
 class AmbiguousCountryError(AtlasError, LookupError):
-    """Raised when a country query has multiple equally valid matches."""
+    """Raised when an exact country name identifies multiple profiles."""
 
 
 class PlaceNotFoundError(AtlasError, LookupError):

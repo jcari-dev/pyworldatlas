@@ -1,10 +1,17 @@
 import dataclasses
 import math
+from pathlib import Path
+import shutil
+import sqlite3
+import tempfile
 import unittest
 
-from pyworldatlas import (AmbiguousPlaceError, Atlas, AtlasClosedError,
-                          CapitalNotFoundError, Coordinate, CountryNotFoundError,
-                          PlaceNotFoundError)
+from pyworldatlas import (AmbiguousCountryError, AmbiguousPlaceError, Atlas,
+                          AtlasClosedError, CapitalNotFoundError, Coordinate,
+                          CountryNotFoundError, PlaceNotFoundError)
+
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 class AtlasTests(unittest.TestCase):
@@ -23,6 +30,38 @@ class AtlasTests(unittest.TestCase):
             "reviewed-overrides",
             {source.id for source in self.atlas.country("US").sources},
         )
+
+    def test_ambiguous_country_names_are_reported_separately(self):
+        source = ROOT / "src/pyworldatlas/data/atlas.sqlite3"
+        with tempfile.TemporaryDirectory() as folder:
+            database = Path(folder) / "atlas.sqlite3"
+            shutil.copy2(source, database)
+            connection = sqlite3.connect(database)
+            try:
+                japan_id = connection.execute(
+                    "SELECT id FROM country WHERE alpha2='JP'"
+                ).fetchone()[0]
+                china_id = connection.execute(
+                    "SELECT id FROM country WHERE alpha2='CN'"
+                ).fetchone()[0]
+                connection.executemany(
+                    """INSERT INTO country_name
+                       (country_id, name, normalized_name, language_code, kind, preferred)
+                       VALUES (?, 'Shared example', 'shared example', NULL, 'alias', 0)""",
+                    ((japan_id,), (china_id,)),
+                )
+                connection.commit()
+            finally:
+                connection.close()
+
+            with Atlas(database) as atlas:
+                with self.assertRaisesRegex(
+                    AmbiguousCountryError,
+                    r"China \(CN\).*Japan \(JP\)",
+                ):
+                    atlas.country("Shared example")
+                self.assertIsNone(atlas.get("Shared example"))
+                self.assertEqual(atlas.country("JP").name, "Japan")
 
     def test_country_capital(self):
         tokyo = self.atlas.country("Japan").capital
@@ -495,6 +534,9 @@ class AtlasTests(unittest.TestCase):
     def test_missing_and_closed_behavior(self):
         with self.assertRaises(CountryNotFoundError):
             self.atlas.country("Atlantis")
+        self.assertNotIn("", self.atlas)
+        with self.assertRaisesRegex(ValueError, "letter or number"):
+            self.atlas.country("   ")
         self.atlas.close()
         with self.assertRaises(AtlasClosedError):
             len(self.atlas)
@@ -503,7 +545,7 @@ class AtlasTests(unittest.TestCase):
 
     def test_dataset_versions(self):
         info = self.atlas.dataset_info()
-        self.assertEqual((info.library_version, info.schema_version, info.dataset_version), ("0.9.4", 7, "2026.07.22.7"))
+        self.assertEqual((info.library_version, info.schema_version, info.dataset_version), ("0.9.5", 7, "2026.07.22.7"))
         self.assertEqual(info.country_count, 248)
 
     def test_english_formal_names_are_sourced_and_discoverable(self):
