@@ -176,12 +176,20 @@ class EducationalPolicyTests(unittest.TestCase):
         )
         api = (ROOT / "docs/source/api.rst").read_text(encoding="utf-8")
         maps = (ROOT / "docs/source/maps.rst").read_text(encoding="utf-8")
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
         styles = (ROOT / "docs/source/_static/pyworldatlas.css").read_text(
             encoding="utf-8"
         )
         rendered_installation = re.sub(r"\s+", " ", installation)
 
         self.assertIn("python -m pip install pyworldatlas", installation)
+        self.assertIn("pyworldatlas --version", installation)
+        self.assertIn("python -m pyworldatlas", installation)
+        self.assertIn("pyworldatlas --version", readme)
+        self.assertIn(
+            'pyworldatlas = "pyworldatlas.__main__:main"',
+            (ROOT / "pyproject.toml").read_text(encoding="utf-8"),
+        )
         self.assertIn(
             "only needed when replacing an older installed version",
             rendered_installation,

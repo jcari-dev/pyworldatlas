@@ -1,4 +1,4 @@
-"""A friendly tour of the PyWorldAtlas 0.8 learning helpers."""
+"""A friendly tour of PyWorldAtlas learning and discovery helpers."""
 
 from pyworldatlas import Atlas
 

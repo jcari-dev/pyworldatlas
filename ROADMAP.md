@@ -8,8 +8,9 @@ public API until it is implemented, tested, documented, and published.
 
 Version 0.9 adds optional offline 3D elevation and climate maps for all 248
 existing profiles. Overview and Standard data editions install separately, so
-the core atlas remains small and dependency-free. The release adds no boundary
-geometry, GeoJSON, or point-in-country public API.
+the core atlas remains small and dependency-free. Patch releases also tighten
+installed-package usability, documentation, and release checks. The release
+adds no boundary geometry, GeoJSON, or point-in-country public API.
 
 The complete shipped coverage is generated in the
 [roadmap status](docs/project/ROADMAP_STATUS.md).

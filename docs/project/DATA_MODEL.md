@@ -21,10 +21,10 @@ Physical geography adds immutable `ElevationPoint`, `River`, `Lake`,
 remain grouped under `Geography.area`; the other physical values are grouped
 under `Geography.physical` and exposed through `Country` conveniences.
 
-``Country.name`` is the familiar English display identity,
-``Country.official_name`` is the canonical UN M49 identity, and
-``Country.formal_name`` is the sourced English long form. The last value may
-equal the short form and is ``None`` outside the 240-profile source scope.
+`Country.name` is the familiar English display identity,
+`Country.official_name` is the canonical UN M49 identity, and
+`Country.formal_name` is the sourced English long form. The last value may
+equal the short form and is `None` outside the 240-profile source scope.
 
 The schema supports multiple capitals, although the current dataset selects at
 most one GeoNames primary capital for each country or area. Exact city lookup

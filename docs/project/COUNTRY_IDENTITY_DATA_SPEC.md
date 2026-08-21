@@ -109,7 +109,7 @@ atlas.countries_with_local_names(name_kind="national_official")
 Language and script filters are case-insensitive exact matches. All results are
 immutable and detached from SQLite. A missing local formal name means “not in
 the reviewed UNGEGN layer,” not “this name does not exist.” A missing English
-``Country.formal_name`` means the profile is outside the captured source
+`Country.formal_name` means the profile is outside the captured source
 intersection.
 
 ## Transcription and normalization rules
@@ -148,7 +148,7 @@ source page. Text extraction alone is not acceptable evidence.
 English formal names use a compact public-domain extraction of the final
 structured CIA World Factbook country-name profiles. Five current names are
 short credited excerpts from the United Nations Protocol and Liaison Service
-list, and three are exact Wikidata ``official name`` statements released under
+list, and three are exact Wikidata `official name` statements released under
 CC0. The reviewed override CSV records each source locator and decision. The
 UNTERM export was used only as a private comparison during review and is not
 redistributed or copied into the package.

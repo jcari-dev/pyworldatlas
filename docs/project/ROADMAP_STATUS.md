@@ -2,7 +2,7 @@
 
 > This file is generated from `build_data/reports/status.json`.
 
-Library version: 0.9.4
+Library version: 0.9.5
 Dataset version: 2026.07.22.7
 Schema version: 7
 
