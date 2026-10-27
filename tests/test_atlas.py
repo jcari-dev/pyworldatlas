@@ -21,6 +21,18 @@ class AtlasTests(unittest.TestCase):
     def tearDown(self):
         self.atlas.close()
 
+    def test_notebooks_show_an_accessible_fact_card(self):
+        card = self.atlas.country("Japan")._repr_html_()
+        self.assertIn("<caption", card)
+        self.assertIn("Country profile for Japan (JP)", card)
+        self.assertIn('<th scope="row"', card)
+        self.assertIn("<td", card)
+        self.assertIn("Tokyo", card)
+        self.assertNotIn("color:", card)
+        unsafe = dataclasses.replace(self.atlas.country("Japan"), name="<b>Japan</b>")
+        self.assertIn("&lt;b&gt;Japan&lt;/b&gt;", unsafe._repr_html_())
+        self.assertNotIn("<b>Japan</b>", unsafe._repr_html_())
+
     def test_common_everyday_names_find_their_country(self):
         expected = {
             "Netherlands": "NL", "the netherlands": "NL", "The Gambia": "GM",
