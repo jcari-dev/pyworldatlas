@@ -6,7 +6,7 @@ from xml.sax.saxutils import escape
 project = "PyWorldAtlas"
 author = "PyWorldAtlas maintainers"
 copyright = "2026, PyWorldAtlas maintainers"
-release = "0.10.0"
+release = "0.11.0"
 version = "0.10"
 extensions = [
     "sphinx.ext.autodoc", "sphinx.ext.autosummary", "sphinx.ext.napoleon",
@@ -22,7 +22,7 @@ nitpicky = True
 nitpick_ignore = [("py:class", "pathlib.Path"), ("py:class", "collections.abc.Callable")]
 html_theme = "sphinx_rtd_theme"
 pygments_style = "friendly"
-html_title = "PyWorldAtlas 0.10.0"
+html_title = "PyWorldAtlas 0.11.0"
 html_short_title = "PyWorldAtlas"
 html_baseurl = "https://jcari-dev.github.io/pyworldatlas-documentation/"
 html_favicon = "_static/globe.svg"
