@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Country lookup understands everyday names: "UK", "Britain", "Burma", "UAE",
+  "DRC", "Cape Verde", "East Timor", "Swaziland", "Macau", "Falklands",
+  "Bosnia", and more, plus spellings with or without a leading "The" and "St"
+  for "Saint". Parts of countries and ambiguous names ("England", "Korea") are
+  still not guessed.
 - Made repeated lookups much faster: every `Atlas` now keeps its own country,
   border, code, and place caches, so profiles are read at most once. Ranking by
   border count, neighbor quizzes, and nearest-place searches drop from hundreds

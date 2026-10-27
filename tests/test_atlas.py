@@ -21,6 +21,24 @@ class AtlasTests(unittest.TestCase):
     def tearDown(self):
         self.atlas.close()
 
+    def test_common_everyday_names_find_their_country(self):
+        expected = {
+            "Netherlands": "NL", "the netherlands": "NL", "The Gambia": "GM",
+            "The Bahamas": "BS", "St Kitts and Nevis": "KN", "St. Lucia": "LC",
+            "UK": "GB", "U.K.": "GB", "Britain": "GB", "Great Britain": "GB",
+            "Burma": "MM", "Swaziland": "SZ", "East Timor": "TL", "Cape Verde": "CV",
+            "DRC": "CD", "DR Congo": "CD", "Congo-Kinshasa": "CD",
+            "Congo-Brazzaville": "CG", "Republic of Congo": "CG", "UAE": "AE",
+            "Bosnia": "BA", "Macau": "MO", "Falklands": "FK",
+        }
+        for query, alpha2 in expected.items():
+            with self.subTest(query=query):
+                self.assertEqual(self.atlas.country(query).alpha2, alpha2)
+        # Parts of countries and ambiguous names are not silently mapped.
+        for query in ("England", "Holland", "Korea"):
+            with self.subTest(query=query), self.assertRaises(CountryNotFoundError):
+                self.atlas.country(query)
+
     def test_lookup_by_codes_names_and_aliases(self):
         self.assertEqual(self.atlas.country("JP").name, "Japan")
         self.assertEqual(self.atlas.country("USA").name, "United States")
