@@ -1,6 +1,8 @@
 # Changelog
 
-## 0.11.0: Every place on Earth
+## 0.11.0
+
+Every place on Earth.
 
 - New: search every place on Earth. Every install now includes a school atlas
   of 207,664 places chosen by educational value (about 2 MB): every country,
