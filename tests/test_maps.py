@@ -63,6 +63,11 @@ class MapDataTests(unittest.TestCase):
                 self.assertGreater(payload["landCells"], 0)
 
 
+def atlas_page_without_places(data: Path) -> str:
+    with Atlas(data_dir=data) as atlas:
+        return atlas.map("Iceland", quality="overview", places=0).to_html()
+
+
 class MapViewerTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -130,6 +135,9 @@ class MapViewerTests(unittest.TestCase):
         page = peru.to_html()
         self.assertIn('data-trace="Landmarks"', page)
         self.assertIn("Landmarks, marked with a purple cross: ", page)
+        self.assertIn('<label class="group-label" for="place-search">Find a place</label>', page)
+        self.assertIn('<option value="Machu Picchu"></option>', page)
+        self.assertNotIn('id="place-search"', atlas_page_without_places(self.data))
 
     def test_map_controls_adjust_height_and_optional_labels(self) -> None:
         with self.atlas() as atlas:
