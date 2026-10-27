@@ -83,7 +83,7 @@ class EducationalPolicyTests(unittest.TestCase):
 
         self.assertIn("browser playground", readme)
         self.assertIn("classrooms", readme)
-        self.assertIn("Optional interactive maps (0.9)", roadmap)
+        self.assertIn("Current release: Stable and instant (0.10)", roadmap)
         self.assertIn("does not publish their coordinates", roadmap)
         self.assertEqual(status["milestones"][-2]["name"], "9: Optional interactive maps")
         self.assertEqual(status["milestones"][-2]["status"], "complete")

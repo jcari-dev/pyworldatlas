@@ -1,5 +1,5 @@
 {
-  "dataset_version": "2026.07.22.7",
+  "dataset_version": "2026.10.26.1",
   "countries": 248,
   "capitals": 241,
   "major_cities": 6265,
@@ -78,6 +78,6 @@
     "TV",
     "UM"
   ],
-  "database_sha256": "65dbcbff2ba3afe422f12e6fe21a5ccb5336f90ee9c0bd32a55c6663c99b9df7",
+  "database_sha256": "72e6dee24785c212f502dc8dd05ceadc057b1f6582200dc0234cd97852d7f027",
   "validation": "PASS"
 }

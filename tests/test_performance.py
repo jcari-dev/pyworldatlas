@@ -1,4 +1,4 @@
-"""Speed guards for the performance budgets in docs/project/PLAN_1_X.md.
+"""Speed guards for the performance budgets in docs/project/PLAN.md.
 
 Shared CI machines vary a lot, so each limit sits well above the budget measured
 on a typical laptop. The guards catch regressions of the kind that once made

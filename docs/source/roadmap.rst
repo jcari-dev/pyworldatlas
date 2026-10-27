@@ -11,23 +11,22 @@ public API until it is implemented, tested, documented, and published.
 
       .. rubric:: Current release
 
-      **0.9.5** tightens installed-package behavior, terminal usability,
-      lookup errors, documentation accuracy, and release checks.
+      **0.10.0** is the stable offline atlas: a tested public API, instant
+      lookups, zero-dependency 3D maps from data packs, and accessible pages.
 
    .. container:: atlas-card atlas-card-teal
 
       .. rubric:: Next milestone
 
-      **1.0.0** focuses on consistency, typing, performance, packaging,
-      compatibility, and complete reference coverage.
+      **0.11** adds every place on Earth: places and landmarks packs, travel
+      basics, one lookup for every place, and explorable maps.
 
    .. container:: atlas-card atlas-card-gold
 
-      .. rubric:: Stable destination
+      .. rubric:: On the way to 1.0
 
-      **1.0.0** represents a dependable offline atlas contract with clear
-      upgrades and reproducible releases. The 1.x series then adds places,
-      landmarks, official statistics, and generated reference entries.
+      **0.12** adds official statistics with sources and years, and **0.13**
+      generated reference entries and an offline site export.
 
 .. list-table:: Release train
    :header-rows: 1
@@ -84,20 +83,20 @@ public API until it is implemented, tested, documented, and published.
    * - 0.9.5
      - Complete
      - Installed command, lookup clarity, clean-wheel checks, and documentation audit
-     - Release candidate
-   * - 1.0.0
-     - Planned
-     - Stable offline atlas contract, performance budgets, and data packs
-     - Not yet
-   * - 1.1.0
+     - Published
+   * - 0.10.0
+     - Complete
+     - Stable API, instant lookups, zero-dependency maps, data packs, and accessibility
+     - Published
+   * - 0.11.0
      - Planned
      - Places and landmarks packs, travel basics, and proximity search
      - Not yet
-   * - 1.2.0
+   * - 0.12.0
      - Planned
      - Official statistics pack with sourced, dated indicators
      - Not yet
-   * - 1.3.0
+   * - 0.13.0
      - Planned
      - Generated reference entries and offline site export
      - Not yet

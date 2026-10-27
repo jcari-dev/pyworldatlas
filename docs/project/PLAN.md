@@ -1,18 +1,19 @@
-# 1.x plan
+# Release plan
 
-This document records the planned scope of the 1.x series. Planned work is not
+This document records the planned scope of the next releases. Planned work is not
 part of the public API until it is implemented, tested, documented, and
 published. Every item below remains subject to the data-admission rules and to
 the review in `EDUCATIONAL_AND_NEUTRALITY_POLICY.md`.
 
 ## Versioning
 
-The 1.x series uses few, themed minor releases:
+PyWorldAtlas grows through few, themed releases on the way to 1.0:
 
-- A minor release (1.1, 1.2, ...) ships one large, coherent theme.
-- Patch releases (1.1.1, 1.1.2, ...) ship fixes and small additions inside the
+- A release (0.11, 0.12, ...) ships one large, coherent theme.
+- Patch releases (0.11.1, 0.11.2, ...) ship fixes and small additions inside the
   current theme.
-- A major release is reserved for an unavoidable breaking change.
+- Version 1.0 comes once the public API has proven stable in real use. From
+  then on, a major release is reserved for an unavoidable breaking change.
 
 ## Who PyWorldAtlas is for
 
@@ -67,7 +68,7 @@ in doubt, it is left out.
 
 ## Installation model
 
-The 1.x series ships **one** PyPI package. Additional data is installed as data
+PyWorldAtlas ships **one** PyPI package. Additional data is installed as data
 packs rather than as separate PyPI distributions.
 
 ```console
@@ -96,9 +97,9 @@ Atlas(data_dir="D:/world-packs")    # or the PYWORLDATLAS_DATA variable
 - Packs are attached to GitHub releases, replacing the separate
   `pyworldatlas-mapview` and `pyworldatlas-mapdata-*` distributions. (Done.)
 
-This changes how maps install, so it lands before the 1.0 API freeze.
+This changed how maps install and shipped in 0.10.
 
-## 1.0: Stable and instant
+## 0.10: Stable and instant (released)
 
 No new data families; the existing data becomes dependable and fast.
 
@@ -118,7 +119,7 @@ No new data families; the existing data becomes dependable and fast.
 - Performance budgets checked automatically, including import time and the
   first full collection load.
 
-## 1.1: Every place on Earth
+## 0.11: Every place on Earth
 
 - **Places pack:** populated places of 5,000 or more inhabitants and
   first-level subdivisions with their codes (GeoNames).
@@ -132,7 +133,7 @@ No new data families; the existing data becomes dependable and fast.
   airports, landmarks) as layers that can be searched, filtered, and clicked
   for their facts on the map.
 
-## 1.2: The world in numbers
+## 0.12: The world in numbers
 
 Requires an "official statistics" section in the editorial policy first.
 
@@ -143,7 +144,7 @@ Requires an "official statistics" section in the editorial policy first.
   charts.
 - Map coloring by any indicator.
 
-## 1.3: The encyclopedia
+## 0.13: The encyclopedia
 
 - Generated reference entries for every country, place, and landmark, built
   only from sourced structured data.

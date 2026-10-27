@@ -1,6 +1,9 @@
 # Changelog
 
-## Unreleased
+## 0.10.0
+
+A big step toward 1.0. The public API is now guarded by a snapshot test, so
+any change to it is deliberate and listed here.
 
 - In Jupyter and other notebooks, a `Country` now displays as an accessible
   fact card that follows the notebook's theme.
@@ -61,7 +64,7 @@
 - The `pyworldatlas-mapview` and `pyworldatlas-mapdata-*` packages are retired.
   The `maps` and `maps-overview` extras remain, empty, so older install commands
   still work.
-- Published the 1.x plan, generated `llms.txt` and `llms-full.txt` plain-text
+- Published the release plan, generated `llms.txt` and `llms-full.txt` plain-text
   documentation indexes, and removed em-dashes from the project text.
 
 ## 0.9.5
