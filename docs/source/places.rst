@@ -43,6 +43,20 @@ exactly that name. Narrow any search with ``kind`` (see
    >>> atlas.search_places("Fuji", kind="volcano", limit=1)[0].english_name
    'Mount Fuji'
 
+One search for everything
+-------------------------
+
+:meth:`~pyworldatlas.Atlas.lookup` searches countries and places together, for
+a search box that accepts anything. A country named exactly comes first as its
+full profile, then the best-known places.
+
+.. doctest::
+
+   >>> [str(item) for item in atlas.lookup("Georgia", limit=2)]
+   ['Georgia', 'Georgia, state or province (US)']
+   >>> atlas.lookup("Georgia")[0].capital.name
+   'Tbilisi'
+
 What is near here?
 ------------------
 
@@ -111,6 +125,7 @@ The command line has the same searches:
 
 .. code-block:: bash
 
+   pyworldatlas find Georgia
    pyworldatlas place "Lake Titicaca"
    pyworldatlas near 27.9881 86.9250 --kind peak
 

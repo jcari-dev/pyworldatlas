@@ -14,6 +14,9 @@
 - New `Place` and `PlaceDistance` models, `Atlas.place_kinds()` and
   `Atlas.place_categories()`, and the `pyworldatlas place` and
   `pyworldatlas near` commands.
+- New: `Atlas.lookup` and `pyworldatlas find` search countries, cities,
+  regions, and landmarks in one call. A country named exactly comes first as
+  its full profile, then the best-known places.
 - Places are stored in a compact column format (6 to 10 bytes per place) using
   only the standard library, and unpacked once into a local SQLite index on
   first search.

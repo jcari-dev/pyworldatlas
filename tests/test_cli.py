@@ -30,6 +30,16 @@ class CommandLineTests(unittest.TestCase):
         self.assertIn("Japan (JP)", country.stdout)
         self.assertIn("Capital: Tokyo", country.stdout)
 
+    def test_find_lists_countries_and_places(self) -> None:
+        result = self.run_cli("find", "Georgia", "--limit", "2")
+        self.assertEqual(result.returncode, 0)
+        lines = result.stdout.splitlines()
+        self.assertTrue(lines[0].startswith("Georgia, country (GE)"))
+        self.assertTrue(lines[1].startswith("Georgia, state or province (US)"))
+        missing = self.run_cli("find", "Zzyzx Qwertyland")
+        self.assertEqual(missing.returncode, 1)
+        self.assertIn("Nothing found", missing.stderr)
+
     def test_country_json_is_valid(self) -> None:
         result = self.run_cli("country", "Japan", "--json")
         self.assertEqual(result.returncode, 0)
