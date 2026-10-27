@@ -156,6 +156,11 @@ on a slow 3G connection, and every place on Earth under 2 minutes on a slow
   forest area share, agricultural land share, access to electricity, access
   to safe drinking water, internet users share, and primary school
   enrollment.
+- **License notes (checked 2026-10-27).** The World Bank data catalog lists
+  World Development Indicators under CC BY 4.0. WDI collects some series from
+  partner agencies, so each indicator's own license field must also read
+  CC BY 4.0 before it is admitted. The UN World Population Prospects terms
+  still need to be confirmed from the publisher before any WPP value is used.
 
 - **Statistics pack:** selected World Bank indicators from 1960 and UN
   population estimates from 1950, with UN projections labeled as projections.
