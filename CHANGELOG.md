@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased
+
+- Made repeated lookups much faster: every `Atlas` now keeps its own country,
+  border, code, and place caches, so profiles are read at most once. Ranking by
+  border count, neighbor quizzes, and nearest-place searches drop from hundreds
+  of milliseconds to a few milliseconds on a typical laptop.
+- Loading the full collection now reads each related table once instead of
+  issuing several queries per country.
+- Fixed closing one `Atlas` clearing the cached profiles of every other open
+  `Atlas`.
+- Reduced import time by loading `importlib.resources` and `hashlib` only when
+  they are needed.
+- Climate quiz answers now read `Af: Tropical, rainforest` instead of using a
+  dash separator.
+- Published the 1.x plan, generated `llms.txt` and `llms-full.txt` plain-text
+  documentation indexes, and removed em-dashes from the project text.
+
 ## 0.9.5
 
 - Added an installed `pyworldatlas` command with version, country lookup,

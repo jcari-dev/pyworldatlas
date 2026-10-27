@@ -2,18 +2,27 @@
 
 from __future__ import annotations
 
-from importlib.resources import files
 from pathlib import Path
 import sqlite3
 
 from .exceptions import DatasetNotFoundError
 
 
+def _bundled_path() -> Path:
+    """Locate the bundled dataset, importing ``importlib.resources`` only if needed."""
+    bundled = Path(__file__).resolve().parent / "data" / "atlas.sqlite3"
+    if bundled.is_file():
+        return bundled
+    from importlib.resources import files
+
+    return Path(str(files("pyworldatlas.data").joinpath("atlas.sqlite3")))
+
+
 class Database:
     """A small read-only SQLite connection wrapper."""
 
     def __init__(self, path: str | Path | None = None) -> None:
-        selected = Path(path) if path else Path(str(files("pyworldatlas.data").joinpath("atlas.sqlite3")))
+        selected = Path(path) if path else _bundled_path()
         if not selected.is_file():
             raise DatasetNotFoundError(f"Atlas dataset not found: {selected}")
         uri = f"file:{selected.resolve().as_posix()}?mode=ro&immutable=1"

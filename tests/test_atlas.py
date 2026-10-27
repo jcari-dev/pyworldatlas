@@ -671,6 +671,54 @@ class AtlasTests(unittest.TestCase):
         local_name_queries = [sql for sql in statements if "FROM country_local_name" in sql]
         self.assertEqual(len(local_name_queries), 1)
 
+    def test_collection_reads_every_profile_in_bulk(self):
+        statements = []
+        self.atlas._db.connection.set_trace_callback(statements.append)
+        self.assertEqual(len(self.atlas.countries()), 248)
+        self.assertLess(len(statements), 300)
+        statements.clear()
+        self.atlas.countries()
+        self.atlas.rank("border_count")
+        self.atlas.quiz(topic="neighbors", count=10)
+        self.assertLess(len(statements), 20)
+
+    def test_bulk_and_single_reads_build_identical_profiles(self):
+        with Atlas() as single:
+            singles = tuple(single.country(item.alpha2) for item in self.atlas.countries())
+        self.assertEqual(singles, self.atlas.countries())
+
+    def test_closing_one_atlas_keeps_other_atlases_cached(self):
+        japan = self.atlas.country("Japan")
+        with Atlas() as other:
+            other.country("Japan")
+        statements = []
+        self.atlas._db.connection.set_trace_callback(statements.append)
+        self.assertIs(self.atlas.country("Japan"), japan)
+        self.assertEqual(statements, [])
+
+    def test_nearest_cities_match_public_distance_calculation(self):
+        for origin in ((48.8566, 2.3522), (-33.86, 151.21), (64.1, -21.9)):
+            for unit in ("km", "mi", "nmi"):
+                results = self.atlas.nearest_cities(origin, limit=10, unit=unit)
+                start = Coordinate(*origin)
+                for result in results:
+                    self.assertEqual(
+                        result.distance,
+                        start.distance_to(result.city.coordinates, unit=unit),
+                    )
+                keys = [
+                    (r.distance, r.country.name, r.city.name, r.city.geonames_id or 0)
+                    for r in results
+                ]
+                self.assertEqual(keys, sorted(keys))
+
+    def test_repeated_nearest_city_queries_reuse_loaded_places(self):
+        self.atlas.nearest_cities("Paris", origin_country="FR")
+        statements = []
+        self.atlas._db.connection.set_trace_callback(statements.append)
+        self.atlas.nearest_cities((35.68, 139.69), limit=3)
+        self.assertFalse([sql for sql in statements if "FROM city c" in sql])
+
     def test_missing_capital_is_explicit(self):
         self.assertIsNone(self.atlas.country("Antarctica").capital)
 
