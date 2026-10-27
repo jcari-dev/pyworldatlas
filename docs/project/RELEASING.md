@@ -47,12 +47,15 @@ The release workflow builds Sphinx from the exact release wheels and replaces
 the generated files in the documentation repository. Source documentation
 remains in this repository under `docs/source/`.
 
-Documentation-only changes do not require a new PyPI version. Changes to the
-documentation, examples, runtime documentation surface, or map viewer run the
-dedicated documentation workflow after they are merged to `main`. That workflow
-deploys only when the version in the source tree is already available on PyPI;
-new-release documentation is deployed by the release workflow after package
-publication succeeds.
+Each release deploys its own documentation from the release workflow after
+the package is published. Merges to `main` do not deploy, so the public site
+never describes unreleased features.
+
+Documentation-only fixes do not require a new PyPI version. Commit the fix to a
+branch made from the release tag, then run **Actions > Documentation > Run
+workflow** and choose that branch under **Use workflow from**. Do not run it from
+`main` while `main` holds unreleased work. The workflow also refuses to deploy
+when the source version is not on PyPI.
 
 ## Prepare version 0.9.5
 
