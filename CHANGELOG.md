@@ -36,6 +36,11 @@
   module, and `Atlas(data_dir=...)` for choosing the pack folder.
 - `CountryMap` moved to `pyworldatlas.maps` and gained `to_dict()`; `figure()`
   still returns a Plotly figure when the separate `plotly` package is installed.
+- Redesigned the map page: the map fills the window beside one clear control
+  panel (color, terrain height, labels and rivers, motion, reset, Save PNG),
+  with a country badge and subtitle, light and dark themes, and a bottom-sheet
+  layout on phones. `to_dict()` and `figure()` keep Plotly's in-figure controls
+  for notebooks.
 - The `pyworldatlas-mapview` and `pyworldatlas-mapdata-*` packages are retired.
   The `maps` and `maps-overview` extras remain, empty, so older install commands
   still work.

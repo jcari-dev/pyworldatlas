@@ -17,7 +17,7 @@ from typing import Any
 import webbrowser
 
 from .. import packs
-from ._html import document, viewer_controls_script
+from ._html import document, rotation_options
 from ._scene import MapDataError, build_figure, load_payload
 
 __all__ = ["QUALITY_PACKS", "CountryMap", "MapDataError", "available_map_qualities"]
@@ -149,36 +149,31 @@ class CountryMap:
         auto_rotate: bool = False,
         rotation_speed: float = 1.0,
     ) -> str:
-        """Return a complete standalone HTML document with plotly.js embedded.
+        """Return a complete standalone HTML page with plotly.js embedded.
 
-        The document includes rotation, speed, and high-resolution PNG export
-        controls. Set ``auto_rotate=True`` to begin rotating when the page
+        The page fills the browser window and offers a control panel to color
+        the terrain by elevation or climate, change terrain height, show or hide
+        the capital, rivers, and river names, rotate the view, reset the camera,
+        and download a high-resolution PNG. On narrow screens the panel becomes
+        a collapsible bottom sheet, and it follows the reader's light or dark
+        color scheme. Set ``auto_rotate=True`` to begin rotating when the page
         opens. ``rotation_speed`` accepts values from ``0.25`` through ``3``;
         ``1`` completes a turn in about twenty seconds.
         """
-        filename = f"{self.alpha2.casefold()}-{self.quality}-3d-map"
-        script = viewer_controls_script(
-            auto_rotate=auto_rotate,
-            rotation_speed=rotation_speed,
-            png_filename=filename,
-        )
+        rotation_options(auto_rotate, rotation_speed)
+        quality, folder, payload = self._payload()
         return document(
             self.to_dict(),
-            renderer=self._pack() / "plotly.min.js",
-            title=f"{self.country_name} 3D map · PyWorldAtlas",
-            config={
-                "responsive": True,
-                "displaylogo": False,
-                "scrollZoom": True,
-                "toImageButtonOptions": {
-                    "format": "png",
-                    "filename": filename,
-                    "width": 1600,
-                    "height": 900,
-                    "scale": 2,
-                },
-            },
-            post_script=script,
+            renderer=folder / "plotly.min.js",
+            country=self.country_name,
+            code=self.alpha2,
+            subtitle=(
+                f"{quality.title()} 3D map · "
+                f"{payload['resolutionArcMinutes']} arc-minute terrain"
+            ),
+            auto_rotate=auto_rotate,
+            rotation_speed=rotation_speed,
+            png_filename=f"{self.alpha2.casefold()}-{quality}-3d-map",
         )
 
     def write_html(

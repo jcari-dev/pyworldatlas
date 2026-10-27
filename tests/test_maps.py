@@ -15,6 +15,7 @@ from pack_fixtures import ROOT, installed_packs
 
 from pyworldatlas import Atlas, MapSupportNotInstalledError
 from pyworldatlas.maps import CountryMap, MapDataError, available_map_qualities
+from pyworldatlas.maps._html import page_figure
 
 EDITIONS = (
     (ROOT / "packs/maps-lite/maps.sqlite3", "overview"),
@@ -147,8 +148,13 @@ class MapViewerTests(unittest.TestCase):
             html = brazil.write_html(Path(folder) / "brazil.html").read_text(encoding="utf-8")
             self.assertIn("<title>Brazil 3D map · PyWorldAtlas</title>", html)
             self.assertIn("plotly.js v3.7.0", html)
-            self.assertIn("Map motion and export controls", html)
-            self.assertIn("Download PNG", html)
+            self.assertIn('aria-label="Map controls"', html)
+            self.assertIn("Save PNG", html)
+            self.assertIn("Reset view", html)
+            self.assertIn('<span class="badge" aria-hidden="true">BR</span>', html)
+            self.assertIn("Overview 3D map · 20 arc-minute terrain", html)
+            self.assertIn("prefers-color-scheme: dark", html)
+            self.assertIn('<meta name="viewport"', html)
             self.assertIn("prefers-reduced-motion", html)
             self.assertIn("width: 1600", html)
             self.assertIn("height: 900", html)
@@ -161,6 +167,23 @@ class MapViewerTests(unittest.TestCase):
         shown_html = shown.read_text(encoding="utf-8")
         self.assertIn("if (true && !reducedMotion)", shown_html)
         self.assertIn("speedInput.value = String(1.5)", shown_html)
+
+    def test_page_replaces_plotly_controls_but_to_dict_keeps_them(self) -> None:
+        with self.atlas() as atlas:
+            iceland = atlas.map("Iceland", quality="standard")
+        figure = iceland.to_dict()
+        page, controls = page_figure(figure)
+        self.assertIn("updatemenus", figure["layout"])
+        for removed in ("updatemenus", "sliders", "annotations", "title"):
+            self.assertNotIn(removed, page["layout"])
+        self.assertEqual(list(controls["surfaces"]), ["Elevation", "Climate"])
+        self.assertEqual([item["label"] for item in controls["heights"]], ["0.5×", "1×", "1.5×", "2×", "3×"])
+        self.assertEqual(controls["capitalLabels"], [0])
+        self.assertEqual(controls["riverLabels"], [1])
+        self.assertTrue(controls["hasRivers"])
+        self.assertIn("Not for navigation", controls["sources"])
+        self.assertEqual(page["layout"]["scene"]["aspectratio"]["x"], controls["pageScale"])
+        self.assertEqual(figure["layout"]["scene"]["aspectratio"]["x"], 1)
 
     def test_rotation_options_are_validated(self) -> None:
         with self.atlas() as atlas:
