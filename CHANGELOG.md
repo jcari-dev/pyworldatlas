@@ -22,6 +22,8 @@
   and show or hide toggle (`Atlas.map(..., places=8)`). The screen-reader
   description lists every marked place.
 - New: `Atlas.places_in` lists the best-known places in a country.
+- New: the map page has a **Find a place** box that labels any marked place on
+  the map and announces it to screen readers.
 - Places are stored in a compact column format (6 to 10 bytes per place) using
   only the standard library, and unpacked once into a local SQLite index on
   first search.

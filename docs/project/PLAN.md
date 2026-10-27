@@ -142,8 +142,8 @@ on a slow 3G connection, and every place on Earth under 2 minutes on a slow
 - **Done: places on 3D maps.** Towns, mountains and islands, lakes and seas,
   and landmarks as layers that can be shown, hidden, and hovered for their
   facts (`Atlas.map(..., places=8)`, `Atlas.places_in`).
-- Explorable 3D maps, next: search on the map and airport and World Heritage
-  layers.
+- **Done: search on the map** (Find a place box on the map page).
+- Explorable 3D maps, next: airport and World Heritage layers.
 
 ## 0.12: The world in numbers
 
