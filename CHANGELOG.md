@@ -41,6 +41,14 @@
   with a country badge and subtitle, light and dark themes, and a bottom-sheet
   layout on phones. `to_dict()` and `figure()` keep Plotly's in-figure controls
   for notebooks.
+- **Accessibility.** Map pages can be used without a mouse or a screen: the map
+  takes keyboard focus (arrow keys turn and tilt it, plus and minus zoom, 0
+  resets), carries a plain-language description of its terrain, climate
+  classes, capital, and rivers for screen readers (also shown under "About
+  this map"), and announces every control change. Control outlines now meet
+  the 3:1 contrast requirement in light and dark themes.
+- The documentation adds a "Skip to main content" link and darker link, label,
+  and caption colors that meet WCAG AA contrast.
 - The `pyworldatlas-mapview` and `pyworldatlas-mapdata-*` packages are retired.
   The `maps` and `maps-overview` extras remain, empty, so older install commands
   still work.

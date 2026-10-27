@@ -228,6 +228,27 @@ class EducationalPolicyTests(unittest.TestCase):
         for page in re.findall(r"^   ([a-z_/]+)$", index, flags=re.MULTILINE):
             self.assertIn(f'"{page}"', docs_config, page)
 
+    def test_documentation_offers_a_skip_link_and_readable_colors(self):
+        layout = (ROOT / "docs/source/_templates/layout.html").read_text(encoding="utf-8")
+        css = (ROOT / "docs/source/_static/pyworldatlas.css").read_text(encoding="utf-8")
+        self.assertIn('href="#main-content">Skip to main content</a>', layout)
+        self.assertIn('<span id="main-content" tabindex="-1"></span>', layout)
+        self.assertIn(".atlas-skip-link:focus", css)
+
+        def luminance(color: str) -> float:
+            channels = [int(color[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+            linear = [c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4 for c in channels]
+            return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
+
+        def contrast(first: str, second: str) -> float:
+            high, low = sorted((luminance(first), luminance(second)), reverse=True)
+            return (high + 0.05) / (low + 0.05)
+
+        variables = dict(re.findall(r"--(atlas-[a-z-]+):\s*(#[0-9a-f]{6})", css))
+        for name in ("atlas-blue", "atlas-teal", "atlas-ink", "atlas-muted"):
+            with self.subTest(color=name):
+                self.assertGreaterEqual(contrast(variables[name], variables["atlas-blue-soft"]), 4.5)
+
     def test_project_text_uses_no_em_dashes(self):
         paths = [
             *ROOT.glob("*.md"),

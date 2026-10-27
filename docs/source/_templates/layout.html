@@ -45,3 +45,13 @@
   </script>
   {%- endif %}
 {% endblock %}
+
+{% block extrabody %}
+  {{ super() }}
+  <a class="atlas-skip-link" href="#main-content">Skip to main content</a>
+{% endblock %}
+
+{% block document %}
+  <span id="main-content" tabindex="-1"></span>
+  {{ super() }}
+{% endblock %}

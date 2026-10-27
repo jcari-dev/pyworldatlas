@@ -532,3 +532,62 @@ def build_figure(
     if not map_annotations:
         del layout["scene"]["annotations"]  # plotly.js treats [] and absent alike
     return {"data": traces, "layout": layout}
+
+
+def _share(count: int, total: int) -> str:
+    percent = round(count * 100 / total)
+    return f"{percent}%" if percent >= 1 else "under 1%"
+
+
+def describe(request: CountryMap, payload: dict[str, Any], quality: str) -> list[str]:
+    """Return plain-language sentences that describe a map for screen-reader users."""
+    rows, columns = int(payload["rows"]), int(payload["columns"])
+    climate, _ = _decode_climate(payload["climate"], rows, columns, payload["climateLegend"])
+    counts: dict[int, int] = {}
+    for row in climate:
+        for value in row:
+            if value is not None:
+                counts[value] = counts.get(value, 0) + 1
+    total = sum(counts.values())
+
+    def metres(value: int) -> str:
+        text = f"{abs(value):,} m"
+        return f"{text} below sea level" if value < 0 else text
+
+    sentences = [
+        f"{request.country_name}, shown as a {quality} 3D terrain map sampled every "
+        f"{payload['resolutionArcMinutes']} arc-minutes.",
+    ]
+    lowest = int(payload["minimumElevationM"] or 0)
+    highest = int(payload["maximumElevationM"] or 0)
+    if lowest == highest:
+        sentences.append(
+            f"At this resolution the land appears flat, at {metres(lowest)}; "
+            "it is too small to show differences in height."
+        )
+    else:
+        sentences.append(
+            f"Elevation on the map ranges from {metres(lowest)} to {metres(highest)}."
+        )
+    if request.capital_name and request.capital_latitude is not None:
+        sentences.append(f"The capital, {request.capital_name}, is marked with a pink diamond.")
+    if total:
+        ranked = sorted(counts.items(), key=lambda item: (-item[1], item[0]))
+        legend = payload["climateLegend"]
+        parts = [
+            f"{legend[str(index)]['name']} ({legend[str(index)]['code']}), "
+            f"{_share(count, total)}"
+            for index, count in ranked[:4]
+        ]
+        extra = f", and {len(ranked) - 4} more" if len(ranked) > 4 else ""
+        sentences.append("Climate classes by area: " + "; ".join(parts) + extra + ".")
+    rivers = [
+        name
+        for name in dict.fromkeys(str(river["name"]) for river in payload["rivers"])
+        if name.casefold() != "river"  # unnamed source records
+    ]
+    sentences.append(
+        f"Rivers shown: {', '.join(rivers)}." if rivers else "No major rivers are shown."
+    )
+    sentences.append("Outlines and rivers are simplified. The map is not for navigation.")
+    return sentences

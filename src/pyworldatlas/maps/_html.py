@@ -31,6 +31,12 @@ def rotation_options(auto_rotate: bool, rotation_speed: float) -> tuple[bool, fl
     return auto_rotate, speed
 
 
+KEYBOARD_HINT = (
+    "Keyboard: select the map, then use the left and right arrow keys to turn it, "
+    "the up and down arrow keys to tilt it, plus and minus to zoom, and 0 to reset "
+    "the view."
+)
+
 PAGE_SCALE = 1.45
 """How much larger the scene is drawn on the standalone page than in ``to_dict()``."""
 
@@ -82,13 +88,13 @@ _STYLE = """
 :root {
   color-scheme: light dark;
   --bg: #f4f7fa; --panel: #ffffff; --text: #17293d; --muted: #5b6b7c;
-  --line: #dbe3eb; --accent: #287aa3; --accent-text: #ffffff; --soft: #eef4f8;
+  --line: #dbe3eb; --control: #7a8a9b; --accent: #287aa3; --accent-text: #ffffff; --soft: #eef4f8;
   --shadow: 0 10px 30px rgba(22, 48, 74, 0.10);
 }
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #0e1620; --panel: #16212d; --text: #e6edf4; --muted: #9db0c2;
-    --line: #2a3a4b; --accent: #5bb3db; --accent-text: #0b1a26; --soft: #1d2b39;
+    --line: #2a3a4b; --control: #66798d; --accent: #5bb3db; --accent-text: #0b1a26; --soft: #1d2b39;
     --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
   }
 }
@@ -108,7 +114,20 @@ header { display: flex; align-items: center; gap: 14px; padding: 16px 24px 8px; 
 h1 { font-size: 22px; font-weight: 650; margin: 0; letter-spacing: -0.01em; }
 .subtitle { color: var(--muted); font-size: 13.5px; margin: 2px 0 0; }
 main { position: relative; min-height: 0; }
+.map-frame { position: absolute; inset: 0; border-radius: 12px; }
+.map-frame:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
 #pyworldatlas-map { position: absolute; inset: 0; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+.about summary {
+  cursor: pointer; color: var(--text); font-weight: 600; font-size: 13.5px;
+  padding: 4px 0; list-style-position: inside;
+}
+.about p, .about ul { color: var(--text); font-size: 13.5px; margin: 6px 0; }
+.about ul { padding-left: 18px; }
+.about .hint { color: var(--muted); }
 .panel {
   position: absolute; top: 12px; left: 24px; width: 248px; z-index: 5;
   background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
@@ -122,7 +141,7 @@ main { position: relative; min-height: 0; }
   letter-spacing: 0.06em; text-transform: uppercase; margin: 0 0 6px;
 }
 .segmented {
-  display: flex; background: var(--soft); border: 1px solid var(--line);
+  display: flex; background: var(--soft); border: 1px solid var(--control);
   border-radius: 9px; padding: 3px; gap: 3px;
 }
 .segmented button {
@@ -134,7 +153,7 @@ main { position: relative; min-height: 0; }
 }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chip, .action {
-  border: 1px solid var(--line); background: var(--panel); color: var(--text);
+  border: 1px solid var(--control); background: var(--panel); color: var(--text);
   border-radius: 999px; font: inherit; font-size: 13.5px; padding: 5px 12px; cursor: pointer;
 }
 .chip[aria-pressed="true"] {
@@ -180,6 +199,13 @@ _CONTROLS_SCRIPT = r"""
 
   const NARROW_SCALE = 0.82;
   let terrainHeight = controls.aspect.z;
+  let zoom = 1;
+  const status = document.getElementById('map-status');
+  function announce(message) {
+    status.textContent = '';
+    window.setTimeout(function () { status.textContent = message; }, 60);
+  }
+  function screenScale() { return (isWide() ? controls.pageScale : NARROW_SCALE) * zoom; }
   function isWide() { return window.innerWidth > 760; }
 
   let surface = Object.keys(controls.surfaces)[0];
@@ -199,7 +225,7 @@ _CONTROLS_SCRIPT = r"""
 
   function sceneFor() {
     const wide = isWide();
-    const scale = wide ? controls.pageScale : NARROW_SCALE;
+    const scale = screenScale();
     const start = wide
       ? Math.min(0.4, (panel.offsetLeft + panel.offsetWidth + 16) / Math.max(plot.clientWidth, 1))
       : 0;
@@ -226,7 +252,6 @@ _CONTROLS_SCRIPT = r"""
 
   fitFigure(data, layout);
   const config = __CONFIG__;
-  config.displayModeBar = isWide() ? 'hover' : false;
   Plotly.newPlot(plot, data, layout, config).then(wire);
 
   function wire() {
@@ -252,6 +277,7 @@ _CONTROLS_SCRIPT = r"""
         const update = Object.assign({}, controls.surfaces[surface]);
         update.colorbar = [colorbarFor()];
         Plotly.restyle(plot, update, [0]);
+        announce('Colored by ' + surface.toLowerCase() + '.');
       });
     });
 
@@ -259,8 +285,8 @@ _CONTROLS_SCRIPT = r"""
       button.addEventListener('click', function () {
         choose(button.parentElement, button);
         terrainHeight = Number(button.dataset.height);
-        const scale = isWide() ? controls.pageScale : NARROW_SCALE;
-        Plotly.relayout(plot, {'scene.aspectratio.z': terrainHeight * scale});
+        Plotly.relayout(plot, {'scene.aspectratio.z': terrainHeight * screenScale()});
+        announce('Terrain height ' + button.textContent + '.');
       });
     });
 
@@ -272,6 +298,7 @@ _CONTROLS_SCRIPT = r"""
         update['scene.annotations[' + index + '].visible'] = visible;
       });
       Plotly.relayout(plot, update);
+      announce(button.textContent + (visible ? ' shown.' : ' hidden.'));
     }
     const capitalChip = document.querySelector('[data-labels="capital"]');
     if (capitalChip) {
@@ -292,6 +319,7 @@ _CONTROLS_SCRIPT = r"""
         riverLines.setAttribute('aria-pressed', String(visible));
         const index = plot.data.findIndex(function (trace) { return trace.name === 'Rivers'; });
         Plotly.restyle(plot, {visible: visible}, [index]);
+        announce('Rivers ' + (visible ? 'shown.' : 'hidden.'));
       });
     }
 
@@ -361,10 +389,56 @@ _CONTROLS_SCRIPT = r"""
       }
     }
 
-    rotateButton.addEventListener('click', function () { setRotating(!rotating); });
-    document.getElementById('reset').addEventListener('click', function () {
+    rotateButton.addEventListener('click', function () {
+      setRotating(!rotating);
+      announce(rotating ? 'Rotating.' : 'Rotation paused.');
+    });
+
+    function resetView() {
       setRotating(false);
-      Plotly.relayout(plot, {'scene.camera': JSON.parse(JSON.stringify(controls.camera))});
+      zoom = 1;
+      Plotly.relayout(plot, {
+        'scene.camera': JSON.parse(JSON.stringify(controls.camera)),
+        'scene.aspectratio': sceneFor().aspectratio
+      });
+      announce('View reset.');
+    }
+    document.getElementById('reset').addEventListener('click', resetView);
+
+    // Keyboard: turn with left and right, tilt with up and down, zoom with + and -.
+    const frame = document.getElementById('map-frame');
+    function moveCamera(turnDegrees, tilt) {
+      setRotating(false);
+      const eye = (plot.layout.scene.camera && plot.layout.scene.camera.eye) || controls.camera.eye;
+      const radius = Math.hypot(eye.x, eye.y) || 0.65;
+      const angle = Math.atan2(eye.y, eye.x) + turnDegrees * Math.PI / 180;
+      const height = Math.min(2.5, Math.max(0.1, eye.z + tilt));
+      Plotly.relayout(plot, {
+        'scene.camera.eye': {x: radius * Math.cos(angle), y: radius * Math.sin(angle), z: height}
+      });
+    }
+    function changeZoom(factor) {
+      zoom = Math.min(3, Math.max(0.5, zoom * factor));
+      Plotly.relayout(plot, {'scene.aspectratio': sceneFor().aspectratio});
+      announce('Zoom ' + Math.round(zoom * 100) + ' percent.');
+    }
+    frame.addEventListener('keydown', function (event) {
+      const keys = {
+        ArrowLeft: function () { moveCamera(-15, 0); },
+        ArrowRight: function () { moveCamera(15, 0); },
+        ArrowUp: function () { moveCamera(0, 0.12); },
+        ArrowDown: function () { moveCamera(0, -0.12); },
+        '+': function () { changeZoom(1.2); },
+        '=': function () { changeZoom(1.2); },
+        '-': function () { changeZoom(1 / 1.2); },
+        '0': resetView,
+        Home: resetView
+      };
+      const action = keys[event.key];
+      if (action) {
+        event.preventDefault();
+        action();
+      }
     });
     document.getElementById('download').addEventListener('click', function () {
       const resume = rotating;
@@ -420,6 +494,7 @@ def document(
     country: str,
     code: str,
     subtitle: str,
+    description: list[str],
     auto_rotate: bool,
     rotation_speed: float,
     png_filename: str,
@@ -432,7 +507,7 @@ def document(
         "responsive": True,
         "displaylogo": False,
         "scrollZoom": True,
-        "modeBarButtonsToRemove": ["toImage"],
+        "displayModeBar": False,
     }
     surfaces = [
         ("data-surface", name, name, index == 0) for index, name in enumerate(controls["surfaces"])
@@ -463,6 +538,7 @@ def document(
         .replace("__ROTATION_SPEED__", json.dumps(rotation_speed))
         .replace("__PNG_FILENAME__", json.dumps(png_filename))
     )
+    about = "".join(f"<p>{escape(sentence)}</p>" for sentence in description)
     title = f"{country} 3D map · PyWorldAtlas"
     badge = f'<span class="badge" aria-hidden="true">{escape(code)}</span>' 
     return "\n".join(
@@ -479,8 +555,12 @@ def document(
             f'<header>{badge}<div><h1>{escape(country)}</h1>'
             f'<p class="subtitle">{escape(subtitle)}</p></div></header>',
             "<main>",
-            '<div id="pyworldatlas-map" role="img" '
-            f'aria-label="Interactive 3D terrain map of {escape(country)}"></div>',
+            '<div class="map-frame" id="map-frame" tabindex="0" role="img" '
+            f'aria-label="3D terrain map of {escape(country)}" '
+            'aria-describedby="map-description map-keys">',
+            '<div id="pyworldatlas-map" aria-hidden="true"></div>',
+            "</div>",
+            '<p id="map-status" class="sr-only" role="status" aria-live="polite"></p>',
             '<aside class="panel" data-open="false" aria-label="Map controls">',
             '<button type="button" class="panel-toggle" aria-expanded="false">Show map controls</button>',
             _segmented("Color by", surfaces),
@@ -494,6 +574,10 @@ def document(
             '<button type="button" class="action" id="reset">Reset view</button>'
             '<button type="button" class="action primary" id="download">Save PNG</button>'
             "</div></div>",
+            '<div class="group"><details class="about"><summary>About this map</summary>'
+            f'<div id="map-description">{about}</div>'
+            f'<p class="hint" id="map-keys">{escape(KEYBOARD_HINT)}</p>'
+            "</details></div>",
             "</aside>",
             "</main>",
             f'<footer>{escape(controls["sources"])}</footer>',
