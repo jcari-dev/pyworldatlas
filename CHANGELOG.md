@@ -17,6 +17,11 @@
 - New: `Atlas.lookup` and `pyworldatlas find` search countries, cities,
   regions, and landmarks in one call. A country named exactly comes first as
   its full profile, then the best-known places.
+- New: 3D maps mark the country's best-known towns, mountains and islands,
+  lakes and seas, and landmarks, each kind a layer with its own shape, color,
+  and show or hide toggle (`Atlas.map(..., places=8)`). The screen-reader
+  description lists every marked place.
+- New: `Atlas.places_in` lists the best-known places in a country.
 - Places are stored in a compact column format (6 to 10 bytes per place) using
   only the standard library, and unpacked once into a local SQLite index on
   first search.

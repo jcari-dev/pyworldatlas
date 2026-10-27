@@ -57,6 +57,18 @@ full profile, then the best-known places.
    >>> atlas.lookup("Georgia")[0].capital.name
    'Tbilisi'
 
+The best-known places in a country
+----------------------------------
+
+:meth:`~pyworldatlas.Atlas.places_in` lists a country's best-known places,
+narrowed by ``kind`` or ``category`` when wanted. 3D maps mark these places
+(see :doc:`maps`).
+
+.. doctest::
+
+   >>> [place.english_name for place in atlas.places_in("Iceland", kind="volcano", limit=2)]
+   ['Hekla', 'Laki']
+
 What is near here?
 ------------------
 

@@ -139,9 +139,11 @@ on a slow 3G connection, and every place on Earth under 2 minutes on a slow
 - **Done: one lookup** across countries, places, regions, and landmarks
   (`Atlas.lookup`, `pyworldatlas find`).
 - **Done: proximity search** over all installed places (`Atlas.places_near`).
-- Explorable 3D maps: every installed place type (cities, subdivisions,
-  airports, landmarks) as layers that can be searched, filtered, and clicked
-  for their facts on the map.
+- **Done: places on 3D maps.** Towns, mountains and islands, lakes and seas,
+  and landmarks as layers that can be shown, hidden, and hovered for their
+  facts (`Atlas.map(..., places=8)`, `Atlas.places_in`).
+- Explorable 3D maps, next: search on the map and airport and World Heritage
+  layers.
 
 ## 0.12: The world in numbers
 

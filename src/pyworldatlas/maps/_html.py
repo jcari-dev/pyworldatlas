@@ -63,6 +63,7 @@ def page_figure(figure: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]
         "capitalLabels": [i for i, item in enumerate(annotations) if item.get("showarrow")],
         "riverLabels": [i for i, item in enumerate(annotations) if not item.get("showarrow")],
         "hasRivers": any(trace.get("name") == "Rivers" for trace in figure["data"]),
+        "placeLayers": [trace["name"] for trace in figure["data"] if trace.get("meta") == "places"],
         "camera": copy.deepcopy(layout["scene"]["camera"]),
         "aspect": copy.deepcopy(layout["scene"]["aspectratio"]),
         "pageScale": PAGE_SCALE,
@@ -312,6 +313,16 @@ _CONTROLS_SCRIPT = r"""
         toggleLabels(riverChip, controls.riverLabels);
       });
     }
+    document.querySelectorAll('[data-trace]').forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        const visible = chip.getAttribute('aria-pressed') !== 'true';
+        chip.setAttribute('aria-pressed', String(visible));
+        const name = chip.getAttribute('data-trace');
+        const index = plot.data.findIndex(function (trace) { return trace.name === name; });
+        Plotly.restyle(plot, {visible: visible}, [index]);
+        announce(name + (visible ? ' shown.' : ' hidden.'));
+      });
+    });
     const riverLines = document.querySelector('[data-layer="rivers"]');
     if (riverLines) {
       riverLines.addEventListener('click', function () {
@@ -523,6 +534,10 @@ def document(
         chips.append('<button type="button" class="chip" data-layer="rivers" aria-pressed="true">Rivers</button>')
     if controls["riverLabels"]:
         chips.append('<button type="button" class="chip" data-labels="rivers" aria-pressed="false">River names</button>')
+    for layer in controls["placeLayers"]:
+        chips.append(
+            f'<button type="button" class="chip" data-trace="{escape(layer)}" aria-pressed="true">{escape(layer)}</button>'
+        )
     labels = (
         '<div class="group"><p class="group-label">Show</p>'
         f'<div class="chips">{"".join(chips)}</div></div>'

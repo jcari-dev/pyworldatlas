@@ -69,6 +69,8 @@ class CountryMap:
     capital_longitude: float | None = None
     requested_quality: str = "auto"
     data_dir: str | None = None
+    places: tuple[tuple[str, str, str, float, float, int | None], ...] = ()
+    """The places to mark, each as name, kind, category, latitude, longitude, and elevation in metres."""
 
     @classmethod
     def from_country(
@@ -77,8 +79,12 @@ class CountryMap:
         *,
         quality: str = "auto",
         data_dir: str | Path | None = None,
+        places: tuple[Any, ...] = (),
     ) -> CountryMap:
-        """Create a map request from a PyWorldAtlas country profile."""
+        """Create a map request from a PyWorldAtlas country profile.
+
+        ``places`` are :class:`~pyworldatlas.Place` objects to mark on the map.
+        """
         capital = getattr(country, "capital", None)
         coordinates = getattr(capital, "coordinates", None) if capital else None
         return cls(
@@ -90,6 +96,13 @@ class CountryMap:
             capital_longitude=getattr(coordinates, "longitude", None) if coordinates else None,
             requested_quality=quality,
             data_dir=None if data_dir is None else str(data_dir),
+            places=tuple(
+                (
+                    place.english_name, place.kind, place.category,
+                    place.coordinates.latitude, place.coordinates.longitude, place.elevation_m,
+                )
+                for place in places
+            ),
         )
 
     @property
@@ -119,8 +132,8 @@ class CountryMap:
 
         The figure contains elevation and climate surface controls, terrain
         height choices, optional river and capital labels, a country outline,
-        source-provided river centerlines, and the primary capital when
-        coordinates are available.
+        source-provided river centerlines, the primary capital when
+        coordinates are available, and markers for well-known places.
         """
         quality, folder, payload = self._payload()
         template = json.loads(
@@ -153,7 +166,8 @@ class CountryMap:
 
         The page fills the browser window and offers a control panel to color
         the terrain by elevation or climate, change terrain height, show or hide
-        the capital, rivers, and river names, rotate the view, reset the camera,
+        the capital, rivers, river names, and each kind of marked place, rotate
+        the view, reset the camera,
         and download a high-resolution PNG. The map can be turned, tilted, and
         zoomed from the keyboard, carries a plain-language description for screen
         readers, and announces each change. On narrow screens the panel becomes
