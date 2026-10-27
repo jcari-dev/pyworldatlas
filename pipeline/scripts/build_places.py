@@ -12,7 +12,8 @@ Educational value uses only signals in the data: what a place is, how big or
 high it is, and how widely it is known (named in other writing systems and
 languages, with an English Wikipedia article). Shops, hotels, farms, roads and
 similar spots are left out. ``pipeline/config/must_have_places.json`` lists a few
-famous places whose GeoNames entries lack those signals.
+famous places whose GeoNames entries lack those signals, and corrects the few
+English names that are misspelled in the source.
 
 Usage: python pipeline/scripts/build_places.py [school|explorer|world ...]
 Only the Python standard library is used. Memory peaks around 6 GB.
@@ -258,12 +259,17 @@ def fame(places: Places, languages: array, enwiki: array, i: int) -> int:
 
 def main() -> None:
     verify_snapshot()
-    must_have = {int(item["geonames_id"]) for item in json.loads(MUST_HAVE.read_text(encoding="utf-8"))["places"]}
+    reviewed = json.loads(MUST_HAVE.read_text(encoding="utf-8"))["places"]
+    must_have = {int(item["geonames_id"]) for item in reviewed}
+    corrections = {int(item["geonames_id"]): item["english_name"] for item in reviewed if "english_name" in item}
     log("Reading every place")
     places = Places()
     places.read(SNAPSHOT / "allCountries.zip")
     log(f"Read {len(places.ids):,} places; reading alternate names")
     languages, enwiki, english = read_alternate_names(places, SNAPSHOT / "alternateNamesV2.zip")
+    for i, place_id in enumerate(places.ids):
+        if place_id in corrections:
+            english[i] = corrections[place_id]
     log("Ranking by educational value")
     tiers = rank(places, languages, enwiki, must_have)
     missing = must_have - {places.ids[i] for i in range(len(places.ids)) if tiers[i] == 1}

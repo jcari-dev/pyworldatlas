@@ -1,9 +1,9 @@
 {
-  "description": "Famous places whose GeoNames entries lack the language and Wikipedia signals the ranking uses. Each is kept in the school atlas. Add an entry only with its GeoNames id and coordinates checked.",
+  "description": "Famous places whose GeoNames entries lack the language and Wikipedia signals the ranking uses. Each is kept in the school atlas. Add an entry only with its GeoNames id and coordinates checked. An optional english_name corrects a misspelled English name in the source.",
   "places": [
     {"geonames_id": 6619202, "name": "Grand Canyon", "checked": "36.0, -113.8, Arizona, United States"},
     {"geonames_id": 2212709, "name": "Sahara", "checked": "26.0, 13.0, desert centre point in Libya"},
-    {"geonames_id": 3407729, "name": "Amazon River", "checked": "-0.2, -49.0, river mouth, Brazil"},
+    {"geonames_id": 3407729, "name": "Amazon River", "english_name": "Amazon River", "checked": "-0.2, -49.0, river mouth, Brazil; GeoNames English name is misspelled Amazone River"},
     {"geonames_id": 7932547, "name": "Mississippi River", "checked": "38.2, -90.4, Missouri, United States"},
     {"geonames_id": 1252558, "name": "Himalayas", "checked": "28.0, 84.0, Nepal"},
     {"geonames_id": 2661786, "name": "Alps", "checked": "46.4, 10.0, Switzerland"},

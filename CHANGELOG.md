@@ -24,6 +24,8 @@
 - New: `Atlas.places_in` lists the best-known places in a country.
 - New: the map page has a **Find a place** box that labels any marked place on
   the map and announces it to screen readers.
+- A short reviewed list corrects English names misspelled in the source, such
+  as GeoNames' "Amazone River", now "Amazon River".
 - Places are stored in a compact column format (6 to 10 bytes per place) using
   only the standard library, and unpacked once into a local SQLite index on
   first search.
