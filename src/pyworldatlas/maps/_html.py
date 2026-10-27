@@ -64,6 +64,15 @@ def page_figure(figure: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]
         "riverLabels": [i for i, item in enumerate(annotations) if not item.get("showarrow")],
         "hasRivers": any(trace.get("name") == "Rivers" for trace in figure["data"]),
         "placeLayers": [trace["name"] for trace in figure["data"] if trace.get("meta") == "places"],
+        "places": [
+            {"name": name, "layer": trace["name"], "detail": detail, "x": x, "y": y, "z": z}
+            for trace in figure["data"]
+            if trace.get("meta") == "places"
+            for name, detail, x, y, z in zip(
+                trace["text"], trace["customdata"], trace["x"], trace["y"], trace["z"], strict=True
+            )
+        ],
+        "annotationCount": len(annotations),
         "camera": copy.deepcopy(layout["scene"]["camera"]),
         "aspect": copy.deepcopy(layout["scene"]["aspectratio"]),
         "pageScale": PAGE_SCALE,
@@ -165,6 +174,14 @@ main { position: relative; min-height: 0; }
 .motion input { flex: 1; accent-color: var(--accent); min-width: 0; }
 .motion output { min-width: 34px; text-align: right; font-variant-numeric: tabular-nums; }
 .actions { display: flex; gap: 8px; }
+.find { display: flex; gap: 8px; }
+.find input {
+  flex: 1; min-width: 0; border: 1px solid var(--control); border-radius: 9px;
+  background: var(--panel); color: var(--text); font: inherit; font-size: 13.5px; padding: 6px 10px;
+}
+.find input[aria-invalid="true"] { border-color: #d4335b; }
+.find .action { flex: 0 0 auto; padding: 7px 12px; }
+.find-result { color: var(--muted); font-size: 12.5px; margin: 6px 0 0; min-height: 1em; }
 .action { flex: 1; border-radius: 9px; padding: 7px 8px; }
 .action.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); font-weight: 600; }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
@@ -323,6 +340,52 @@ _CONTROLS_SCRIPT = r"""
         announce(name + (visible ? ' shown.' : ' hidden.'));
       });
     });
+    const findForm = document.getElementById('place-find');
+    if (findForm) {
+      const findInput = document.getElementById('place-search');
+      const findResult = document.getElementById('place-result');
+      const simple = function (text) {
+        return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+      };
+      findForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const query = simple(findInput.value);
+        if (!query) {
+          return;
+        }
+        const tests = [
+          function (name) { return name === query; },
+          function (name) { return name.indexOf(query) === 0; },
+          function (name) { return name.indexOf(query) >= 0; }
+        ];
+        let found = null;
+        tests.some(function (test) {
+          found = controls.places.find(function (place) { return test(simple(place.name)); }) || null;
+          return found !== null;
+        });
+        if (!found) {
+          findInput.setAttribute('aria-invalid', 'true');
+          findResult.textContent = 'No marked place matches "' + findInput.value.trim() + '".';
+          announce(findResult.textContent);
+          return;
+        }
+        findInput.setAttribute('aria-invalid', 'false');
+        const chip = document.querySelector('[data-trace="' + found.layer + '"]');
+        if (chip && chip.getAttribute('aria-pressed') !== 'true') {
+          chip.click();
+        }
+        const update = {};
+        update['scene.annotations[' + controls.annotationCount + ']'] = {
+          x: found.x, y: found.y, z: found.z, text: '<b>' + found.name + '</b>',
+          showarrow: true, arrowhead: 2, arrowcolor: '#287aa3', ax: 0, ay: -40,
+          bgcolor: 'rgba(255, 255, 255, 0.95)', bordercolor: '#287aa3', borderpad: 4,
+          font: {color: '#17293d', size: 13}
+        };
+        Plotly.relayout(plot, update);
+        findResult.textContent = found.name + ': ' + found.detail + '.';
+        announce('Found ' + found.name + ', ' + found.detail + '. It is labeled on the map.');
+      });
+    }
     const riverLines = document.querySelector('[data-layer="rivers"]');
     if (riverLines) {
       riverLines.addEventListener('click', function () {
@@ -544,6 +607,21 @@ def document(
         if chips
         else ""
     )
+    finder = ""
+    if controls["places"]:
+        options = "".join(
+            f'<option value="{escape(name)}"></option>'
+            for name in sorted({place["name"] for place in controls["places"]})
+        )
+        finder = (
+            '<div class="group"><label class="group-label" for="place-search">Find a place</label>'
+            '<form class="find" id="place-find" role="search" aria-label="Find a marked place">'
+            '<input id="place-search" type="search" list="place-names" autocomplete="off" '
+            'aria-describedby="place-result" />'
+            '<button type="submit" class="action">Find</button></form>'
+            f'<datalist id="place-names">{options}</datalist>'
+            '<p class="find-result" id="place-result"></p></div>'
+        )
     script = (
         _CONTROLS_SCRIPT.replace("__CONTROLS__", _script_json(controls))
         .replace("__DATA__", _script_json(plot_figure["data"]))
@@ -581,6 +659,7 @@ def document(
             _segmented("Color by", surfaces),
             _segmented("Terrain height", heights),
             labels,
+            finder,
             '<div class="group"><p class="group-label">Motion</p><div class="motion">'
             '<button type="button" class="action" id="rotate" aria-pressed="false">Rotate</button>'
             '<input id="speed" type="range" min="0.25" max="3" step="0.25" aria-label="Rotation speed" />'

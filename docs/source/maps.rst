@@ -89,6 +89,8 @@ That one call opens a full-window map with a single control panel:
 - markers for well-known towns, mountains and islands, lakes and seas, and
   landmarks, each with its own shape and color and its own **Show** toggle,
   and hover details with the kind of place and its height;
+- **Find a place**: type a marked place's name, with suggestions, to label it
+  on the map;
 - **Motion**: rotate or pause, with a ``0.25×`` to ``3×`` speed slider;
 - **View**: reset the camera, or save a high-resolution PNG;
 - generalized country outlines and source-provided river centerlines with hover
