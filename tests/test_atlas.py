@@ -495,7 +495,7 @@ class AtlasTests(unittest.TestCase):
         self.assertEqual(path.alpha2_codes, tuple(country.alpha2 for country in path.countries))
         self.assertEqual(path.crossings, self.atlas.border_crossings("Portugal", "China"))
         self.assertTrue(self.atlas.has_land_route("Portugal", "China"))
-        for first, second in zip(path.countries, path.countries[1:]):
+        for first, second in zip(path.countries, path.countries[1:], strict=False):
             self.assertTrue(self.atlas.shares_border(first.alpha2, second.alpha2))
 
         same = self.atlas.border_path("Japan", "JP")

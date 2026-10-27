@@ -8,7 +8,8 @@ import json
 from math import asin, cos, radians, sin, sqrt
 from pathlib import Path
 import sqlite3
-from typing import TYPE_CHECKING, Iterable, Iterator
+from typing import TYPE_CHECKING, Any
+from collections.abc import Iterable, Iterator
 
 from ._normalization import normalize_name
 from ._version import SCHEMA_VERSION, __version__
@@ -45,7 +46,7 @@ def _stable_country_sample(
 
     def rank(country: Country) -> tuple[bytes, str]:
         identifier = country.codes.numeric or country.alpha3 or country.alpha2
-        payload = f"pyworldatlas:0.2:{seed}:{identifier}".encode("utf-8")
+        payload = f"pyworldatlas:0.2:{seed}:{identifier}".encode()
         return sha256(payload).digest(), identifier
 
     return tuple(sorted(candidates, key=rank)[:count])
@@ -58,7 +59,7 @@ def _stable_text_order(
     from hashlib import sha256
 
     def rank(value: str) -> tuple[bytes, str]:
-        payload = f"pyworldatlas:0.8:{namespace}:{seed}:{value}".encode("utf-8")
+        payload = f"pyworldatlas:0.8:{namespace}:{seed}:{value}".encode()
         return sha256(payload).digest(), value
 
     return tuple(sorted(values, key=rank))
@@ -232,7 +233,7 @@ class Atlas:
         country: str | Country,
         *,
         quality: str = "auto",
-    ) -> "CountryMap":
+    ) -> CountryMap:
         """Return an interactive offline 3D map for a country profile.
 
         ``country`` accepts the same names and codes as :meth:`country`, or an
@@ -262,7 +263,7 @@ class Atlas:
             raise
         try:
             result = CountryMap.from_country(profile, quality=quality)
-            result.quality
+            _ = result.quality  # load map data now so a missing pack fails here
             return result
         except RuntimeError as error:
             from .exceptions import MapSupportNotInstalledError
@@ -430,6 +431,7 @@ class Atlas:
             raise ValueError("limit must be a positive integer or None")
 
         ranked: list[tuple[Country, int | float]] = []
+        value: int | float | None
         for country in self.countries(continent=continent, region=region):
             if normalized_metric == "population":
                 value = country.population
@@ -482,7 +484,7 @@ class Atlas:
             for position, (country, value) in enumerate(ranked, 1)
         )
 
-    def rank(self, metric: str, **kwargs: object) -> tuple[CountryRanking, ...]:
+    def rank(self, metric: str, **kwargs: Any) -> tuple[CountryRanking, ...]:
         """Alias for :meth:`rank_countries` suited to exploratory sessions."""
         return self.rank_countries(metric, **kwargs)
 
@@ -688,8 +690,10 @@ class Atlas:
         if finish not in parents:
             return None
         path = [finish]
-        while parents[path[-1]] is not None:
-            path.append(parents[path[-1]])
+        parent = parents[finish]
+        while parent is not None:
+            path.append(parent)
+            parent = parents[parent]
         path.reverse()
         references = tuple(self._load_country(item).reference() for item in path)
         return BorderPathResult(references, len(references) - 1)
@@ -926,9 +930,13 @@ class Atlas:
 
     def _flashcard(self, country: Country, topic: str) -> Flashcard:
         reference = country.reference()
+        answer: str | None
+        # _has_flashcard_answer() guarantees the optional field each topic reads.
         if topic == "capitals":
+            assert country.capital is not None
             prompt, answer = f"What is the capital of {country.name}?", country.capital.name
         elif topic == "countries_from_capitals":
+            assert country.capital is not None
             prompt, answer = (
                 f"{country.capital.name} is the capital of which country or area?",
                 country.name,
@@ -948,6 +956,7 @@ class Atlas:
             prompt = f"Which countries or areas share a reviewed land border with {country.name}?"
             answer = ", ".join(neighbor.name for neighbor in self.neighbors(country.alpha2))
         elif topic == "currencies":
+            assert country.currency is not None
             label = country.currency.name or country.currency.code
             answer = f"{label} ({country.currency.code})" if label != country.currency.code else label
             prompt = f"Which currency is listed for {country.name}?"
@@ -963,6 +972,7 @@ class Atlas:
             prompt, answer = f"Which UN region contains {country.name}?", country.region
         elif topic == "climate_zones":
             zone = country.climate.dominant_zone
+            assert zone is not None
             prompt = (
                 f"Which Köppen-Geiger class has the largest represented share "
                 f"of {country.name}?"
@@ -973,6 +983,7 @@ class Atlas:
             answer = f"{country.coastline_km:g} km"
         elif topic == "highest_points":
             point = country.highest_point
+            assert point is not None
             prompt = f"What is the highest point listed for {country.name}?"
             answer = f"{point.name} ({point.elevation_m:g} m)"
         elif topic == "rivers":
@@ -1054,7 +1065,7 @@ class Atlas:
             params,
         ).fetchall()
 
-        def rank(row: object) -> tuple[object, ...]:
+        def rank(row: sqlite3.Row) -> tuple[object, ...]:
             candidate = row["normalized_name"]
             score = 100 if candidate == normalized else 80 if candidate.startswith(normalized) else 50
             population = row["population"] if row["population"] is not None else -1
@@ -1246,7 +1257,7 @@ class Atlas:
         raise TypeError("place must be a city name, country/place model, Coordinate, or (latitude, longitude) tuple")
 
     @staticmethod
-    def _city_from_row(row: object) -> City:
+    def _city_from_row(row: sqlite3.Row) -> City:
         return City(row["name"], row["alpha2"], Coordinate(row["latitude"], row["longitude"]), row["population"], row["elevation_m"], row["timezone_id"], ("official",) if row["is_capital"] else (), (), row["geonames_id"])
 
     def _load_countries(self, country_ids: Iterable[int]) -> tuple[Country, ...]:
@@ -1531,7 +1542,7 @@ class Atlas:
             self._code_cache = None
             self._city_cache = None
 
-    def __enter__(self) -> "Atlas":
+    def __enter__(self) -> Atlas:
         return self
 
     def __exit__(self, *args: object) -> None:

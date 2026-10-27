@@ -14,6 +14,11 @@
   they are needed.
 - Climate quiz answers now read `Af: Tropical, rainforest` instead of using a
   dash separator.
+- The package is now marked as typed (`py.typed`), so editors and type
+  checkers see its full annotations; the source passes strict mypy.
+- Added `python maintain.py quality` with Ruff, strict mypy, and branch coverage
+  (currently 92%, minimum 90%) using development-only tools from
+  `requirements-dev.txt`.
 - Published the 1.x plan, generated `llms.txt` and `llms-full.txt` plain-text
   documentation indexes, and removed em-dashes from the project text.
 
