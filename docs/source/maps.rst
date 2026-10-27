@@ -15,8 +15,7 @@ local HTML document and opens that file.
    misplaced. Countries and areas containing islands, distant territories, or
    separated land areas may render unexpectedly. These maps must not be used
    for navigation, legal boundary interpretation, or authoritative geographic
-   analysis. This feature may change substantially or be removed before
-   version 1.0.
+   analysis. The map feature may still change in a minor release.
 
    **TL;DR:** The maps are fun, but right now this feature is a bug-shaped
    headache. It may settle down before 1.0, or it may be politely shown the

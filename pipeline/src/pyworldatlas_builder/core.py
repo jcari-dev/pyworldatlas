@@ -1383,7 +1383,7 @@ def build_database(
     epoch = os.environ.get("SOURCE_DATE_EPOCH")
     built_at = datetime.fromtimestamp(int(epoch), timezone.utc).isoformat().replace("+00:00", "Z") if epoch else "2026-07-21T00:00:00Z"
     library_version = _project_version(root)
-    meta = {"schema_version": "7", "dataset_version": "2026.07.22.7", "library_version": library_version, "built_at": built_at}
+    meta = {"schema_version": "7", "dataset_version": "2026.10.26.1", "library_version": library_version, "built_at": built_at}
     con.executemany("INSERT INTO schema_meta VALUES (?,?)", sorted(meta.items()))
     sources = [
         ("geonames", "GeoNames", "https://www.geonames.org/", "2026-07-20", "2026-07-20", "CC BY 4.0", "https://creativecommons.org/licenses/by/4.0/", _sha(root / "build_data/raw/geonames/2026-07-20/manifest.json"), "Country metadata and populated places"),
@@ -1629,7 +1629,7 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
     reports.mkdir(parents=True, exist_ok=True)
     countries = normalized["countries"]
     coverage = {
-        "dataset_version": "2026.07.22.7",
+        "dataset_version": "2026.10.26.1",
         "countries": len(countries),
         "capitals": len(normalized["capitals"]),
         "major_cities": len(normalized["cities"]),
@@ -1889,21 +1889,21 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
                 "release": "Published in v0.9.0",
             },
             {
-                "name": "Stable offline atlas",
-                "version": "1.0.0",
-                "status": "planned",
-                "functions": "Planned",
-                "tests": "Planned",
-                "dataset": "Planned",
-                "docs": "Planned",
-                "release": "Planned",
+                "name": "10: Stable and instant",
+                "version": "0.10.0",
+                "status": "complete",
+                "functions": "Frozen public API, per-atlas caches, zero-dependency maps, data packs with get/add/packs/remove, redesigned accessible map page, notebook fact cards, and everyday country names",
+                "tests": "API snapshot, strict typing, lint, branch coverage, speed guards, pack integrity, figure fingerprints, accessibility checks, and Linux, Windows, and macOS CI",
+                "dataset": "248 profiles with 18 more reviewed everyday aliases; map data moved unchanged into checksummed packs",
+                "docs": "Release plan, data-pack and map guides, accessibility, plain-text llms indexes, and release instructions",
+                "release": "Published as v0.10.0",
             },
         ]
     )
     status = {
         "library_version": _project_version(root),
         "schema_version": 7,
-        "dataset_version": "2026.07.22.7",
+        "dataset_version": "2026.10.26.1",
         "milestones": milestones,
         "coverage": coverage,
     }
