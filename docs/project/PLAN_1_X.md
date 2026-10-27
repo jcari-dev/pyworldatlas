@@ -106,7 +106,9 @@ No new data families; the existing data becomes dependable and fast.
   driving side.
 - One lookup across countries, places, subdivisions, and landmarks.
 - Proximity search over all installed places.
-- Map layers for each new feature type.
+- Explorable 3D maps: every installed place type (cities, subdivisions,
+  airports, landmarks) as layers that can be searched, filtered, and clicked
+  for their facts on the map.
 
 ## 1.2: The world in numbers
 

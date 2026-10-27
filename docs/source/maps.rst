@@ -81,17 +81,21 @@ Open your first map
    with Atlas() as atlas:
        atlas.map("Iceland").show(auto_rotate=True)
 
-That one call opens a standalone browser view containing:
+That one call opens a full-window map with a single control panel:
 
-- rotatable and zoomable 3D elevation;
-- five terrain-height settings from ``0.5×`` through ``3×``;
-- play and pause controls with an adjustable ``0.25×`` to ``3×`` rotation speed;
-- an elevation or Köppen-Geiger climate surface switch;
-- generalized country outlines;
-- source-provided river centerlines with hover details and optional names;
-- a high-contrast primary-capital marker with a selectable label;
-- high-resolution PNG export of the current camera view; and
+- rotatable and zoomable 3D elevation that fills the window;
+- **Color by** elevation or Köppen-Geiger climate;
+- **Terrain height** from ``0.5×`` through ``3×``;
+- **Show** toggles for the capital name, river lines, and river names;
+- **Motion**: rotate or pause, with a ``0.25×`` to ``3×`` speed slider;
+- **View**: reset the camera, or save a high-resolution PNG;
+- generalized country outlines and source-provided river centerlines with hover
+  details; and
 - visible resolution, source, and navigation-use notes.
+
+The page follows the reader's light or dark color scheme. On a phone the panel
+becomes a sheet that opens from the bottom of the screen, and the legend moves
+to a slim bar above the map.
 
 ``show()`` returns the generated :class:`~pathlib.Path`, so applications can
 log or reuse the exact local document.
@@ -159,9 +163,8 @@ Write a permanent, self-contained HTML document without opening it:
        )
 
 The exported document embeds the renderer and selected country data. It does
-not depend on a CDN or a running Python process. Select **Download PNG** in the
-viewer to save a crisp 3200 × 1800 image of the current camera angle. The
-camera icon in Plotly's toolbar uses the same high-resolution settings.
+not depend on a CDN or a running Python process. Select **Save PNG** in the
+viewer to save a crisp 3200 × 1800 image of the current camera angle.
 
 Create a documentation GIF
 --------------------------
