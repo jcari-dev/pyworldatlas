@@ -29,6 +29,24 @@ if TYPE_CHECKING:
     from .maps import CountryMap
 
 
+def _name_variants(key: str) -> tuple[str, ...]:
+    """Return the exact lookup key, then common spelling variants of it.
+
+    People often add or drop a leading "the" ("The Gambia", "Netherlands") and
+    shorten "Saint" to "St" ("St Lucia"). Variants are tried only when the exact
+    key has no match, so they never change an existing result.
+    """
+    words = key.split()
+    variants = [key]
+    if words and words[0] == "the":
+        variants.append(" ".join(words[1:]))
+    elif words:
+        variants.append(f"the {key}")
+    if "st" in words:
+        variants.append(" ".join("saint" if word == "st" else word for word in words))
+    return tuple(dict.fromkeys(variant for variant in variants if variant))
+
+
 class Atlas:
     """Open and explore the bundled, read-only world atlas.
 
@@ -107,13 +125,15 @@ class Atlas:
             if code_rows:
                 return tuple(int(row[0]) for row in code_rows)
 
-        normalized = normalize_name(query)
-        name_rows = self._db.connection.execute(
-            """SELECT DISTINCT country_id FROM country_name
-               WHERE normalized_name=? ORDER BY country_id""",
-            (normalized,),
-        ).fetchall()
-        return tuple(int(row[0]) for row in name_rows)
+        for key in _name_variants(normalize_name(query)):
+            name_rows = self._db.connection.execute(
+                """SELECT DISTINCT country_id FROM country_name
+                   WHERE normalized_name=? ORDER BY country_id""",
+                (key,),
+            ).fetchall()
+            if name_rows:
+                return tuple(int(row[0]) for row in name_rows)
+        return ()
 
     def _code_ids(self) -> dict[str, tuple[int, ...]]:
         """Map upper-case alpha-2, alpha-3, and numeric codes to country ids."""

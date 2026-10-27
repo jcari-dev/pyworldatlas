@@ -1,15 +1,25 @@
 {
+  "AE": ["UAE", "U.A.E."],
   "AU": ["Commonwealth of Australia"],
+  "BA": ["Bosnia"],
   "BO": ["Bolivia", "Plurinational State of Bolivia"],
   "BR": ["Federative Republic of Brazil"],
   "CA": [],
+  "CD": ["DRC", "DR Congo", "Congo-Kinshasa"],
+  "CG": ["Congo-Brazzaville", "Republic of Congo"],
   "CU": ["Republic of Cuba"],
+  "CV": ["Cape Verde"],
   "DE": ["Federal Republic of Germany"],
   "DO": ["Dominican Republic"],
+  "FK": ["Falklands"],
   "FR": ["French Republic"],
+  "GB": ["UK", "U.K.", "Britain", "Great Britain"],
   "JP": [],
+  "MM": ["Burma"],
+  "MO": ["Macau"],
+  "SZ": ["Swaziland"],
+  "TL": ["East Timor"],
   "US": ["United States", "USA", "U.S.A.", "America"],
   "VA": ["Vatican City", "Holy See"],
   "ZA": ["Republic of South Africa"]
 }
-
