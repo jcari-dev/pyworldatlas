@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- In Jupyter and other notebooks, a `Country` now displays as an accessible
+  fact card that follows the notebook's theme.
+- Speed guards in the test suite fail if common calls, the first load, or the
+  import slow down sharply, and CI now also tests Windows and macOS.
 - Country lookup understands everyday names: "UK", "Britain", "Burma", "UAE",
   "DRC", "Cape Verde", "East Timor", "Swaziland", "Macau", "Falklands",
   "Bosnia", and more, plus spellings with or without a leading "The" and "St"

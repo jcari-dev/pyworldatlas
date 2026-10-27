@@ -403,6 +403,31 @@ class Country:
         """
         return json.dumps(self.to_dict(include_history), ensure_ascii=False, indent=indent)
 
+    def _repr_html_(self) -> str:
+        """Show the profile as a fact card in Jupyter and other notebook tools.
+
+        The card is the :meth:`summary` as an accessible table. It sets no colors,
+        so it follows the notebook's light or dark theme.
+        """
+        from html import escape
+
+        heading, *lines = self.summary().splitlines()
+        rows = "".join(
+            '<tr><th scope="row" style="text-align:left;padding:2px 14px 2px 0;'
+            f'font-weight:600;vertical-align:top">{escape(label)}</th>'
+            f'<td style="text-align:left;padding:2px 0">{escape(value)}</td></tr>'
+            for label, _, value in (line.partition(": ") for line in lines)
+        )
+        return (
+            '<div class="pyworldatlas-country" style="font-family:system-ui,sans-serif;'
+            'line-height:1.45;max-width:46em">'
+            f'<p style="font-size:1.25em;font-weight:650;margin:0 0 6px">{escape(heading)}</p>'
+            f'<table style="border-collapse:collapse;margin:0">'
+            f"<caption style=\"text-align:left;opacity:0.75;padding-bottom:4px\">"
+            f"Country profile for {escape(self.name)} ({escape(self.alpha2)})</caption>"
+            f"{rows}</table></div>"
+        )
+
     def __str__(self) -> str:
         return self.name
 

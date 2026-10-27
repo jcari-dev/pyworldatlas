@@ -14,12 +14,20 @@ concurrency:
 
 jobs:
   tests:
-    name: Python ${{ matrix.python-version }}
-    runs-on: ubuntu-latest
+    name: Python ${{ matrix.python-version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
+        # Every supported Python on Linux, plus the oldest and newest on Windows
+        # and macOS. Standard GitHub-hosted runners are free for public repos.
+        os: [ubuntu-latest]
         python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+        include:
+          - {os: windows-latest, python-version: "3.10"}
+          - {os: windows-latest, python-version: "3.14"}
+          - {os: macos-latest, python-version: "3.10"}
+          - {os: macos-latest, python-version: "3.14"}
     steps:
       - uses: actions/checkout@v6
         with:
