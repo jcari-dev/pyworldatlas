@@ -1,14 +1,10 @@
 name: Documentation
 
+# Run by hand (Actions > Documentation > Run workflow) from a branch made from
+# the release tag to publish a documentation-only fix. Merges to main do not deploy,
+# so unreleased features never appear on the public site early; each release
+# deploys its own documentation from release.yml.
 on:
-  push:
-    branches: [main]
-    paths:
-      - "docs/**"
-      - "examples/**"
-      - "packs/**"
-      - "src/pyworldatlas/**"
-      - ".github/workflows/docs.yml"
   workflow_dispatch:
 
 permissions:
