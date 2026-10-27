@@ -48,6 +48,7 @@
     "SCHEMA_VERSION",
     "SourceReference",
     "Timezone",
+    "TravelBasics",
     "__version__"
   ],
   "pyworldatlas": {
@@ -493,7 +494,7 @@
     },
     "Country": {
       "kind": "dataclass",
-      "signature": "(name: 'str', official_name: 'str | None', names: 'tuple[LocalizedName, ...]', aliases: 'tuple[str, ...]', codes: 'CountryCodes', flag: 'str', geography: 'Geography', capitals: 'tuple[Capital, ...]', major_cities: 'tuple[City, ...]', sources: 'tuple[SourceReference, ...]', local_names: 'tuple[LocalizedName, ...]' = (), population: 'int | None' = None, currency: 'Currency | None' = None, languages: 'tuple[Language, ...]' = (), calling_codes: 'tuple[str, ...]' = (), top_level_domain: 'str | None' = None, observed_timezones: 'tuple[str, ...]' = (), formal_name: 'str | None' = None, anthems: 'tuple[NationalAnthem, ...]' = (), mottos: 'tuple[NationalMotto, ...]' = (), demonyms: 'tuple[Demonym, ...]' = (), timezones: 'tuple[Timezone, ...]' = (), postal_code: 'PostalCodeFormat | None' = None) -> None",
+      "signature": "(name: 'str', official_name: 'str | None', names: 'tuple[LocalizedName, ...]', aliases: 'tuple[str, ...]', codes: 'CountryCodes', flag: 'str', geography: 'Geography', capitals: 'tuple[Capital, ...]', major_cities: 'tuple[City, ...]', sources: 'tuple[SourceReference, ...]', local_names: 'tuple[LocalizedName, ...]' = (), population: 'int | None' = None, currency: 'Currency | None' = None, languages: 'tuple[Language, ...]' = (), calling_codes: 'tuple[str, ...]' = (), top_level_domain: 'str | None' = None, observed_timezones: 'tuple[str, ...]' = (), formal_name: 'str | None' = None, anthems: 'tuple[NationalAnthem, ...]' = (), mottos: 'tuple[NationalMotto, ...]' = (), demonyms: 'tuple[Demonym, ...]' = (), timezones: 'tuple[Timezone, ...]' = (), postal_code: 'PostalCodeFormat | None' = None, travel: 'TravelBasics | None' = None) -> None",
       "members": {
         "alpha2": "property",
         "alpha3": "property",
@@ -653,6 +654,11 @@
         {
           "name": "postal_code",
           "type": "PostalCodeFormat | None",
+          "default": "None"
+        },
+        {
+          "name": "travel",
+          "type": "TravelBasics | None",
           "default": "None"
         }
       ]
@@ -1619,7 +1625,7 @@
     },
     "SCHEMA_VERSION": {
       "kind": "int",
-      "value": "7"
+      "value": "8"
     },
     "SourceReference": {
       "kind": "dataclass",
@@ -1701,6 +1707,41 @@
           "default": "None"
         }
       ]
+    },
+    "TravelBasics": {
+      "kind": "dataclass",
+      "signature": "(plug_types: 'tuple[str, ...]', voltages_v: 'tuple[int, ...]', frequencies_hz: 'tuple[int, ...]', driving_side: 'str | None', source: 'SourceReference | None' = None) -> None",
+      "members": {
+        "summary": "property"
+      },
+      "frozen": true,
+      "fields": [
+        {
+          "name": "plug_types",
+          "type": "tuple[str, ...]",
+          "default": null
+        },
+        {
+          "name": "voltages_v",
+          "type": "tuple[int, ...]",
+          "default": null
+        },
+        {
+          "name": "frequencies_hz",
+          "type": "tuple[int, ...]",
+          "default": null
+        },
+        {
+          "name": "driving_side",
+          "type": "str | None",
+          "default": null
+        },
+        {
+          "name": "source",
+          "type": "SourceReference | None",
+          "default": "None"
+        }
+      ]
     }
   },
   "pyworldatlas.models": [
@@ -1737,6 +1778,7 @@
     "QuizQuestion",
     "River",
     "SourceReference",
-    "Timezone"
+    "Timezone",
+    "TravelBasics"
   ]
 }

@@ -6,7 +6,7 @@ The models live in small topic modules; every public model is importable from
 
 from __future__ import annotations
 
-from .reference import CountryCodes, Currency, DatasetInfo, Demonym, Language, LocalizedName, NationalAnthem, NationalMotto, PostalCodeFormat, SourceReference, Timezone
+from .reference import CountryCodes, Currency, DatasetInfo, Demonym, Language, LocalizedName, NationalAnthem, NationalMotto, PostalCodeFormat, SourceReference, Timezone, TravelBasics
 from .geography import Area, ClimateProfile, ClimateZone, Coordinate, ElevationPoint, Geography, Lake, PhysicalGeography, River
 from .places import Capital, City, Place
 from .results import BorderPathResult, CapitalDistance, CityDistance, CountryMatch, CountryRanking, CountryReference, PlaceDistance
@@ -48,4 +48,5 @@ __all__ = [
     "River",
     "SourceReference",
     "Timezone",
+    "TravelBasics",
 ]

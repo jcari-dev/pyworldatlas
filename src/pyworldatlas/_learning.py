@@ -50,13 +50,16 @@ FLASHCARD_TOPICS = (
     "continents",
     "countries_from_capitals",
     "currencies",
+    "driving_sides",
     "flags",
     "highest_points",
     "language_codes",
     "local_names",
     "lakes",
     "m49_codes",
+    "mains_electricity",
     "neighbors",
+    "plug_types",
     "population_density",
     "populations",
     "regions",
@@ -109,6 +112,12 @@ def has_flashcard_answer(
         return bool(country.rivers)
     if topic == "top_level_domains":
         return country.top_level_domain is not None
+    if topic == "driving_sides":
+        return country.travel is not None and country.travel.driving_side is not None
+    if topic == "plug_types":
+        return country.travel is not None and bool(country.travel.plug_types)
+    if topic == "mains_electricity":
+        return country.travel is not None and bool(country.travel.voltages_v)
     return True
 
 
@@ -196,6 +205,20 @@ def build_flashcard(
         )
         prompt = f"What is a locally official short name for {country.name} in {local_name.language_name}?"
         answer = local_name.short_name
+    elif topic == "driving_sides":
+        assert country.travel is not None
+        prompt = f"On which side of the road do people drive in {country.name}?"
+        answer = f"On the {country.travel.driving_side}"
+    elif topic == "plug_types":
+        assert country.travel is not None
+        prompt = f"Which electrical plug types are used in {country.name}?"
+        answer = "Type " + ", ".join(country.travel.plug_types)
+    elif topic == "mains_electricity":
+        assert country.travel is not None
+        prompt = f"What is the household mains supply in {country.name}?"
+        answer = "/".join(map(str, country.travel.voltages_v)) + " V"
+        if country.travel.frequencies_hz:
+            answer += ", " + "/".join(map(str, country.travel.frequencies_hz)) + " Hz"
     elif topic == "areas":
         prompt, answer = f"What area is listed for {country.name}?", f"{country.area_km2:g} km²"
     elif topic == "populations":

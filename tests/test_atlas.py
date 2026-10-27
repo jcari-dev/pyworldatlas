@@ -165,6 +165,25 @@ class AtlasTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "exceeds"):
             self.atlas.sample_countries(count=999)
 
+    def test_travel_basics(self):
+        japan = self.atlas.country("Japan").travel
+        self.assertEqual(
+            (japan.plug_types, japan.voltages_v, japan.frequencies_hz, japan.driving_side),
+            (("A", "B"), (100,), (50, 60), "left"),
+        )
+        self.assertEqual(japan.summary, "Plugs A, B · 100 V, 50/60 Hz · drives on the left")
+        self.assertEqual(self.atlas.country("GB").travel.plug_types, ("G",))
+        self.assertIn("Travel: Plug G", self.atlas.country("GB").summary())
+        # Sources that disagree on the driving side leave it missing.
+        self.assertIsNone(self.atlas.country("Argentina").travel.driving_side)
+        sides = {country.travel.driving_side for country in self.atlas if country.travel}
+        self.assertEqual(sides, {"left", "right", None})
+        card = self.atlas.flashcards(topic="driving_sides", count=1, seed=1)[0]
+        self.assertTrue(card.prompt.startswith("On which side of the road"))
+        self.assertIn(card.answer, {"On the left", "On the right"})
+        quiz = self.atlas.quiz(topic="plug_types", count=1, choices=4, seed=3)[0]
+        self.assertEqual(len(quiz.choices), 4)
+
     def test_structured_flashcards(self):
         cards = self.atlas.flashcards(topic="capitals", count=3, seed=42)
         self.assertEqual(
@@ -175,8 +194,8 @@ class AtlasTests(unittest.TestCase):
         topics = (
             "alpha_2_codes", "alpha_3_codes", "areas", "border_counts", "calling_codes",
             "climate_zones", "coastlines", "continents", "countries_from_capitals",
-            "currencies", "flags", "highest_points", "language_codes", "lakes",
-            "local_names", "m49_codes", "neighbors", "population_density",
+            "currencies", "driving_sides", "flags", "highest_points", "language_codes", "lakes",
+            "local_names", "m49_codes", "mains_electricity", "neighbors", "plug_types", "population_density",
             "populations", "regions", "rivers", "top_level_domains",
         )
         for topic in topics:
@@ -575,7 +594,7 @@ class AtlasTests(unittest.TestCase):
 
     def test_dataset_versions(self):
         info = self.atlas.dataset_info()
-        self.assertEqual((info.library_version, info.schema_version, info.dataset_version), ("0.11.0", 7, "2026.10.26.1"))
+        self.assertEqual((info.library_version, info.schema_version, info.dataset_version), ("0.11.0", 8, "2026.10.27.1"))
         self.assertEqual(info.country_count, 248)
 
     def test_english_formal_names_are_sourced_and_discoverable(self):

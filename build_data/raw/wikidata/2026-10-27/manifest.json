@@ -1,0 +1,17 @@
+{
+  "source_id": "wikidata-travel-basics-2026-10-27",
+  "source_version": "2026-10-27 query snapshot",
+  "retrieved_at": "2026-10-27T00:00:00Z",
+  "endpoint": "https://query.wikidata.org/sparql",
+  "query": {
+    "path": "pipeline/queries/wikidata_travel_basics.rq",
+    "sha256": "089192732b6007404b2cfce8a9e7f6e5b7c6966b145e6e8b142e542b99ef4699"
+  },
+  "file": {
+    "path": "travel-basics.json",
+    "sha256": "45dd47e550a14f7ba265c93b843bb0828f602ab4b65a0ccf92481e40974c7d64",
+    "size_bytes": 882836
+  },
+  "rights": "Creative Commons CC0 1.0",
+  "rights_url": "https://www.wikidata.org/wiki/Wikidata:Licensing"
+}

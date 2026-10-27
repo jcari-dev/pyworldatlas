@@ -700,9 +700,9 @@ class Atlas:
         Supported topics are ``alpha_2_codes``, ``alpha_3_codes``, ``areas``,
         ``border_counts``, ``calling_codes``, ``capitals``, ``climate_zones``,
         ``coastlines``, ``continents``,
-        ``countries_from_capitals``, ``currencies``, ``flags``,
+        ``countries_from_capitals``, ``currencies``, ``driving_sides``, ``flags``,
         ``highest_points``, ``language_codes``, ``lakes``, ``local_names``,
-        ``m49_codes``, ``neighbors``, ``rivers``,
+        ``m49_codes``, ``mains_electricity``, ``neighbors``, ``plug_types``, ``rivers``,
         ``population_density``, ``populations``, ``regions``, and
         ``top_level_domains``. Countries missing the answer required by a topic
         are excluded before sampling. An impossible count raises

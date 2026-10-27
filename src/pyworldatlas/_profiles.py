@@ -10,7 +10,7 @@ from .models import (Area, Capital, City, ClimateProfile, ClimateZone, Coordinat
                      Country, CountryCodes, Currency, Demonym, ElevationPoint,
                      Geography, Lake, Language, LocalizedName, NationalAnthem,
                      NationalMotto, PhysicalGeography, PostalCodeFormat, River,
-                     SourceReference, Timezone)
+                     SourceReference, Timezone, TravelBasics)
 
 
 def flag(alpha2: str) -> str:
@@ -183,6 +183,17 @@ def build_country(
         )
         for item in demonym_rows
     )
+    travel_row = next(iter(child_rows("SELECT * FROM country_travel WHERE country_id=?")), None)
+    travel = (
+        TravelBasics(
+            tuple(filter(None, travel_row["plug_types"].split(","))),
+            tuple(int(value) for value in filter(None, travel_row["voltages_v"].split(","))),
+            tuple(int(value) for value in filter(None, travel_row["frequencies_hz"].split(","))),
+            travel_row["driving_side"],
+            source_by_id.get(travel_row["source_id"]),
+        )
+        if travel_row else None
+    )
     postal_code = (
         PostalCodeFormat(
             row["postal_code_format"], row["postal_code_regex"],
@@ -215,6 +226,7 @@ def build_country(
         demonyms=demonyms,
         timezones=timezones,
         postal_code=postal_code,
+        travel=travel,
     )
 
 
