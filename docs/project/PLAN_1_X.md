@@ -14,6 +14,21 @@ The 1.x series uses few, themed minor releases:
   current theme.
 - A major release is reserved for an unavoidable breaking change.
 
+## Who PyWorldAtlas is for
+
+PyWorldAtlas is for every audience and every age: learners, classrooms,
+teachers, hobbyists, and developers. It is an educational project that makes
+reliable world information easy to reach and invites people to learn
+programming by exploring it. Two requirements follow from that purpose and
+apply to every release:
+
+- **Fully accessible.** Documentation, the map page, and command-line output
+  meet WCAG 2.2 AA: complete keyboard use, text alternatives for visual
+  content (including the 3D map), sufficient contrast, respect for reduced
+  motion, and plain, friendly language.
+- **Extremely fast.** Every feature stays responsive on modest and older
+  hardware, within the performance budgets below.
+
 ## Principles every release must keep
 
 1. **Offline at runtime.** Queries never use the network.
@@ -26,7 +41,9 @@ The 1.x series uses few, themed minor releases:
 6. **Zero runtime dependencies.** The package uses only the Python standard
    library, maps included. Large data ships as optional data packs.
 7. **Fast on modest hardware.** Performance budgets are enforced in CI.
-8. **Licenses first.** A source's license is verified and shipped before its
+8. **Accessible to everyone.** New pages, controls, and messages meet
+   WCAG 2.2 AA and are written in plain language.
+9. **Licenses first.** A source's license is verified and shipped before its
    data is collected.
 
 ## Data-admission rules
@@ -95,6 +112,11 @@ No new data families; the existing data becomes dependable and fast.
 - Maps: city markers, elevation-extreme markers, lakes, neighbor scenes,
   click-for-facts, and a lite rendering mode.
 - Rich notebook display for country profiles.
+- Accessibility audit and fixes for the documentation site and the map page:
+  a text summary of each map (terrain range, climate classes, rivers, capital)
+  for screen readers, keyboard-only use, contrast, and focus order.
+- Performance budgets checked automatically, including import time and the
+  first full collection load.
 
 ## 1.1: Every place on Earth
 
