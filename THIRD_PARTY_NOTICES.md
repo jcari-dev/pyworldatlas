@@ -65,7 +65,7 @@ may be used for personal, educational, and commercial purposes. Source archives,
 embedded versions, URLs, and checksums are retained in the raw-data manifest.
 See https://www.naturalearthdata.com/about/terms-of-use/.
 
-The optional 0.9 map packages also use generalized Natural Earth 1:10m Admin 0
+The optional map packs also use generalized Natural Earth 1:10m Admin 0
 map-unit outlines and river/lake centerlines. Overview uses the smaller 1:50m
 river layer. These public-domain vectors are transformed into per-profile map
 records and are not exposed as a boundary-geometry API.
@@ -77,9 +77,10 @@ that it is not suitable for navigation. The source subset, request URL,
 checksum, and transformation are pinned. See
 https://doi.org/10.25921/fd45-gt74.
 
-The optional browser viewer uses Plotly.js through the Plotly Python package.
-Plotly.js is copyright Plotly, Inc. and contributors and is licensed under the
-MIT License. The generated standalone HTML embeds the installed renderer so a
+The optional map packs include plotly.js 3.7.0 and the plotly.py
+"plotly_white" template. Both are copyright Plotly, Inc. and contributors and
+are licensed under the MIT License; each pack carries the license text. The
+generated standalone HTML embeds the renderer from the installed pack so a
 displayed map does not contact a CDN. See https://github.com/plotly/plotly.js.
 
 The documentation includes a small set of Twemoji flag SVGs from release

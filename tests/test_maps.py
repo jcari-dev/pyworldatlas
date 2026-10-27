@@ -11,33 +11,27 @@ import unittest
 from unittest.mock import patch
 import zlib
 
+from pack_fixtures import ROOT, installed_packs
 
-ROOT = Path(__file__).resolve().parents[1]
-for source in (
-    ROOT / "packages/mapview/src",
-    ROOT / "packages/mapdata-overview/src",
-    ROOT / "packages/mapdata-standard/src",
-):
-    sys.path.insert(0, str(source))
+from pyworldatlas import Atlas, MapSupportNotInstalledError
+from pyworldatlas.maps import CountryMap, MapDataError, available_map_qualities
 
-from pyworldatlas import Atlas
-from pyworldatlas_mapview import available_map_qualities
+EDITIONS = (
+    (ROOT / "packs/maps-lite/maps.sqlite3", "overview"),
+    (ROOT / "packs/maps/maps.sqlite3", "standard"),
+)
+
+
+def fingerprint(figure: dict[str, object]) -> str:
+    text = json.dumps(figure, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+    return sha256(text.encode("utf-8")).hexdigest()
 
 
 class MapDataTests(unittest.TestCase):
     def test_both_map_editions_cover_the_complete_atlas(self) -> None:
         with Atlas() as atlas:
             expected = {country.alpha2 for country in atlas}
-        for path, quality in (
-            (
-                ROOT / "packages/mapdata-overview/src/pyworldatlas_mapdata_overview/data/maps.sqlite3",
-                "overview",
-            ),
-            (
-                ROOT / "packages/mapdata-standard/src/pyworldatlas_mapdata_standard/data/maps.sqlite3",
-                "standard",
-            ),
-        ):
+        for path, quality in EDITIONS:
             connection = sqlite3.connect(path)
             try:
                 metadata = dict(connection.execute("SELECT key, value FROM metadata"))
@@ -49,10 +43,7 @@ class MapDataTests(unittest.TestCase):
             self.assertEqual(actual, expected)
 
     def test_every_map_record_passes_its_integrity_hash(self) -> None:
-        for path in (
-            ROOT / "packages/mapdata-overview/src/pyworldatlas_mapdata_overview/data/maps.sqlite3",
-            ROOT / "packages/mapdata-standard/src/pyworldatlas_mapdata_standard/data/maps.sqlite3",
-        ):
+        for path, _ in EDITIONS:
             connection = sqlite3.connect(path)
             try:
                 rows = connection.execute(
@@ -72,9 +63,16 @@ class MapDataTests(unittest.TestCase):
 
 
 class MapViewerTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.data = installed_packs()
+
+    def atlas(self) -> Atlas:
+        return Atlas(data_dir=self.data)
+
     def test_quality_discovery_and_selection(self) -> None:
-        self.assertEqual(available_map_qualities(), ("overview", "standard"))
-        with Atlas() as atlas:
+        self.assertEqual(available_map_qualities(self.data), ("overview", "standard"))
+        with self.atlas() as atlas:
             automatic = atlas.map("Brazil")
             overview = atlas.map("BR", quality="overview")
         self.assertEqual(automatic.quality, "standard")
@@ -82,77 +80,94 @@ class MapViewerTests(unittest.TestCase):
         self.assertEqual(overview.quality, "overview")
         self.assertEqual(overview.resolution_arc_minutes, 20)
 
+    def test_missing_pack_explains_how_to_install_it(self) -> None:
+        with tempfile.TemporaryDirectory() as empty, Atlas(data_dir=empty) as atlas:
+            self.assertEqual(available_map_qualities(empty), ())
+            with self.assertRaisesRegex(MapSupportNotInstalledError, "pyworldatlas get maps$"):
+                atlas.map("Brazil")
+            with self.assertRaisesRegex(MapSupportNotInstalledError, "get maps-lite"):
+                atlas.map("Brazil", quality="overview")
+        with self.assertRaises(ValueError):
+            _ = CountryMap("BR", "Brazil", requested_quality="ultra").quality
+
+    def test_figures_are_unchanged(self) -> None:
+        """Pin two complete figures so rendering changes are always deliberate."""
+        with self.atlas() as atlas:
+            iceland = atlas.map("IS", quality="overview").to_dict()
+            brazil = atlas.map("BR", quality="standard").to_dict()
+        self.assertEqual(
+            fingerprint(iceland),
+            "815ad7f1ae2ab05606d5900e310812528415c21110bd7be759d1eac03c32170d",
+        )
+        self.assertEqual(
+            fingerprint(brazil),
+            "8e7e9a0002e9ebbcbca9c4f27188ba7e8e2d8e603b31a818bd33448954fb4fea",
+        )
+
     def test_country_map_builds_an_offline_interactive_figure(self) -> None:
-        with Atlas() as atlas:
-            brazil = atlas.map("Brazil", quality="overview")
-        figure = brazil.figure()
-        names = {trace.name for trace in figure.data}
-        self.assertIn("Terrain", names)
-        self.assertIn("Country outline", names)
-        self.assertIn("Rivers", names)
-        self.assertIn("Capital", names)
-        self.assertEqual(len(figure.layout.updatemenus[0].buttons), 2)
+        with self.atlas() as atlas:
+            figure = atlas.map("Brazil", quality="overview").to_dict()
+        names = {trace["name"] for trace in figure["data"]}
+        self.assertEqual(names, {"Terrain", "Country outline", "Rivers", "Capital"})
+        self.assertEqual(len(figure["layout"]["updatemenus"][0]["buttons"]), 2)
+        self.assertEqual(figure["layout"]["template"]["layout"]["paper_bgcolor"], "white")
 
     def test_map_controls_adjust_height_and_optional_labels(self) -> None:
-        with Atlas() as atlas:
-            iceland = atlas.map("Iceland", quality="standard")
-        figure = iceland.figure()
-
+        with self.atlas() as atlas:
+            layout = atlas.map("Iceland", quality="standard").to_dict()["layout"]
+        slider = layout["sliders"][0]
         self.assertEqual(
-            [step.label for step in figure.layout.sliders[0].steps],
+            [step["label"] for step in slider["steps"]],
             ["0.5×", "1×", "1.5×", "2×", "3×"],
         )
-        self.assertEqual(figure.layout.sliders[0].active, 1)
+        self.assertEqual(slider["active"], 1)
+        menus = layout["updatemenus"]
         self.assertEqual(
-            [button.label for button in figure.layout.updatemenus[1].buttons],
+            [button["label"] for button in menus[1]["buttons"]],
             ["Capital only", "All names", "River names", "Hide names"],
         )
-        self.assertLess(figure.layout.updatemenus[0].y, 1)
-        self.assertLess(figure.layout.updatemenus[1].y, figure.layout.updatemenus[0].y)
-        annotations = figure.layout.scene.annotations
-        self.assertEqual(annotations[0].text, "<b>Reykjavík</b>")
-        self.assertTrue(annotations[0].visible)
-        self.assertEqual(
-            {annotation.text for annotation in annotations[1:]},
-            {"<b>Þjórsá</b>"},
-        )
-        self.assertTrue(all(not annotation.visible for annotation in annotations[1:]))
+        self.assertLess(menus[1]["y"], menus[0]["y"])
+        annotations = layout["scene"]["annotations"]
+        self.assertEqual(annotations[0]["text"], "<b>Reykjavík</b>")
+        self.assertTrue(annotations[0]["visible"])
+        self.assertEqual({item["text"] for item in annotations[1:]}, {"<b>Þjórsá</b>"})
+        self.assertTrue(all(not item["visible"] for item in annotations[1:]))
 
-        capital = next(trace for trace in figure.data if trace.name == "Capital")
-        self.assertEqual(capital.marker.size, 8)
-        self.assertEqual(capital.marker.line.color, "#ffffff")
+    def test_figure_uses_plotly_only_when_it_is_installed(self) -> None:
+        with self.atlas() as atlas:
+            brazil = atlas.map("Brazil", quality="overview")
+        with patch.dict(sys.modules, {"plotly": None, "plotly.graph_objects": None}):
+            with self.assertRaisesRegex(MapDataError, "pip install plotly"):
+                brazil.figure()
 
     def test_show_opens_a_standalone_local_html_document(self) -> None:
-        with Atlas() as atlas:
+        with self.atlas() as atlas:
             brazil = atlas.map("Brazil", quality="overview")
         with tempfile.TemporaryDirectory() as folder:
-            target = Path(folder) / "brazil.html"
-            result = brazil.write_html(target)
-            html = result.read_text(encoding="utf-8")
-            self.assertIn("Brazil 3D map", html)
-            self.assertIn("plotly.js", html)
+            html = brazil.write_html(Path(folder) / "brazil.html").read_text(encoding="utf-8")
+            self.assertIn("<title>Brazil 3D map · PyWorldAtlas</title>", html)
+            self.assertIn("plotly.js v3.7.0", html)
             self.assertIn("Map motion and export controls", html)
             self.assertIn("Download PNG", html)
             self.assertIn("prefers-reduced-motion", html)
-            self.assertIn('width: 1600', html)
-            self.assertIn('height: 900', html)
-            self.assertIn('scale: 2', html)
+            self.assertIn("width: 1600", html)
+            self.assertIn("height: 900", html)
+            self.assertIn("scale: 2", html)
             self.assertNotRegex(html, r'<script[^>]+src=["\']https?://')
+            self.assertEqual(html.count("</script>"), 3)
         with patch("webbrowser.open", return_value=True) as opened:
             shown = brazil.show(auto_rotate=True, rotation_speed=1.5)
         opened.assert_called_once_with(shown.as_uri(), new=2)
-        self.assertTrue(shown.is_file())
         shown_html = shown.read_text(encoding="utf-8")
         self.assertIn("if (true && !reducedMotion)", shown_html)
         self.assertIn("speedInput.value = String(1.5)", shown_html)
 
     def test_rotation_options_are_validated(self) -> None:
-        with Atlas() as atlas:
+        with self.atlas() as atlas:
             brazil = atlas.map("Brazil", quality="overview")
         for speed in (0, 3.1, float("inf"), float("nan")):
-            with self.subTest(speed=speed):
-                with self.assertRaises(ValueError):
-                    brazil.to_html(rotation_speed=speed)
+            with self.subTest(speed=speed), self.assertRaises(ValueError):
+                brazil.to_html(rotation_speed=speed)
         with self.assertRaises(TypeError):
             brazil.to_html(auto_rotate="yes")  # type: ignore[arg-type]
         with self.assertRaises(TypeError):

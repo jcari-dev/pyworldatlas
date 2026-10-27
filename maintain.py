@@ -18,12 +18,8 @@ import venv
 
 
 ROOT = Path(__file__).resolve().parent
-RELEASE_PROJECTS = (
-    ROOT,
-    ROOT / "packages/mapview",
-    ROOT / "packages/mapdata-overview",
-    ROOT / "packages/mapdata-standard",
-)
+PACK_SOURCE = ROOT / "packs"
+PACK_INDEX = ROOT / "src/pyworldatlas/_pack_index.json"
 
 
 def run(command: list[str], *, env: dict[str, str] | None = None) -> None:
@@ -36,9 +32,6 @@ def builder_env() -> dict[str, str]:
     parts = [
         str(ROOT / "pipeline/src"),
         str(ROOT / "src"),
-        str(ROOT / "packages/mapview/src"),
-        str(ROOT / "packages/mapdata-overview/src"),
-        str(ROOT / "packages/mapdata-standard/src"),
     ]
     if env.get("PYTHONPATH"):
         parts.append(env["PYTHONPATH"])
@@ -51,8 +44,6 @@ def bootstrap() -> None:
     run([
         sys.executable, "-m", "pip", "install", "-r", "docs/requirements.txt",
         "build>=1.2,<2", "setuptools>=77", "-e", ".", "-e", "pipeline",
-        "-e", "packages/mapview", "-e", "packages/mapdata-overview",
-        "-e", "packages/mapdata-standard",
     ])
 
 
@@ -320,39 +311,39 @@ def build_distributions(output_dir: Path | None = None) -> tuple[Path, Path]:
     return wheels[0], sdists[0]
 
 
+def build_packs(output_dir: Path) -> dict[str, dict[str, object]]:
+    """Build every data pack into ``output_dir`` and check the committed index."""
+    sys.path.insert(0, str(ROOT / "src"))
+    from pyworldatlas._packbuild import build_packs as build, index_document
+
+    index = build(PACK_SOURCE, output_dir)
+    if PACK_INDEX.read_text(encoding="utf-8") != index_document(index):
+        raise RuntimeError(
+            "src/pyworldatlas/_pack_index.json is out of date; run: python maintain.py packs"
+        )
+    return index
+
+
+def write_pack_index() -> None:
+    """Rebuild the packs and record their checksums in the package index."""
+    sys.path.insert(0, str(ROOT / "src"))
+    from pyworldatlas._packbuild import build_packs as build, index_document
+
+    with tempfile.TemporaryDirectory(prefix="pyworldatlas-packs-") as folder:
+        index = build(PACK_SOURCE, Path(folder))
+    PACK_INDEX.write_text(index_document(index), encoding="utf-8", newline="\n")
+    for name, item in index.items():
+        print(f"{name}: {item['size_bytes']:,} bytes, sha256 {item['sha256']}")
+
+
 def build_release_distributions(
     output_dir: Path | None = None,
-) -> tuple[list[Path], list[Path]]:
-    """Build the core project and every optional map companion package."""
+) -> tuple[Path, Path, list[Path]]:
+    """Build the wheel, the source distribution, and every data pack."""
     dist = output_dir or ROOT / "dist"
-    if dist.exists():
-        try:
-            shutil.rmtree(dist)
-        except PermissionError as error:
-            raise RuntimeError(
-                f"Could not replace {dist}; close any process using its release artifacts"
-            ) from error
-    dist.mkdir(parents=True, exist_ok=True)
-    for project in RELEASE_PROJECTS:
-        run(
-            [
-                sys.executable,
-                "-m",
-                "build",
-                "--no-isolation",
-                "--outdir",
-                str(dist),
-                str(project),
-            ]
-        )
-    wheels = sorted(dist.glob("*.whl"))
-    sdists = sorted(dist.glob("*.tar.gz"))
-    if len(wheels) != len(RELEASE_PROJECTS) or len(sdists) != len(RELEASE_PROJECTS):
-        raise RuntimeError(
-            f"Expected {len(RELEASE_PROJECTS)} wheels and source distributions, "
-            f"found {wheels!r} and {sdists!r}"
-        )
-    return wheels, sdists
+    wheel, sdist = build_distributions(dist)
+    build_packs(dist)
+    return wheel, sdist, sorted(dist.glob("*.pack"))
 
 
 def demo(wheel: Path | None = None) -> Path:
@@ -421,42 +412,29 @@ def demo(wheel: Path | None = None) -> Path:
     return wheel
 
 
-def demo_maps(wheels: list[Path]) -> None:
-    """Resolve both map extras locally and render a map without a network."""
+def demo_maps(wheel: Path, pack_files: list[Path]) -> None:
+    """Install the wheel with no other packages, add the packs, and render maps offline."""
     with tempfile.TemporaryDirectory(prefix="pyworldatlas-map-demo-") as folder:
         environment = Path(folder) / "venv"
-        venv.EnvBuilder(with_pip=True, system_site_packages=True).create(environment)
+        venv.EnvBuilder(with_pip=True).create(environment)
         python = environment / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
         clean_env = os.environ.copy()
         clean_env.pop("PYTHONPATH", None)
         clean_env["PYTHONUTF8"] = "1"
-        tool_paths = [path for path in site.getsitepackages() if Path(path).exists()]
-        clean_env["PYTHONPATH"] = os.pathsep.join(tool_paths)
-        distribution_directory = wheels[0].parent
-        run(
-            [
-                str(python),
-                "-m",
-                "pip",
-                "install",
-                "--no-index",
-                "--find-links",
-                str(distribution_directory),
-                "--no-deps",
-                "--force-reinstall",
-                f"pyworldatlas=={project_version()}",
-                f"pyworldatlas-mapview=={project_version()}",
-                f"pyworldatlas-mapdata-overview=={project_version()}",
-                f"pyworldatlas-mapdata-standard=={project_version()}",
-            ],
-            env=clean_env,
-        )
+        clean_env["PYWORLDATLAS_DATA"] = str(Path(folder) / "packs")
+        run([
+            str(python), "-m", "pip", "install", "--force-reinstall",
+            "--no-index", "--no-deps", str(wheel),
+        ], env=clean_env)
+        run([str(python), "-m", "pyworldatlas", "add", *map(str, pack_files)], env=clean_env)
         output = Path(folder) / "brazil.html"
         program = (
-            "from pathlib import Path; from pyworldatlas import Atlas; "
+            "import importlib.util; from pathlib import Path; from pyworldatlas import Atlas; "
+            "assert importlib.util.find_spec('plotly') is None; "
             "a=Atlas(); m=a.map('Brazil'); "
             f"p=m.write_html(Path({str(output)!r})); "
-            "assert m.quality == 'standard' and p.stat().st_size > 1000000; a.close()"
+            "assert m.quality == 'standard' and p.stat().st_size > 1000000; "
+            "assert a.map('Brazil', quality='overview').resolution_arc_minutes == 20; a.close()"
         )
         run([str(python), "-c", program], env=clean_env)
 
@@ -465,6 +443,9 @@ def docs(wheel: Path | None = None) -> None:
     status(write=True)
     python = Path(sys.executable)
     temporary: tempfile.TemporaryDirectory[str] | None = None
+    packs_folder = tempfile.TemporaryDirectory(prefix="pyworldatlas-doc-packs-")
+    pack_files = Path(packs_folder.name) / "files"
+    build_packs(pack_files)
     env = builder_env()
     if wheel is not None:
         temporary = tempfile.TemporaryDirectory(prefix="pyworldatlas-docs-")
@@ -473,21 +454,9 @@ def docs(wheel: Path | None = None) -> None:
         python = environment / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
         env = os.environ.copy()
         env.pop("PYTHONPATH", None)
-        companion_wheels = sorted(
-            path
-            for path in wheel.parent.glob("pyworldatlas_*.whl")
-            if path.name.startswith(
-                (
-                    "pyworldatlas_mapview-",
-                    "pyworldatlas_mapdata_overview-",
-                    "pyworldatlas_mapdata_standard-",
-                )
-            )
-        )
         run([
             str(python), "-m", "pip", "install", "--force-reinstall",
             "--no-index", "--no-deps", str(wheel),
-            *(str(path) for path in companion_wheels),
         ], env=env)
         tool_paths = [path for path in site.getsitepackages() if Path(path).exists()]
         if site.ENABLE_USER_SITE:
@@ -495,6 +464,11 @@ def docs(wheel: Path | None = None) -> None:
             if isinstance(user_site, str) and Path(user_site).exists():
                 tool_paths.append(user_site)
         env["PYTHONPATH"] = os.pathsep.join(tool_paths)
+    env["PYWORLDATLAS_DATA"] = str(Path(packs_folder.name) / "installed")
+    run([
+        str(python), "-m", "pyworldatlas", "add",
+        *map(str, sorted(pack_files.glob("*.pack"))),
+    ], env=env)
     try:
         run([
             str(python), "-m", "sphinx", "-W", "--keep-going",
@@ -509,6 +483,7 @@ def docs(wheel: Path | None = None) -> None:
     finally:
         if temporary is not None:
             temporary.cleanup()
+        packs_folder.cleanup()
 
 
 def prepare_release(version: str, output_dir: Path | None = None) -> None:
@@ -547,22 +522,17 @@ def prepare_release(version: str, output_dir: Path | None = None) -> None:
 
     print("[1/5] Runtime and pipeline tests")
     run_tests()
-    print("[2/5] Build core and optional map distributions")
-    wheels, sdists = build_release_distributions(output_dir)
-    core_wheel = next(path for path in wheels if path.name.startswith(f"pyworldatlas-{version}-"))
-    core_sdist = next(path for path in sdists if path.name == f"pyworldatlas-{version}.tar.gz")
+    print("[2/5] Build the wheel, source distribution, and data packs")
+    core_wheel, core_sdist, pack_files = build_release_distributions(output_dir)
     print("[3/5] Clean installation, examples, and offline map rendering")
     demo(core_wheel)
-    demo_maps(wheels)
+    demo_maps(core_wheel, pack_files)
     print("[4/5] Documentation from release wheel")
     docs(core_wheel)
     print("[5/5] Release content and policy audit")
     audit_wheel(core_wheel)
     audit_sdist(core_sdist)
-    for wheel in wheels:
-        if wheel != core_wheel:
-            audit_map_wheel(wheel)
-    artifacts = [*wheels, *sdists]
+    artifacts = [core_wheel, core_sdist, *pack_files]
     status_data = json.loads((ROOT / "build_data/reports/status.json").read_text(encoding="utf-8"))
     if status_data["library_version"] != version:
         raise RuntimeError("Generated status metadata does not match the release version")
@@ -658,21 +628,15 @@ def check() -> None:
     if not quality():
         run_tests()
     with tempfile.TemporaryDirectory(prefix="pyworldatlas-check-") as folder:
-        print("[2/4] Build distributions and run offline wheel demo")
-        wheels, sdists = build_release_distributions(Path(folder) / "dist")
-        version = project_version()
-        wheel = next(path for path in wheels if path.name.startswith(f"pyworldatlas-{version}-"))
-        sdist = next(path for path in sdists if path.name == f"pyworldatlas-{version}.tar.gz")
+        print("[2/4] Build the wheel and packs, then run offline demos")
+        wheel, sdist, pack_files = build_release_distributions(Path(folder) / "dist")
         demo(wheel)
-        demo_maps(wheels)
+        demo_maps(wheel, pack_files)
         print("[3/4] Documentation")
         docs(wheel)
         print("[4/4] Release content and policy audit")
         audit_wheel(wheel)
         audit_sdist(sdist)
-        for companion in wheels:
-            if companion != wheel:
-                audit_map_wheel(companion)
 
 
 def audit_wheel(wheel: Path) -> None:
@@ -691,26 +655,6 @@ def audit_wheel(wheel: Path) -> None:
             f"forbidden={forbidden}, py.typed={typed}"
         )
     print("All checks passed.")
-
-
-def audit_map_wheel(wheel: Path) -> None:
-    """Ensure a map companion wheel contains only its installed package."""
-    import zipfile
-
-    with zipfile.ZipFile(wheel) as archive:
-        names = archive.namelist()
-    forbidden = [
-        name for name in names
-        if name.startswith(("pipeline/", "tests/", "docs/", "build_data/"))
-    ]
-    databases = [name for name in names if name.endswith("maps.sqlite3")]
-    is_data_wheel = "mapdata" in wheel.name
-    if forbidden or (is_data_wheel and len(databases) != 1) or (not is_data_wheel and databases):
-        raise RuntimeError(
-            f"Map wheel audit failed for {wheel.name}: "
-            f"databases={databases}, forbidden={forbidden}"
-        )
-    print(f"Map wheel {wheel.name}: PASS")
 
 
 def audit_sdist(sdist: Path) -> None:
@@ -753,6 +697,7 @@ def main() -> int:
     release_parser.add_argument("version")
     release_parser.add_argument("--output-dir", type=Path, default=Path("dist"))
     sub.add_parser("quality")
+    sub.add_parser("packs", help="rebuild data packs and update their pinned checksums")
     sub.add_parser("check")
     args = parser.parse_args()
     if args.command == "bootstrap":
@@ -767,6 +712,8 @@ def main() -> int:
         run_tests()
     elif args.command == "quality":
         quality(required=True)
+    elif args.command == "packs":
+        write_pack_index()
     elif args.command == "demo":
         demo()
     elif args.command == "docs":

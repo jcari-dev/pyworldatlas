@@ -1,0 +1,25 @@
+{
+  "format": 1,
+  "packs": {
+    "maps": {
+      "title": "Standard 3D maps, 5 arc-minute terrain",
+      "files": {
+        "maps.sqlite3": "maps/maps.sqlite3",
+        "plotly.min.js": "renderer/plotly.min.js",
+        "plotly-template-white.json": "renderer/plotly-template-white.json",
+        "LICENSE-plotly.txt": "renderer/LICENSE-plotly.txt",
+        "NOTICE.md": "NOTICE.md"
+      }
+    },
+    "maps-lite": {
+      "title": "Overview 3D maps, 20 arc-minute terrain, smaller and faster",
+      "files": {
+        "maps.sqlite3": "maps-lite/maps.sqlite3",
+        "plotly.min.js": "renderer/plotly.min.js",
+        "plotly-template-white.json": "renderer/plotly-template-white.json",
+        "LICENSE-plotly.txt": "renderer/LICENSE-plotly.txt",
+        "NOTICE.md": "NOTICE.md"
+      }
+    }
+  }
+}

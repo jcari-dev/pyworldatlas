@@ -46,8 +46,8 @@ QUALITY = {
 }
 
 OUTPUTS = {
-    "overview": ROOT / "packages/mapdata-overview/src/pyworldatlas_mapdata_overview/data/maps.sqlite3",
-    "standard": ROOT / "packages/mapdata-standard/src/pyworldatlas_mapdata_standard/data/maps.sqlite3",
+    "overview": ROOT / "packs/maps-lite/maps.sqlite3",
+    "standard": ROOT / "packs/maps/maps.sqlite3",
 }
 
 _NC_TYPE_WIDTH = {1: 1, 2: 1, 3: 2, 4: 4, 5: 4, 6: 8}

@@ -34,14 +34,10 @@ classifiers = [
 pyworldatlas = "pyworldatlas.__main__:main"
 
 [project.optional-dependencies]
-maps-overview = [
-  "pyworldatlas-mapview==0.9.5",
-  "pyworldatlas-mapdata-overview==0.9.5",
-]
-maps = [
-  "pyworldatlas-mapview==0.9.5",
-  "pyworldatlas-mapdata-standard==0.9.5",
-]
+# Kept so older install commands still work. Maps need no extra packages now;
+# install map data with: pyworldatlas get maps
+maps-overview = []
+maps = []
 
 [project.urls]
 Homepage = "https://jcari-dev.github.io/pyworldatlas-documentation/"
@@ -61,14 +57,15 @@ package-dir = {"" = "src"}
 where = ["src"]
 
 [tool.setuptools.package-data]
-pyworldatlas = ["data/atlas.sqlite3", "py.typed"]
+pyworldatlas = ["data/atlas.sqlite3", "py.typed", "_pack_index.json"]
 
 [tool.mypy]
 strict = true
 files = ["src/pyworldatlas"]
 
 [[tool.mypy.overrides]]
-module = ["pyworldatlas_mapview", "pyworldatlas_mapview.*"]
+# plotly is optional: only CountryMap.figure() uses it, when installed.
+module = ["plotly", "plotly.*"]
 ignore_missing_imports = true
 
 [tool.coverage.run]

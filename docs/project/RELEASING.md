@@ -4,19 +4,24 @@ PyWorldAtlas builds, verifies, publishes, and documents each release from one
 Git tag. PyPI publishing uses short-lived Trusted Publishing credentials; no
 PyPI API token is stored in GitHub.
 
-## What version 0.9 publishes
+## What a release publishes
 
-The 0.9 release consists of four coordinated PyPI projects:
+Each release publishes one PyPI project and attaches data packs to the GitHub
+release:
 
-| Project | Purpose |
-|---|---|
-| `pyworldatlas` | Dependency-free core package and atlas database |
-| `pyworldatlas-mapview` | Plotly-based browser viewer |
-| `pyworldatlas-mapdata-overview` | Compact global map edition |
-| `pyworldatlas-mapdata-standard` | Recommended global map edition |
+| Artifact | Where | Purpose |
+|---|---|---|
+| `pyworldatlas` wheel and sdist | PyPI | Dependency-free package, atlas database, and map viewer |
+| `pyworldatlas-maps.pack` | GitHub release | Standard 3D map data and renderer |
+| `pyworldatlas-maps-lite.pack` | GitHub release | Overview 3D map data and renderer |
 
-All four projects use the same version. The `maps-overview` and `maps` extras
-on the core package install the correct viewer and data project.
+Packs are built byte for byte reproducibly from `packs/` by
+`python maintain.py packs`, which also records their SHA-256 checksums in
+`src/pyworldatlas/_pack_index.json`. The library accepts only packs with those
+checksums and downloads them from the release that matches its own version.
+
+The `pyworldatlas-mapview` and `pyworldatlas-mapdata-*` PyPI projects were last
+published at 0.9.5 and are no longer released.
 
 ## One-time repository setup
 
@@ -24,26 +29,13 @@ The canonical source repository is `jcari-dev/pyworldatlas`. Pushes and pull
 requests to `main` run CI on Python 3.10 through 3.14, plus the complete wheel,
 example, map-rendering, and documentation gate on Python 3.12.
 
-Create four protected GitHub environments. Requiring maintainer approval before
-deployment is recommended.
+Create one protected GitHub environment named `pypi`. Requiring maintainer
+approval before deployment is recommended.
 
-| PyPI project | GitHub environment |
-|---|---|
-| `pyworldatlas` | `pypi` |
-| `pyworldatlas-mapview` | `pypi-mapview` |
-| `pyworldatlas-mapdata-overview` | `pypi-maps-overview` |
-| `pyworldatlas-mapdata-standard` | `pypi-maps-standard` |
-
-On the **Publishing** page for each PyPI project, configure a GitHub Actions
+On the PyPI **Publishing** page for `pyworldatlas`, configure a GitHub Actions
 trusted publisher with owner `jcari-dev`, repository `pyworldatlas`, workflow
-`release.yml`, and the environment listed above. The distinct environment names
-allow all three new companion projects to be registered as pending publishers
-at the same time.
-
-For a companion project that does not exist yet, create its pending trusted
-publisher on PyPI before pushing the first release tag. The first successful
-publication creates the project. Each publishing job receives only the two
-distribution files that belong to its project.
+`release.yml`, and environment `pypi`. The publishing job receives only the
+wheel and source distribution.
 
 ## Documentation deployment
 
@@ -110,19 +102,23 @@ release workflow from the previous version.
 The tag starts the release workflow. Approve the protected PyPI environments
 when GitHub requests it. The workflow must complete these outcomes:
 
-1. Build and audit four wheels and four source distributions.
-2. Publish all four coordinated projects to PyPI.
-3. Create the GitHub Release with distributions, checksums, and manifest.
-4. Build and deploy the public documentation from the release wheels.
+1. Build and audit the wheel and source distribution, and rebuild the data
+   packs, failing if their checksums differ from the pinned index.
+2. Publish `pyworldatlas` to PyPI.
+3. Create the GitHub Release with the distributions, data packs, checksums, and
+   manifest.
+4. Build and deploy the public documentation from the release wheel.
 
 ## Verify the public release
 
-Create a clean environment and install the recommended map edition from PyPI:
+Create a clean environment, install the package from PyPI, and download the
+map pack from the new GitHub release:
 
 ```console
 py -3.10 -m venv .venv-live
-.venv-live\Scripts\python -m pip install --no-cache-dir "pyworldatlas[maps]==0.9.5"
+.venv-live\Scripts\python -m pip install --no-cache-dir "pyworldatlas==VERSION"
 .venv-live\Scripts\pyworldatlas --version
+.venv-live\Scripts\pyworldatlas get maps
 .venv-live\Scripts\python -c "from pyworldatlas import Atlas; a=Atlas(); m=a.map('Brazil'); print(a.dataset_info().library_version, m.quality, m.resolution_arc_minutes); p=m.write_html('brazil-map.html'); print(p); a.close()"
 ```
 
@@ -132,9 +128,6 @@ and Climate controls work. Then verify:
 - <https://github.com/jcari-dev/pyworldatlas/actions>
 - <https://github.com/jcari-dev/pyworldatlas/releases>
 - <https://pypi.org/project/pyworldatlas/>
-- <https://pypi.org/project/pyworldatlas-mapview/>
-- <https://pypi.org/project/pyworldatlas-mapdata-overview/>
-- <https://pypi.org/project/pyworldatlas-mapdata-standard/>
 - <https://jcari-dev.github.io/pyworldatlas-documentation/>
 
 ## Release rules

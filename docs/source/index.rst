@@ -84,8 +84,8 @@ Open the terrain
 
 The map opens as a rotatable local browser view. Play or pause automatic
 rotation, change its speed, switch between Elevation and Climate, or download a
-high-resolution PNG. Add maps with
-``python -m pip install "pyworldatlas[maps]"``.
+high-resolution PNG. Add maps once with ``pyworldatlas get maps``; no extra
+Python packages are needed.
 
 A small taste of the atlas
 --------------------------

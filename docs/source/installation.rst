@@ -33,26 +33,29 @@ installed version:
 Optional 3D maps
 ----------------
 
-Install the recommended Standard global map edition together with the core
-package:
+Maps need no extra Python packages, only their data. Install the recommended
+Standard map pack once:
 
 .. code-block:: console
 
-   python -m pip install "pyworldatlas[maps]"
+   pyworldatlas get maps
 
-For the smallest download, install Overview instead:
+For the smallest download, install the Overview pack instead:
 
 .. code-block:: console
 
-   python -m pip install "pyworldatlas[maps-overview]"
+   pyworldatlas get maps-lite
 
-Both editions work offline after installation and cover all 248 atlas
-profiles. See :doc:`maps` for the exact sizes, resolution, API, and data limits.
+Both packs work offline after installation and cover all 248 atlas profiles.
+Without internet access, install a copied pack file with
+``pyworldatlas add pyworldatlas-maps.pack``. See :doc:`maps` for the exact sizes,
+resolution, API, and data limits.
 
 .. note::
 
-   Extras use square brackets. Quoting the requirement keeps the command
-   portable across common terminals and shells.
+   Older instructions used ``pip install "pyworldatlas[maps]"``. That still
+   installs PyWorldAtlas and is harmless, but the map data now comes from
+   ``pyworldatlas get maps``.
 
 Install a source checkout
 -------------------------
@@ -62,7 +65,7 @@ root, and install the projects in editable mode:
 
 .. code-block:: console
 
-   python -m pip install -e . -e pipeline -e packages/mapview -e packages/mapdata-overview -e packages/mapdata-standard
+   python -m pip install -e . -e pipeline
 
 Documentation dependencies are optional:
 

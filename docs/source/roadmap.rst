@@ -109,10 +109,10 @@ The map release is an optional presentation layer over documented geographic
 sources:
 
 - :meth:`~pyworldatlas.Atlas.map` resolves any existing country query;
-- :meth:`~pyworldatlas_mapview.CountryMap.show` opens a local browser view;
-- :meth:`~pyworldatlas_mapview.CountryMap.figure` supports notebooks and
+- :meth:`~pyworldatlas.maps.CountryMap.show` opens a local browser view;
+- :meth:`~pyworldatlas.maps.CountryMap.figure` supports notebooks and
   direct Plotly customization;
-- :meth:`~pyworldatlas_mapview.CountryMap.write_html` creates a standalone
+- :meth:`~pyworldatlas.maps.CountryMap.write_html` creates a standalone
   offline document with configurable initial rotation;
 - standalone viewers provide rotation-speed and high-resolution PNG controls;
   and

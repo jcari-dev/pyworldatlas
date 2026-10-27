@@ -3,8 +3,10 @@ Interactive 3D maps
 
 PyWorldAtlas can open a rotatable country terrain map directly from Python.
 The viewer runs in the default browser because WebGL provides smooth,
-cross-platform 3D interaction. After installation, the map data and viewer are
-fully offline: ``show()`` writes a local HTML document and opens that file.
+cross-platform 3D interaction. Maps need no extra Python packages: PyWorldAtlas
+builds each map with the standard library, and the map pack ships the browser
+renderer. After the pack is installed everything is offline: ``show()`` writes a
+local HTML document and opens that file.
 
 .. warning::
 
@@ -31,36 +33,43 @@ fully offline: ``show()`` writes a local HTML document and opens that file.
       and zoom the live view, adjust terrain height, control river and capital
       labels, or switch from elevation to climate without contacting a server.
 
-Choose a map edition
---------------------
+Install a map pack
+------------------
 
-The ordinary package remains small and dependency-free. Add exactly one map
-edition when interactive maps are wanted:
+The ordinary package stays small and dependency-free. Map data comes as a data
+pack, installed once with one command:
 
-.. list-table:: Optional editions
+.. list-table:: Map packs
    :header-rows: 1
-   :widths: 23 24 17 36
+   :widths: 30 22 14 34
 
-   * - Install
+   * - Command
      - Elevation sampling
-     - Data wheel
+     - Download
      - Best for
-   * - ``pyworldatlas[maps-overview]``
+   * - ``pyworldatlas get maps-lite``
      - 20 arc-minutes
-     - about 2.1 MB
+     - about 7.1 MB
      - Lessons, quick exploration, and modest computers
-   * - ``pyworldatlas[maps]``
+   * - ``pyworldatlas get maps``
      - 5 arc-minutes
-     - about 8.2 MB
+     - about 13.3 MB
      - The recommended general-purpose experience
 
 .. code-block:: console
 
-   python -m pip install "pyworldatlas[maps]"
+   pyworldatlas get maps
 
-Overview and Standard cover the same 248 profiles and expose the same API.
-Standard simply samples the pinned elevation surface more densely and uses a
-more detailed river layer. Detailed and Ultra editions are not part of 0.9.
+``get`` downloads the pack from this release on GitHub, checks its SHA-256
+fingerprint against the value pinned in the installed library, and refuses any
+file that does not match. It is the only command that uses the network. On a
+machine without internet, copy the ``.pack`` file over and install it with
+``pyworldatlas add pyworldatlas-maps.pack``. ``pyworldatlas packs`` lists what is
+installed; see :ref:`api-packs` for the pack folder and the Python API.
+
+Overview (``maps-lite``) and Standard (``maps``) cover the same 248 profiles and
+expose the same API. Standard samples the pinned elevation surface more densely
+and uses a more detailed river layer.
 
 Open your first map
 -------------------
@@ -118,22 +127,23 @@ edition when reproducibility matters:
    ...     print(brazil.country_name, brazil.quality, brazil.resolution_arc_minutes)
    Brazil overview 20
 
-Use ``quality="standard"`` or ``quality="overview"``. A missing edition raises
-:class:`~pyworldatlas.MapSupportNotInstalledError` with the exact installation
-command rather than silently downloading data.
+Use ``quality="standard"`` or ``quality="overview"``. A missing pack raises
+:class:`~pyworldatlas.MapSupportNotInstalledError` with the exact ``pyworldatlas
+get`` command rather than silently downloading data.
 
 Notebooks, customization, and export
 ------------------------------------
 
-Use :meth:`pyworldatlas_mapview.CountryMap.figure` to obtain the underlying
-Plotly figure. It can display inline in a compatible notebook or be customized
-with normal Plotly methods:
+Use :meth:`pyworldatlas.maps.CountryMap.to_dict` to obtain the complete
+figure as plain plotly.js ``data`` and ``layout`` dictionaries. If the separate
+``plotly`` package is installed, :meth:`~pyworldatlas.maps.CountryMap.figure`
+returns a Plotly figure that displays inline in notebooks and supports normal
+Plotly customization. It is the only map feature that needs ``plotly``:
 
 .. code-block:: python
 
    with Atlas() as atlas:
-       map_view = atlas.map("Japan")
-       figure = map_view.figure()
+       figure = atlas.map("Japan").figure()  # requires: pip install plotly
        figure.update_layout(height=760)
        figure.show()
 
@@ -157,12 +167,12 @@ Create a documentation GIF
 --------------------------
 
 The repository includes a maintainer utility that renders one seamless turn
-from the real Plotly figure. GIF dependencies stay outside the published
-runtime packages:
+from the real map figure. GIF dependencies stay outside the published
+package:
 
 .. code-block:: console
 
-   python -m pip install Pillow kaleido
+   python -m pip install plotly Pillow kaleido
    python tools/create_map_gif.py Iceland --quality standard --seconds 6 --fps 10 --output docs/source/_static/iceland-rotation.gif
 
 The default 960 × 600 render uses 128 colors to keep project-page downloads
@@ -183,7 +193,7 @@ decisions.
 
 Climate coloring uses the pinned Beck et al. 1991–2020 Köppen-Geiger raster.
 Outlines and river centerlines use generalized Natural Earth data. The outline
-supports visualization only: 0.9 does not expose boundary coordinates,
+supports visualization only: PyWorldAtlas does not expose boundary coordinates,
 GeoJSON, point-in-country tests, or legal boundary claims through the public
 API. Small islands and narrow coastlines can be visibly generalized at the
 selected elevation resolution.

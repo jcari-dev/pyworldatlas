@@ -65,7 +65,7 @@ changes. The newest published release appears first.
 
 - Added optional offline 3D country maps through
   :meth:`~pyworldatlas.Atlas.map` and
-  :meth:`pyworldatlas_mapview.CountryMap.show`.
+  :meth:`pyworldatlas.maps.CountryMap.show`.
 - Added Overview and Standard global editions covering all 248 profiles with
   20 and 5 arc-minute elevation sampling.
 - Added elevation and Köppen-Geiger climate surface modes, generalized

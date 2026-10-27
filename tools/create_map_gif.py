@@ -110,9 +110,8 @@ def main() -> int:
         from pyworldatlas import Atlas
     except ModuleNotFoundError as error:
         raise SystemExit(
-            "Install the project, Pillow, and Kaleido first: "
-            "python -m pip install -e . -e packages/mapview "
-            "-e packages/mapdata-standard Pillow kaleido"
+            "Install the project, Plotly, Pillow, and Kaleido, then the maps pack: "
+            "python -m pip install -e . plotly Pillow kaleido && pyworldatlas get maps"
         ) from error
 
     with Atlas() as atlas:
