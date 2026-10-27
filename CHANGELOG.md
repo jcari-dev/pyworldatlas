@@ -19,6 +19,13 @@
 - Added `python maintain.py quality` with Ruff, strict mypy, and branch coverage
   (currently 92%, minimum 90%) using development-only tools from
   `requirements-dev.txt`.
+- Split the 1,200-line models module into a `pyworldatlas.models` package
+  with small topic modules, and moved profile building, flashcard helpers, and
+  ranking metrics out of `atlas.py`. Every import path and signature is
+  unchanged.
+- Added a public API snapshot test that fails whenever an exported name,
+  signature, field, or method changes without an intentional update.
+- Fixed broken inline-code formatting in the `rank_countries` docstring.
 - Published the 1.x plan, generated `llms.txt` and `llms-full.txt` plain-text
   documentation indexes, and removed em-dashes from the project text.
 

@@ -41,6 +41,11 @@ python maintain.py quality
 `quality` runs Ruff, strict mypy, and the test suite under branch coverage, and
 fails below 90% coverage.
 
+The test suite includes a public API snapshot (`tests/api_snapshot.json`). When
+a change to the public API is intentional, update it with
+`PYWORLDATLAS_UPDATE_API_SNAPSHOT=1 python -m unittest discover -s tests` and
+explain the change in the pull request.
+
 Before submitting a pull request, run the complete gate:
 
 ```console
