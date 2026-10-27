@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from collections import deque
 import heapq
-import json
 from math import asin, cos, radians, sin, sqrt
 from pathlib import Path
 import sqlite3
@@ -14,82 +13,20 @@ from collections.abc import Iterable, Iterator
 from ._normalization import normalize_name
 from ._version import SCHEMA_VERSION, __version__
 from .database import Database
+from ._learning import (FLASHCARD_TOPICS, build_flashcard, has_flashcard_answer,
+                        stable_country_sample, stable_text_order)
+from ._rankings import METRIC_UNITS, metric_value, normalize_metric
+from ._profiles import build_country, city_from_row, read_local_names
 from .exceptions import (AmbiguousCountryError, AmbiguousPlaceError,
                          AtlasClosedError, CapitalNotFoundError,
                          CountryNotFoundError, DatasetVersionError,
                          PlaceNotFoundError)
-from .models import (Area, BorderPathResult, Capital, CapitalDistance, City,
-                     CityDistance, ClimateProfile, ClimateZone, Coordinate, Country,
-                     CountryCodes, CountryMatch, CountryRanking, Currency,
-                     DatasetInfo, Demonym, ElevationPoint, Flashcard, Geography,
-                     Lake, Language, LocalizedName, NationalAnthem,
-                     NationalMotto, PhysicalGeography, PostalCodeFormat, QuizQuestion, River,
-                     SourceReference, Timezone)
+from .models import (BorderPathResult, Capital, CapitalDistance, City,
+                     CityDistance, Coordinate, Country,
+                     CountryMatch, CountryRanking, DatasetInfo, Flashcard, LocalizedName, QuizQuestion)
 
 if TYPE_CHECKING:
     from pyworldatlas_mapview import CountryMap
-
-
-def _flag(alpha2: str) -> str:
-    return "".join(chr(0x1F1E6 + ord(letter) - ord("A")) for letter in alpha2)
-
-
-def _stable_country_sample(
-    candidates: tuple[Country, ...], count: int, seed: int | str
-) -> tuple[Country, ...]:
-    """Select countries by a versioned SHA-256 ranking, independent of row order."""
-    if isinstance(count, bool) or not isinstance(count, int) or count <= 0:
-        raise ValueError("count must be a positive integer")
-    if count > len(candidates):
-        raise ValueError(f"count {count} exceeds the {len(candidates)} available countries")
-    from hashlib import sha256
-
-    def rank(country: Country) -> tuple[bytes, str]:
-        identifier = country.codes.numeric or country.alpha3 or country.alpha2
-        payload = f"pyworldatlas:0.2:{seed}:{identifier}".encode()
-        return sha256(payload).digest(), identifier
-
-    return tuple(sorted(candidates, key=rank)[:count])
-
-
-def _stable_text_order(
-    values: tuple[str, ...], *, seed: int | str, namespace: str
-) -> tuple[str, ...]:
-    """Order text deterministically without depending on global random state."""
-    from hashlib import sha256
-
-    def rank(value: str) -> tuple[bytes, str]:
-        payload = f"pyworldatlas:0.8:{namespace}:{seed}:{value}".encode()
-        return sha256(payload).digest(), value
-
-    return tuple(sorted(values, key=rank))
-
-
-_FLASHCARD_TOPICS = (
-    "alpha_2_codes",
-    "alpha_3_codes",
-    "areas",
-    "border_counts",
-    "calling_codes",
-    "capitals",
-    "climate_zones",
-    "coastlines",
-    "continents",
-    "countries_from_capitals",
-    "currencies",
-    "flags",
-    "highest_points",
-    "language_codes",
-    "local_names",
-    "lakes",
-    "m49_codes",
-    "neighbors",
-    "population_density",
-    "populations",
-    "regions",
-    "rivers",
-    "top_level_domains",
-)
 
 
 class Atlas:
@@ -386,89 +323,23 @@ class Atlas:
         """Rank countries by a documented sourced or directly derived metric.
 
         Supported physical metrics include ``"land_area"``, ``"water_area"``,
-        ``"water_percent"``, ``"coastline"`, ``"mean_elevation"``,
-        ``"highest_elevation"``, ``"lowest_elevation"`, ``"river_count"``,
+        ``"water_percent"``, ``"coastline"``, ``"mean_elevation"``,
+        ``"highest_elevation"``, ``"lowest_elevation"``, ``"river_count"``,
         ``"lake_count"``, and ``"climate_zone_count"``. Existing population,
         total area, density, border, and city metrics remain available. Missing
         values are excluded.
         """
-        aliases = {
-            "area_km2": "area",
-            "density": "population_density",
-            "land_area_km2": "land_area",
-            "water_area_km2": "water_area",
-            "coastline_km": "coastline",
-            "mean_elevation_m": "mean_elevation",
-            "highest_point": "highest_elevation",
-            "lowest_point": "lowest_elevation",
-        }
-        normalized_metric = aliases.get(metric.casefold(), metric.casefold())
-        units = {
-            "population": "people",
-            "area": "km²",
-            "population_density": "people/km²",
-            "border_count": "countries",
-            "major_city_count": "places",
-            "land_area": "km²",
-            "water_area": "km²",
-            "water_percent": "%",
-            "coastline": "km",
-            "mean_elevation": "m",
-            "highest_elevation": "m",
-            "lowest_elevation": "m",
-            "river_count": "rivers",
-            "lake_count": "lakes",
-            "climate_zone_count": "classes",
-        }
-        if normalized_metric not in units:
-            raise ValueError(
-                "metric must be a documented population, area, border, city, "
-                "coastline, elevation, physical-feature, or climate-zone metric"
-            )
+        normalized_metric = normalize_metric(metric)
         if limit is not None and (
             isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0
         ):
             raise ValueError("limit must be a positive integer or None")
 
         ranked: list[tuple[Country, int | float]] = []
-        value: int | float | None
         for country in self.countries(continent=continent, region=region):
-            if normalized_metric == "population":
-                value = country.population
-            elif normalized_metric == "area":
-                value = country.area_km2
-            elif normalized_metric == "population_density":
-                value = country.population_density
-            elif normalized_metric == "border_count":
-                value = len(self.neighbors(country.alpha2))
-            elif normalized_metric == "major_city_count":
-                value = country.major_city_count
-            elif normalized_metric == "land_area":
-                value = country.land_area_km2
-            elif normalized_metric == "water_area":
-                value = country.water_area_km2
-            elif normalized_metric == "water_percent":
-                value = country.water_percent
-            elif normalized_metric == "coastline":
-                value = country.coastline_km
-            elif normalized_metric == "mean_elevation":
-                value = country.mean_elevation_m
-            elif normalized_metric == "highest_elevation":
-                value = (
-                    country.highest_point.elevation_m if country.highest_point else None
-                )
-            elif normalized_metric == "lowest_elevation":
-                value = country.lowest_point.elevation_m if country.lowest_point else None
-            elif normalized_metric == "river_count":
-                value = len(country.rivers) if country.rivers else None
-            elif normalized_metric == "lake_count":
-                value = len(country.lakes) if country.lakes else None
-            else:
-                value = (
-                    len(country.climate.koppen_geiger_zones)
-                    if country.climate.koppen_geiger_zones
-                    else None
-                )
+            value = metric_value(
+                country, normalized_metric, lambda item: len(self.neighbors(item.alpha2))
+            )
             if value is not None:
                 ranked.append((country, value))
         ranked.sort(
@@ -480,7 +351,7 @@ class Atlas:
         if limit is not None:
             ranked = ranked[:limit]
         return tuple(
-            CountryRanking(position, country.reference(), normalized_metric, value, units[normalized_metric])
+            CountryRanking(position, country.reference(), normalized_metric, value, METRIC_UNITS[normalized_metric])
             for position, (country, value) in enumerate(ranked, 1)
         )
 
@@ -759,7 +630,7 @@ class Atlas:
         ``count`` must be positive and cannot exceed the filtered population.
         ``continent`` and ``region`` follow :meth:`countries` semantics.
         """
-        return _stable_country_sample(
+        return stable_country_sample(
             self.countries(continent=continent, region=region), count, seed
         )
 
@@ -770,7 +641,7 @@ class Atlas:
         builders, or playground controls.
         """
         self._ensure_open()
-        return _FLASHCARD_TOPICS
+        return FLASHCARD_TOPICS
 
     def flashcards(
         self,
@@ -800,15 +671,15 @@ class Atlas:
         UNGEGN identity record for every country and area.
         Flashcards are structured values, not an interactive game.
         """
-        if topic not in _FLASHCARD_TOPICS:
-            allowed = ", ".join(_FLASHCARD_TOPICS)
+        if topic not in FLASHCARD_TOPICS:
+            allowed = ", ".join(FLASHCARD_TOPICS)
             raise ValueError(f"unsupported flashcard topic {topic!r}; choose from {allowed}")
         candidates = tuple(
             country
             for country in self.countries(continent=continent, region=region)
             if self._has_flashcard_answer(country, topic)
         )
-        selected = _stable_country_sample(candidates, count, seed)
+        selected = stable_country_sample(candidates, count, seed)
         return tuple(self._flashcard(country, topic) for country in selected)
 
     def quiz(
@@ -832,8 +703,8 @@ class Atlas:
         provide enough distinct answers for the requested number of choices.
         No scoring, learner data, or session state is stored.
         """
-        if topic not in _FLASHCARD_TOPICS:
-            allowed = ", ".join(_FLASHCARD_TOPICS)
+        if topic not in FLASHCARD_TOPICS:
+            allowed = ", ".join(FLASHCARD_TOPICS)
             raise ValueError(f"unsupported quiz topic {topic!r}; choose from {allowed}")
         if isinstance(choices, bool) or not isinstance(choices, int):
             raise TypeError("choices must be an integer")
@@ -845,7 +716,7 @@ class Atlas:
             for country in self.countries(continent=continent, region=region)
             if self._has_flashcard_answer(country, topic)
         )
-        selected = _stable_country_sample(candidates, count, seed)
+        selected = stable_country_sample(candidates, count, seed)
         cards = tuple(self._flashcard(country, topic) for country in candidates)
         distinct_answers: dict[str, str] = {}
         for card in cards:
@@ -865,10 +736,10 @@ class Atlas:
                 if normalized != card.answer.casefold()
             )
             namespace = f"quiz-distractors:{topic}:{country.alpha2}"
-            picked = _stable_text_order(
+            picked = stable_text_order(
                 distractors, seed=seed, namespace=namespace
             )[: choices - 1]
-            ordered_choices = _stable_text_order(
+            ordered_choices = stable_text_order(
                 (card.answer, *picked),
                 seed=seed,
                 namespace=f"quiz-choices:{topic}:{country.alpha2}",
@@ -885,136 +756,16 @@ class Atlas:
         return tuple(questions)
 
     def _has_flashcard_answer(self, country: Country, topic: str) -> bool:
-        if topic in {"capitals", "countries_from_capitals"}:
-            return country.capital is not None
-        if topic == "alpha_3_codes":
-            return country.alpha3 is not None
-        if topic == "areas":
-            return country.area_km2 is not None
-        if topic == "calling_codes":
-            return bool(country.calling_codes)
-        if topic == "climate_zones":
-            return country.climate.dominant_zone is not None
-        if topic == "coastlines":
-            return country.coastline_km is not None
-        if topic == "continents":
-            return country.continent is not None
-        if topic == "currencies":
-            return country.currency is not None
-        if topic == "flags":
-            return country.flag_emoji is not None
-        if topic == "highest_points":
-            return country.highest_point is not None
-        if topic == "language_codes":
-            return bool(country.language_codes)
-        if topic == "local_names":
-            return bool(country.local_names)
-        if topic == "lakes":
-            return bool(country.lakes)
-        if topic == "m49_codes":
-            return country.codes.numeric is not None
-        if topic == "neighbors":
-            country_id = self._country_id(country.alpha2)
-            return country_id is not None and bool(self._border_adjacency()[country_id])
-        if topic == "population_density":
-            return country.population_density is not None
-        if topic == "populations":
-            return country.population is not None
-        if topic == "regions":
-            return country.region is not None
-        if topic == "rivers":
-            return bool(country.rivers)
-        if topic == "top_level_domains":
-            return country.top_level_domain is not None
-        return True
+        return has_flashcard_answer(country, topic, self._has_neighbors)
+
+    def _has_neighbors(self, country: Country) -> bool:
+        country_id = self._country_id(country.alpha2)
+        return country_id is not None and bool(self._border_adjacency()[country_id])
 
     def _flashcard(self, country: Country, topic: str) -> Flashcard:
-        reference = country.reference()
-        answer: str | None
-        # _has_flashcard_answer() guarantees the optional field each topic reads.
-        if topic == "capitals":
-            assert country.capital is not None
-            prompt, answer = f"What is the capital of {country.name}?", country.capital.name
-        elif topic == "countries_from_capitals":
-            assert country.capital is not None
-            prompt, answer = (
-                f"{country.capital.name} is the capital of which country or area?",
-                country.name,
-            )
-        elif topic == "flags":
-            prompt, answer = f"Which country or area uses the flag {country.flag_emoji}?", country.name
-        elif topic == "alpha_2_codes":
-            prompt, answer = f"What is the alpha-2 code for {country.name}?", country.alpha2
-        elif topic == "alpha_3_codes":
-            prompt, answer = f"What is the alpha-3 code for {country.name}?", country.alpha3
-        elif topic == "m49_codes":
-            prompt, answer = f"What is the M49 code for {country.name}?", country.codes.numeric
-        elif topic == "border_counts":
-            prompt = f"How many reviewed land neighbors does {country.name} have?"
-            answer = str(len(self.neighbors(country.alpha2)))
-        elif topic == "neighbors":
-            prompt = f"Which countries or areas share a reviewed land border with {country.name}?"
-            answer = ", ".join(neighbor.name for neighbor in self.neighbors(country.alpha2))
-        elif topic == "currencies":
-            assert country.currency is not None
-            label = country.currency.name or country.currency.code
-            answer = f"{label} ({country.currency.code})" if label != country.currency.code else label
-            prompt = f"Which currency is listed for {country.name}?"
-        elif topic == "calling_codes":
-            prompt, answer = f"Which calling code is listed for {country.name}?", ", ".join(country.calling_codes)
-        elif topic == "top_level_domains":
-            prompt, answer = f"What is the country-code top-level domain for {country.name}?", country.top_level_domain
-        elif topic == "language_codes":
-            prompt, answer = f"Which language codes are listed for {country.name}?", ", ".join(country.language_codes)
-        elif topic == "continents":
-            prompt, answer = f"Which continent contains {country.name}?", country.continent
-        elif topic == "regions":
-            prompt, answer = f"Which UN region contains {country.name}?", country.region
-        elif topic == "climate_zones":
-            zone = country.climate.dominant_zone
-            assert zone is not None
-            prompt = (
-                f"Which Köppen-Geiger class has the largest represented share "
-                f"of {country.name}?"
-            )
-            answer = f"{zone.code}: {zone.name}"
-        elif topic == "coastlines":
-            prompt = f"What coastline length is listed for {country.name}?"
-            answer = f"{country.coastline_km:g} km"
-        elif topic == "highest_points":
-            point = country.highest_point
-            assert point is not None
-            prompt = f"What is the highest point listed for {country.name}?"
-            answer = f"{point.name} ({point.elevation_m:g} m)"
-        elif topic == "rivers":
-            river = country.rivers[0]
-            prompt = f"Name a source-listed major river associated with {country.name}."
-            answer = (
-                f"{river.name} ({river.length_km:g} km)"
-                if river.length_km is not None else river.name
-            )
-        elif topic == "lakes":
-            lake = country.lakes[0]
-            prompt = f"Name a source-listed major lake associated with {country.name}."
-            answer = (
-                f"{lake.name} ({lake.area_km2:g} km²)"
-                if lake.area_km2 is not None else lake.name
-            )
-        elif topic == "local_names":
-            local_name = next(
-                (name for name in country.local_names if name.language_code != "en"),
-                country.local_names[0],
-            )
-            prompt = f"What is a locally official short name for {country.name} in {local_name.language_name}?"
-            answer = local_name.short_name
-        elif topic == "areas":
-            prompt, answer = f"What area is listed for {country.name}?", f"{country.area_km2:g} km²"
-        elif topic == "populations":
-            prompt, answer = f"What snapshot population is listed for {country.name}?", f"{country.population:,}"
-        else:
-            prompt = f"What snapshot population density is calculated for {country.name}?"
-            answer = f"{country.population_density:.2f} people per km²"
-        return Flashcard(topic, prompt, str(answer), reference)
+        return build_flashcard(
+            country, topic, lambda item: self.neighbors(item.alpha2)
+        )
 
     def major_cities(self, country: str, *, limit: int | None = None) -> tuple[City, ...]:
         """Return populated places for a country, ordered by population and name.
@@ -1258,7 +1009,7 @@ class Atlas:
 
     @staticmethod
     def _city_from_row(row: sqlite3.Row) -> City:
-        return City(row["name"], row["alpha2"], Coordinate(row["latitude"], row["longitude"]), row["population"], row["elevation_m"], row["timezone_id"], ("official",) if row["is_capital"] else (), (), row["geonames_id"])
+        return city_from_row(row)
 
     def _load_countries(self, country_ids: Iterable[int]) -> tuple[Country, ...]:
         """Return several country models, reading missing ones in bulk."""
@@ -1294,189 +1045,10 @@ class Atlas:
 
     def _read_country(self, country_id: int) -> Country:
         row = self._db.connection.execute("SELECT * FROM country WHERE id=?", (country_id,)).fetchone()
-        names_rows = self._child_rows("SELECT * FROM country_name WHERE country_id=? ORDER BY preferred DESC, kind, name", country_id)
-        names = tuple(LocalizedName(n["name"], n["language_code"], n["kind"], bool(n["preferred"])) for n in names_rows)
-        aliases = tuple(n.text for n in names if n.kind == "alias")
-        capital_rows = self._child_rows("SELECT * FROM capital WHERE country_id=? ORDER BY is_primary DESC, name", country_id)
-        capitals = tuple(Capital(c["name"], row["alpha2"], Coordinate(c["latitude"], c["longitude"]), c["role"], bool(c["is_primary"]), None, c["population"], c["elevation_m"], c["timezone_id"], (), c["geonames_id"]) for c in capital_rows)
-        city_rows = self._child_rows("SELECT * FROM city WHERE country_id=? ORDER BY population DESC, name", country_id)
-        cities = tuple(City(c["name"], row["alpha2"], Coordinate(c["latitude"], c["longitude"]), c["population"], c["elevation_m"], c["timezone_id"], ("official",) if c["is_capital"] else (), (), c["geonames_id"]) for c in city_rows)
-        source_rows = self._child_rows("SELECT DISTINCT f.country_id AS country_id, s.* FROM source s JOIN field_source f ON f.source_id=s.id WHERE f.country_id=? ORDER BY s.id", country_id)
-        sources = tuple(
-            SourceReference(
-                s["id"], s["name"], s["homepage"], s["retrieved_at"],
-                s["version"], s["license_name"], s["license_url"], s["notes"],
-            )
-            for s in source_rows
-        )
-        source_by_id = {source.id: source for source in sources}
-        local_names = self._load_local_names().get(country_id, ())
-        physical_row = next(iter(self._child_rows("SELECT * FROM country_physical WHERE country_id=?", country_id)), None)
-        river_rows = self._child_rows("SELECT * FROM country_river WHERE country_id=? ORDER BY length_km DESC, name", country_id)
-        lake_rows = self._child_rows("SELECT * FROM country_lake WHERE country_id=? ORDER BY area_km2 DESC, name", country_id)
-        climate_rows = self._child_rows("SELECT * FROM country_climate_zone WHERE country_id=? ORDER BY position", country_id)
-        zones = tuple(
-            ClimateZone(
-                item["code"], item["name"], item["climate_group"],
-                item["share_percent"],
-            )
-            for item in climate_rows
-        )
-        climate = ClimateProfile(
-            summary=physical_row["climate_summary"] if physical_row else None,
-            koppen_geiger_zones=zones,
-            reference_period=climate_rows[0]["reference_period"] if climate_rows else None,
-            resolution_degrees=climate_rows[0]["resolution_degrees"] if climate_rows else None,
-            minimum_share_percent=(
-                climate_rows[0]["minimum_share_percent"] if climate_rows else None
-            ),
-            summary_source=source_by_id.get("cia-world-factbook-2025"),
-            classification_source=source_by_id.get("koppen-geiger-1991-2020"),
-        )
-        highest_point = (
-            ElevationPoint(
-                physical_row["highest_point_name"],
-                physical_row["highest_point_elevation_m"],
-                bool(physical_row["highest_point_is_approximate"]),
-                physical_row["highest_point_source_label"],
-            )
-            if physical_row and physical_row["highest_point_name"]
-            else None
-        )
-        lowest_point = (
-            ElevationPoint(
-                physical_row["lowest_point_name"],
-                physical_row["lowest_point_elevation_m"],
-                bool(physical_row["lowest_point_is_approximate"]),
-                physical_row["lowest_point_source_label"],
-            )
-            if physical_row and physical_row["lowest_point_name"]
-            else None
-        )
-        physical = PhysicalGeography(
-            coastline_km=physical_row["coastline_km"] if physical_row else None,
-            mean_elevation_m=(
-                physical_row["mean_elevation_m"] if physical_row else None
-            ),
-            highest_point=highest_point,
-            lowest_point=lowest_point,
-            rivers=tuple(
-                River(item["name"], item["length_km"], item["source_label"])
-                for item in river_rows
-            ),
-            lakes=tuple(
-                Lake(
-                    item["name"], item["area_km2"], item["water_type"],
-                    item["source_label"],
-                )
-                for item in lake_rows
-            ),
-            climate=climate,
-            source=source_by_id.get("cia-world-factbook-2025"),
-            source_locator=physical_row["source_locator"] if physical_row else None,
-        )
-        land_area = physical_row["land_area_km2"] if physical_row else None
-        water_area = physical_row["water_area_km2"] if physical_row else None
-        total_area = row["total_area_km2"]
-        water_percent = (
-            water_area / total_area * 100
-            if water_area is not None
-            and total_area is not None
-            and total_area > 0
-            and water_area <= total_area
-            else None
-        )
-        geography = Geography(
-            continent=row["continent"],
-            region=row["region"],
-            subregion=row["subregion"],
-            area=Area(total_area, land_area, water_area, water_percent),
-            landlocked=physical.is_landlocked,
-            physical=physical,
-        )
-        currency = (
-            Currency(
-                row["currency_code"], row["currency_name"], row["currency_symbol"],
-                row["currency_minor_unit_digits"],
-                source_by_id.get("unicode-cldr-48.2-reference"),
-            )
-            if row["currency_code"] else None
-        )
-        language_rows = self._child_rows("SELECT * FROM country_language WHERE country_id=? ORDER BY code", country_id)
-        languages = tuple(
-            Language(
-                item["code"], item["primary_code"], item["name"], item["script_code"],
-                source_by_id.get(item["source_id"]),
-            )
-            for item in language_rows
-        )
-        calling_codes = tuple(json.loads(row["calling_codes"]))
-        observed_timezones = tuple(sorted({city.timezone_id for city in cities if city.timezone_id}))
-        timezone_rows = self._child_rows("SELECT * FROM country_timezone WHERE country_id=? ORDER BY timezone_id", country_id)
-        timezones = tuple(
-            Timezone(
-                item["timezone_id"], item["january_utc_offset_hours"],
-                item["july_utc_offset_hours"], item["raw_utc_offset_hours"],
-                source_by_id.get(item["source_id"]),
-            )
-            for item in timezone_rows
-        )
-        anthem_rows = self._child_rows("SELECT * FROM country_anthem WHERE country_id=? ORDER BY title", country_id)
-        anthems = tuple(
-            NationalAnthem(
-                item["title"], item["english_title"], source_by_id[item["source_id"]],
-                item["source_locator"],
-            )
-            for item in anthem_rows
-        )
-        motto_rows = self._child_rows("SELECT * FROM country_motto WHERE country_id=? ORDER BY text", country_id)
-        mottos = tuple(
-            NationalMotto(
-                item["text"], item["language_code"], item["english_text"],
-                source_by_id[item["source_id"]], item["source_locator"],
-            )
-            for item in motto_rows
-        )
-        demonym_rows = self._child_rows("SELECT * FROM country_demonym WHERE country_id=? ORDER BY language_code", country_id)
-        demonyms = tuple(
-            Demonym(
-                item["noun"], item["adjective"], item["language_code"],
-                source_by_id[item["source_id"]], item["source_locator"],
-            )
-            for item in demonym_rows
-        )
-        postal_code = (
-            PostalCodeFormat(
-                row["postal_code_format"], row["postal_code_regex"],
-                source_by_id.get("geonames"),
-            )
-            if row["postal_code_format"] else None
-        )
-        formal_name = next((name.text for name in names if name.kind == "formal"), None)
-        return Country(
-            name=row["name"],
-            official_name=row["official_name"],
-            names=names,
-            aliases=aliases,
-            codes=CountryCodes(row["alpha2"], row["alpha3"], row["numeric_code"], None, row["geonames_id"]),
-            flag=_flag(row["alpha2"]),
-            geography=geography,
-            capitals=capitals,
-            major_cities=cities,
-            sources=sources,
-            local_names=local_names,
-            population=row["population"],
-            currency=currency,
-            languages=languages,
-            calling_codes=calling_codes,
-            top_level_domain=row["top_level_domain"],
-            observed_timezones=observed_timezones,
-            formal_name=formal_name,
-            anthems=anthems,
-            mottos=mottos,
-            demonyms=demonyms,
-            timezones=timezones,
-            postal_code=postal_code,
+        return build_country(
+            row,
+            lambda sql: self._child_rows(sql, country_id),
+            self._load_local_names().get(country_id, ()),
         )
 
     def _load_local_names(self) -> dict[int, tuple[LocalizedName, ...]]:
@@ -1486,32 +1058,7 @@ class Atlas:
         return self._local_names_cache
 
     def _read_local_names(self) -> dict[int, tuple[LocalizedName, ...]]:
-        rows = self._db.connection.execute(
-            """SELECT n.*, s.name AS source_name, s.homepage, s.retrieved_at
-               FROM country_local_name n JOIN source s ON s.id=n.source_id
-               ORDER BY n.country_id, n.language_code"""
-        ).fetchall()
-        grouped: dict[int, list[LocalizedName]] = {}
-        for row in rows:
-            source = SourceReference(row["source_id"], row["source_name"], row["homepage"], row["retrieved_at"])
-            grouped.setdefault(int(row["country_id"]), []).append(
-                LocalizedName(
-                    text=row["short_name"],
-                    language_code=row["language_code"],
-                    kind=row["name_kind"],
-                    preferred=True,
-                    language_name=row["language_name"],
-                    script_code=row["script_code"],
-                    official_name=row["official_name"],
-                    romanized_short_name=row["romanized_short_name"],
-                    romanized_official_name=row["romanized_official_name"],
-                    is_official_language=bool(row["is_official_language"]),
-                    source=source,
-                    source_locator=row["source_locator"],
-                    language_status=row["language_status"],
-                )
-            )
-        return {country_id: tuple(names) for country_id, names in grouped.items()}
+        return read_local_names(self._db.connection)
 
     def __getitem__(self, query: str) -> Country:
         return self.country(query)

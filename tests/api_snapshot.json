@@ -1,0 +1,1645 @@
+{
+  "pyworldatlas.__all__": [
+    "AmbiguousCountryError",
+    "AmbiguousPlaceError",
+    "Area",
+    "Atlas",
+    "AtlasClosedError",
+    "AtlasError",
+    "BorderPathResult",
+    "Capital",
+    "CapitalDistance",
+    "CapitalNotFoundError",
+    "City",
+    "CityDistance",
+    "ClimateProfile",
+    "ClimateZone",
+    "Coordinate",
+    "Country",
+    "CountryCodes",
+    "CountryDiscoveryCard",
+    "CountryMatch",
+    "CountryNotFoundError",
+    "CountryRanking",
+    "CountryReference",
+    "Currency",
+    "DatasetError",
+    "DatasetInfo",
+    "DatasetIntegrityError",
+    "DatasetNotFoundError",
+    "DatasetVersionError",
+    "Demonym",
+    "ElevationPoint",
+    "Flashcard",
+    "Geography",
+    "Lake",
+    "Language",
+    "LocalizedName",
+    "MapSupportNotInstalledError",
+    "NationalAnthem",
+    "NationalMotto",
+    "PhysicalGeography",
+    "PlaceNotFoundError",
+    "PostalCodeFormat",
+    "QuizQuestion",
+    "River",
+    "SCHEMA_VERSION",
+    "SourceReference",
+    "Timezone",
+    "__version__"
+  ],
+  "pyworldatlas": {
+    "AmbiguousCountryError": {
+      "kind": "exception",
+      "bases": [
+        "AtlasError",
+        "LookupError",
+        "Exception",
+        "BaseException",
+        "object"
+      ]
+    },
+    "AmbiguousPlaceError": {
+      "kind": "exception",
+      "bases": [
+        "AtlasError",
+        "LookupError",
+        "Exception",
+        "BaseException",
+        "object"
+      ]
+    },
+    "Area": {
+      "kind": "dataclass",
+      "signature": "(total_km2: 'float | None' = None, land_km2: 'float | None' = None, water_km2: 'float | None' = None, water_percent: 'float | None' = None, disputed_km2: 'float | None' = None) -> None",
+      "members": {},
+      "frozen": true,
+      "fields": [
+        {
+          "name": "total_km2",
+          "type": "float | None",
+          "default": "None"
+        },
+        {
+          "name": "land_km2",
+          "type": "float | None",
+          "default": "None"
+        },
+        {
+          "name": "water_km2",
+          "type": "float | None",
+          "default": "None"
+        },
+        {
+          "name": "water_percent",
+          "type": "float | None",
+          "default": "None"
+        },
+        {
+          "name": "disputed_km2",
+          "type": "float | None",
+          "default": "None"
+        }
+      ]
+    },
+    "Atlas": {
+      "kind": "class",
+      "signature": "(database_path: 'str | Path | None' = None) -> 'None'",
+      "members": {
+        "__contains__": "method(self, query: 'object') -> 'bool'",
+        "__enter__": "method(self) -> 'Atlas'",
+        "__exit__": "method(self, *args: 'object') -> 'None'",
+        "__getitem__": "method(self, query: 'str') -> 'Country'",
+        "__iter__": "method(self) -> 'Iterator[Country]'",
+        "__len__": "method(self) -> 'int'",
+        "border_crossings": "method(self, origin: 'str', destination: 'str') -> 'int | None'",
+        "border_path": "method(self, origin: 'str', destination: 'str') -> 'BorderPathResult | None'",
+        "city": "method(self, query: 'str', *, country: 'str | None' = None) -> 'City'",
+        "climate_zone_codes": "method(self) -> 'tuple[str, ...]'",
+        "close": "method(self) -> 'None'",
+        "coordinates": "method(self, query: 'str', *, country: 'str | None' = None) -> 'Coordinate'",
+        "countries": "method(self, *, continent: 'str | None' = None, region: 'str | None' = None, currency_code: 'str | None' = None, language_code: 'str | None' = None, script_code: 'str | None' = None, timezone_id: 'str | None' = None, coastal: 'bool | None' = None, koppen_geiger_code: 'str | None' = None, has_rivers: 'bool | None' = None, has_lakes: 'bool | None' = None) -> 'tuple[Country, ...]'",
+        "countries_in_climate_zone": "method(self, code: 'str') -> 'tuple[Country, ...]'",
+        "countries_reachable_by_land": "method(self, country: 'str') -> 'tuple[Country, ...]'",
+        "countries_with_formal_names": "method(self) -> 'tuple[Country, ...]'",
+        "countries_with_lake": "method(self, name: 'str | None' = None) -> 'tuple[Country, ...]'",
+        "countries_with_local_names": "method(self, *, language_code: 'str | None' = None, script_code: 'str | None' = None, name_kind: 'str | None' = None) -> 'tuple[Country, ...]'",
+        "countries_with_no_land_borders": "method(self) -> 'tuple[Country, ...]'",
+        "countries_with_river": "method(self, name: 'str | None' = None) -> 'tuple[Country, ...]'",
+        "country": "method(self, query: 'str') -> 'Country'",
+        "dataset_info": "method(self) -> 'DatasetInfo'",
+        "distance_between": "method(self, first: 'str | Country | Capital | City | Coordinate | tuple[float, float]', second: 'str | Country | Capital | City | Coordinate | tuple[float, float]', *, unit: 'str' = 'km', first_country: 'str | None' = None, second_country: 'str | None' = None) -> 'float'",
+        "flashcards": "method(self, *, topic: 'str', count: 'int', continent: 'str | None' = None, region: 'str | None' = None, seed: 'int | str' = 0) -> 'tuple[Flashcard, ...]'",
+        "get": "method(self, query: 'str', default: 'Country | None' = None) -> 'Country | None'",
+        "has_land_route": "method(self, origin: 'str', destination: 'str') -> 'bool'",
+        "learning_topics": "method(self) -> 'tuple[str, ...]'",
+        "major_cities": "method(self, country: 'str', *, limit: 'int | None' = None) -> 'tuple[City, ...]'",
+        "map": "method(self, country: 'str | Country', *, quality: 'str' = 'auto') -> 'CountryMap'",
+        "nearest_capitals": "method(self, origin: 'str | Country | Capital | City | Coordinate | tuple[float, float]', *, limit: 'int' = 5, unit: 'str' = 'km', country: 'str | None' = None, include_origin: 'bool' = False) -> 'tuple[CapitalDistance, ...]'",
+        "nearest_cities": "method(self, origin: 'str | Country | Capital | City | Coordinate | tuple[float, float]', *, limit: 'int' = 5, unit: 'str' = 'km', origin_country: 'str | None' = None, within_country: 'str | None' = None, include_origin: 'bool' = False) -> 'tuple[CityDistance, ...]'",
+        "neighbors": "method(self, country: 'str') -> 'tuple[Country, ...]'",
+        "quiz": "method(self, *, topic: 'str', count: 'int', choices: 'int' = 4, continent: 'str | None' = None, region: 'str | None' = None, seed: 'int | str' = 0) -> 'tuple[QuizQuestion, ...]'",
+        "rank": "method(self, metric: 'str', **kwargs: 'Any') -> 'tuple[CountryRanking, ...]'",
+        "rank_countries": "method(self, metric: 'str', *, limit: 'int | None' = None, descending: 'bool' = True, continent: 'str | None' = None, region: 'str | None' = None) -> 'tuple[CountryRanking, ...]'",
+        "sample_countries": "method(self, *, count: 'int', continent: 'str | None' = None, region: 'str | None' = None, seed: 'int | str' = 0) -> 'tuple[Country, ...]'",
+        "search_cities": "method(self, query: 'str', *, country: 'str | None' = None, limit: 'int' = 20) -> 'tuple[City, ...]'",
+        "search_countries": "method(self, query: 'str', *, limit: 'int' = 20) -> 'tuple[CountryMatch, ...]'",
+        "shared_neighbors": "method(self, country1: 'str', country2: 'str') -> 'tuple[Country, ...]'",
+        "shares_border": "method(self, country1: 'str', country2: 'str') -> 'bool'"
+      }
+    },
+    "AtlasClosedError": {
+      "kind": "exception",
+      "bases": [
+        "AtlasError",
+        "Exception",
+        "BaseException",
+        "object"
+      ]
+    },
+    "AtlasError": {
+      "kind": "exception",
+      "bases": [
+        "Exception",
+        "BaseException",
+        "object"
+      ]
+    },
+    "BorderPathResult": {
+      "kind": "dataclass",
+      "signature": "(countries: 'tuple[CountryReference, ...]', crossings: 'int') -> None",
+      "members": {
+        "alpha2_codes": "property",
+        "destination": "property",
+        "names": "property",
+        "origin": "property",
+        "to_dict": "method(self) -> 'dict[str, Any]'",
+        "to_json": "method(self, indent: 'int | None' = None) -> 'str'"
+      },
+      "frozen": true,
+      "fields": [
+        {
+          "name": "countries",
+          "type": "tuple[CountryReference, ...]",
+          "default": null
+        },
+        {
+          "name": "crossings",
+          "type": "int",
+          "default": null
+        }
+      ]
+    },
+    "Capital": {
+      "kind": "dataclass",
+      "signature": "(name: 'str', country_code: 'str', coordinates: 'Coordinate', role: 'str' = 'official', primary: 'bool' = True, largest_city: 'bool | None' = None, population: 'int | None' = None, elevation_m: 'float | None' = None, timezone_id: 'str | None' = None, alternate_names: 'tuple[str, ...]' = (), geonames_id: 'int | None' = None) -> None",
+      "members": {},
+      "frozen": true,
+      "fields": [
+        {
+          "name": "name",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "country_code",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "coordinates",
+          "type": "Coordinate",
+          "default": null
+        },
+        {
+          "name": "role",
+          "type": "str",
+          "default": "'official'"
+        },
+        {
+          "name": "primary",
+          "type": "bool",
+          "default": "True"
+        },
+        {
+          "name": "largest_city",
+          "type": "bool | None",
+          "default": "None"
+        },
+        {
+          "name": "population",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "elevation_m",
+          "type": "float | None",
+          "default": "None"
+        },
+        {
+          "name": "timezone_id",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "alternate_names",
+          "type": "tuple[str, ...]",
+          "default": "()"
+        },
+        {
+          "name": "geonames_id",
+          "type": "int | None",
+          "default": "None"
+        }
+      ]
+    },
+    "CapitalDistance": {
+      "kind": "dataclass",
+      "signature": "(country: 'CountryReference', capital: 'Capital', distance: 'float', unit: 'str') -> None",
+      "members": {
+        "to_dict": "method(self) -> 'dict[str, Any]'",
+        "to_json": "method(self, indent: 'int | None' = None) -> 'str'"
+      },
+      "frozen": true,
+      "fields": [
+        {
+          "name": "country",
+          "type": "CountryReference",
+          "default": null
+        },
+        {
+          "name": "capital",
+          "type": "Capital",
+          "default": null
+        },
+        {
+          "name": "distance",
+          "type": "float",
+          "default": null
+        },
+        {
+          "name": "unit",
+          "type": "str",
+          "default": null
+        }
+      ]
+    },
+    "CapitalNotFoundError": {
+      "kind": "exception",
+      "bases": [
+        "PlaceNotFoundError",
+        "AtlasError",
+        "LookupError",
+        "Exception",
+        "BaseException",
+        "object"
+      ]
+    },
+    "City": {
+      "kind": "dataclass",
+      "signature": "(name: 'str', country_code: 'str', coordinates: 'Coordinate', population: 'int | None' = None, elevation_m: 'float | None' = None, timezone_id: 'str | None' = None, capital_roles: 'tuple[str, ...]' = (), alternate_names: 'tuple[str, ...]' = (), geonames_id: 'int | None' = None) -> None",
+      "members": {
+        "label": "property"
+      },
+      "frozen": true,
+      "fields": [
+        {
+          "name": "name",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "country_code",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "coordinates",
+          "type": "Coordinate",
+          "default": null
+        },
+        {
+          "name": "population",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "elevation_m",
+          "type": "float | None",
+          "default": "None"
+        },
+        {
+          "name": "timezone_id",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "capital_roles",
+          "type": "tuple[str, ...]",
+          "default": "()"
+        },
+        {
+          "name": "alternate_names",
+          "type": "tuple[str, ...]",
+          "default": "()"
+        },
+        {
+          "name": "geonames_id",
+          "type": "int | None",
+          "default": "None"
+        }
+      ]
+    },
+    "CityDistance": {
+      "kind": "dataclass",
+      "signature": "(country: 'CountryReference', city: 'City', distance: 'float', unit: 'str') -> None",
+      "members": {
+        "to_dict": "method(self) -> 'dict[str, Any]'",
+        "to_json": "method(self, indent: 'int | None' = None) -> 'str'"
+      },
+      "frozen": true,
+      "fields": [
+        {
+          "name": "country",
+          "type": "CountryReference",
+          "default": null
+        },
+        {
+          "name": "city",
+          "type": "City",
+          "default": null
+        },
+        {
+          "name": "distance",
+          "type": "float",
+          "default": null
+        },
+        {
+          "name": "unit",
+          "type": "str",
+          "default": null
+        }
+      ]
+    },
+    "ClimateProfile": {
+      "kind": "dataclass",
+      "signature": "(summary: 'str | None' = None, koppen_geiger_zones: 'tuple[ClimateZone, ...]' = (), reference_period: 'str | None' = None, resolution_degrees: 'float | None' = None, minimum_share_percent: 'float | None' = None, summary_source: 'SourceReference | None' = None, classification_source: 'SourceReference | None' = None) -> None",
+      "members": {
+        "dominant_zone": "property",
+        "zone_codes": "property"
+      },
+      "frozen": true,
+      "fields": [
+        {
+          "name": "summary",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "koppen_geiger_zones",
+          "type": "tuple[ClimateZone, ...]",
+          "default": "()"
+        },
+        {
+          "name": "reference_period",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "resolution_degrees",
+          "type": "float | None",
+          "default": "None"
+        },
+        {
+          "name": "minimum_share_percent",
+          "type": "float | None",
+          "default": "None"
+        },
+        {
+          "name": "summary_source",
+          "type": "SourceReference | None",
+          "default": "None"
+        },
+        {
+          "name": "classification_source",
+          "type": "SourceReference | None",
+          "default": "None"
+        }
+      ]
+    },
+    "ClimateZone": {
+      "kind": "dataclass",
+      "signature": "(code: 'str', name: 'str', group: 'str', share_percent: 'float') -> None",
+      "members": {},
+      "frozen": true,
+      "fields": [
+        {
+          "name": "code",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "name",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "group",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "share_percent",
+          "type": "float",
+          "default": null
+        }
+      ]
+    },
+    "Coordinate": {
+      "kind": "dataclass",
+      "signature": "(latitude: 'float', longitude: 'float') -> None",
+      "members": {
+        "as_tuple": "method(self) -> 'tuple[float, float]'",
+        "bearing_to": "method(self, other: 'Coordinate') -> 'float'",
+        "compass_direction_to": "method(self, other: 'Coordinate', *, points: 'int' = 16) -> 'str'",
+        "distance_to": "method(self, other: 'Coordinate', *, unit: 'str' = 'km') -> 'float'",
+        "dms": "method(self, *, seconds_precision: 'int' = 1) -> 'str'",
+        "format": "method(self, *, precision: 'int' = 4) -> 'str'",
+        "hemispheres": "property",
+        "midpoint_to": "method(self, other: 'Coordinate') -> 'Coordinate'"
+      },
+      "frozen": true,
+      "fields": [
+        {
+          "name": "latitude",
+          "type": "float",
+          "default": null
+        },
+        {
+          "name": "longitude",
+          "type": "float",
+          "default": null
+        }
+      ]
+    },
+    "Country": {
+      "kind": "dataclass",
+      "signature": "(name: 'str', official_name: 'str | None', names: 'tuple[LocalizedName, ...]', aliases: 'tuple[str, ...]', codes: 'CountryCodes', flag: 'str', geography: 'Geography', capitals: 'tuple[Capital, ...]', major_cities: 'tuple[City, ...]', sources: 'tuple[SourceReference, ...]', local_names: 'tuple[LocalizedName, ...]' = (), population: 'int | None' = None, currency: 'Currency | None' = None, languages: 'tuple[Language, ...]' = (), calling_codes: 'tuple[str, ...]' = (), top_level_domain: 'str | None' = None, observed_timezones: 'tuple[str, ...]' = (), formal_name: 'str | None' = None, anthems: 'tuple[NationalAnthem, ...]' = (), mottos: 'tuple[NationalMotto, ...]' = (), demonyms: 'tuple[Demonym, ...]' = (), timezones: 'tuple[Timezone, ...]' = (), postal_code: 'PostalCodeFormat | None' = None) -> None",
+      "members": {
+        "alpha2": "property",
+        "alpha3": "property",
+        "anthem": "property",
+        "area_km2": "property",
+        "capital": "property",
+        "capital_coordinates": "property",
+        "climate": "property",
+        "coastline_km": "property",
+        "continent": "property",
+        "currency_code": "property",
+        "demonym": "property",
+        "discovery_card": "method(self) -> 'CountryDiscoveryCard'",
+        "flag_emoji": "property",
+        "has_distinct_formal_name": "property",
+        "highest_point": "property",
+        "is_coastal": "property",
+        "is_landlocked": "property",
+        "lakes": "property",
+        "land_area_km2": "property",
+        "language_codes": "property",
+        "local_name": "method(self, language_code: 'str') -> 'LocalizedName | None'",
+        "local_name_languages": "property",
+        "lowest_point": "property",
+        "major_city_count": "property",
+        "mean_elevation_m": "property",
+        "motto": "property",
+        "name_in": "method(self, language_code: 'str') -> 'str | None'",
+        "official_name_in": "method(self, language_code: 'str') -> 'str | None'",
+        "physical": "property",
+        "population_density": "property",
+        "reference": "method(self) -> 'CountryReference'",
+        "region": "property",
+        "rivers": "property",
+        "romanized_name_in": "method(self, language_code: 'str') -> 'str | None'",
+        "romanized_official_name_in": "method(self, language_code: 'str') -> 'str | None'",
+        "subregion": "property",
+        "summary": "method(self, *, local_language: 'str | None' = None) -> 'str'",
+        "timezone_ids": "property",
+        "to_dict": "method(self, include_history: 'bool' = False) -> 'dict[str, Any]'",
+        "to_json": "method(self, indent: 'int | None' = None, include_history: 'bool' = False) -> 'str'",
+        "water_area_km2": "property",
+        "water_percent": "property"
+      },
+      "frozen": true,
+      "fields": [
+        {
+          "name": "name",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "official_name",
+          "type": "str | None",
+          "default": null
+        },
+        {
+          "name": "names",
+          "type": "tuple[LocalizedName, ...]",
+          "default": null
+        },
+        {
+          "name": "aliases",
+          "type": "tuple[str, ...]",
+          "default": null
+        },
+        {
+          "name": "codes",
+          "type": "CountryCodes",
+          "default": null
+        },
+        {
+          "name": "flag",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "geography",
+          "type": "Geography",
+          "default": null
+        },
+        {
+          "name": "capitals",
+          "type": "tuple[Capital, ...]",
+          "default": null
+        },
+        {
+          "name": "major_cities",
+          "type": "tuple[City, ...]",
+          "default": null
+        },
+        {
+          "name": "sources",
+          "type": "tuple[SourceReference, ...]",
+          "default": null
+        },
+        {
+          "name": "local_names",
+          "type": "tuple[LocalizedName, ...]",
+          "default": "()"
+        },
+        {
+          "name": "population",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "currency",
+          "type": "Currency | None",
+          "default": "None"
+        },
+        {
+          "name": "languages",
+          "type": "tuple[Language, ...]",
+          "default": "()"
+        },
+        {
+          "name": "calling_codes",
+          "type": "tuple[str, ...]",
+          "default": "()"
+        },
+        {
+          "name": "top_level_domain",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "observed_timezones",
+          "type": "tuple[str, ...]",
+          "default": "()"
+        },
+        {
+          "name": "formal_name",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "anthems",
+          "type": "tuple[NationalAnthem, ...]",
+          "default": "()"
+        },
+        {
+          "name": "mottos",
+          "type": "tuple[NationalMotto, ...]",
+          "default": "()"
+        },
+        {
+          "name": "demonyms",
+          "type": "tuple[Demonym, ...]",
+          "default": "()"
+        },
+        {
+          "name": "timezones",
+          "type": "tuple[Timezone, ...]",
+          "default": "()"
+        },
+        {
+          "name": "postal_code",
+          "type": "PostalCodeFormat | None",
+          "default": "None"
+        }
+      ]
+    },
+    "CountryCodes": {
+      "kind": "dataclass",
+      "signature": "(alpha2: 'str', alpha3: 'str | None', numeric: 'str | None', wikidata: 'str | None' = None, geonames: 'int | None' = None) -> None",
+      "members": {},
+      "frozen": true,
+      "fields": [
+        {
+          "name": "alpha2",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "alpha3",
+          "type": "str | None",
+          "default": null
+        },
+        {
+          "name": "numeric",
+          "type": "str | None",
+          "default": null
+        },
+        {
+          "name": "wikidata",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "geonames",
+          "type": "int | None",
+          "default": "None"
+        }
+      ]
+    },
+    "CountryDiscoveryCard": {
+      "kind": "dataclass",
+      "signature": "(country: 'CountryReference', flag_emoji: 'str | None', official_name: 'str | None', formal_name: 'str | None', capital: 'str | None', capital_coordinates: 'Coordinate | None', continent: 'str | None', region: 'str | None', subregion: 'str | None', population: 'int | None', area_km2: 'float | None', population_density: 'float | None', currency: 'Currency | None', language_codes: 'tuple[str, ...]', calling_codes: 'tuple[str, ...]', top_level_domain: 'str | None', observed_timezones: 'tuple[str, ...]', local_names: 'tuple[LocalizedName, ...]', major_city_count: 'int', source_ids: 'tuple[str, ...]', anthem_title: 'str | None' = None, motto_text: 'str | None' = None, demonym: 'str | None' = None, timezone_ids: 'tuple[str, ...]' = (), coastline_km: 'float | None' = None, highest_point: 'ElevationPoint | None' = None, climate_zone_codes: 'tuple[str, ...]' = ()) -> None",
+      "members": {
+        "to_dict": "method(self) -> 'dict[str, Any]'",
+        "to_json": "method(self, indent: 'int | None' = None) -> 'str'"
+      },
+      "frozen": true,
+      "fields": [
+        {
+          "name": "country",
+          "type": "CountryReference",
+          "default": null
+        },
+        {
+          "name": "flag_emoji",
+          "type": "str | None",
+          "default": null
+        },
+        {
+          "name": "official_name",
+          "type": "str | None",
+          "default": null
+        },
+        {
+          "name": "formal_name",
+          "type": "str | None",
+          "default": null
+        },
+        {
+          "name": "capital",
+          "type": "str | None",
+          "default": null
+        },
+        {
+          "name": "capital_coordinates",
+          "type": "Coordinate | None",
+          "default": null
+        },
+        {
+          "name": "continent",
+          "type": "str | None",
+          "default": null
+        },
+        {
+          "name": "region",
+          "type": "str | None",
+          "default": null
+        },
+        {
+          "name": "subregion",
+          "type": "str | None",
+          "default": null
+        },
+        {
+          "name": "population",
+          "type": "int | None",
+          "default": null
+        },
+        {
+          "name": "area_km2",
+          "type": "float | None",
+          "default": null
+        },
+        {
+          "name": "population_density",
+          "type": "float | None",
+          "default": null
+        },
+        {
+          "name": "currency",
+          "type": "Currency | None",
+          "default": null
+        },
+        {
+          "name": "language_codes",
+          "type": "tuple[str, ...]",
+          "default": null
+        },
+        {
+          "name": "calling_codes",
+          "type": "tuple[str, ...]",
+          "default": null
+        },
+        {
+          "name": "top_level_domain",
+          "type": "str | None",
+          "default": null
+        },
+        {
+          "name": "observed_timezones",
+          "type": "tuple[str, ...]",
+          "default": null
+        },
+        {
+          "name": "local_names",
+          "type": "tuple[LocalizedName, ...]",
+          "default": null
+        },
+        {
+          "name": "major_city_count",
+          "type": "int",
+          "default": null
+        },
+        {
+          "name": "source_ids",
+          "type": "tuple[str, ...]",
+          "default": null
+        },
+        {
+          "name": "anthem_title",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "motto_text",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "demonym",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "timezone_ids",
+          "type": "tuple[str, ...]",
+          "default": "()"
+        },
+        {
+          "name": "coastline_km",
+          "type": "float | None",
+          "default": "None"
+        },
+        {
+          "name": "highest_point",
+          "type": "ElevationPoint | None",
+          "default": "None"
+        },
+        {
+          "name": "climate_zone_codes",
+          "type": "tuple[str, ...]",
+          "default": "()"
+        }
+      ]
+    },
+    "CountryMatch": {
+      "kind": "dataclass",
+      "signature": "(country: 'Country', matched_name: 'str', score: 'int') -> None",
+      "members": {},
+      "frozen": true,
+      "fields": [
+        {
+          "name": "country",
+          "type": "Country",
+          "default": null
+        },
+        {
+          "name": "matched_name",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "score",
+          "type": "int",
+          "default": null
+        }
+      ]
+    },
+    "CountryNotFoundError": {
+      "kind": "exception",
+      "bases": [
+        "AtlasError",
+        "LookupError",
+        "Exception",
+        "BaseException",
+        "object"
+      ]
+    },
+    "CountryRanking": {
+      "kind": "dataclass",
+      "signature": "(position: 'int', country: 'CountryReference', metric: 'str', value: 'int | float', unit: 'str') -> None",
+      "members": {
+        "to_dict": "method(self) -> 'dict[str, Any]'",
+        "to_json": "method(self, indent: 'int | None' = None) -> 'str'"
+      },
+      "frozen": true,
+      "fields": [
+        {
+          "name": "position",
+          "type": "int",
+          "default": null
+        },
+        {
+          "name": "country",
+          "type": "CountryReference",
+          "default": null
+        },
+        {
+          "name": "metric",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "value",
+          "type": "int | float",
+          "default": null
+        },
+        {
+          "name": "unit",
+          "type": "str",
+          "default": null
+        }
+      ]
+    },
+    "CountryReference": {
+      "kind": "dataclass",
+      "signature": "(name: 'str', alpha2: 'str', alpha3: 'str | None', numeric: 'str | None') -> None",
+      "members": {},
+      "frozen": true,
+      "fields": [
+        {
+          "name": "name",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "alpha2",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "alpha3",
+          "type": "str | None",
+          "default": null
+        },
+        {
+          "name": "numeric",
+          "type": "str | None",
+          "default": null
+        }
+      ]
+    },
+    "Currency": {
+      "kind": "dataclass",
+      "signature": "(code: 'str', name: 'str | None' = None, symbol: 'str | None' = None, minor_unit_digits: 'int | None' = None, source: 'SourceReference | None' = None) -> None",
+      "members": {},
+      "frozen": true,
+      "fields": [
+        {
+          "name": "code",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "name",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "symbol",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "minor_unit_digits",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "source",
+          "type": "SourceReference | None",
+          "default": "None"
+        }
+      ]
+    },
+    "DatasetError": {
+      "kind": "exception",
+      "bases": [
+        "AtlasError",
+        "Exception",
+        "BaseException",
+        "object"
+      ]
+    },
+    "DatasetInfo": {
+      "kind": "dataclass",
+      "signature": "(library_version: 'str', schema_version: 'int', dataset_version: 'str', country_count: 'int', built_at: 'str') -> None",
+      "members": {},
+      "frozen": true,
+      "fields": [
+        {
+          "name": "library_version",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "schema_version",
+          "type": "int",
+          "default": null
+        },
+        {
+          "name": "dataset_version",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "country_count",
+          "type": "int",
+          "default": null
+        },
+        {
+          "name": "built_at",
+          "type": "str",
+          "default": null
+        }
+      ]
+    },
+    "DatasetIntegrityError": {
+      "kind": "exception",
+      "bases": [
+        "DatasetError",
+        "AtlasError",
+        "Exception",
+        "BaseException",
+        "object"
+      ]
+    },
+    "DatasetNotFoundError": {
+      "kind": "exception",
+      "bases": [
+        "DatasetError",
+        "AtlasError",
+        "Exception",
+        "BaseException",
+        "object"
+      ]
+    },
+    "DatasetVersionError": {
+      "kind": "exception",
+      "bases": [
+        "DatasetError",
+        "AtlasError",
+        "Exception",
+        "BaseException",
+        "object"
+      ]
+    },
+    "Demonym": {
+      "kind": "dataclass",
+      "signature": "(noun: 'str | None', adjective: 'str | None', language_code: 'str', source: 'SourceReference', source_locator: 'str') -> None",
+      "members": {},
+      "frozen": true,
+      "fields": [
+        {
+          "name": "noun",
+          "type": "str | None",
+          "default": null
+        },
+        {
+          "name": "adjective",
+          "type": "str | None",
+          "default": null
+        },
+        {
+          "name": "language_code",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "source",
+          "type": "SourceReference",
+          "default": null
+        },
+        {
+          "name": "source_locator",
+          "type": "str",
+          "default": null
+        }
+      ]
+    },
+    "ElevationPoint": {
+      "kind": "dataclass",
+      "signature": "(name: 'str', elevation_m: 'float', is_approximate: 'bool' = False, source_label: 'str | None' = None) -> None",
+      "members": {},
+      "frozen": true,
+      "fields": [
+        {
+          "name": "name",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "elevation_m",
+          "type": "float",
+          "default": null
+        },
+        {
+          "name": "is_approximate",
+          "type": "bool",
+          "default": "False"
+        },
+        {
+          "name": "source_label",
+          "type": "str | None",
+          "default": "None"
+        }
+      ]
+    },
+    "Flashcard": {
+      "kind": "dataclass",
+      "signature": "(topic: 'str', prompt: 'str', answer: 'str', country: 'CountryReference') -> None",
+      "members": {
+        "to_dict": "method(self) -> 'dict[str, Any]'",
+        "to_json": "method(self, indent: 'int | None' = None) -> 'str'"
+      },
+      "frozen": true,
+      "fields": [
+        {
+          "name": "topic",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "prompt",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "answer",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "country",
+          "type": "CountryReference",
+          "default": null
+        }
+      ]
+    },
+    "Geography": {
+      "kind": "dataclass",
+      "signature": "(continent: 'str | None', region: 'str | None', subregion: 'str | None', area: 'Area' = Area(total_km2=None, land_km2=None, water_km2=None, water_percent=None, disputed_km2=None), centroid: 'Coordinate | None' = None, landlocked: 'bool | None' = None, physical: 'PhysicalGeography' = PhysicalGeography(coastline_km=None, mean_elevation_m=None, highest_point=None, lowest_point=None, rivers=(), lakes=(), climate=ClimateProfile(summary=None, koppen_geiger_zones=(), reference_period=None, resolution_degrees=None, minimum_share_percent=None, summary_source=None, classification_source=None), source=None, source_locator=None)) -> None",
+      "members": {},
+      "frozen": true,
+      "fields": [
+        {
+          "name": "continent",
+          "type": "str | None",
+          "default": null
+        },
+        {
+          "name": "region",
+          "type": "str | None",
+          "default": null
+        },
+        {
+          "name": "subregion",
+          "type": "str | None",
+          "default": null
+        },
+        {
+          "name": "area",
+          "type": "Area",
+          "default": "Area(total_km2=None, land_km2=None, water_km2=None, water_percent=None, disputed_km2=None)"
+        },
+        {
+          "name": "centroid",
+          "type": "Coordinate | None",
+          "default": "None"
+        },
+        {
+          "name": "landlocked",
+          "type": "bool | None",
+          "default": "None"
+        },
+        {
+          "name": "physical",
+          "type": "PhysicalGeography",
+          "default": "PhysicalGeography(coastline_km=None, mean_elevation_m=None, highest_point=None, lowest_point=None, rivers=(), lakes=(), climate=ClimateProfile(summary=None, koppen_geiger_zones=(), reference_period=None, resolution_degrees=None, minimum_share_percent=None, summary_source=None, classification_source=None), source=None, source_locator=None)"
+        }
+      ]
+    },
+    "Lake": {
+      "kind": "dataclass",
+      "signature": "(name: 'str', area_km2: 'float | None', water_type: 'str | None', source_label: 'str') -> None",
+      "members": {},
+      "frozen": true,
+      "fields": [
+        {
+          "name": "name",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "area_km2",
+          "type": "float | None",
+          "default": null
+        },
+        {
+          "name": "water_type",
+          "type": "str | None",
+          "default": null
+        },
+        {
+          "name": "source_label",
+          "type": "str",
+          "default": null
+        }
+      ]
+    },
+    "Language": {
+      "kind": "dataclass",
+      "signature": "(code: 'str', primary_code: 'str | None' = None, name: 'str | None' = None, script_code: 'str | None' = None, source: 'SourceReference | None' = None) -> None",
+      "members": {},
+      "frozen": true,
+      "fields": [
+        {
+          "name": "code",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "primary_code",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "name",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "script_code",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "source",
+          "type": "SourceReference | None",
+          "default": "None"
+        }
+      ]
+    },
+    "LocalizedName": {
+      "kind": "dataclass",
+      "signature": "(text: 'str', language_code: 'str | None', kind: 'str', preferred: 'bool', language_name: 'str | None' = None, script_code: 'str | None' = None, official_name: 'str | None' = None, romanized_short_name: 'str | None' = None, romanized_official_name: 'str | None' = None, is_official_language: 'bool' = False, source: 'SourceReference | None' = None, source_locator: 'str | None' = None, language_status: 'str | None' = None) -> None",
+      "members": {
+        "formal_name": "property",
+        "is_national_official": "property",
+        "short_name": "property"
+      },
+      "frozen": true,
+      "fields": [
+        {
+          "name": "text",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "language_code",
+          "type": "str | None",
+          "default": null
+        },
+        {
+          "name": "kind",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "preferred",
+          "type": "bool",
+          "default": null
+        },
+        {
+          "name": "language_name",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "script_code",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "official_name",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "romanized_short_name",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "romanized_official_name",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "is_official_language",
+          "type": "bool",
+          "default": "False"
+        },
+        {
+          "name": "source",
+          "type": "SourceReference | None",
+          "default": "None"
+        },
+        {
+          "name": "source_locator",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "language_status",
+          "type": "str | None",
+          "default": "None"
+        }
+      ]
+    },
+    "MapSupportNotInstalledError": {
+      "kind": "exception",
+      "bases": [
+        "AtlasError",
+        "Exception",
+        "BaseException",
+        "object"
+      ]
+    },
+    "NationalAnthem": {
+      "kind": "dataclass",
+      "signature": "(title: 'str', english_title: 'str | None', source: 'SourceReference', source_locator: 'str') -> None",
+      "members": {},
+      "frozen": true,
+      "fields": [
+        {
+          "name": "title",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "english_title",
+          "type": "str | None",
+          "default": null
+        },
+        {
+          "name": "source",
+          "type": "SourceReference",
+          "default": null
+        },
+        {
+          "name": "source_locator",
+          "type": "str",
+          "default": null
+        }
+      ]
+    },
+    "NationalMotto": {
+      "kind": "dataclass",
+      "signature": "(text: 'str', language_code: 'str', english_text: 'str | None', source: 'SourceReference', source_locator: 'str') -> None",
+      "members": {},
+      "frozen": true,
+      "fields": [
+        {
+          "name": "text",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "language_code",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "english_text",
+          "type": "str | None",
+          "default": null
+        },
+        {
+          "name": "source",
+          "type": "SourceReference",
+          "default": null
+        },
+        {
+          "name": "source_locator",
+          "type": "str",
+          "default": null
+        }
+      ]
+    },
+    "PhysicalGeography": {
+      "kind": "dataclass",
+      "signature": "(coastline_km: 'float | None' = None, mean_elevation_m: 'float | None' = None, highest_point: 'ElevationPoint | None' = None, lowest_point: 'ElevationPoint | None' = None, rivers: 'tuple[River, ...]' = (), lakes: 'tuple[Lake, ...]' = (), climate: 'ClimateProfile' = ClimateProfile(summary=None, koppen_geiger_zones=(), reference_period=None, resolution_degrees=None, minimum_share_percent=None, summary_source=None, classification_source=None), source: 'SourceReference | None' = None, source_locator: 'str | None' = None) -> None",
+      "members": {
+        "is_coastal": "property",
+        "is_landlocked": "property"
+      },
+      "frozen": true,
+      "fields": [
+        {
+          "name": "coastline_km",
+          "type": "float | None",
+          "default": "None"
+        },
+        {
+          "name": "mean_elevation_m",
+          "type": "float | None",
+          "default": "None"
+        },
+        {
+          "name": "highest_point",
+          "type": "ElevationPoint | None",
+          "default": "None"
+        },
+        {
+          "name": "lowest_point",
+          "type": "ElevationPoint | None",
+          "default": "None"
+        },
+        {
+          "name": "rivers",
+          "type": "tuple[River, ...]",
+          "default": "()"
+        },
+        {
+          "name": "lakes",
+          "type": "tuple[Lake, ...]",
+          "default": "()"
+        },
+        {
+          "name": "climate",
+          "type": "ClimateProfile",
+          "default": "ClimateProfile(summary=None, koppen_geiger_zones=(), reference_period=None, resolution_degrees=None, minimum_share_percent=None, summary_source=None, classification_source=None)"
+        },
+        {
+          "name": "source",
+          "type": "SourceReference | None",
+          "default": "None"
+        },
+        {
+          "name": "source_locator",
+          "type": "str | None",
+          "default": "None"
+        }
+      ]
+    },
+    "PlaceNotFoundError": {
+      "kind": "exception",
+      "bases": [
+        "AtlasError",
+        "LookupError",
+        "Exception",
+        "BaseException",
+        "object"
+      ]
+    },
+    "PostalCodeFormat": {
+      "kind": "dataclass",
+      "signature": "(format: 'str', regex: 'str | None' = None, source: 'SourceReference | None' = None) -> None",
+      "members": {},
+      "frozen": true,
+      "fields": [
+        {
+          "name": "format",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "regex",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "source",
+          "type": "SourceReference | None",
+          "default": "None"
+        }
+      ]
+    },
+    "QuizQuestion": {
+      "kind": "dataclass",
+      "signature": "(topic: 'str', prompt: 'str', choices: 'tuple[str, ...]', answer: 'str', country: 'CountryReference') -> None",
+      "members": {
+        "answer_number": "property",
+        "is_correct": "method(self, choice: 'str | int') -> 'bool'",
+        "to_dict": "method(self) -> 'dict[str, Any]'",
+        "to_json": "method(self, indent: 'int | None' = None) -> 'str'"
+      },
+      "frozen": true,
+      "fields": [
+        {
+          "name": "topic",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "prompt",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "choices",
+          "type": "tuple[str, ...]",
+          "default": null
+        },
+        {
+          "name": "answer",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "country",
+          "type": "CountryReference",
+          "default": null
+        }
+      ]
+    },
+    "River": {
+      "kind": "dataclass",
+      "signature": "(name: 'str', length_km: 'float | None', source_label: 'str') -> None",
+      "members": {},
+      "frozen": true,
+      "fields": [
+        {
+          "name": "name",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "length_km",
+          "type": "float | None",
+          "default": null
+        },
+        {
+          "name": "source_label",
+          "type": "str",
+          "default": null
+        }
+      ]
+    },
+    "SCHEMA_VERSION": {
+      "kind": "int",
+      "value": "7"
+    },
+    "SourceReference": {
+      "kind": "dataclass",
+      "signature": "(id: 'str', name: 'str', homepage: 'str', retrieved_at: 'str', version: 'str | None' = None, license_name: 'str | None' = None, license_url: 'str | None' = None, notes: 'str | None' = None) -> None",
+      "members": {},
+      "frozen": true,
+      "fields": [
+        {
+          "name": "id",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "name",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "homepage",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "retrieved_at",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "version",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "license_name",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "license_url",
+          "type": "str | None",
+          "default": "None"
+        },
+        {
+          "name": "notes",
+          "type": "str | None",
+          "default": "None"
+        }
+      ]
+    },
+    "Timezone": {
+      "kind": "dataclass",
+      "signature": "(id: 'str', january_utc_offset_hours: 'float', july_utc_offset_hours: 'float', raw_utc_offset_hours: 'float', source: 'SourceReference | None' = None) -> None",
+      "members": {},
+      "frozen": true,
+      "fields": [
+        {
+          "name": "id",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "january_utc_offset_hours",
+          "type": "float",
+          "default": null
+        },
+        {
+          "name": "july_utc_offset_hours",
+          "type": "float",
+          "default": null
+        },
+        {
+          "name": "raw_utc_offset_hours",
+          "type": "float",
+          "default": null
+        },
+        {
+          "name": "source",
+          "type": "SourceReference | None",
+          "default": "None"
+        }
+      ]
+    }
+  },
+  "pyworldatlas.models": [
+    "Area",
+    "BorderPathResult",
+    "Capital",
+    "CapitalDistance",
+    "City",
+    "CityDistance",
+    "ClimateProfile",
+    "ClimateZone",
+    "Coordinate",
+    "Country",
+    "CountryCodes",
+    "CountryDiscoveryCard",
+    "CountryMatch",
+    "CountryRanking",
+    "CountryReference",
+    "Currency",
+    "DatasetInfo",
+    "Demonym",
+    "ElevationPoint",
+    "Flashcard",
+    "Geography",
+    "Lake",
+    "Language",
+    "LocalizedName",
+    "NationalAnthem",
+    "NationalMotto",
+    "PhysicalGeography",
+    "PostalCodeFormat",
+    "QuizQuestion",
+    "River",
+    "SourceReference",
+    "Timezone"
+  ]
+}
