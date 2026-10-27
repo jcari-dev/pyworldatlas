@@ -121,10 +121,19 @@ No new data families; the existing data becomes dependable and fast.
 
 ## 0.11: Every place on Earth
 
-- **Places pack:** populated places of 5,000 or more inhabitants and
-  first-level subdivisions with their codes (GeoNames).
-- **Landmarks pack:** airports (OurAirports), World Heritage sites, mountains,
-  volcanoes, islands, deserts, seas, and ranges from open sources.
+Promise: a complete school atlas in every install, under a minute to download
+on a slow 3G connection, and every place on Earth under 2 minutes on a slow
+5 Mbps line.
+
+- **Done: school atlas in core.** 207,664 places ranked by educational value
+  (2 MB): every country, region, town of 5,000 or more, and widely known
+  natural feature and landmark, from GeoNames. Search by local or English name,
+  best known first, and exact nearest-place search.
+- **Done: place packs.** `places-explorer` (every town over 1,000 and every
+  named natural feature) and `places-world` (everything else worth knowing),
+  11 million places in all.
+- **Landmarks:** airports (OurAirports) and World Heritage sites as extra
+  detail on places already in the atlas.
 - **Travel basics in core:** plug types, mains voltage and frequency, and
   driving side.
 - One lookup across countries, places, subdivisions, and landmarks.

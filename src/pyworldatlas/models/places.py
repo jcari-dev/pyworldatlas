@@ -53,3 +53,36 @@ class City:
 
     def __str__(self) -> str:
         return self.label
+
+
+@dataclass(frozen=True, slots=True)
+class Place:
+    """Any named place on Earth: a town, mountain, lake, ruin, island, and more.
+
+    Places come from the GeoNames gazetteer. ``kind`` is a plain-English label
+    such as ``"mountain"`` and ``category`` its general group such as
+    ``"landform"``. ``english_name`` equals ``name`` unless the place has a
+    different English name (``"Lago Titicaca"`` is ``"Lake Titicaca"``).
+    ``fame`` (0 to 255) estimates how widely a place is known and orders
+    search results; it is not a measure of importance.
+    """
+
+    name: str
+    english_name: str
+    kind: str
+    category: str
+    country_code: str
+    coordinates: Coordinate
+    population: int | None = None
+    elevation_m: int | None = None
+    feature_code: str = ""
+    fame: int = 0
+
+    @property
+    def label(self) -> str:
+        """Return a compact label such as ``"Lake Titicaca, lake (PE)"``."""
+        country = f" ({self.country_code})" if self.country_code else ""
+        return f"{self.english_name}, {self.kind}{country}"
+
+    def __str__(self) -> str:
+        return self.label

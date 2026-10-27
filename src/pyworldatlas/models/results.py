@@ -7,7 +7,7 @@ import json
 from typing import TYPE_CHECKING, Any
 
 from ._serialize import _jsonable
-from .places import Capital, City
+from .places import Capital, City, Place
 
 if TYPE_CHECKING:
     from .country import Country
@@ -87,6 +87,27 @@ class CityDistance:
 
     def to_json(self, indent: int | None = None) -> str:
         """Serialize this nearby-city result without escaping Unicode text."""
+        return json.dumps(self.to_dict(), ensure_ascii=False, indent=indent)
+
+
+@dataclass(frozen=True, slots=True)
+class PlaceDistance:
+    """A nearby place and its great-circle distance from an origin.
+
+    ``unit`` records the unit requested from :meth:`pyworldatlas.Atlas.places_near`.
+    """
+
+    place: Place
+    distance: float
+    unit: str
+
+    def to_dict(self) -> dict[str, Any]:
+        """Return JSON-compatible primitives for this nearby-place result."""
+        data: dict[str, Any] = _jsonable(self)
+        return data
+
+    def to_json(self, indent: int | None = None) -> str:
+        """Serialize this nearby-place result without escaping Unicode text."""
         return json.dumps(self.to_dict(), ensure_ascii=False, indent=indent)
 
 

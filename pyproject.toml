@@ -57,7 +57,7 @@ package-dir = {"" = "src"}
 where = ["src"]
 
 [tool.setuptools.package-data]
-pyworldatlas = ["data/atlas.sqlite3", "py.typed", "_pack_index.json"]
+pyworldatlas = ["data/atlas.sqlite3", "data/places.pwpl", "py.typed", "_pack_index.json"]
 
 [tool.mypy]
 strict = true

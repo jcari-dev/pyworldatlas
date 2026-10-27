@@ -8,8 +8,8 @@ from __future__ import annotations
 
 from .reference import CountryCodes, Currency, DatasetInfo, Demonym, Language, LocalizedName, NationalAnthem, NationalMotto, PostalCodeFormat, SourceReference, Timezone
 from .geography import Area, ClimateProfile, ClimateZone, Coordinate, ElevationPoint, Geography, Lake, PhysicalGeography, River
-from .places import Capital, City
-from .results import BorderPathResult, CapitalDistance, CityDistance, CountryMatch, CountryRanking, CountryReference
+from .places import Capital, City, Place
+from .results import BorderPathResult, CapitalDistance, CityDistance, CountryMatch, CountryRanking, CountryReference, PlaceDistance
 from .learning import CountryDiscoveryCard, Flashcard, QuizQuestion
 from .country import Country
 
@@ -41,6 +41,8 @@ __all__ = [
     "NationalAnthem",
     "NationalMotto",
     "PhysicalGeography",
+    "Place",
+    "PlaceDistance",
     "PostalCodeFormat",
     "QuizQuestion",
     "River",

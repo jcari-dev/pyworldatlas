@@ -1,0 +1,22 @@
+{
+  "source_id": "geonames-places",
+  "source_version": "2026-10-27",
+  "retrieved_at": "2026-10-27T00:00:00Z",
+  "license_name": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "note": "The two archives are too large for git. Download them from the URLs below into this folder; the place builder refuses files whose checksum differs.",
+  "files": [
+    {
+      "url": "https://download.geonames.org/export/dump/allCountries.zip",
+      "path": "allCountries.zip",
+      "sha256": "efb8e27e66ba86d8269b8f57718d5872447d6f675249194c07152990d8577740",
+      "size_bytes": 422503902
+    },
+    {
+      "url": "https://download.geonames.org/export/dump/alternateNamesV2.zip",
+      "path": "alternateNamesV2.zip",
+      "sha256": "1741ffd3dfe705c7000ef9233319bc07fe83b58fdb1e0a6c5a10a41c97894e28",
+      "size_bytes": 205167713
+    }
+  ]
+}

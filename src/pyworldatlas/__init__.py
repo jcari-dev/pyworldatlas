@@ -13,14 +13,14 @@ from .models import (Area, BorderPathResult, Capital, CapitalDistance, City,
                      CountryRanking, CountryReference, Currency, DatasetInfo,
                      Demonym, ElevationPoint, Flashcard, Geography, Lake,
                      Language, LocalizedName, NationalAnthem, NationalMotto,
-                     PhysicalGeography, PostalCodeFormat, QuizQuestion, River,
+                     PhysicalGeography, Place, PlaceDistance, PostalCodeFormat, QuizQuestion, River,
                      SourceReference, Timezone)
 
 __all__ = [
     "Atlas", "Country", "CountryCodes", "CountryReference", "CountryDiscoveryCard",
     "BorderPathResult", "CountryRanking", "CapitalDistance", "CityDistance",
     "LocalizedName", "Flashcard", "QuizQuestion",
-    "Coordinate", "Area", "Geography", "Capital", "City", "Currency", "Language", "CountryMatch",
+    "Coordinate", "Area", "Geography", "Capital", "City", "Place", "PlaceDistance", "Currency", "Language", "CountryMatch",
     "PhysicalGeography", "ElevationPoint", "River", "Lake", "ClimateProfile", "ClimateZone",
     "NationalAnthem", "NationalMotto", "Demonym", "Timezone", "PostalCodeFormat",
     "DatasetInfo", "SourceReference", "AtlasError", "AtlasClosedError",

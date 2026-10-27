@@ -20,6 +20,20 @@
         "LICENSE-plotly.txt": "renderer/LICENSE-plotly.txt",
         "NOTICE.md": "NOTICE.md"
       }
+    },
+    "places-explorer": {
+      "title": "Explorer places: every town over 1,000 people and every named natural feature",
+      "files": {
+        "places.pwpl": "places-explorer/places.pwpl",
+        "NOTICE.md": "NOTICE-places.md"
+      }
+    },
+    "places-world": {
+      "title": "World places: every remaining village, stream, hill, and local area (add after explorer)",
+      "files": {
+        "places.pwpl": "places-world/places.pwpl",
+        "NOTICE.md": "NOTICE-places.md"
+      }
     }
   }
 }

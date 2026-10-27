@@ -325,6 +325,7 @@ The current source checkout can be installed with ``python -m pip install -e .``
    :caption: Explore the atlas
 
    country_profile
+   places
    maps
    physical_geography
    reference_facts

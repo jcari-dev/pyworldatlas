@@ -648,11 +648,12 @@ def audit_wheel(wheel: Path) -> None:
     forbidden = [name for name in names if name.startswith(("pipeline/", "tests/", "docs/", "build_data/"))]
     unicode_licenses = [name for name in names if name.endswith("UNICODE_LICENSE.txt")]
     typed = "pyworldatlas/py.typed" in names
-    if len(databases) != 1 or len(unicode_licenses) != 1 or forbidden or not typed:
+    school_atlas = "pyworldatlas/data/places.pwpl" in names
+    if len(databases) != 1 or len(unicode_licenses) != 1 or forbidden or not typed or not school_atlas:
         raise RuntimeError(
             "Wheel audit failed: "
             f"databases={databases}, unicode_licenses={unicode_licenses}, "
-            f"forbidden={forbidden}, py.typed={typed}"
+            f"forbidden={forbidden}, py.typed={typed}, school atlas={school_atlas}"
         )
     print("All checks passed.")
 
