@@ -178,6 +178,17 @@ class PlaceSearchTests(unittest.TestCase):
         self.assertTrue(all(item.distance > 0 for item in nearby))
         self.assertIn("place", nearby[0].to_dict())
 
+    def test_places_in_a_country(self) -> None:
+        peru = self.atlas.places_in("Peru", category="landmark", limit=5)
+        self.assertIn("Machu Picchu", [place.english_name for place in peru])
+        self.assertTrue(all(place.country_code == "PE" for place in peru))
+        fame = [place.fame for place in self.atlas.places_in("JP", limit=10)]
+        self.assertEqual(fame, sorted(fame, reverse=True))
+        volcanoes = self.atlas.places_in("Iceland", kind="volcano", limit=3)
+        self.assertTrue(volcanoes and all(place.kind == "volcano" for place in volcanoes))
+        with self.assertRaises(ValueError):
+            self.atlas.places_in("Peru", limit=0)
+
     def test_lookup_finds_anything(self) -> None:
         georgia = self.atlas.lookup("Georgia", limit=3)
         self.assertIsInstance(georgia[0], Country)

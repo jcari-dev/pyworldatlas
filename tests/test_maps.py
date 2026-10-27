@@ -94,8 +94,8 @@ class MapViewerTests(unittest.TestCase):
     def test_figures_are_unchanged(self) -> None:
         """Pin two complete figures so rendering changes are always deliberate."""
         with self.atlas() as atlas:
-            iceland = atlas.map("IS", quality="overview").to_dict()
-            brazil = atlas.map("BR", quality="standard").to_dict()
+            iceland = atlas.map("IS", quality="overview", places=0).to_dict()
+            brazil = atlas.map("BR", quality="standard", places=0).to_dict()
         self.assertEqual(
             fingerprint(iceland),
             "815ad7f1ae2ab05606d5900e310812528415c21110bd7be759d1eac03c32170d",
@@ -109,9 +109,27 @@ class MapViewerTests(unittest.TestCase):
         with self.atlas() as atlas:
             figure = atlas.map("Brazil", quality="overview").to_dict()
         names = {trace["name"] for trace in figure["data"]}
-        self.assertEqual(names, {"Terrain", "Country outline", "Rivers", "Capital"})
+        self.assertTrue({"Terrain", "Country outline", "Rivers", "Capital"} <= names)
+        self.assertTrue({"Towns", "Mountains and islands", "Landmarks"} <= names)
         self.assertEqual(len(figure["layout"]["updatemenus"][0]["buttons"]), 2)
         self.assertEqual(figure["layout"]["template"]["layout"]["paper_bgcolor"], "white")
+
+    def test_maps_mark_well_known_places_in_layers(self) -> None:
+        with self.atlas() as atlas:
+            peru = atlas.map("Peru", places=5)
+            plain = atlas.map("Peru", places=0).to_dict()
+            with self.assertRaises(ValueError):
+                atlas.map("Peru", places=-1)
+        names = [place[0] for place in peru.places]
+        self.assertIn("Machu Picchu", names)
+        self.assertNotIn("Lima", names)  # the capital has its own marker
+        self.assertLessEqual(len(names), 20)
+        layers = [trace for trace in peru.to_dict()["data"] if trace.get("meta") == "places"]
+        self.assertEqual(len({trace["marker"]["symbol"] for trace in layers}), len(layers))
+        self.assertFalse(any(trace.get("meta") == "places" for trace in plain["data"]))
+        page = peru.to_html()
+        self.assertIn('data-trace="Landmarks"', page)
+        self.assertIn("Landmarks, marked with a purple cross: ", page)
 
     def test_map_controls_adjust_height_and_optional_labels(self) -> None:
         with self.atlas() as atlas:

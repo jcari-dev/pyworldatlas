@@ -208,12 +208,17 @@ class Atlas:
         country: str | Country,
         *,
         quality: str = "auto",
+        places: int = 8,
     ) -> CountryMap:
         """Return an interactive offline 3D map for a country profile.
 
         ``country`` accepts the same names and codes as :meth:`country`, or an
         already loaded :class:`Country`. ``quality="auto"`` prefers Standard
         map data when installed and otherwise uses Overview data.
+
+        The map marks the ``places`` best-known towns, mountains and islands,
+        lakes and seas, and landmarks of the country, each kind as a layer
+        that can be shown or hidden. Pass ``places=0`` for terrain only.
 
         The returned map opens in the default browser when its ``show()``
         method is called. Maps need a map pack, installed once with
@@ -230,7 +235,15 @@ class Atlas:
         from .exceptions import MapSupportNotInstalledError
         from .maps import CountryMap, MapDataError
 
-        result = CountryMap.from_country(profile, quality=quality, data_dir=self._data_dir)
+        if isinstance(places, bool) or not isinstance(places, int) or places < 0:
+            raise ValueError("places must be zero or a positive integer")
+        marked: list[Place] = []
+        if places:
+            for category in ("town", "landform", "water", "landmark"):
+                marked.extend(self.places_in(profile, category=category, limit=places))
+        result = CountryMap.from_country(
+            profile, quality=quality, data_dir=self._data_dir, places=tuple(marked)
+        )
         try:
             _ = result.quality  # find the map pack now so a missing pack fails here
         except MapDataError as error:
@@ -1123,6 +1136,36 @@ class Atlas:
                 return match
         suffix = f" in {country!r}" if country else ""
         raise PlaceNotFoundError(f"No place is named {query!r}{suffix}")
+
+    def places_in(
+        self,
+        country: str | Country,
+        *,
+        kind: str | None = None,
+        category: str | None = None,
+        limit: int = 20,
+    ) -> tuple[Place, ...]:
+        """Return the best-known places in a country from the school atlas.
+
+        Towns, mountains, lakes, landmarks, and more, best known first. Narrow
+        with ``kind`` (see :meth:`place_kinds`) or ``category`` (see
+        :meth:`place_categories`). The capital, whole regions, schools,
+        airports, and river points are left out unless asked for by ``kind``.
+        """
+        if isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0:
+            raise ValueError("limit must be a positive integer")
+        profile = country if isinstance(country, Country) else self.country(country)
+        where, params = self._place_filter(kind, category, None)
+        if kind is None:
+            where += " AND code NOT IN ('P.PPLC', 'S.SCH', 'S.SCHC', 'S.AIRP', 'H.STM')"
+            if category is None:
+                where += " AND substr(code, 1, 1) NOT IN ('A', 'L', 'R', 'U')"
+        rows = self._places()[0].execute(
+            f"""SELECT * FROM place WHERE country = ?{where}
+                ORDER BY fame DESC, population DESC, id LIMIT ?""",
+            (profile.alpha2, *params, limit),
+        ).fetchall()
+        return tuple(self._place_from_row(row) for row in rows)
 
     def lookup(self, query: str, *, limit: int = 10) -> tuple[Country | Place, ...]:
         """Find anything by name: countries, cities, regions, and landmarks.

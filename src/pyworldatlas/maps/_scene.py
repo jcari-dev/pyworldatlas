@@ -42,6 +42,15 @@ _ELEVATION_SCALE = (
     (1.00, "#f1f3f4"),
 )
 
+# Place layers: (category, layer name, marker symbol, color). Each layer has its
+# own shape as well as its own color, so it can be told apart without color.
+PLACE_LAYERS = (
+    ("town", "Towns", "circle", "#ffffff"),
+    ("landform", "Mountains and islands", "square", "#c2410c"),
+    ("water", "Lakes and seas", "diamond", "#0284c7"),
+    ("landmark", "Landmarks", "x", "#7c3aed"),
+)
+
 _CLIMATE_COLORS = {
     1: "#166534", 2: "#228b22", 3: "#65a30d",
     4: "#dc2626", 5: "#f97316", 6: "#eab308", 7: "#facc15",
@@ -183,7 +192,7 @@ def build_figure(
     quality: str,
     template: dict[str, Any],
 ) -> dict[str, Any]:
-    """Return the complete figure: terrain, outline, rivers, capital, and controls."""
+    """Return the complete figure: terrain, outline, rivers, capital, places, and controls."""
 
     rows, columns = int(payload["rows"]), int(payload["columns"])
     longitudes = _axis(float(payload["west"]), float(payload["longitudeStep"]), columns)
@@ -337,6 +346,44 @@ def build_figure(
             "borderpad": 4,
             "font": {"color": "#7f1734", "size": 13},
         }
+    for category, layer, symbol, color in PLACE_LAYERS:
+        members = [place for place in request.places if place[2] == category]
+        if not members:
+            continue
+        xs: list[float] = []
+        ys: list[float] = []
+        zs: list[float] = []
+        details: list[str] = []
+        for _name, kind, _, latitude, longitude, height in members:
+            while longitude < longitudes[0]:
+                longitude += 360.0
+            while longitude > longitudes[-1]:
+                longitude -= 360.0
+            xs.append(longitude)
+            ys.append(latitude)
+            zs.append(_nearest_elevation(longitude, latitude, longitudes, latitudes, elevation) + 90)
+            details.append(f"{kind}, {height:,} m" if height is not None else kind)
+        traces.append(
+            _trace(
+                "scatter3d",
+                x=xs,
+                y=ys,
+                z=zs,
+                text=[place[0] for place in members],
+                customdata=details,
+                mode="markers",
+                marker={
+                    "color": color,
+                    "size": 6,
+                    "symbol": symbol,
+                    "line": {"color": "#1f2937" if color == "#ffffff" else "#ffffff", "width": 1.5},
+                },
+                hovertemplate="<b>%{text}</b><br>%{customdata}<extra></extra>",
+                name=layer,
+                meta="places",
+                showlegend=True,
+            )
+        )
     present = sorted(int(index) for index in payload["climateLegend"])
     map_annotations = (
         ([capital_annotation] if capital_annotation is not None else [])
@@ -589,5 +636,10 @@ def describe(request: CountryMap, payload: dict[str, Any], quality: str) -> list
     sentences.append(
         f"Rivers shown: {', '.join(rivers)}." if rivers else "No major rivers are shown."
     )
+    for category, layer, symbol, _ in PLACE_LAYERS:
+        names = [place[0] for place in request.places if place[2] == category]
+        if names:
+            shape = {"circle": "white circle", "square": "orange square", "diamond": "blue diamond", "x": "purple cross"}[symbol]
+            sentences.append(f"{layer}, marked with a {shape}: {', '.join(names)}.")
     sentences.append("Outlines and rivers are simplified. The map is not for navigation.")
     return sentences
