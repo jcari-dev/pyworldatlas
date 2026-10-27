@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased
+
+- Made repeated lookups much faster: every `Atlas` now keeps its own country,
+  border, code, and place caches, so profiles are read at most once. Ranking by
+  border count, neighbor quizzes, and nearest-place searches drop from hundreds
+  of milliseconds to a few milliseconds on a typical laptop.
+- Loading the full collection now reads each related table once instead of
+  issuing several queries per country.
+- Fixed closing one `Atlas` clearing the cached profiles of every other open
+  `Atlas`.
+- Reduced import time by loading `importlib.resources` and `hashlib` only when
+  they are needed.
+- Climate quiz answers now read `Af: Tropical, rainforest` instead of using a
+  dash separator.
+- Published the 1.x plan, generated `llms.txt` and `llms-full.txt` plain-text
+  documentation indexes, and removed em-dashes from the project text.
+
 ## 0.9.5
 
 - Added an installed `pyworldatlas` command with version, country lookup,
@@ -170,7 +187,7 @@
   speculative narrative outside the bundled dataset.
 - Moved national symbols and reference facts to 0.6.0 for their own source review.
 
-## 0.4.0 — Reserved tag; not published to PyPI
+## 0.4.0 (reserved tag, not published to PyPI)
 
 - Preserved the public tag after it was created against the 0.3.1 commit before
   the country-identity candidate reached `main`.
@@ -207,7 +224,7 @@
 - Supersedes the unpublished 0.2.0 candidate without changing its public API or
   bundled dataset.
 
-## 0.2.0 — Unpublished candidate
+## 0.2.0 (unpublished candidate)
 
 - Added richer country profiles with population snapshots, currencies, language
   codes, calling codes, top-level domains, observed timezones, and direct

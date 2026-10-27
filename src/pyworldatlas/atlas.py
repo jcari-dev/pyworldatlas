@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 from collections import deque
-from functools import lru_cache
-from hashlib import sha256
+import heapq
 import json
+from math import asin, cos, radians, sin, sqrt
 from pathlib import Path
-from typing import TYPE_CHECKING, Iterator
+import sqlite3
+from typing import TYPE_CHECKING, Iterable, Iterator
 
 from ._normalization import normalize_name
 from ._version import SCHEMA_VERSION, __version__
@@ -40,6 +41,7 @@ def _stable_country_sample(
         raise ValueError("count must be a positive integer")
     if count > len(candidates):
         raise ValueError(f"count {count} exceeds the {len(candidates)} available countries")
+    from hashlib import sha256
 
     def rank(country: Country) -> tuple[bytes, str]:
         identifier = country.codes.numeric or country.alpha3 or country.alpha2
@@ -53,6 +55,7 @@ def _stable_text_order(
     values: tuple[str, ...], *, seed: int | str, namespace: str
 ) -> tuple[str, ...]:
     """Order text deterministically without depending on global random state."""
+    from hashlib import sha256
 
     def rank(value: str) -> tuple[bytes, str]:
         payload = f"pyworldatlas:0.8:{namespace}:{seed}:{value}".encode("utf-8")
@@ -101,6 +104,13 @@ class Atlas:
     def __init__(self, database_path: str | Path | None = None) -> None:
         self._db = Database(database_path)
         self._closed = False
+        self._country_cache: dict[int, Country] = {}
+        self._local_names_cache: dict[int, tuple[LocalizedName, ...]] | None = None
+        self._border_cache: dict[int, tuple[int, ...]] | None = None
+        self._bulk_rows: dict[str, dict[int, list[sqlite3.Row]]] | None = None
+        self._query_cache: dict[str, tuple[int, ...]] = {}
+        self._code_cache: dict[str, tuple[int, ...]] | None = None
+        self._city_cache: list[tuple[sqlite3.Row, float, float, float]] | None = None
         found = int(self._meta("schema_version"))
         if found != SCHEMA_VERSION:
             self.close()
@@ -124,15 +134,30 @@ class Atlas:
 
     def _country_ids(self, query: str) -> tuple[int, ...]:
         self._ensure_open()
-        code_rows = self._db.connection.execute(
-            """SELECT id FROM country
-               WHERE upper(alpha2)=upper(?) OR upper(alpha3)=upper(?)
-                  OR numeric_code=?
-               ORDER BY id""",
-            (query, query, query),
-        ).fetchall()
-        if code_rows:
-            return tuple(int(row[0]) for row in code_rows)
+        if not isinstance(query, str):
+            return self._read_country_ids(query)
+        ids = self._query_cache.get(query)
+        if ids is None:
+            if len(self._query_cache) >= 4096:
+                self._query_cache.clear()
+            ids = self._query_cache[query] = self._read_country_ids(query)
+        return ids
+
+    def _read_country_ids(self, query: str) -> tuple[int, ...]:
+        if isinstance(query, str) and query.isascii():
+            code_ids = self._code_ids().get(query.upper())
+            if code_ids:
+                return code_ids
+        elif not isinstance(query, str):
+            code_rows = self._db.connection.execute(
+                """SELECT id FROM country
+                   WHERE upper(alpha2)=upper(?) OR upper(alpha3)=upper(?)
+                      OR numeric_code=?
+                   ORDER BY id""",
+                (query, query, query),
+            ).fetchall()
+            if code_rows:
+                return tuple(int(row[0]) for row in code_rows)
 
         normalized = normalize_name(query)
         name_rows = self._db.connection.execute(
@@ -141,6 +166,22 @@ class Atlas:
             (normalized,),
         ).fetchall()
         return tuple(int(row[0]) for row in name_rows)
+
+    def _code_ids(self) -> dict[str, tuple[int, ...]]:
+        """Map upper-case alpha-2, alpha-3, and numeric codes to country ids."""
+        if self._code_cache is None:
+            grouped: dict[str, set[int]] = {}
+            rows = self._db.connection.execute(
+                "SELECT id, alpha2, alpha3, numeric_code FROM country"
+            )
+            for row in rows:
+                for code in (row["alpha2"], row["alpha3"], row["numeric_code"]):
+                    if code is not None:
+                        grouped.setdefault(str(code).upper(), set()).add(int(row["id"]))
+            self._code_cache = {
+                code: tuple(sorted(ids)) for code, ids in grouped.items()
+            }
+        return self._code_cache
 
     def _country_id(self, query: str) -> int | None:
         ids = self._country_ids(query)
@@ -330,7 +371,7 @@ class Atlas:
                 clauses.append(f"id {operator} (SELECT country_id FROM {table})")
         where = f" WHERE {' AND '.join(clauses)}" if clauses else ""
         rows = self._db.connection.execute(f"SELECT id FROM country{where} ORDER BY name", params).fetchall()
-        return tuple(self._load_country(int(row[0])) for row in rows)
+        return self._load_countries(int(row[0]) for row in rows)
 
     def rank_countries(
         self,
@@ -489,7 +530,7 @@ class Atlas:
                ORDER BY c.name""",
             (query, query),
         ).fetchall()
-        return tuple(self._load_country(int(row[0])) for row in rows)
+        return self._load_countries(int(row[0]) for row in rows)
 
     def countries_with_lake(self, name: str | None = None) -> tuple[Country, ...]:
         """Return profiles with source-listed major lakes.
@@ -508,7 +549,7 @@ class Atlas:
                ORDER BY c.name""",
             (query, query),
         ).fetchall()
-        return tuple(self._load_country(int(row[0])) for row in rows)
+        return self._load_countries(int(row[0]) for row in rows)
 
     def countries_with_local_names(
         self,
@@ -551,7 +592,7 @@ class Atlas:
                 ORDER BY c.name""",
             params,
         ).fetchall()
-        return tuple(self._load_country(int(row[0])) for row in rows)
+        return self._load_countries(int(row[0]) for row in rows)
 
     def countries_with_formal_names(self) -> tuple[Country, ...]:
         """Return countries and areas with a sourced English formal name.
@@ -567,11 +608,15 @@ class Atlas:
                WHERE n.kind = 'formal'
                ORDER BY c.name"""
         ).fetchall()
-        return tuple(self._load_country(int(row[0])) for row in rows)
+        return self._load_countries(int(row[0]) for row in rows)
 
-    @lru_cache(maxsize=1)
     def _border_adjacency(self) -> dict[int, tuple[int, ...]]:
         """Load the undirected border graph once for graph operations."""
+        if self._border_cache is None:
+            self._border_cache = self._read_border_adjacency()
+        return self._border_cache
+
+    def _read_border_adjacency(self) -> dict[int, tuple[int, ...]]:
         self._ensure_open()
         country_rows = self._db.connection.execute(
             "SELECT id, name FROM country ORDER BY name"
@@ -922,7 +967,7 @@ class Atlas:
                 f"Which Köppen-Geiger class has the largest represented share "
                 f"of {country.name}?"
             )
-            answer = f"{zone.code} — {zone.name}"
+            answer = f"{zone.code}: {zone.name}"
         elif topic == "coastlines":
             prompt = f"What coastline length is listed for {country.name}?"
             answer = f"{country.coastline_km:g} km"
@@ -1133,36 +1178,52 @@ class Atlas:
         start = self._coordinates_of(origin, country=origin_country)
         start.distance_to(start, unit=unit)
 
-        params: list[object] = []
-        where = ""
+        country_filter = None
         if within_country is not None:
-            country_id = self._country_id(self.country(within_country).alpha2)
-            where = "WHERE c.country_id = ?"
-            params.append(country_id)
-        rows = self._db.connection.execute(
-            f"""SELECT c.*, co.alpha2 FROM city c
-                JOIN country co ON co.id = c.country_id
-                {where}""",
-            params,
-        ).fetchall()
+            country_filter = self._country_id(self.country(within_country).alpha2)
 
-        results = []
-        for row in rows:
-            city = self._city_from_row(row)
-            distance = start.distance_to(city.coordinates, unit=unit)
+        # Rank cached raw rows first and build models only for the returned places.
+        # The arithmetic mirrors Coordinate.distance_to step for step, so the
+        # distances are identical to the public method's results.
+        factor = {"km": 1.0, "mi": 0.621371192237334, "nmi": 0.539956803455724}[unit]
+        lat1, lon1 = radians(start.latitude), radians(start.longitude)
+        cos_lat1 = cos(lat1)
+        ranked = []
+        for row, lat2, lon2, cos_lat2 in self._city_positions():
+            if country_filter is not None and row["country_id"] != country_filter:
+                continue
+            delta_lat, delta_lon = lat2 - lat1, lon2 - lon1
+            haversine = sin(delta_lat / 2) ** 2 + cos_lat1 * cos_lat2 * sin(delta_lon / 2) ** 2
+            distance = 2 * 6371.0088 * asin(min(1.0, sqrt(haversine))) * factor
             if not include_origin and distance <= 1e-9:
                 continue
-            country = self._load_country(int(row["country_id"])).reference()
-            results.append(CityDistance(country, city, distance, unit))
-        results.sort(
-            key=lambda result: (
-                result.distance,
-                result.country.name,
-                result.city.name,
-                result.city.geonames_id or 0,
+            key = (distance, row["country_name"], row["name"], row["geonames_id"] or 0)
+            ranked.append((key, row))
+        return tuple(
+            CityDistance(
+                self._load_country(int(row["country_id"])).reference(),
+                self._city_from_row(row),
+                key[0],
+                unit,
             )
+            for key, row in heapq.nsmallest(limit, ranked, key=lambda item: item[0])
         )
-        return tuple(results[:limit])
+
+    def _city_positions(self) -> list[tuple[sqlite3.Row, float, float, float]]:
+        """Load every populated place once, with radians precomputed for distances."""
+        if self._city_cache is None:
+            self._ensure_open()
+            rows = self._db.connection.execute(
+                """SELECT c.*, co.alpha2, co.name AS country_name FROM city c
+                   JOIN country co ON co.id = c.country_id"""
+            ).fetchall()
+            self._city_cache = []
+            for row in rows:
+                latitude = radians(row["latitude"])
+                self._city_cache.append(
+                    (row, latitude, radians(row["longitude"]), cos(latitude))
+                )
+        return self._city_cache
 
     def _coordinates_of(
         self,
@@ -1188,17 +1249,48 @@ class Atlas:
     def _city_from_row(row: object) -> City:
         return City(row["name"], row["alpha2"], Coordinate(row["latitude"], row["longitude"]), row["population"], row["elevation_m"], row["timezone_id"], ("official",) if row["is_capital"] else (), (), row["geonames_id"])
 
-    @lru_cache(maxsize=64)
+    def _load_countries(self, country_ids: Iterable[int]) -> tuple[Country, ...]:
+        """Return several country models, reading missing ones in bulk."""
+        ids = tuple(country_ids)
+        missing = [item for item in ids if item not in self._country_cache]
+        if len(missing) > 1:
+            self._bulk_rows = {}
+            try:
+                for item in missing:
+                    self._load_country(item)
+            finally:
+                self._bulk_rows = None
+        return tuple(self._load_country(item) for item in ids)
+
+    def _child_rows(self, sql: str, country_id: int) -> list[sqlite3.Row]:
+        """Run one per-country query, or serve it from a bulk read of all countries."""
+        if self._bulk_rows is None:
+            return self._db.connection.execute(sql, (country_id,)).fetchall()
+        grouped = self._bulk_rows.get(sql)
+        if grouped is None:
+            grouped = self._bulk_rows[sql] = {}
+            bulk_sql = sql.replace("country_id=?", "country_id IS NOT NULL")
+            for row in self._db.connection.execute(bulk_sql):
+                grouped.setdefault(int(row["country_id"]), []).append(row)
+        return grouped.get(country_id, [])
+
     def _load_country(self, country_id: int) -> Country:
+        """Return one immutable country model, reading it at most once per atlas."""
+        country = self._country_cache.get(country_id)
+        if country is None:
+            country = self._country_cache[country_id] = self._read_country(country_id)
+        return country
+
+    def _read_country(self, country_id: int) -> Country:
         row = self._db.connection.execute("SELECT * FROM country WHERE id=?", (country_id,)).fetchone()
-        names_rows = self._db.connection.execute("SELECT * FROM country_name WHERE country_id=? ORDER BY preferred DESC, kind, name", (country_id,)).fetchall()
+        names_rows = self._child_rows("SELECT * FROM country_name WHERE country_id=? ORDER BY preferred DESC, kind, name", country_id)
         names = tuple(LocalizedName(n["name"], n["language_code"], n["kind"], bool(n["preferred"])) for n in names_rows)
         aliases = tuple(n.text for n in names if n.kind == "alias")
-        capital_rows = self._db.connection.execute("SELECT * FROM capital WHERE country_id=? ORDER BY is_primary DESC, name", (country_id,)).fetchall()
+        capital_rows = self._child_rows("SELECT * FROM capital WHERE country_id=? ORDER BY is_primary DESC, name", country_id)
         capitals = tuple(Capital(c["name"], row["alpha2"], Coordinate(c["latitude"], c["longitude"]), c["role"], bool(c["is_primary"]), None, c["population"], c["elevation_m"], c["timezone_id"], (), c["geonames_id"]) for c in capital_rows)
-        city_rows = self._db.connection.execute("SELECT * FROM city WHERE country_id=? ORDER BY population DESC, name", (country_id,)).fetchall()
+        city_rows = self._child_rows("SELECT * FROM city WHERE country_id=? ORDER BY population DESC, name", country_id)
         cities = tuple(City(c["name"], row["alpha2"], Coordinate(c["latitude"], c["longitude"]), c["population"], c["elevation_m"], c["timezone_id"], ("official",) if c["is_capital"] else (), (), c["geonames_id"]) for c in city_rows)
-        source_rows = self._db.connection.execute("SELECT DISTINCT s.* FROM source s JOIN field_source f ON f.source_id=s.id WHERE f.country_id=? ORDER BY s.id", (country_id,)).fetchall()
+        source_rows = self._child_rows("SELECT DISTINCT f.country_id AS country_id, s.* FROM source s JOIN field_source f ON f.source_id=s.id WHERE f.country_id=? ORDER BY s.id", country_id)
         sources = tuple(
             SourceReference(
                 s["id"], s["name"], s["homepage"], s["retrieved_at"],
@@ -1208,21 +1300,10 @@ class Atlas:
         )
         source_by_id = {source.id: source for source in sources}
         local_names = self._load_local_names().get(country_id, ())
-        physical_row = self._db.connection.execute(
-            "SELECT * FROM country_physical WHERE country_id=?", (country_id,)
-        ).fetchone()
-        river_rows = self._db.connection.execute(
-            "SELECT * FROM country_river WHERE country_id=? ORDER BY length_km DESC, name",
-            (country_id,),
-        ).fetchall()
-        lake_rows = self._db.connection.execute(
-            "SELECT * FROM country_lake WHERE country_id=? ORDER BY area_km2 DESC, name",
-            (country_id,),
-        ).fetchall()
-        climate_rows = self._db.connection.execute(
-            "SELECT * FROM country_climate_zone WHERE country_id=? ORDER BY position",
-            (country_id,),
-        ).fetchall()
+        physical_row = next(iter(self._child_rows("SELECT * FROM country_physical WHERE country_id=?", country_id)), None)
+        river_rows = self._child_rows("SELECT * FROM country_river WHERE country_id=? ORDER BY length_km DESC, name", country_id)
+        lake_rows = self._child_rows("SELECT * FROM country_lake WHERE country_id=? ORDER BY area_km2 DESC, name", country_id)
+        climate_rows = self._child_rows("SELECT * FROM country_climate_zone WHERE country_id=? ORDER BY position", country_id)
         zones = tuple(
             ClimateZone(
                 item["code"], item["name"], item["climate_group"],
@@ -1310,10 +1391,7 @@ class Atlas:
             )
             if row["currency_code"] else None
         )
-        language_rows = self._db.connection.execute(
-            "SELECT * FROM country_language WHERE country_id=? ORDER BY code",
-            (country_id,),
-        ).fetchall()
+        language_rows = self._child_rows("SELECT * FROM country_language WHERE country_id=? ORDER BY code", country_id)
         languages = tuple(
             Language(
                 item["code"], item["primary_code"], item["name"], item["script_code"],
@@ -1323,10 +1401,7 @@ class Atlas:
         )
         calling_codes = tuple(json.loads(row["calling_codes"]))
         observed_timezones = tuple(sorted({city.timezone_id for city in cities if city.timezone_id}))
-        timezone_rows = self._db.connection.execute(
-            "SELECT * FROM country_timezone WHERE country_id=? ORDER BY timezone_id",
-            (country_id,),
-        ).fetchall()
+        timezone_rows = self._child_rows("SELECT * FROM country_timezone WHERE country_id=? ORDER BY timezone_id", country_id)
         timezones = tuple(
             Timezone(
                 item["timezone_id"], item["january_utc_offset_hours"],
@@ -1335,10 +1410,7 @@ class Atlas:
             )
             for item in timezone_rows
         )
-        anthem_rows = self._db.connection.execute(
-            "SELECT * FROM country_anthem WHERE country_id=? ORDER BY title",
-            (country_id,),
-        ).fetchall()
+        anthem_rows = self._child_rows("SELECT * FROM country_anthem WHERE country_id=? ORDER BY title", country_id)
         anthems = tuple(
             NationalAnthem(
                 item["title"], item["english_title"], source_by_id[item["source_id"]],
@@ -1346,10 +1418,7 @@ class Atlas:
             )
             for item in anthem_rows
         )
-        motto_rows = self._db.connection.execute(
-            "SELECT * FROM country_motto WHERE country_id=? ORDER BY text",
-            (country_id,),
-        ).fetchall()
+        motto_rows = self._child_rows("SELECT * FROM country_motto WHERE country_id=? ORDER BY text", country_id)
         mottos = tuple(
             NationalMotto(
                 item["text"], item["language_code"], item["english_text"],
@@ -1357,10 +1426,7 @@ class Atlas:
             )
             for item in motto_rows
         )
-        demonym_rows = self._db.connection.execute(
-            "SELECT * FROM country_demonym WHERE country_id=? ORDER BY language_code",
-            (country_id,),
-        ).fetchall()
+        demonym_rows = self._child_rows("SELECT * FROM country_demonym WHERE country_id=? ORDER BY language_code", country_id)
         demonyms = tuple(
             Demonym(
                 item["noun"], item["adjective"], item["language_code"],
@@ -1402,9 +1468,13 @@ class Atlas:
             postal_code=postal_code,
         )
 
-    @lru_cache(maxsize=1)
     def _load_local_names(self) -> dict[int, tuple[LocalizedName, ...]]:
         """Load local names once so collection iteration never creates an N+1 query."""
+        if self._local_names_cache is None:
+            self._local_names_cache = self._read_local_names()
+        return self._local_names_cache
+
+    def _read_local_names(self) -> dict[int, tuple[LocalizedName, ...]]:
         rows = self._db.connection.execute(
             """SELECT n.*, s.name AS source_name, s.homepage, s.retrieved_at
                FROM country_local_name n JOIN source s ON s.id=n.source_id
@@ -1454,9 +1524,12 @@ class Atlas:
         if not self._closed:
             self._db.close()
             self._closed = True
-            self._load_country.cache_clear()
-            self._load_local_names.cache_clear()
-            self._border_adjacency.cache_clear()
+            self._country_cache.clear()
+            self._local_names_cache = None
+            self._border_cache = None
+            self._query_cache.clear()
+            self._code_cache = None
+            self._city_cache = None
 
     def __enter__(self) -> "Atlas":
         return self

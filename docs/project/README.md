@@ -12,3 +12,4 @@ policies. User guides and the API reference are published on the
 - [Educational and editorial policy](EDUCATIONAL_AND_NEUTRALITY_POLICY.md)
 - [Maintainer release process](RELEASING.md)
 - [Generated roadmap status](ROADMAP_STATUS.md)
+- [1.x plan](PLAN_1_X.md)
