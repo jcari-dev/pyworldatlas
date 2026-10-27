@@ -46,6 +46,26 @@ def _parser() -> argparse.ArgumentParser:
     search.add_argument("query", help="partial country name or alias")
     subcommands.add_parser("dataset-info", help="show bundled dataset metadata")
 
+    place = subcommands.add_parser(
+        "place",
+        help="find any place on Earth by name",
+        description="Find towns, mountains, lakes, rivers, islands, and landmarks by name, best known first.",
+    )
+    place.add_argument("query", help="place name, in English or the local language")
+    near = subcommands.add_parser(
+        "near",
+        help="list the places nearest to a coordinate",
+        description="List the places nearest to a latitude and longitude, nearest first.",
+    )
+    near.add_argument("latitude", type=float, help="latitude in decimal degrees, south is negative")
+    near.add_argument("longitude", type=float, help="longitude in decimal degrees, west is negative")
+    for command in (place, near):
+        command.add_argument("--kind", help='only this kind of place, such as "volcano" or "lake"')
+        command.add_argument("--limit", type=int, default=10, help="how many places to show (default 10)")
+        command.add_argument("--data-dir", help="pack folder with optional place packs")
+    place.add_argument("--country", help="only places in this country")
+    near.add_argument("--category", help='only this category, such as "water" or "landform"')
+
     names = [pack.name for pack in packs.available()]
     get = subcommands.add_parser(
         "get",
@@ -106,8 +126,8 @@ def _pack_command(args: argparse.Namespace) -> int:
                 state = "installed"
             else:
                 state = f"update available -> pyworldatlas get {info.name}"
-            print(f"  {info.name:<10} {_megabytes(info.size_bytes):>8}  {state}")
-            print(f"  {'':<10} {'':>8}  {info.title}")
+            print(f"  {info.name:<16} {_megabytes(info.size_bytes):>8}  {state}")
+            print(f"  {'':<16} {'':>8}  {info.title}")
     return 0
 
 
@@ -125,8 +145,22 @@ def main(argv: Sequence[str] | None = None) -> int:
         except (AtlasError, OSError) as error:
             parser.exit(1, f"pyworldatlas: error: {error}\n")
     try:
-        with Atlas() as atlas:
-            if args.command == "country":
+        with Atlas(data_dir=getattr(args, "data_dir", None)) as atlas:
+            if args.command == "place":
+                found_places = atlas.search_places(
+                    args.query, kind=args.kind, country=args.country, limit=args.limit
+                )
+                if not found_places:
+                    parser.exit(1, f"No places found for {args.query!r}.\n")
+                for item in found_places:
+                    print(f"{item.label}\t{item.coordinates.format(precision=3)}")
+            elif args.command == "near":
+                nearby = atlas.places_near(
+                    (args.latitude, args.longitude), kind=args.kind, category=args.category, limit=args.limit
+                )
+                for result in nearby:
+                    print(f"{result.distance:8.1f} km  {result.place.label}")
+            elif args.command == "country":
                 found = atlas.country(args.query)
                 capital = found.capital.name if found.capital else "not listed"
                 output = (

@@ -24,17 +24,20 @@ class PackBuildTests(unittest.TestCase):
             index = build_packs(ROOT / "packs", Path(folder))
         committed = (ROOT / "src/pyworldatlas/_pack_index.json").read_text(encoding="utf-8")
         self.assertEqual(index_document(index), committed)
-        self.assertEqual({pack.name for pack in packs.available()}, {"maps", "maps-lite"})
+        self.assertEqual(
+            {pack.name for pack in packs.available()},
+            {"maps", "maps-lite", "places-explorer", "places-world"},
+        )
 
     def test_every_pack_carries_its_licenses_and_notice(self) -> None:
         for file in pack_files().glob("*.pack"):
             with zipfile.ZipFile(file) as archive:
                 names = set(archive.namelist())
-            self.assertTrue(
-                {"manifest.json", "maps.sqlite3", "plotly.min.js", "LICENSE-plotly.txt",
-                 "NOTICE.md"} <= names,
-                file.name,
-            )
+            if file.name.startswith("pyworldatlas-places-"):
+                required = {"manifest.json", "places.pwpl", "NOTICE.md"}
+            else:
+                required = {"manifest.json", "maps.sqlite3", "plotly.min.js", "LICENSE-plotly.txt", "NOTICE.md"}
+            self.assertTrue(required <= names, file.name)
 
 
 class PackInstallTests(unittest.TestCase):

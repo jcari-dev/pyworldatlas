@@ -17,13 +17,16 @@ from ._learning import (FLASHCARD_TOPICS, build_flashcard, has_flashcard_answer,
                         stable_country_sample, stable_text_order)
 from ._rankings import METRIC_UNITS, metric_value, normalize_metric
 from ._profiles import build_country, city_from_row, read_local_names
+from . import _placefile, packs
+from ._placekinds import CATEGORIES, KINDS, category_of, kind_of
 from .exceptions import (AmbiguousCountryError, AmbiguousPlaceError,
                          AtlasClosedError, CapitalNotFoundError,
                          CountryNotFoundError, DatasetVersionError,
                          PlaceNotFoundError)
 from .models import (BorderPathResult, Capital, CapitalDistance, City,
                      CityDistance, Coordinate, Country,
-                     CountryMatch, CountryRanking, DatasetInfo, Flashcard, LocalizedName, QuizQuestion)
+                     CountryMatch, CountryRanking, DatasetInfo, Flashcard, LocalizedName, Place,
+                     PlaceDistance, QuizQuestion)
 
 if TYPE_CHECKING:
     from .maps import CountryMap
@@ -77,6 +80,7 @@ class Atlas:
         self._query_cache: dict[str, tuple[int, ...]] = {}
         self._code_cache: dict[str, tuple[int, ...]] | None = None
         self._city_cache: list[tuple[sqlite3.Row, float, float, float]] | None = None
+        self._place_indexes: list[sqlite3.Connection] | None = None
         found = int(self._meta("schema_version"))
         if found != SCHEMA_VERSION:
             self.close()
@@ -993,6 +997,165 @@ class Atlas:
             for key, row in heapq.nsmallest(limit, ranked, key=lambda item: item[0])
         )
 
+    # --- every place on Earth -----------------------------------------------------
+
+    PLACE_PACKS = ("places-explorer", "places-world")
+    """Data packs that add places to the bundled school atlas, smallest first."""
+
+    def _places(self) -> list[sqlite3.Connection]:
+        """Open the place indexes once: the school atlas plus any installed place packs."""
+        self._ensure_open()
+        if self._place_indexes is None:
+            sources = [Path(__file__).resolve().parent / "data" / "places.pwpl"]
+            for name in self.PLACE_PACKS:
+                folder = packs.pack_path(name, self._data_dir)
+                if folder is not None and (folder / "places.pwpl").is_file():
+                    sources.append(folder / "places.pwpl")
+            cache = packs.data_dir(self._data_dir) / "index"
+            self._place_indexes = [_placefile.open_index(source, cache) for source in sources if source.is_file()]
+        return self._place_indexes
+
+    @staticmethod
+    def _place_from_row(row: sqlite3.Row) -> Place:
+        code = row["code"]
+        return Place(
+            row["name"], row["english"] or row["name"], kind_of(code), category_of(code), row["country"],
+            Coordinate(row["latitude"], row["longitude"]), row["population"], row["elevation_m"],
+            code, row["fame"],
+        )
+
+    def _place_filter(
+        self, kind: str | None, category: str | None, country: str | None
+    ) -> tuple[str, list[object]]:
+        """Return an SQL condition (starting with AND) and its parameters."""
+        where = ""
+        params: list[object] = []
+        if kind is not None:
+            label = " ".join(str(kind).casefold().split())
+            codes = sorted(code for code, name in KINDS.items() if name == label)
+            if not codes:
+                raise ValueError(f"Unknown place kind {kind!r}; see Atlas.place_kinds()")
+            where += f" AND code IN ({','.join('?' * len(codes))})"
+            params += codes
+        if category is not None:
+            letters = [letter for letter, name in CATEGORIES.items() if name == str(category).casefold()]
+            if not letters:
+                choices = ", ".join(sorted(CATEGORIES.values()))
+                raise ValueError(f"Unknown place category {category!r}; choose from {choices}")
+            where += " AND code LIKE ?"
+            params.append(f"{letters[0]}.%")
+        if country is not None:
+            where += " AND country = ?"
+            params.append(self.country(country).alpha2)
+        return where, params
+
+    @staticmethod
+    def place_kinds() -> tuple[str, ...]:
+        """Return every place kind accepted by place searches, such as ``"volcano"``."""
+        return tuple(sorted(set(KINDS.values())))
+
+    @staticmethod
+    def place_categories() -> tuple[str, ...]:
+        """Return the general place categories, such as ``"water"`` and ``"landform"``."""
+        return tuple(sorted(CATEGORIES.values()))
+
+    def search_places(
+        self,
+        query: str,
+        *,
+        kind: str | None = None,
+        category: str | None = None,
+        country: str | None = None,
+        limit: int = 10,
+    ) -> tuple[Place, ...]:
+        """Find places on Earth by name, best known first.
+
+        Searches the bundled school atlas (about 200,000 places: every country,
+        region, town over 2,000 people, and well-known mountain, lake, river,
+        island, and landmark) plus any installed place packs. Local and English
+        names both match, without regard to case or accents: ``"Lake Titicaca"``
+        finds ``"Lago Titicaca"``. Exact names come first, then names that start
+        with the query; better-known places break ties.
+
+        Narrow results with ``kind`` (see :meth:`place_kinds`), ``category``
+        (see :meth:`place_categories`), or ``country``.
+        """
+        if not isinstance(query, str):
+            raise TypeError("query must be a string")
+        if not normalize_name(query):
+            raise ValueError("query must contain at least one letter or number")
+        if isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0:
+            raise ValueError("limit must be a positive integer")
+        where, params = self._place_filter(kind, category, country)
+        ranked = []
+        for index in self._places():
+            for score, row in _placefile.find(index, query, limit, where, params):
+                name = row["english"] or row["name"]
+                order = (-score, -row["fame"], -(row["population"] or 0), name, row["country"])
+                ranked.append((order, row))
+        ranked.sort(key=lambda item: item[0])
+        seen: set[tuple[object, ...]] = set()
+        result: list[Place] = []
+        for _, row in ranked:
+            key = (row["name"], row["code"], round(row["latitude"], 2), round(row["longitude"], 2))
+            if key not in seen:
+                seen.add(key)
+                result.append(self._place_from_row(row))
+                if len(result) == limit:
+                    break
+        return tuple(result)
+
+    def place(self, query: str, *, kind: str | None = None, country: str | None = None) -> Place:
+        """Return the best-known place with exactly this name.
+
+        ``atlas.place("Kilimanjaro")`` is the mountain and ``atlas.place("Lake
+        Victoria")`` the African lake. Narrow with ``kind`` or ``country`` to pick
+        a less famous namesake. Raises :class:`PlaceNotFoundError` when no place
+        has this exact name.
+        """
+        key = normalize_name(query) if isinstance(query, str) else ""
+        for match in self.search_places(query, kind=kind, country=country, limit=10):
+            if key in {normalize_name(match.name), normalize_name(match.english_name)}:
+                return match
+        suffix = f" in {country!r}" if country else ""
+        raise PlaceNotFoundError(f"No place is named {query!r}{suffix}")
+
+    def places_near(
+        self,
+        origin: str | Country | Capital | City | Place | Coordinate | tuple[float, float],
+        *,
+        limit: int = 10,
+        kind: str | None = None,
+        category: str | None = None,
+        unit: str = "km",
+        include_origin: bool = False,
+        origin_country: str | None = None,
+    ) -> tuple[PlaceDistance, ...]:
+        """Return the places nearest to an origin, nearest first.
+
+        The origin can be a city name, any place or country model, a
+        :class:`Coordinate`, or a ``(latitude, longitude)`` tuple. Filter with
+        ``kind`` or ``category`` (``category="water"`` finds the nearest lakes
+        and rivers). Distances are great-circle surface measurements in
+        ``"km"``, ``"mi"``, or ``"nmi"``.
+        """
+        if isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0:
+            raise ValueError("limit must be a positive integer")
+        if unit not in {"km", "mi", "nmi"}:
+            raise ValueError('unit must be "km", "mi", or "nmi"')
+        start = self._coordinates_of(origin, country=origin_country)
+        where, params = self._place_filter(kind, category, None)
+        factor = {"km": 1.0, "mi": 0.621371192237334, "nmi": 0.539956803455724}[unit]
+        found = _placefile.near(self._places(), start.latitude, start.longitude, limit + 1, where, params)
+        result: list[PlaceDistance] = []
+        for distance, row in found:
+            if not include_origin and distance <= 1e-6:
+                continue
+            result.append(PlaceDistance(self._place_from_row(row), distance * factor, unit))
+            if len(result) == limit:
+                break
+        return tuple(result)
+
     def _city_positions(self) -> list[tuple[sqlite3.Row, float, float, float]]:
         """Load every populated place once, with radians precomputed for distances."""
         if self._city_cache is None:
@@ -1011,13 +1174,13 @@ class Atlas:
 
     def _coordinates_of(
         self,
-        value: str | Country | Capital | City | Coordinate | tuple[float, float],
+        value: str | Country | Capital | City | Place | Coordinate | tuple[float, float],
         *,
         country: str | None,
     ) -> Coordinate:
         if isinstance(value, Coordinate):
             return value
-        if isinstance(value, (Capital, City)):
+        if isinstance(value, (Capital, City, Place)):
             return value.coordinates
         if isinstance(value, Country):
             if value.capital_coordinates is None:
@@ -1027,7 +1190,7 @@ class Atlas:
             return self.coordinates(value, country=country)
         if isinstance(value, tuple) and len(value) == 2:
             return Coordinate(float(value[0]), float(value[1]))
-        raise TypeError("place must be a city name, country/place model, Coordinate, or (latitude, longitude) tuple")
+        raise TypeError("place must be a city name, country or place model, Coordinate, or (latitude, longitude) tuple")
 
     @staticmethod
     def _city_from_row(row: sqlite3.Row) -> City:
@@ -1110,6 +1273,9 @@ class Atlas:
             self._query_cache.clear()
             self._code_cache = None
             self._city_cache = None
+            for index in self._place_indexes or ():
+                index.close()
+            self._place_indexes = None
 
     def __enter__(self) -> Atlas:
         return self

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import subprocess
 import sys
+import tempfile
 import time
 import unittest
 
@@ -72,6 +73,23 @@ class PerformanceBudgetTests(unittest.TestCase):
         for name, call in calls.items():
             with self.subTest(call=name):
                 self.assertLess(best_ms(call), 60, f"{name}: budget 10 ms")
+
+    def test_place_searches_are_instant_once_indexed(self) -> None:
+        with tempfile.TemporaryDirectory() as folder, Atlas(data_dir=folder) as atlas:
+            started = time.perf_counter()
+            atlas.search_places("Paris")  # builds the school atlas index once
+            self.assertLess(time.perf_counter() - started, 30, "budget about 3 s on a laptop")
+            calls = {
+                "search_places": lambda: atlas.search_places("Kilimanjaro"),
+                "search_places prefix": lambda: atlas.search_places("a"),
+                "place": lambda: atlas.place("Lake Titicaca"),
+                "places_near": lambda: atlas.places_near((48.85, 2.35)),
+                "places_near open ocean": lambda: atlas.places_near((-48.9, -123.4)),
+                "places_near water": lambda: atlas.places_near((0.0, 0.0), category="water"),
+            }
+            for name, call in calls.items():
+                with self.subTest(call=name):
+                    self.assertLess(best_ms(call), 60, f"{name}: budget 10 ms")
 
 
 if __name__ == "__main__":

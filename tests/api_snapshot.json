@@ -39,6 +39,8 @@
     "NationalAnthem",
     "NationalMotto",
     "PhysicalGeography",
+    "Place",
+    "PlaceDistance",
     "PlaceNotFoundError",
     "PostalCodeFormat",
     "QuizQuestion",
@@ -138,12 +140,17 @@
         "nearest_capitals": "method(self, origin: 'str | Country | Capital | City | Coordinate | tuple[float, float]', *, limit: 'int' = 5, unit: 'str' = 'km', country: 'str | None' = None, include_origin: 'bool' = False) -> 'tuple[CapitalDistance, ...]'",
         "nearest_cities": "method(self, origin: 'str | Country | Capital | City | Coordinate | tuple[float, float]', *, limit: 'int' = 5, unit: 'str' = 'km', origin_country: 'str | None' = None, within_country: 'str | None' = None, include_origin: 'bool' = False) -> 'tuple[CityDistance, ...]'",
         "neighbors": "method(self, country: 'str') -> 'tuple[Country, ...]'",
+        "place": "method(self, query: 'str', *, kind: 'str | None' = None, country: 'str | None' = None) -> 'Place'",
+        "place_categories": "staticmethod() -> 'tuple[str, ...]'",
+        "place_kinds": "staticmethod() -> 'tuple[str, ...]'",
+        "places_near": "method(self, origin: 'str | Country | Capital | City | Place | Coordinate | tuple[float, float]', *, limit: 'int' = 10, kind: 'str | None' = None, category: 'str | None' = None, unit: 'str' = 'km', include_origin: 'bool' = False, origin_country: 'str | None' = None) -> 'tuple[PlaceDistance, ...]'",
         "quiz": "method(self, *, topic: 'str', count: 'int', choices: 'int' = 4, continent: 'str | None' = None, region: 'str | None' = None, seed: 'int | str' = 0) -> 'tuple[QuizQuestion, ...]'",
         "rank": "method(self, metric: 'str', **kwargs: 'Any') -> 'tuple[CountryRanking, ...]'",
         "rank_countries": "method(self, metric: 'str', *, limit: 'int | None' = None, descending: 'bool' = True, continent: 'str | None' = None, region: 'str | None' = None) -> 'tuple[CountryRanking, ...]'",
         "sample_countries": "method(self, *, count: 'int', continent: 'str | None' = None, region: 'str | None' = None, seed: 'int | str' = 0) -> 'tuple[Country, ...]'",
         "search_cities": "method(self, query: 'str', *, country: 'str | None' = None, limit: 'int' = 20) -> 'tuple[City, ...]'",
         "search_countries": "method(self, query: 'str', *, limit: 'int' = 20) -> 'tuple[CountryMatch, ...]'",
+        "search_places": "method(self, query: 'str', *, kind: 'str | None' = None, category: 'str | None' = None, country: 'str | None' = None, limit: 'int' = 10) -> 'tuple[Place, ...]'",
         "shared_neighbors": "method(self, country1: 'str', country2: 'str') -> 'tuple[Country, ...]'",
         "shares_border": "method(self, country1: 'str', country2: 'str') -> 'bool'"
       }
@@ -1428,6 +1435,92 @@
         }
       ]
     },
+    "Place": {
+      "kind": "dataclass",
+      "signature": "(name: 'str', english_name: 'str', kind: 'str', category: 'str', country_code: 'str', coordinates: 'Coordinate', population: 'int | None' = None, elevation_m: 'int | None' = None, feature_code: 'str' = '', fame: 'int' = 0) -> None",
+      "members": {
+        "label": "property"
+      },
+      "frozen": true,
+      "fields": [
+        {
+          "name": "name",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "english_name",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "kind",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "category",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "country_code",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "coordinates",
+          "type": "Coordinate",
+          "default": null
+        },
+        {
+          "name": "population",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "elevation_m",
+          "type": "int | None",
+          "default": "None"
+        },
+        {
+          "name": "feature_code",
+          "type": "str",
+          "default": "''"
+        },
+        {
+          "name": "fame",
+          "type": "int",
+          "default": "0"
+        }
+      ]
+    },
+    "PlaceDistance": {
+      "kind": "dataclass",
+      "signature": "(place: 'Place', distance: 'float', unit: 'str') -> None",
+      "members": {
+        "to_dict": "method(self) -> 'dict[str, Any]'",
+        "to_json": "method(self, indent: 'int | None' = None) -> 'str'"
+      },
+      "frozen": true,
+      "fields": [
+        {
+          "name": "place",
+          "type": "Place",
+          "default": null
+        },
+        {
+          "name": "distance",
+          "type": "float",
+          "default": null
+        },
+        {
+          "name": "unit",
+          "type": "str",
+          "default": null
+        }
+      ]
+    },
     "PlaceNotFoundError": {
       "kind": "exception",
       "bases": [
@@ -1636,6 +1729,8 @@
     "NationalAnthem",
     "NationalMotto",
     "PhysicalGeography",
+    "Place",
+    "PlaceDistance",
     "PostalCodeFormat",
     "QuizQuestion",
     "River",

@@ -1,6 +1,6 @@
 # PyWorldAtlas: offline world geography for Python
 
-> Offline country profiles, physical geography, optional 3D maps, distances, and learning tools for Python.
+> Offline country profiles, every place on Earth, physical geography, optional 3D maps, distances, and learning tools for Python.
 
 [![PyPI](https://img.shields.io/pypi/v/pyworldatlas.svg?label=PyPI&color=287aa3)](https://pypi.org/project/pyworldatlas/)
 [![Python 3.10–3.14](https://img.shields.io/badge/Python-3.10%E2%80%933.14-3776ab)](https://www.python.org/)
@@ -8,7 +8,7 @@
 [![Documentation](https://img.shields.io/badge/docs-online-317f78)](https://jcari-dev.github.io/pyworldatlas-documentation/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-607087)](https://github.com/jcari-dev/pyworldatlas/blob/main/LICENSE)
 
-**248 profiles · 248 optional 3D maps · 6,265 populated places · 0 core runtime dependencies**
+**248 profiles · 200,000 places built in · 11 million with packs · 248 optional 3D maps · 0 core runtime dependencies**
 
 [Documentation](https://jcari-dev.github.io/pyworldatlas-documentation/) ·
 [Quickstart](https://jcari-dev.github.io/pyworldatlas-documentation/quickstart.html) ·
@@ -96,6 +96,28 @@ Source-listed lakes: Lagoa dos Patos, Lagoa Mirim
 typed models rather than loosely structured dictionaries, and loaded records
 remain usable after the atlas is closed.
 
+## Find any place on Earth
+
+```python
+from pyworldatlas import Atlas
+
+with Atlas() as atlas:
+    print(atlas.place("Lake Titicaca"))
+    for result in atlas.places_near("Nairobi", category="water", limit=3):
+        print(f"{result.distance:.0f} km  {result.place}")
+```
+
+Every install includes a school atlas of about 200,000 places chosen by
+educational value: every country, region, and town of 5,000 people or more,
+and the mountains, volcanoes, lakes, rivers, deserts, islands, and landmarks
+that people around the world know. It adds about 2 MB, under a minute on a
+slow 3G connection. Search by local or English name, best known first, and ask
+what is near any point in a few milliseconds.
+
+Want everything? `pyworldatlas get places-explorer places-world` adds every
+other village, stream, and hill in the GeoNames gazetteer, 11 million places in
+all. [Read the places guide](https://jcari-dev.github.io/pyworldatlas-documentation/places.html).
+
 ## Open the terrain
 
 ```python
@@ -124,7 +146,7 @@ create a standalone rotating document for a lesson or presentation.
 | Names and writing systems | English identities, selected local-language names, scripts, reviewed official forms, and source-provided romanization |
 | Physical geography | Land and water area, coastline, elevation extremes, rivers, lakes, and climate summaries |
 | Interactive maps | Optional offline 3D elevation and climate surfaces for all 248 profiles, with rotation and speed controls, crisp PNG export, terrain-height settings, and selectable labels |
-| Places and measurement | 6,265 cities and capitals with search, nearby-place discovery, readable coordinates, distance, compass direction, bearing, and midpoint calculations |
+| Places and measurement | About 200,000 places built in (11 million with packs) and 6,265 detailed city profiles, with search by local or English name, nearest-place discovery, readable coordinates, distance, compass direction, bearing, and midpoint calculations |
 | Land connections | Reviewed neighbors, shared neighbors, shortest border paths, crossings, and connected components |
 | Learning tools | Readable profiles, stable samples, flashcards, deterministic multiple-choice questions, rankings, discovery cards, and Unicode-preserving JSON |
 
@@ -196,7 +218,9 @@ Library `0.10.0` includes dataset `2026.10.26.1` and schema `7`.
 |---|---:|
 | Countries and areas | 248 |
 | Primary capitals | 241 / 248 |
-| Populated places | 6,265 |
+| Populated places with detailed profiles | 6,265 |
+| Places in the built-in school atlas | 207,664 |
+| Places with the explorer and world packs | 11,112,657 |
 | Selected local-language identities | 248 / 248 |
 | Anthem titles | 234 / 248 |
 | Reviewed land-border relationships | 319 |

@@ -41,8 +41,8 @@ html_context = {
     "current_version": release,
     "site_url": html_baseurl,
     "seo_description": (
-        "Explore 248 country profiles, optional 3D maps, physical geography, "
-        "cities, distances, and learning tools offline with PyWorldAtlas."
+        "Explore 248 country profiles, every place on Earth, optional 3D maps, "
+        "physical geography, distances, and learning tools offline with PyWorldAtlas."
     ),
 }
 html_static_path = ["_static"]
@@ -120,7 +120,7 @@ LLMS_SECTIONS = (
     (
         "Explore the atlas",
         (
-            "country_profile", "maps", "physical_geography", "reference_facts",
+            "country_profile", "places", "maps", "physical_geography", "reference_facts",
             "rankings", "local_names", "capitals_cities", "coordinates_distances",
             "borders", "discovery", "searching", "serialization",
         ),
@@ -137,6 +137,7 @@ LLMS_SECTIONS = (
 LLMS_SUMMARY = (
     "PyWorldAtlas is an offline world-geography Python package built around one "
     "bundled, source-aware database: country profiles, names, capitals, cities, "
+    "a searchable school atlas of 200,000 places (11 million with packs), "
     "physical geography, climate classes, reviewed land borders, distances, "
     "rankings, learning tools, and optional 3D maps. It has no core runtime "
     "dependencies, needs no API key, and never uses the network at runtime."

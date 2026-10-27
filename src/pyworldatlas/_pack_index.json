@@ -12,6 +12,18 @@
       "sha256": "0d6d6d1f89d55d948791761536ff1c45f045be18ae674ae6870835325cc2d9a5",
       "size_bytes": 7097871,
       "title": "Overview 3D maps, 20 arc-minute terrain, smaller and faster"
+    },
+    "places-explorer": {
+      "file": "pyworldatlas-places-explorer.pack",
+      "sha256": "4ef12ac9f66030cd1ab2c0fdd9cafec49ead1a4e4dde2ce6261d7e0d7b7d5df8",
+      "size_bytes": 22809503,
+      "title": "Explorer places: every town over 1,000 people and every named natural feature"
+    },
+    "places-world": {
+      "file": "pyworldatlas-places-world.pack",
+      "sha256": "06463185354e71f587767387c3946e7f12a97b79c3a6288026d3e80ec1974fce",
+      "size_bytes": 43918966,
+      "title": "World places: every remaining village, stream, hill, and local area (add after explorer)"
     }
   }
 }

@@ -1,5 +1,23 @@
 # Changelog
 
+## Unreleased: 0.11.0, every place on Earth
+
+- New: search every place on Earth. Every install now includes a school atlas
+  of 207,664 places chosen by educational value (about 2 MB): every country,
+  region, and town of 5,000 people or more, plus the mountains, volcanoes,
+  lakes, rivers, deserts, islands, and landmarks that people around the world
+  know. `Atlas.search_places`, `Atlas.place`, and `Atlas.places_near` find
+  places by local or English name, best known first, and list the nearest
+  places to any point.
+- New optional packs `places-explorer` and `places-world` add every other
+  place in the GeoNames gazetteer, 11 million places in all.
+- New `Place` and `PlaceDistance` models, `Atlas.place_kinds()` and
+  `Atlas.place_categories()`, and the `pyworldatlas place` and
+  `pyworldatlas near` commands.
+- Places are stored in a compact column format (6 to 10 bytes per place) using
+  only the standard library, and unpacked once into a local SQLite index on
+  first search.
+
 ## 0.10.0
 
 A big step toward 1.0. The public API is now guarded by a snapshot test, so
