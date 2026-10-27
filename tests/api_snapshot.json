@@ -135,6 +135,7 @@
         "get": "method(self, query: 'str', default: 'Country | None' = None) -> 'Country | None'",
         "has_land_route": "method(self, origin: 'str', destination: 'str') -> 'bool'",
         "learning_topics": "method(self) -> 'tuple[str, ...]'",
+        "lookup": "method(self, query: 'str', *, limit: 'int' = 10) -> 'tuple[Country | Place, ...]'",
         "major_cities": "method(self, country: 'str', *, limit: 'int | None' = None) -> 'tuple[City, ...]'",
         "map": "method(self, country: 'str | Country', *, quality: 'str' = 'auto') -> 'CountryMap'",
         "nearest_capitals": "method(self, origin: 'str | Country | Capital | City | Coordinate | tuple[float, float]', *, limit: 'int' = 5, unit: 'str' = 'km', country: 'str | None' = None, include_origin: 'bool' = False) -> 'tuple[CapitalDistance, ...]'",

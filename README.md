@@ -103,6 +103,7 @@ from pyworldatlas import Atlas
 
 with Atlas() as atlas:
     print(atlas.place("Lake Titicaca"))
+    print([str(item) for item in atlas.lookup("Georgia", limit=2)])  # the country, then the US state
     for result in atlas.places_near("Nairobi", category="water", limit=3):
         print(f"{result.distance:.0f} km  {result.place}")
 ```

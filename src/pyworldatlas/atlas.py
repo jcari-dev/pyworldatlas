@@ -50,6 +50,10 @@ def _name_variants(key: str) -> tuple[str, ...]:
     return tuple(dict.fromkeys(variant for variant in variants if variant))
 
 
+# GeoNames codes for whole countries and territories, shown as Country profiles.
+_COUNTRY_CODES = frozenset({"A.PCL", "A.PCLD", "A.PCLF", "A.PCLI", "A.PCLS", "A.TERR"})
+
+
 class Atlas:
     """Open and explore the bundled, read-only world atlas.
 
@@ -1071,7 +1075,7 @@ class Atlas:
         """Find places on Earth by name, best known first.
 
         Searches the bundled school atlas (about 200,000 places: every country,
-        region, town over 2,000 people, and well-known mountain, lake, river,
+        region, town of 5,000 people or more, and well-known mountain, lake, river,
         island, and landmark) plus any installed place packs. Local and English
         names both match, without regard to case or accents: ``"Lake Titicaca"``
         finds ``"Lago Titicaca"``. Exact names come first, then names that start
@@ -1119,6 +1123,35 @@ class Atlas:
                 return match
         suffix = f" in {country!r}" if country else ""
         raise PlaceNotFoundError(f"No place is named {query!r}{suffix}")
+
+    def lookup(self, query: str, *, limit: int = 10) -> tuple[Country | Place, ...]:
+        """Find anything by name: countries, cities, regions, and landmarks.
+
+        One search for human-entered text. A country that the query names
+        exactly (by name, alias, or code) comes first as a full
+        :class:`Country` profile; then come the best-known places from
+        :meth:`search_places`, where a country-level place is replaced by its
+        :class:`Country` profile. ``atlas.lookup("Georgia")`` gives the country
+        and then the US state.
+        """
+        if isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0:
+            raise ValueError("limit must be a positive integer")
+        found: list[Country | Place] = []
+        countries: set[str] = set()
+        exact = self.get(query)
+        if exact is not None:
+            found.append(exact)
+            countries.add(exact.alpha2)
+        for place in self.search_places(query, limit=limit + 2):
+            if place.feature_code in _COUNTRY_CODES:
+                country = self.get(place.country_code) if place.country_code else None
+                if country is not None:
+                    if country.alpha2 not in countries:
+                        countries.add(country.alpha2)
+                        found.append(country)
+                    continue
+            found.append(place)
+        return tuple(found[:limit])
 
     def places_near(
         self,

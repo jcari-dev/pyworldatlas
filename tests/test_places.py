@@ -8,7 +8,7 @@ import sqlite3
 import tempfile
 import unittest
 
-from pyworldatlas import Atlas, Coordinate, Place, PlaceDistance, PlaceNotFoundError
+from pyworldatlas import Atlas, Coordinate, Country, Place, PlaceDistance, PlaceNotFoundError
 from pyworldatlas import _placefile
 from pyworldatlas._placefile import PlaceFileError, PlaceRecord
 
@@ -177,6 +177,23 @@ class PlaceSearchTests(unittest.TestCase):
         nearby = self.atlas.places_near(origin, limit=3)
         self.assertTrue(all(item.distance > 0 for item in nearby))
         self.assertIn("place", nearby[0].to_dict())
+
+    def test_lookup_finds_anything(self) -> None:
+        georgia = self.atlas.lookup("Georgia", limit=3)
+        self.assertIsInstance(georgia[0], Country)
+        self.assertEqual(georgia[0].alpha2, "GE")
+        self.assertIsInstance(georgia[1], Place)
+        self.assertEqual(georgia[1].country_code, "US")
+        self.assertEqual([str(item) for item in self.atlas.lookup("JP")], ["Japan"])
+        everest = self.atlas.lookup("Everest", limit=1)[0]
+        self.assertIsInstance(everest, Place)
+        self.assertEqual(everest.english_name, "Mount Everest")
+        # A country found among places appears once, as its full profile.
+        ireland = self.atlas.lookup("Ireland")
+        self.assertEqual(sum(isinstance(item, Country) for item in ireland), 1)
+        self.assertEqual(self.atlas.lookup("Zzyzx Qwertyland"), ())
+        with self.assertRaises(ValueError):
+            self.atlas.lookup("Paris", limit=0)
 
     def test_bad_input(self) -> None:
         with self.assertRaises(PlaceNotFoundError):

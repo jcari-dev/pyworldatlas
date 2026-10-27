@@ -8,7 +8,7 @@ import json
 import sys
 from collections.abc import Sequence
 
-from . import Atlas, AtlasError, __version__, packs
+from . import Atlas, AtlasError, Country, __version__, packs
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -45,6 +45,15 @@ def _parser() -> argparse.ArgumentParser:
     )
     search.add_argument("query", help="partial country name or alias")
     subcommands.add_parser("dataset-info", help="show bundled dataset metadata")
+
+    find = subcommands.add_parser(
+        "find",
+        help="find countries, cities, regions, and landmarks in one search",
+        description="Find anything by name: countries first, then the best-known places.",
+    )
+    find.add_argument("query", help="any name or country code")
+    find.add_argument("--limit", type=int, default=10, help="how many results to show (default 10)")
+    find.add_argument("--data-dir", help="pack folder with optional place packs")
 
     place = subcommands.add_parser(
         "place",
@@ -146,7 +155,16 @@ def main(argv: Sequence[str] | None = None) -> int:
             parser.exit(1, f"pyworldatlas: error: {error}\n")
     try:
         with Atlas(data_dir=getattr(args, "data_dir", None)) as atlas:
-            if args.command == "place":
+            if args.command == "find":
+                found_items = atlas.lookup(args.query, limit=args.limit)
+                if not found_items:
+                    parser.exit(1, f"Nothing found for {args.query!r}.\n")
+                for entry in found_items:
+                    if isinstance(entry, Country):
+                        print(f"{entry.name}, country ({entry.alpha2})\t{entry.flag}")
+                    else:
+                        print(f"{entry.label}\t{entry.coordinates.format(precision=3)}")
+            elif args.command == "place":
                 found_places = atlas.search_places(
                     args.query, kind=args.kind, country=args.country, limit=args.limit
                 )

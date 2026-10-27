@@ -136,8 +136,9 @@ on a slow 3G connection, and every place on Earth under 2 minutes on a slow
   detail on places already in the atlas.
 - **Travel basics in core:** plug types, mains voltage and frequency, and
   driving side.
-- One lookup across countries, places, subdivisions, and landmarks.
-- Proximity search over all installed places.
+- **Done: one lookup** across countries, places, regions, and landmarks
+  (`Atlas.lookup`, `pyworldatlas find`).
+- **Done: proximity search** over all installed places (`Atlas.places_near`).
 - Explorable 3D maps: every installed place type (cities, subdivisions,
   airports, landmarks) as layers that can be searched, filtered, and clicked
   for their facts on the map.
