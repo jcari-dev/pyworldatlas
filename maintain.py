@@ -617,9 +617,46 @@ def preview(*, host: str = "127.0.0.1", port: int = 8000) -> None:
         print("\nDocumentation preview stopped.")
 
 
+QUALITY_TOOLS = ("coverage", "mypy", "ruff")
+COVERAGE_MINIMUM = 90
+
+
+def quality(*, required: bool = False) -> bool:
+    """Run lint, strict typing, and the tests under branch coverage.
+
+    The tools are development-only and never become runtime dependencies.
+    Returns False when they are not installed and ``required`` is False.
+    """
+    from importlib.util import find_spec
+
+    missing = [tool for tool in QUALITY_TOOLS if find_spec(tool) is None]
+    if missing:
+        message = (
+            f"Static checks need {', '.join(missing)}: "
+            "python -m pip install -r requirements-dev.txt"
+        )
+        if required:
+            raise RuntimeError(message)
+        print(f"Static checks: SKIPPED ({message})")
+        return False
+    run([sys.executable, "-m", "ruff", "check", "src", "tests", "maintain.py"])
+    run([sys.executable, "-m", "mypy"])
+    run([sys.executable, "-m", "coverage", "erase"])
+    run(
+        [sys.executable, "-m", "coverage", "run", "-m", "unittest", "discover", "-s", "tests"],
+        env=builder_env(),
+    )
+    run([
+        sys.executable, "-m", "coverage", "report",
+        f"--fail-under={COVERAGE_MINIMUM}", "--skip-covered",
+    ])
+    return True
+
+
 def check() -> None:
-    print("[1/4] Runtime and pipeline tests")
-    run_tests()
+    print("[1/4] Lint, strict typing, and tests with coverage")
+    if not quality():
+        run_tests()
     with tempfile.TemporaryDirectory(prefix="pyworldatlas-check-") as folder:
         print("[2/4] Build distributions and run offline wheel demo")
         wheels, sdists = build_release_distributions(Path(folder) / "dist")
@@ -646,11 +683,12 @@ def audit_wheel(wheel: Path) -> None:
     databases = [name for name in names if name.endswith(".sqlite3")]
     forbidden = [name for name in names if name.startswith(("pipeline/", "tests/", "docs/", "build_data/"))]
     unicode_licenses = [name for name in names if name.endswith("UNICODE_LICENSE.txt")]
-    if len(databases) != 1 or len(unicode_licenses) != 1 or forbidden:
+    typed = "pyworldatlas/py.typed" in names
+    if len(databases) != 1 or len(unicode_licenses) != 1 or forbidden or not typed:
         raise RuntimeError(
             "Wheel audit failed: "
             f"databases={databases}, unicode_licenses={unicode_licenses}, "
-            f"forbidden={forbidden}"
+            f"forbidden={forbidden}, py.typed={typed}"
         )
     print("All checks passed.")
 
@@ -714,6 +752,7 @@ def main() -> int:
     release_parser = sub.add_parser("prepare-release")
     release_parser.add_argument("version")
     release_parser.add_argument("--output-dir", type=Path, default=Path("dist"))
+    sub.add_parser("quality")
     sub.add_parser("check")
     args = parser.parse_args()
     if args.command == "bootstrap":
@@ -726,6 +765,8 @@ def main() -> int:
         status()
     elif args.command == "test":
         run_tests()
+    elif args.command == "quality":
+        quality(required=True)
     elif args.command == "demo":
         demo()
     elif args.command == "docs":

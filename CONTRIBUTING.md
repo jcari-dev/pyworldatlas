@@ -30,15 +30,27 @@ python maintain.py test
 python maintain.py docs
 ```
 
+Install the development-only checking tools once. They are never runtime
+dependencies; PyWorldAtlas itself uses only the Python standard library.
+
+```console
+python -m pip install -r requirements-dev.txt
+python maintain.py quality
+```
+
+`quality` runs Ruff, strict mypy, and the test suite under branch coverage, and
+fails below 90% coverage.
+
 Before submitting a pull request, run the complete gate:
 
 ```console
 python maintain.py check
 ```
 
-The complete gate runs the runtime and pipeline tests, builds all four package
-distributions, installs the wheels in isolation, executes the examples, builds
-strict documentation and doctests, and audits release contents.
+The complete gate runs the quality checks (when the tools are installed), builds
+all four package distributions, installs the wheels in isolation, executes the
+examples, builds strict documentation and doctests, and audits release contents,
+including the `py.typed` marker.
 
 ## Factual corrections
 

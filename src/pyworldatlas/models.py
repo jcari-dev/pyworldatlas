@@ -176,11 +176,11 @@ class Coordinate:
         second = unit_vector(other)
         coincident = all(
             isclose(left, right, rel_tol=0.0, abs_tol=1e-12)
-            for left, right in zip(first, second)
+            for left, right in zip(first, second, strict=True)
         )
         antipodal = all(
             isclose(left, -right, rel_tol=0.0, abs_tol=1e-12)
-            for left, right in zip(first, second)
+            for left, right in zip(first, second, strict=True)
         )
         return coincident, antipodal
 
@@ -555,7 +555,8 @@ class CountryRanking:
 
     def to_dict(self) -> dict[str, Any]:
         """Return JSON-compatible primitives for this ranking row."""
-        return _jsonable(self)
+        data: dict[str, Any] = _jsonable(self)
+        return data
 
     def to_json(self, indent: int | None = None) -> str:
         """Serialize this ranking row as JSON."""
@@ -573,7 +574,8 @@ class CapitalDistance:
 
     def to_dict(self) -> dict[str, Any]:
         """Return JSON-compatible primitives for this distance result."""
-        return _jsonable(self)
+        data: dict[str, Any] = _jsonable(self)
+        return data
 
     def to_json(self, indent: int | None = None) -> str:
         """Serialize this distance result as JSON."""
@@ -595,7 +597,8 @@ class CityDistance:
 
     def to_dict(self) -> dict[str, Any]:
         """Return JSON-compatible primitives for this nearby-city result."""
-        return _jsonable(self)
+        data: dict[str, Any] = _jsonable(self)
+        return data
 
     def to_json(self, indent: int | None = None) -> str:
         """Serialize this nearby-city result without escaping Unicode text."""
@@ -643,7 +646,8 @@ class BorderPathResult:
 
     def to_dict(self) -> dict[str, Any]:
         """Return JSON-compatible primitives for this path."""
-        return _jsonable(self)
+        data: dict[str, Any] = _jsonable(self)
+        return data
 
     def to_json(self, indent: int | None = None) -> str:
         """Serialize this path as JSON without escaping Unicode text."""
@@ -666,7 +670,8 @@ class Flashcard:
 
     def to_dict(self) -> dict[str, Any]:
         """Return JSON-compatible primitives for this flashcard."""
-        return _jsonable(self)
+        data: dict[str, Any] = _jsonable(self)
+        return data
 
     def to_json(self, indent: int | None = None) -> str:
         """Serialize this flashcard as JSON without escaping Unicode text."""
@@ -719,7 +724,8 @@ class QuizQuestion:
 
     def to_dict(self) -> dict[str, Any]:
         """Return JSON-compatible primitives for this question."""
-        return _jsonable(self)
+        data: dict[str, Any] = _jsonable(self)
+        return data
 
     def to_json(self, indent: int | None = None) -> str:
         """Serialize this question without escaping Unicode text."""
@@ -764,7 +770,8 @@ class CountryDiscoveryCard:
 
     def to_dict(self) -> dict[str, Any]:
         """Return JSON-compatible primitives for this discovery card."""
-        return _jsonable(self)
+        data: dict[str, Any] = _jsonable(self)
+        return data
 
     def to_json(self, indent: int | None = None) -> str:
         """Serialize this discovery card as JSON without escaping Unicode text."""
@@ -1149,7 +1156,8 @@ class Country:
         effect because the bundled dataset has no historical series.
         """
         del include_history
-        return _jsonable(self)
+        data: dict[str, Any] = _jsonable(self)
+        return data
 
     def to_json(self, indent: int | None = None, include_history: bool = False) -> str:
         """Serialize this profile as JSON.

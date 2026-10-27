@@ -1,6 +1,7 @@
 include CHANGELOG.md
 include CODE_OF_CONDUCT.md
 include CONTRIBUTING.md
+include requirements-dev.txt
 include SECURITY.md
 include THIRD_PARTY_NOTICES.md
 include docs/project/BOUNDARIES_AND_DISPUTES.md

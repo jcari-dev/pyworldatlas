@@ -61,4 +61,29 @@ package-dir = {"" = "src"}
 where = ["src"]
 
 [tool.setuptools.package-data]
-pyworldatlas = ["data/atlas.sqlite3"]
+pyworldatlas = ["data/atlas.sqlite3", "py.typed"]
+
+[tool.mypy]
+strict = true
+files = ["src/pyworldatlas"]
+
+[[tool.mypy.overrides]]
+module = ["pyworldatlas_mapview", "pyworldatlas_mapview.*"]
+ignore_missing_imports = true
+
+[tool.coverage.run]
+branch = true
+source = ["src/pyworldatlas"]
+
+[tool.ruff]
+target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "B", "UP", "RUF"]
+# Geographic text intentionally uses primes, typographic quotes, and the
+# multiplication sign; __all__ is grouped by topic rather than sorted.
+ignore = ["RUF001", "RUF022"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/test_maps.py" = ["E402"]

@@ -1,7 +1,11 @@
+from contextlib import redirect_stderr, redirect_stdout
+from io import StringIO
 import json
 import subprocess
 import sys
 import unittest
+
+from pyworldatlas.__main__ import main
 
 
 class CommandLineTests(unittest.TestCase):
@@ -46,6 +50,39 @@ class CommandLineTests(unittest.TestCase):
             search.stderr,
             "No countries found for 'zzz-no-match'.\n",
         )
+
+
+class InProcessCommandLineTests(unittest.TestCase):
+    def call(self, *arguments: str) -> tuple[int, str, str]:
+        """Run ``main`` in this process and return its exit code and output."""
+        stdout, stderr = StringIO(), StringIO()
+        with redirect_stdout(stdout), redirect_stderr(stderr):
+            try:
+                code = main(list(arguments))
+            except SystemExit as exit_:
+                code = int(exit_.code or 0)
+        return code, stdout.getvalue(), stderr.getvalue()
+
+    def test_country_summary_and_json(self) -> None:
+        code, output, _ = self.call("country", "France")
+        self.assertEqual(code, 0)
+        self.assertIn("France (FR) | Capital: Paris", output)
+        code, output, _ = self.call("country", "FR", "--json")
+        self.assertEqual(json.loads(output)["codes"]["alpha3"], "FRA")
+
+    def test_search_lists_matches(self) -> None:
+        code, output, _ = self.call("search", "united")
+        self.assertEqual(code, 0)
+        self.assertIn("GB\tUnited Kingdom", output)
+
+    def test_dataset_info_is_json(self) -> None:
+        code, output, _ = self.call("dataset-info")
+        self.assertEqual(code, 0)
+        self.assertEqual(json.loads(output)["country_count"], 248)
+
+    def test_errors_exit_with_one(self) -> None:
+        self.assertEqual(self.call("country", "Atlantis")[0], 1)
+        self.assertEqual(self.call("search", "zzz-no-match")[0], 1)
 
 
 if __name__ == "__main__":
