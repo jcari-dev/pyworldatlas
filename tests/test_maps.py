@@ -185,6 +185,24 @@ class MapViewerTests(unittest.TestCase):
         self.assertEqual(page["layout"]["scene"]["aspectratio"]["x"], controls["pageScale"])
         self.assertEqual(figure["layout"]["scene"]["aspectratio"]["x"], 1)
 
+    def test_page_is_accessible_without_a_mouse_or_screen(self) -> None:
+        with self.atlas() as atlas:
+            html = atlas.map("Iceland", quality="standard").to_html()
+            nauru = atlas.map("Nauru", quality="standard").to_html()
+        self.assertIn('id="map-frame" tabindex="0" role="img"', html)
+        self.assertIn('aria-describedby="map-description map-keys"', html)
+        self.assertIn('<div id="pyworldatlas-map" aria-hidden="true">', html)
+        self.assertIn('role="status" aria-live="polite"', html)
+        self.assertIn("Elevation on the map ranges from 147 m below sea level to 1,845 m.", html)
+        self.assertIn("Climate classes by area: Polar, tundra (ET), 74%", html)
+        self.assertIn("The capital, Reykjavík, is marked with a pink diamond.", html)
+        self.assertIn("Rivers shown: Þjórsá.", html)
+        self.assertIn("arrow keys to turn it", html)
+        self.assertIn('"displayModeBar":false', html)
+        for key in ("ArrowLeft", "ArrowUp", "'+'", "'-'", "'0'"):
+            self.assertIn(key, html)
+        self.assertIn("too small to show differences in height", nauru)
+
     def test_rotation_options_are_validated(self) -> None:
         with self.atlas() as atlas:
             brazil = atlas.map("Brazil", quality="overview")

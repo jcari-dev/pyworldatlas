@@ -18,7 +18,7 @@ import webbrowser
 
 from .. import packs
 from ._html import document, rotation_options
-from ._scene import MapDataError, build_figure, load_payload
+from ._scene import MapDataError, build_figure, describe, load_payload
 
 __all__ = ["QUALITY_PACKS", "CountryMap", "MapDataError", "available_map_qualities"]
 
@@ -154,7 +154,9 @@ class CountryMap:
         The page fills the browser window and offers a control panel to color
         the terrain by elevation or climate, change terrain height, show or hide
         the capital, rivers, and river names, rotate the view, reset the camera,
-        and download a high-resolution PNG. On narrow screens the panel becomes
+        and download a high-resolution PNG. The map can be turned, tilted, and
+        zoomed from the keyboard, carries a plain-language description for screen
+        readers, and announces each change. On narrow screens the panel becomes
         a collapsible bottom sheet, and it follows the reader's light or dark
         color scheme. Set ``auto_rotate=True`` to begin rotating when the page
         opens. ``rotation_speed`` accepts values from ``0.25`` through ``3``;
@@ -171,6 +173,7 @@ class CountryMap:
                 f"{quality.title()} 3D map · "
                 f"{payload['resolutionArcMinutes']} arc-minute terrain"
             ),
+            description=describe(self, payload, quality),
             auto_rotate=auto_rotate,
             rotation_speed=rotation_speed,
             png_filename=f"{self.alpha2.casefold()}-{quality}-3d-map",
