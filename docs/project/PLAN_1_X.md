@@ -72,13 +72,12 @@ Atlas(data_dir="D:/world-packs")    # or the PYWORLDATLAS_DATA variable
 - Each pack carries its own source records and license files.
 - Three named levels: **lite** (core only), **standard** (core, places, lite
   maps), and **full** (everything).
-- The map viewer moves into the core package and drops its plotting
-  dependency: Python builds the scene data with the standard library, and the
-  maps pack ships the browser renderer as a static asset. Maps then need no
-  Python dependency at all. The existing `maps` and `maps-overview` extras keep
-  working and point users to `pyworldatlas get maps`.
+- The map viewer lives in the core package with no plotting dependency:
+  Python builds the scene data with the standard library, and the map packs
+  ship the browser renderer as a static asset. The `maps` and
+  `maps-overview` extras are kept, empty, so older install commands still work.
 - Packs are attached to GitHub releases, replacing the separate
-  `pyworldatlas-mapview` and `pyworldatlas-mapdata-*` distributions.
+  `pyworldatlas-mapview` and `pyworldatlas-mapdata-*` distributions. (Done.)
 
 This changes how maps install, so it lands before the 1.0 API freeze.
 

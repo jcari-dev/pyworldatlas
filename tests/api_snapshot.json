@@ -104,7 +104,7 @@
     },
     "Atlas": {
       "kind": "class",
-      "signature": "(database_path: 'str | Path | None' = None) -> 'None'",
+      "signature": "(database_path: 'str | Path | None' = None, *, data_dir: 'str | Path | None' = None) -> 'None'",
       "members": {
         "__contains__": "method(self, query: 'object') -> 'bool'",
         "__enter__": "method(self) -> 'Atlas'",

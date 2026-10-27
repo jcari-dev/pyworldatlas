@@ -54,15 +54,17 @@ The command is a small companion to the Python API. It reads the same bundled
 database and prints concise messages instead of Python tracebacks for ordinary
 lookup errors. Run `pyworldatlas --help` for every command.
 
-Add the recommended global 3D map edition when you want interactive terrain:
+Add interactive 3D terrain maps with one command. Maps need no extra Python
+packages, only their data:
 
 ```console
-python -m pip install "pyworldatlas[maps]"
+pyworldatlas get maps
 ```
 
-Use `pyworldatlas[maps-overview]` for the smaller Overview edition. Map data is
-optional, so the core installation stays unchanged. To replace an older
-installation, add `--upgrade` to the same command.
+Use `pyworldatlas get maps-lite` for the smaller Overview edition. Packs are
+checked against fingerprints pinned in the library, and `pyworldatlas add FILE`
+installs a copied pack on a machine without internet. To replace an older
+installation of the package, add `--upgrade` to the pip command.
 
 ## Meet a country
 

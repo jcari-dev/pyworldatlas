@@ -26,7 +26,7 @@ from .models import (BorderPathResult, Capital, CapitalDistance, City,
                      CountryMatch, CountryRanking, DatasetInfo, Flashcard, LocalizedName, QuizQuestion)
 
 if TYPE_CHECKING:
-    from pyworldatlas_mapview import CountryMap
+    from .maps import CountryMap
 
 
 class Atlas:
@@ -37,10 +37,20 @@ class Atlas:
     database built by the PyWorldAtlas pipeline. A context manager closes the
     database promptly; already materialized immutable models remain usable.
     Runtime lookups and calculations require no network access.
+
+    ``data_dir`` selects the folder of optional data packs, such as 3D maps.
+    It defaults to ``PYWORLDATLAS_DATA`` or a per-user folder; see
+    :mod:`pyworldatlas.packs`.
     """
 
-    def __init__(self, database_path: str | Path | None = None) -> None:
+    def __init__(
+        self,
+        database_path: str | Path | None = None,
+        *,
+        data_dir: str | Path | None = None,
+    ) -> None:
         self._db = Database(database_path)
+        self._data_dir = data_dir
         self._closed = False
         self._country_cache: dict[int, Country] = {}
         self._local_names_cache: dict[int, tuple[LocalizedName, ...]] | None = None
@@ -178,8 +188,9 @@ class Atlas:
         map data when installed and otherwise uses Overview data.
 
         The returned map opens in the default browser when its ``show()``
-        method is called. Install ``pyworldatlas[maps]`` for Standard maps or
-        ``pyworldatlas[maps-overview]`` for the smaller Overview edition.
+        method is called. Maps need a map pack, installed once with
+        ``pyworldatlas get maps`` (Standard) or ``pyworldatlas get maps-lite``
+        (Overview). Packs are read from this atlas's ``data_dir``.
         """
         self._ensure_open()
         if isinstance(country, str):
@@ -188,24 +199,15 @@ class Atlas:
             profile = country
         else:
             raise TypeError("country must be a country name, code, or Country")
-        try:
-            from pyworldatlas_mapview import CountryMap
-        except ModuleNotFoundError as error:
-            from .exceptions import MapSupportNotInstalledError
+        from .exceptions import MapSupportNotInstalledError
+        from .maps import CountryMap, MapDataError
 
-            if error.name == "pyworldatlas_mapview":
-                raise MapSupportNotInstalledError(
-                    'Map support is not installed. Run: pip install "pyworldatlas[maps]"'
-                ) from error
-            raise
+        result = CountryMap.from_country(profile, quality=quality, data_dir=self._data_dir)
         try:
-            result = CountryMap.from_country(profile, quality=quality)
-            _ = result.quality  # load map data now so a missing pack fails here
-            return result
-        except RuntimeError as error:
-            from .exceptions import MapSupportNotInstalledError
-
+            _ = result.quality  # find the map pack now so a missing pack fails here
+        except MapDataError as error:
             raise MapSupportNotInstalledError(str(error)) from error
+        return result
 
     def search_countries(self, query: str, *, limit: int = 20) -> tuple[CountryMatch, ...]:
         """Return ranked partial-name matches for human-entered text.

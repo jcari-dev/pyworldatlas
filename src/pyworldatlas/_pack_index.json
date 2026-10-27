@@ -1,0 +1,17 @@
+{
+  "format": 1,
+  "packs": {
+    "maps": {
+      "file": "pyworldatlas-maps.pack",
+      "sha256": "465192b045f0649f717e22e4603f439762a52167b8b54bad3d5a267758cf4f84",
+      "size_bytes": 13254133,
+      "title": "Standard 3D maps, 5 arc-minute terrain"
+    },
+    "maps-lite": {
+      "file": "pyworldatlas-maps-lite.pack",
+      "sha256": "0d6d6d1f89d55d948791761536ff1c45f045be18ae674ae6870835325cc2d9a5",
+      "size_bytes": 7097871,
+      "title": "Overview 3D maps, 20 arc-minute terrain, smaller and faster"
+    }
+  }
+}

@@ -26,6 +26,19 @@
 - Added a public API snapshot test that fails whenever an exported name,
   signature, field, or method changes without an intentional update.
 - Fixed broken inline-code formatting in the `rank_countries` docstring.
+- **Maps with zero dependencies.** The 3D map viewer is now part of
+  PyWorldAtlas and builds maps with the standard library only; Plotly is no
+  longer required. Map data installs as a checksummed data pack with
+  `pyworldatlas get maps` (Standard) or `pyworldatlas get maps-lite` (Overview),
+  or offline from a file with `pyworldatlas add`. All 496 maps (248 profiles in
+  both qualities) are identical to the 0.9 output.
+- Added `pyworldatlas packs` and `pyworldatlas remove`, the `pyworldatlas.packs`
+  module, and `Atlas(data_dir=...)` for choosing the pack folder.
+- `CountryMap` moved to `pyworldatlas.maps` and gained `to_dict()`; `figure()`
+  still returns a Plotly figure when the separate `plotly` package is installed.
+- The `pyworldatlas-mapview` and `pyworldatlas-mapdata-*` packages are retired.
+  The `maps` and `maps-overview` extras remain, empty, so older install commands
+  still work.
 - Published the 1.x plan, generated `llms.txt` and `llms-full.txt` plain-text
   documentation indexes, and removed em-dashes from the project text.
 
