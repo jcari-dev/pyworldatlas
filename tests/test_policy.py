@@ -166,7 +166,7 @@ class EducationalPolicyTests(unittest.TestCase):
         self.assertFalse((ROOT / "docs/source/explore.rst").exists())
         self.assertIn("url=index.html#explore-the-atlas", redirect)
         self.assertIn(
-            'html_extra_path = ["robots.txt", "explore.html", ".gitignore"]',
+            'html_extra_path = ["robots.txt", "explore.html", ".gitignore", "README.md"]',
             docs_config,
         )
 
@@ -222,6 +222,9 @@ class EducationalPolicyTests(unittest.TestCase):
         self.assertIn('app.connect("build-finished", _write_llms_files)', docs_config)
         self.assertIn('Path(app.outdir, "llms.txt")', docs_config)
         self.assertIn('Path(app.outdir, "llms-full.txt")', docs_config)
+        self.assertIn('"README.md"]', docs_config)
+        site_readme = (ROOT / "docs/source/README.md").read_text(encoding="utf-8")
+        self.assertIn("github.com/jcari-dev/pyworldatlas/issues", site_readme)
         for page in re.findall(r"^   ([a-z_/]+)$", index, flags=re.MULTILINE):
             self.assertIn(f'"{page}"', docs_config, page)
 
@@ -231,6 +234,7 @@ class EducationalPolicyTests(unittest.TestCase):
             *(ROOT / "docs/project").glob("*.md"),
             *(ROOT / "docs/source").rglob("*.rst"),
             *(ROOT / "docs/source").glob("*.py"),
+            *(ROOT / "docs/source").glob("*.md"),
             *(ROOT / "docs/source/_static").glob("*.js"),
             *(ROOT / "docs/source/_static").glob("*.css"),
             *(ROOT / "docs/source/_templates").glob("*.html"),

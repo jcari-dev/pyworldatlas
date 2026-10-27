@@ -46,7 +46,7 @@ html_context = {
     ),
 }
 html_static_path = ["_static"]
-html_extra_path = ["robots.txt", "explore.html", ".gitignore"]
+html_extra_path = ["robots.txt", "explore.html", ".gitignore", "README.md"]
 html_css_files = ["pyworldatlas.css"]
 html_js_files = [("playground.js", {"defer": "defer"})]
 rst_prolog = """
