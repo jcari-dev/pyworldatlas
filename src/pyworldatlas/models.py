@@ -1067,7 +1067,7 @@ class Country:
         The summary favors useful classroom facts and omits unavailable values.
         Pass a language code to request a particular bundled local name; with
         no code, the selected non-English local identity is used when present.
-        This is a presentation helper rather than a serialization format—use
+        This is a presentation helper rather than a serialization format; use
         :meth:`to_dict` when field names and machine-readable values matter.
         """
         local_name = (

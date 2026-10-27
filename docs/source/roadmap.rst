@@ -18,15 +18,16 @@ public API until it is implemented, tested, documented, and published.
 
       .. rubric:: Next milestone
 
-      Stable-API hardening will focus on consistency, typing, performance,
-      packaging, compatibility, and complete reference coverage.
+      **1.0.0** focuses on consistency, typing, performance, packaging,
+      compatibility, and complete reference coverage.
 
    .. container:: atlas-card atlas-card-gold
 
       .. rubric:: Stable destination
 
       **1.0.0** represents a dependable offline atlas contract with clear
-      upgrades and reproducible releases.
+      upgrades and reproducible releases. The 1.x series then adds places,
+      landmarks, official statistics, and generated reference entries.
 
 .. list-table:: Release train
    :header-rows: 1
@@ -86,8 +87,20 @@ public API until it is implemented, tested, documented, and published.
      - Release candidate
    * - 1.0.0
      - Planned
-     - Stable offline atlas contract
-     - —
+     - Stable offline atlas contract, performance budgets, and data packs
+     - Not yet
+   * - 1.1.0
+     - Planned
+     - Places and landmarks packs, travel basics, and proximity search
+     - Not yet
+   * - 1.2.0
+     - Planned
+     - Official statistics pack with sourced, dated indicators
+     - Not yet
+   * - 1.3.0
+     - Planned
+     - Generated reference entries and offline site export
+     - Not yet
 
 What 0.9 adds
 -------------

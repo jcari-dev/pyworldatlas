@@ -111,11 +111,11 @@ Start with something interesting
    >>> from pyworldatlas import Atlas
    >>> with Atlas() as atlas:
    ...     brazil = atlas.country("Brazil")
-   ...     print(brazil.flag, brazil.name_in("pt"), "—", brazil.capital.name)
+   ...     print(brazil.flag, brazil.name_in("pt"), "|", brazil.capital.name)
    ...     print(brazil.highest_point.name, f"{brazil.highest_point.elevation_m:,.0f} m")
    ...     print(", ".join(river.name for river in brazil.rivers[:3]))
    ...     print(brazil.climate.dominant_zone.code, brazil.climate.dominant_zone.name)
-   🇧🇷 Brasil — Brasília
+   🇧🇷 Brasil | Brasília
    Pico da Neblina 2,994 m
    Amazon, Río de la Plata/Paraná, Tocantins
    Aw Tropical, savannah

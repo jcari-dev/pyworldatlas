@@ -1776,7 +1776,7 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
     )
     milestones = [
         {
-            "name": "0 — Clean foundation",
+            "name": "0: Clean foundation",
             "version": "0.1.0",
             "status": "complete",
             "functions": "Standard package layout, generated database, release automation",
@@ -1786,7 +1786,7 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
             "release": "Rebuilt baseline tagged v0.1.0",
         },
         {
-            "name": "1 — Generated country core",
+            "name": "1: Generated country core",
             "version": "0.1.0",
             "status": "complete",
             "functions": "Lookup, search, collection protocol, capitals, populated places, dataset info",
@@ -1796,7 +1796,7 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
             "release": "Included in the v0.1.0 rebuilt baseline",
         },
         {
-            "name": "2 — Country profiles, coordinates, and discovery",
+            "name": "2: Country profiles, coordinates, and discovery",
             "version": "0.2.1",
             "status": "complete",
             "functions": "Profiles, coordinate tools, flags, discovery cards, stable samples, flashcards",
@@ -1806,7 +1806,7 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
             "release": "Publication state is tracked on GitHub Releases and PyPI",
         },
         {
-            "name": "3 — Reviewed land borders",
+            "name": "3: Reviewed land borders",
             "version": "0.3.0",
             "status": "complete",
             "functions": "Neighbors, shared borders, shortest land paths, crossings, components, and borderless entities",
@@ -1816,7 +1816,7 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
             "release": "Publication state is tracked on GitHub Releases and PyPI",
         },
         {
-            "name": "3.1 — Border API and learning polish",
+            "name": "3.1: Border API and learning polish",
             "version": "0.3.1",
             "status": "complete",
             "functions": "Land-route reachability, path name/code conveniences, neighbor flashcards, and border-count flashcards",
@@ -1826,7 +1826,7 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
             "release": "Publication state is tracked on GitHub Releases and PyPI",
         },
         {
-            "name": "4 — Official country identity",
+            "name": "4: Official country identity",
             "version": "0.4.0",
             "status": "complete",
             "functions": "Complete local display names, English formal names, reviewed local official forms, language/script lookup, romanization, and coverage discovery",
@@ -1836,7 +1836,7 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
             "release": "Included in published v0.5.0",
         },
         {
-            "name": "5 — Educational scope and publication safety",
+            "name": "5: Educational scope and publication safety",
             "version": "0.5.0",
             "status": "complete",
             "functions": "Editorial policy, public-field scope audit, respectful contribution and correction process, and policy release checks",
@@ -1846,7 +1846,7 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
             "release": "Published as v0.5.0",
         },
         {
-            "name": "6 — Country reference and discovery",
+            "name": "6: Country reference and discovery",
             "version": "0.6.0",
             "status": "complete",
             "functions": "Anthem titles, reviewed mottos, demonyms, complete timezone profiles, postal formats, richer currency and language metadata, profile filters, rankings, and nearest capitals",
@@ -1856,7 +1856,7 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
             "release": "Published as v0.6.0",
         },
         {
-            "name": "7 — Physical geography",
+            "name": "7: Physical geography",
             "version": "0.7.0",
             "status": "complete",
             "functions": "Land and water area, coastline, elevation extremes, major rivers and lakes, climate summaries, Köppen-Geiger classes, physical filters, and rankings",
@@ -1869,7 +1869,7 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
     milestones.extend(
         [
             {
-                "name": "8 — Education and usability",
+                "name": "8: Education and usability",
                 "version": "0.8.0",
                 "status": "complete",
                 "functions": "Readable country summaries, city-name and proximity discovery, coordinate display helpers, discoverable learning topics, and deterministic multiple-choice questions",
@@ -1879,7 +1879,7 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
                 "release": "Published as v0.8.0",
             },
             {
-                "name": "9 — Optional interactive maps",
+                "name": "9: Optional interactive maps",
                 "version": "0.9.0",
                 "status": "complete",
                 "functions": "Optional offline 3D elevation and climate maps, browser display, HTML export, river overlays, and capital markers",
@@ -1892,11 +1892,11 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
                 "name": "Stable offline atlas",
                 "version": "1.0.0",
                 "status": "planned",
-                "functions": "—",
-                "tests": "—",
-                "dataset": "—",
-                "docs": "—",
-                "release": "—",
+                "functions": "Planned",
+                "tests": "Planned",
+                "dataset": "Planned",
+                "docs": "Planned",
+                "release": "Planned",
             },
         ]
     )

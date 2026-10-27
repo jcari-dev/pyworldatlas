@@ -26,7 +26,7 @@ class EducationalPolicyTests(unittest.TestCase):
         self.assertIn('app.connect("html-page-context", _set_page_url)', docs_config)
         self.assertIn('app.connect("build-finished", _write_sitemap)', docs_config)
         self.assertIn("| PyWorldAtlas</title>", layout)
-        self.assertNotIn("&mdash;", layout)
+        self.assertNotIn("&" + "mdash;", layout)
         self.assertIn('name="description"', layout)
         self.assertIn('property="og:title"', layout)
         self.assertIn('type="application/ld+json"', layout)
@@ -83,9 +83,9 @@ class EducationalPolicyTests(unittest.TestCase):
 
         self.assertIn("browser playground", readme)
         self.assertIn("classrooms", readme)
-        self.assertIn("0.9 — Optional interactive maps", roadmap)
+        self.assertIn("Optional interactive maps (0.9)", roadmap)
         self.assertIn("does not publish their coordinates", roadmap)
-        self.assertEqual(status["milestones"][-2]["name"], "9 — Optional interactive maps")
+        self.assertEqual(status["milestones"][-2]["name"], "9: Optional interactive maps")
         self.assertEqual(status["milestones"][-2]["status"], "complete")
         self.assertEqual(status["milestones"][-2]["release"], "Published in v0.9.0")
 
@@ -214,6 +214,40 @@ class EducationalPolicyTests(unittest.TestCase):
         self.assertIn("bug-shaped headache", rendered_words)
         self.assertNotIn("Experimental feature", other_pages)
         self.assertNotIn("bug-shaped headache", other_pages)
+
+    def test_documentation_publishes_plain_text_indexes(self):
+        docs_config = (ROOT / "docs/source/conf.py").read_text(encoding="utf-8")
+        index = (ROOT / "docs/source/index.rst").read_text(encoding="utf-8")
+
+        self.assertIn('app.connect("build-finished", _write_llms_files)', docs_config)
+        self.assertIn('Path(app.outdir, "llms.txt")', docs_config)
+        self.assertIn('Path(app.outdir, "llms-full.txt")', docs_config)
+        for page in re.findall(r"^   ([a-z_/]+)$", index, flags=re.MULTILINE):
+            self.assertIn(f'"{page}"', docs_config, page)
+
+    def test_project_text_uses_no_em_dashes(self):
+        paths = [
+            *ROOT.glob("*.md"),
+            *(ROOT / "docs/project").glob("*.md"),
+            *(ROOT / "docs/source").rglob("*.rst"),
+            *(ROOT / "docs/source").glob("*.py"),
+            *(ROOT / "docs/source/_static").glob("*.js"),
+            *(ROOT / "docs/source/_static").glob("*.css"),
+            *(ROOT / "docs/source/_templates").glob("*.html"),
+            *(ROOT / "src").rglob("*.py"),
+            *(ROOT / "packages").rglob("*.py"),
+            *(ROOT / "pipeline/src").rglob("*.py"),
+            *(ROOT / "examples").rglob("*.py"),
+            *(ROOT / "tests").rglob("*.py"),
+            ROOT / "build_data/reports/status.json",
+        ]
+        forms = ("\N{EM DASH}", "\\" + "u2014", "&" + "mdash;")
+        offenders = [
+            str(path.relative_to(ROOT))
+            for path in paths
+            if any(form in path.read_text(encoding="utf-8") for form in forms)
+        ]
+        self.assertEqual(offenders, [])
 
     def test_documentation_deploy_excludes_build_caches(self):
         maintainer = (ROOT / "maintain.py").read_text(encoding="utf-8")

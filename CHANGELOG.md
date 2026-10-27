@@ -170,7 +170,7 @@
   speculative narrative outside the bundled dataset.
 - Moved national symbols and reference facts to 0.6.0 for their own source review.
 
-## 0.4.0 — Reserved tag; not published to PyPI
+## 0.4.0 (reserved tag, not published to PyPI)
 
 - Preserved the public tag after it was created against the 0.3.1 commit before
   the country-identity candidate reached `main`.
@@ -207,7 +207,7 @@
 - Supersedes the unpublished 0.2.0 candidate without changing its public API or
   bundled dataset.
 
-## 0.2.0 — Unpublished candidate
+## 0.2.0 (unpublished candidate)
 
 - Added richer country profiles with population snapshots, currencies, language
   codes, calling codes, top-level domains, observed timezones, and direct

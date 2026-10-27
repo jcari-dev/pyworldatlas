@@ -922,7 +922,7 @@ class Atlas:
                 f"Which Köppen-Geiger class has the largest represented share "
                 f"of {country.name}?"
             )
-            answer = f"{zone.code} — {zone.name}"
+            answer = f"{zone.code}: {zone.name}"
         elif topic == "coastlines":
             prompt = f"What coastline length is listed for {country.name}?"
             answer = f"{country.coastline_km:g} km"
