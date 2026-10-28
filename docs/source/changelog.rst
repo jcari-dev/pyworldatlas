@@ -4,6 +4,23 @@ Changelog
 This record summarizes user-visible package, data, documentation, and release
 changes. The newest published release appears first.
 
+0.12.1
+------
+
+Honest licensing, a cleaner API, and up-to-date documentation.
+
+- **Licensing:** the package metadata reads
+  ``MIT AND CC-BY-4.0 AND Unicode-3.0 AND CC0-1.0``, matching the data it
+  ships. The wheel includes the CC BY 4.0 text and the third-party notices,
+  which list every source with its terms and the changes made.
+- **Removed:** six fields that were always empty (``Area.disputed_km2``,
+  ``Geography.centroid``, ``CountryCodes.wikidata``,
+  ``Capital.largest_city``, ``Capital.alternate_names``,
+  ``City.alternate_names``) and the ``include_history`` argument of
+  ``Country.to_dict`` and ``to_json``, which had no effect.
+- **Documentation:** a refreshed home page, package description, quickstart,
+  installation guide, and API overview.
+
 0.12.0
 ------
 

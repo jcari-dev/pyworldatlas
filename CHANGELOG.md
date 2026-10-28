@@ -1,12 +1,16 @@
 # Changelog
 
-## Unreleased: 0.12.1
+## 0.12.1
+
+Honest licensing, a cleaner API, and up-to-date documentation.
 
 - A clearer package page: a new one-line description, more search keywords,
   and classifiers for typing, education, and the command line. The README,
   documentation summary, and plain-text documentation index describe the
   statistics, landmarks, sun, and travel features, and the quickstart adds an
   "Explore the world in five minutes" section.
+- Documentation brought up to date: the home page, installation guide, and
+  API reference overview cover every feature and data pack.
 
 - Removed six fields that were always empty in every profile:
   `Area.disputed_km2`, `Geography.centroid`, `CountryCodes.wikidata`,
