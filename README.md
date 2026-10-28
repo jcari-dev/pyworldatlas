@@ -6,7 +6,7 @@
 [![Python 3.10–3.14](https://img.shields.io/badge/Python-3.10%E2%80%933.14-3776ab)](https://www.python.org/)
 [![CI](https://github.com/jcari-dev/pyworldatlas/actions/workflows/ci.yml/badge.svg)](https://github.com/jcari-dev/pyworldatlas/actions/workflows/ci.yml)
 [![Documentation](https://img.shields.io/badge/docs-online-317f78)](https://jcari-dev.github.io/pyworldatlas-documentation/)
-[![License: MIT](https://img.shields.io/badge/license-MIT-607087)](https://github.com/jcari-dev/pyworldatlas/blob/main/LICENSE)
+[![Code: MIT](https://img.shields.io/badge/code-MIT-607087)](https://github.com/jcari-dev/pyworldatlas/blob/main/LICENSE) [![Data: CC BY 4.0 and others](https://img.shields.io/badge/data-CC%20BY%204.0%20%2B%20others-607087)](https://github.com/jcari-dev/pyworldatlas/blob/main/THIRD_PARTY_NOTICES.md)
 
 **248 profiles · 200,000 places built in · 11 million with packs · 248 optional 3D maps · 0 core runtime dependencies**
 
@@ -288,6 +288,17 @@ builds strict documentation and doctests, and audits the release contents.
 ## License
 
 PyWorldAtlas code is available under the
-[MIT License](https://github.com/jcari-dev/pyworldatlas/blob/main/LICENSE). Bundled data
-retains its original terms and attribution; see
-[THIRD_PARTY_NOTICES.md](https://github.com/jcari-dev/pyworldatlas/blob/main/THIRD_PARTY_NOTICES.md).
+[MIT License](https://github.com/jcari-dev/pyworldatlas/blob/main/LICENSE). The data keeps
+its own terms, and every source is credited:
+
+- Places, cities, and country metadata: [GeoNames](https://www.geonames.org/), CC BY 4.0
+- Local names, currencies, and languages: [Unicode CLDR](https://cldr.unicode.org/), Unicode License v3
+- Statistics pack: [World Bank World Development Indicators](https://datacatalog.worldbank.org/), CC BY 4.0
+- Also: CIA World Factbook and Natural Earth (public domain), Wikidata, IANA,
+  NOAA ETOPO 2022, and Beck et al. Köppen-Geiger maps (CC0), OurAirports
+  (public domain), and United Nations M49 and naming documents
+
+Full credits, the changes made, and license texts are in
+[THIRD_PARTY_NOTICES.md](https://github.com/jcari-dev/pyworldatlas/blob/main/THIRD_PARTY_NOTICES.md)
+and `licenses/`. The package metadata license is
+`MIT AND CC-BY-4.0 AND Unicode-3.0 AND CC0-1.0`.

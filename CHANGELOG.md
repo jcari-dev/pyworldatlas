@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased: 0.12.1
+
+- Clearer licensing: the package metadata now reads
+  `MIT AND CC-BY-4.0 AND Unicode-3.0 AND CC0-1.0`, matching the data it
+  ships. The wheel now includes the CC BY 4.0 license text and the
+  third-party notices, which open with a table of every source and its terms
+  and describe the changes made to GeoNames data. The README and playground
+  credit the main data sources.
+
 ## 0.12.0
 
 The world in numbers, landmarks, and a new playground.

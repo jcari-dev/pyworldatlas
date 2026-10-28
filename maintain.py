@@ -647,12 +647,16 @@ def audit_wheel(wheel: Path) -> None:
     databases = [name for name in names if name.endswith(".sqlite3")]
     forbidden = [name for name in names if name.startswith(("pipeline/", "tests/", "docs/", "build_data/"))]
     unicode_licenses = [name for name in names if name.endswith("UNICODE_LICENSE.txt")]
+    # The wheel ships GeoNames data (CC BY 4.0), so its license text and the
+    # third-party credits travel with every install.
+    credits = [name for name in names if name.endswith(("CC-BY-4.0.txt", "THIRD_PARTY_NOTICES.md"))]
     typed = "pyworldatlas/py.typed" in names
     school_atlas = "pyworldatlas/data/places.pwpl" in names
-    if len(databases) != 1 or len(unicode_licenses) != 1 or forbidden or not typed or not school_atlas:
+    if (len(databases) != 1 or len(unicode_licenses) != 1 or len(credits) != 2 or forbidden
+            or not typed or not school_atlas):
         raise RuntimeError(
             "Wheel audit failed: "
-            f"databases={databases}, unicode_licenses={unicode_licenses}, "
+            f"databases={databases}, unicode_licenses={unicode_licenses}, credits={credits}, "
             f"forbidden={forbidden}, py.typed={typed}, school atlas={school_atlas}"
         )
     print("All checks passed.")
