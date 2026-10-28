@@ -1,5 +1,5 @@
 {
-  "library_version": "0.11.0",
+  "library_version": "0.11.1",
   "schema_version": 8,
   "dataset_version": "2026.10.27.1",
   "milestones": [
@@ -218,7 +218,7 @@
       "TV",
       "UM"
     ],
-    "database_sha256": "e0acdf819bad4a131fe59fbecd71e09ea6834bae6ef8f1d6dccd367a50571ba0",
+    "database_sha256": "6967f46b8b75128b502279c6e3e7bfae023ab4b17b28a4da9e2620457bc1fb35",
     "validation": "PASS"
   }
 }

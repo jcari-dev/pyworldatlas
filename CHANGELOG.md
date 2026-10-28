@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased: 0.11.1
+## 0.11.1
 
 - New: travel basics for 245 countries and areas. `Country.travel` gives plug
   types (IEC letters A to N), the household mains voltage and frequency, and
