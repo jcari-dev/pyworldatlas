@@ -6,6 +6,17 @@ Every activity below is deterministic, works without an API key, and keeps the
 underlying country, city, coordinate, and source objects available for deeper
 exploration.
 
+.. admonition:: In 30 seconds
+   :class: atlas-quick
+
+   .. doctest::
+
+      >>> from pyworldatlas import Atlas
+      >>> with Atlas() as atlas:
+      ...     card = atlas.flashcards(topic="capitals", count=1, seed="class")[0]
+      >>> card.prompt, card.answer
+      ('What is the capital of Benin?', 'Porto-Novo')
+
 .. container:: atlas-card-grid
 
    .. container:: atlas-card atlas-card-blue

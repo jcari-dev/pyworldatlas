@@ -2,6 +2,8 @@
 
 ## Unreleased: 0.12.1
 
+- Shorter, friendlier front pages: the README is a third of its old length,
+  and the main guides open with an "In 30 seconds" example.
 - Playground: **Surprise me** shows a famous place, **Quiz me** asks five
   questions with answer buttons and a score, and three new challenge recipes
   find the capital with the shortest December day, the capitals closest to the
