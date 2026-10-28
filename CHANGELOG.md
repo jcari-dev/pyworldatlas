@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased: 0.12.0, the world in numbers
+## 0.12.0
+
+The world in numbers, landmarks, and a new playground.
 
 - New optional **statistics** pack (about 150 KB): eleven basic World Bank
   indicators for every country since 1960 (CC BY 4.0, credited): population,
@@ -11,8 +13,6 @@
   `Atlas.indicators`; `StatisticSeries.sparkline()` draws a one-line chart and
   `summary` describes the change in a sentence. New `pyworldatlas stat`
   command and "The world in numbers" guide.
-
-## Unreleased: 0.11.2
 
 - New playground: **Look up anything** answers any country or place in plain
   cards (facts, nearby places, daylight), and **Open in the editor** loads the
