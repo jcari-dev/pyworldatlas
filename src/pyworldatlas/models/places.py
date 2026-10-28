@@ -56,6 +56,60 @@ class City:
 
 
 @dataclass(frozen=True, slots=True)
+class Airport:
+    """An airport with scheduled passenger flights, from OurAirports.
+
+    ``iata_code`` is the three-letter code on tickets and bags (``"LHR"``);
+    ``icao_code`` the four-letter code pilots use (``"EGLL"``). ``size`` is
+    ``"large"``, ``"medium"``, or ``"small"``. ``country_code`` is the
+    two-letter code as published by OurAirports.
+    """
+
+    iata_code: str
+    icao_code: str | None
+    name: str
+    municipality: str | None
+    country_code: str
+    coordinates: Coordinate
+    elevation_m: int | None
+    size: str
+
+    @property
+    def label(self) -> str:
+        """Return a compact label such as ``"LHR · London Heathrow Airport (GB)"``."""
+        return f"{self.iata_code} · {self.name} ({self.country_code})"
+
+    def __str__(self) -> str:
+        return self.label
+
+
+@dataclass(frozen=True, slots=True)
+class WorldHeritageSite:
+    """A site on the UNESCO World Heritage List, from Wikidata.
+
+    ``site_id`` is the list number. ``category`` is ``"cultural"``,
+    ``"natural"``, or ``"mixed"`` from the site's selection criteria.
+    ``coordinates`` marks one representative point and ``inscribed`` the year
+    the site was added, when known. Find sites by name, number, category, or
+    distance from any place.
+    """
+
+    site_id: int
+    name: str
+    coordinates: Coordinate | None
+    inscribed: int | None
+    category: str | None
+
+    @property
+    def label(self) -> str:
+        """Return a compact label such as ``"Taj Mahal, cultural"``."""
+        return f"{self.name}, {self.category}" if self.category else self.name
+
+    def __str__(self) -> str:
+        return self.label
+
+
+@dataclass(frozen=True, slots=True)
 class Place:
     """Any named place on Earth: a town, mountain, lake, ruin, island, and more.
 

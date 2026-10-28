@@ -1,0 +1,16 @@
+{
+  "source_id": "ourairports-2026-10-28",
+  "source_version": "2026-10-28",
+  "retrieved_at": "2026-10-28T00:00:00Z",
+  "license_name": "Public domain",
+  "license_url": "https://ourairports.com/data/",
+  "note": "airports.csv is too large for git. Download it from the URL below into this folder; the landmarks builder refuses a file whose checksum differs.",
+  "files": [
+    {
+      "url": "https://raw.githubusercontent.com/davidmegginson/ourairports-data/main/airports.csv",
+      "path": "airports.csv",
+      "sha256": "9c1f3295b59f84c475f8c8555fa102505d7b4af0f931002cc5558dfeee1e43aa",
+      "size_bytes": 12751638
+    }
+  ]
+}

@@ -132,8 +132,8 @@ on a slow 3G connection, and every place on Earth under 2 minutes on a slow
 - **Done: place packs.** `places-explorer` (every town over 1,000 and every
   named natural feature) and `places-world` (everything else worth knowing),
   11 million places in all.
-- **Landmarks:** airports (OurAirports) and World Heritage sites as extra
-  detail on places already in the atlas.
+- **Done: landmarks pack.** Airports with scheduled flights (OurAirports) and
+  UNESCO World Heritage sites (Wikidata), with a reviewed country table.
 - **Travel basics in core:** plug types, mains voltage and frequency, and
   driving side.
 - **Done: one lookup** across countries, places, regions, and landmarks

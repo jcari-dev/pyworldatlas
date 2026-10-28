@@ -47,6 +47,9 @@ statements. Wikidata structured data is released under Creative Commons CC0
 1.0. The query snapshot, statement IDs, ranks, and values are retained. See
 https://www.wikidata.org/wiki/Wikidata:Licensing.
 
+The optional landmarks pack uses OurAirports airport data (public domain) and
+Wikidata World Heritage statements (CC0 1.0); see `packs/NOTICE-landmarks.md`.
+
 Travel basics (plug types, household mains voltage and frequency, and driving
 side) for 245 profiles come from Wikidata statements under CC0 1.0. The exact
 query and response checksum are retained.

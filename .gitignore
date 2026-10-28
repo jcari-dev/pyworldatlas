@@ -36,3 +36,6 @@ desktop.ini
 # GeoNames all-places snapshots (too large for git; checksums in manifest.json)
 /build_data/raw/geonames/*/allCountries.zip
 /build_data/raw/geonames/*/alternateNamesV2.zip
+
+# Too large for git; see build_data/raw/ourairports/*/manifest.json
+build_data/raw/ourairports/*/airports.csv

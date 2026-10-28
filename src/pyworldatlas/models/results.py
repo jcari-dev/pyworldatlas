@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Any
 
 from ._serialize import _jsonable
 from .geography import Coordinate
-from .places import Capital, City, Place
+from .places import Capital, City, Place, WorldHeritageSite
 
 if TYPE_CHECKING:
     from .country import Country
@@ -110,6 +110,24 @@ class PlaceDistance:
 
     def to_json(self, indent: int | None = None) -> str:
         """Serialize this nearby-place result without escaping Unicode text."""
+        return json.dumps(self.to_dict(), ensure_ascii=False, indent=indent)
+
+
+@dataclass(frozen=True, slots=True)
+class SiteDistance:
+    """A World Heritage site and its great-circle distance from an origin."""
+
+    site: WorldHeritageSite
+    distance: float
+    unit: str
+
+    def to_dict(self) -> dict[str, Any]:
+        """Return JSON-compatible primitives for this nearby-site result."""
+        data: dict[str, Any] = _jsonable(self)
+        return data
+
+    def to_json(self, indent: int | None = None) -> str:
+        """Serialize this nearby-site result without escaping Unicode text."""
         return json.dumps(self.to_dict(), ensure_ascii=False, indent=indent)
 
 

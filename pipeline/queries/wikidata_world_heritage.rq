@@ -1,0 +1,11 @@
+SELECT ?site ?whsId ?siteLabel ?coordinates ?inscribed ?criterionLabel WHERE {
+  ?site wdt:P757 ?whsId;
+        p:P1435 ?designation.
+  ?designation ps:P1435 wd:Q9259.
+  FILTER NOT EXISTS { ?designation pq:P582 ?ended. }
+  OPTIONAL { ?designation pq:P580 ?inscribed. }
+  OPTIONAL { ?site wdt:P625 ?coordinates. }
+  OPTIONAL { ?site wdt:P2614 ?criterion. ?criterion rdfs:label ?criterionLabel. FILTER(LANG(?criterionLabel) = "en") }
+  ?site rdfs:label ?siteLabel. FILTER(LANG(?siteLabel) = "en")
+}
+ORDER BY ?whsId ?site ?criterionLabel

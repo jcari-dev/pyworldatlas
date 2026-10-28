@@ -119,6 +119,10 @@ Want everything? `pyworldatlas get places-explorer places-world` adds every
 other village, stream, and hill in the GeoNames gazetteer, 11 million places in
 all. [Read the places guide](https://jcari-dev.github.io/pyworldatlas-documentation/places.html).
 
+`pyworldatlas get landmarks` (about 150 KB) adds 4,010 airports with scheduled
+flights and 1,266 UNESCO World Heritage sites: `atlas.airport("LHR")`,
+`atlas.world_heritage_sites_near("Cusco")`.
+
 ## Open the terrain
 
 ```python
@@ -222,6 +226,7 @@ Library `0.11.1` includes dataset `2026.10.27.1` and schema `8`.
 | Populated places with detailed profiles | 6,265 |
 | Places in the built-in school atlas | 207,664 |
 | Places with the explorer and world packs | 11,112,657 |
+| Airports and World Heritage sites (landmarks pack) | 4,010 and 1,266 |
 | Selected local-language identities | 248 / 248 |
 | Anthem titles | 234 / 248 |
 | Reviewed land-border relationships | 319 |

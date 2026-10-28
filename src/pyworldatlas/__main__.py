@@ -55,6 +55,22 @@ def _parser() -> argparse.ArgumentParser:
     find.add_argument("--limit", type=int, default=10, help="how many results to show (default 10)")
     find.add_argument("--data-dir", help="pack folder with optional place packs")
 
+    airport = subcommands.add_parser(
+        "airport",
+        help="look up an airport by its IATA or ICAO code (landmarks pack)",
+        description="Show an airport with scheduled flights by its IATA (LHR) or ICAO (EGLL) code.",
+    )
+    airport.add_argument("code", help="IATA or ICAO code")
+    airport.add_argument("--data-dir", help="pack folder with the landmarks pack")
+    heritage = subcommands.add_parser(
+        "heritage",
+        help="list the World Heritage sites nearest a place (landmarks pack)",
+        description="List the UNESCO World Heritage sites nearest to a city or place.",
+    )
+    heritage.add_argument("where", help="city or place name")
+    heritage.add_argument("--limit", type=int, default=10, help="how many sites to show (default 10)")
+    heritage.add_argument("--data-dir", help="pack folder with the landmarks pack")
+
     sun = subcommands.add_parser(
         "sun",
         help="sunrise, sunset, and day length for a place",
@@ -164,7 +180,15 @@ def main(argv: Sequence[str] | None = None) -> int:
             parser.exit(1, f"pyworldatlas: error: {error}\n")
     try:
         with Atlas(data_dir=getattr(args, "data_dir", None)) as atlas:
-            if args.command == "sun":
+            if args.command == "airport":
+                found_airport = atlas.airport(args.code)
+                town = f", {found_airport.municipality}" if found_airport.municipality else ""
+                print(f"{found_airport.label}{town}\t{found_airport.coordinates.format(precision=3)}")
+            elif args.command == "heritage":
+                for near_site in atlas.world_heritage_sites_near(args.where, limit=args.limit):
+                    year = f" ({near_site.site.inscribed})" if near_site.site.inscribed else ""
+                    print(f"{near_site.distance:8.1f} km  {near_site.site.label}{year}")
+            elif args.command == "sun":
                 from datetime import date
                 day = date.fromisoformat(args.date) if args.date else None
                 print(atlas.sun(args.where, day).summary)

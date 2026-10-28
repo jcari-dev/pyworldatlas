@@ -47,3 +47,10 @@ class CapitalNotFoundError(PlaceNotFoundError):
 
 class MapSupportNotInstalledError(AtlasError):
     """Raised when an optional map viewer or map-data pack is unavailable."""
+
+
+class PackNotInstalledError(AtlasError):
+    """Raised when a feature needs an optional data pack that is not installed.
+
+    The message names the ``pyworldatlas get`` command that installs it.
+    """
