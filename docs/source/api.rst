@@ -231,6 +231,15 @@ structured dictionaries. Their ``to_dict()`` methods provide portable output.
 .. autoclass:: pyworldatlas.PlaceQuestion
    :members:
 
+.. autoclass:: pyworldatlas.Indicator
+   :members:
+
+.. autoclass:: pyworldatlas.StatisticSeries
+   :members:
+
+.. autoclass:: pyworldatlas.StatisticValue
+   :members:
+
 .. autoclass:: pyworldatlas.SunTimes
    :members:
 

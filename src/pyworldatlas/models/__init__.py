@@ -11,6 +11,7 @@ from .geography import Area, ClimateProfile, ClimateZone, Coordinate, ElevationP
 from .places import Airport, Capital, City, Place, WorldHeritageSite
 from .results import Antipode, BorderPathResult, CapitalDistance, CityDistance, CountryMatch, CountryRanking, CountryReference, PlaceDistance, SiteDistance, SunTimes
 from .learning import CountryDiscoveryCard, Flashcard, PlaceQuestion, QuizQuestion
+from .statistics import Indicator, StatisticSeries, StatisticValue
 from .country import Country
 
 __all__ = [
@@ -37,6 +38,7 @@ __all__ = [
     "ElevationPoint",
     "Flashcard",
     "Geography",
+    "Indicator",
     "Lake",
     "Language",
     "LocalizedName",
@@ -51,6 +53,8 @@ __all__ = [
     "River",
     "SiteDistance",
     "SourceReference",
+    "StatisticSeries",
+    "StatisticValue",
     "SunTimes",
     "Timezone",
     "TravelBasics",

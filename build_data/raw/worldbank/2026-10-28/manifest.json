@@ -1,0 +1,142 @@
+{
+  "source_id": "worldbank-wdi-2026-10-28",
+  "source_version": "World Development Indicators, last updated 2026-10-08",
+  "retrieved_at": "2026-10-28T00:00:00Z",
+  "license_name": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "note": "The API responses are too large for git. Download them from the URLs below into this folder; the statistics builder refuses files whose checksum differs.",
+  "files": [
+    {
+      "url": "https://api.worldbank.org/v2/country/all/indicator/AG.LND.AGRI.ZS?format=json&per_page=30000&date=1960:2025",
+      "path": "AG.LND.AGRI.ZS.json",
+      "sha256": "1038afc6caa5367ddfc1bb25b8e75128dc9c5fd53c0f579d6c4c45b7f491627d",
+      "size_bytes": 3997274
+    },
+    {
+      "url": "https://api.worldbank.org/v2/sources/2/series/AG.LND.AGRI.ZS/metadata?format=json",
+      "path": "AG.LND.AGRI.ZS.metadata.json",
+      "sha256": "0a3c63c9ffc49e5b34dae057e8b36c796af93d1bb358fc17c56b5a9e016d6f90",
+      "size_bytes": 7477
+    },
+    {
+      "url": "https://api.worldbank.org/v2/country/all/indicator/AG.LND.FRST.ZS?format=json&per_page=30000&date=1960:2025",
+      "path": "AG.LND.FRST.ZS.json",
+      "sha256": "cc2aa40d56b21f74ed6ce5f4ff66fbcfbf40e980ec5b32b0bb0f9bf1e9ddec3a",
+      "size_bytes": 3817226
+    },
+    {
+      "url": "https://api.worldbank.org/v2/sources/2/series/AG.LND.FRST.ZS/metadata?format=json",
+      "path": "AG.LND.FRST.ZS.metadata.json",
+      "sha256": "bc0b8225c93ddb6dabecc9e82a8afd994a1edaf5c5719e78c9b4629f05605951",
+      "size_bytes": 9690
+    },
+    {
+      "url": "https://api.worldbank.org/v2/country/all/indicator/EG.ELC.ACCS.ZS?format=json&per_page=30000&date=1960:2025",
+      "path": "EG.ELC.ACCS.ZS.json",
+      "sha256": "b025311fab5af626745fb4958bfceedaf3dc834126b20ecdc7870d319cef7494",
+      "size_bytes": 3925800
+    },
+    {
+      "url": "https://api.worldbank.org/v2/sources/2/series/EG.ELC.ACCS.ZS/metadata?format=json",
+      "path": "EG.ELC.ACCS.ZS.metadata.json",
+      "sha256": "adb694924cbd5b0f520b639e25e01da55b1a6d1729ea711beda5b6d8b795619f",
+      "size_bytes": 4199
+    },
+    {
+      "url": "https://api.worldbank.org/v2/country/all/indicator/EN.POP.DNST?format=json&per_page=30000&date=1960:2025",
+      "path": "EN.POP.DNST.json",
+      "sha256": "f867d66a680dc2532dc50e20c9192ffecb282af9a524d56d012e81a945f7b972",
+      "size_bytes": 4245641
+    },
+    {
+      "url": "https://api.worldbank.org/v2/sources/2/series/EN.POP.DNST/metadata?format=json",
+      "path": "EN.POP.DNST.metadata.json",
+      "sha256": "64d724ece5ac04d9157413e2cfac5746c00f1853a3e9e739272fe0833accd37b",
+      "size_bytes": 6878
+    },
+    {
+      "url": "https://api.worldbank.org/v2/country/all/indicator/IT.NET.USER.ZS?format=json&per_page=30000&date=1960:2025",
+      "path": "IT.NET.USER.ZS.json",
+      "sha256": "9b2741e732193b183c6534e131d4354d40878895761d7840ebfce50a0eaf792b",
+      "size_bytes": 4099165
+    },
+    {
+      "url": "https://api.worldbank.org/v2/sources/2/series/IT.NET.USER.ZS/metadata?format=json",
+      "path": "IT.NET.USER.ZS.metadata.json",
+      "sha256": "161d1e400f8531b7f8de54f13797fea81d2e983b01cfa2343fb512c0f95e9fe5",
+      "size_bytes": 4989
+    },
+    {
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SH.H2O.BASW.ZS?format=json&per_page=30000&date=1960:2025",
+      "path": "SH.H2O.BASW.ZS.json",
+      "sha256": "15afbc31306b7853ece14ccf40612d9db1ff96a0b22acf7b5040e378f77588b2",
+      "size_bytes": 4504584
+    },
+    {
+      "url": "https://api.worldbank.org/v2/sources/2/series/SH.H2O.BASW.ZS/metadata?format=json",
+      "path": "SH.H2O.BASW.ZS.metadata.json",
+      "sha256": "95d6519e7e49c2bf50e7ca63a162189b500f5075247e5fb6f34ea550683e5ea8",
+      "size_bytes": 6036
+    },
+    {
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SP.DYN.CBRT.IN?format=json&per_page=30000&date=1960:2025",
+      "path": "SP.DYN.CBRT.IN.json",
+      "sha256": "36bdd370b9909d2656dbb353fbc989c6f0f1fa3944ce0607b637b0454be01742",
+      "size_bytes": 3912037
+    },
+    {
+      "url": "https://api.worldbank.org/v2/sources/2/series/SP.DYN.CBRT.IN/metadata?format=json",
+      "path": "SP.DYN.CBRT.IN.metadata.json",
+      "sha256": "40692d081b14a782eb2e720dce6f846fadb03d33d589b8da8f383eb0f05095c0",
+      "size_bytes": 3683
+    },
+    {
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SP.DYN.CDRT.IN?format=json&per_page=30000&date=1960:2025",
+      "path": "SP.DYN.CDRT.IN.json",
+      "sha256": "1ec43f75ec63a51af15876a9f3172bbb986bf6f9d31fea3bbe631d825793c96d",
+      "size_bytes": 3904439
+    },
+    {
+      "url": "https://api.worldbank.org/v2/sources/2/series/SP.DYN.CDRT.IN/metadata?format=json",
+      "path": "SP.DYN.CDRT.IN.metadata.json",
+      "sha256": "1deb6d71caa90bbfc252d35e498cea14e4e5fc52ff17838e50fab6af90b71174",
+      "size_bytes": 3867
+    },
+    {
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SP.DYN.LE00.IN?format=json&per_page=30000&date=1960:2025",
+      "path": "SP.DYN.LE00.IN.json",
+      "sha256": "31c30dcf697d6e559f29f86183621df5586d331cff3b4b56c76bb6a0af3af7c3",
+      "size_bytes": 4007132
+    },
+    {
+      "url": "https://api.worldbank.org/v2/sources/2/series/SP.DYN.LE00.IN/metadata?format=json",
+      "path": "SP.DYN.LE00.IN.metadata.json",
+      "sha256": "f97734f7cc1f97ae3c395632ce02504fec2e8c89290ca8fbccc498d623152f94",
+      "size_bytes": 3719
+    },
+    {
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SP.POP.TOTL?format=json&per_page=30000&date=1960:2025",
+      "path": "SP.POP.TOTL.json",
+      "sha256": "427f1b225b0b7291b9c06b314097916226bbb0f5cdd3b55ff0f564cca15f57cb",
+      "size_bytes": 3528198
+    },
+    {
+      "url": "https://api.worldbank.org/v2/sources/2/series/SP.POP.TOTL/metadata?format=json",
+      "path": "SP.POP.TOTL.metadata.json",
+      "sha256": "8670604aa3dabf4f664fdd405420b38e7271eac1f91f2bc2213879f4514c6480",
+      "size_bytes": 6358
+    },
+    {
+      "url": "https://api.worldbank.org/v2/country/all/indicator/SP.URB.TOTL.IN.ZS?format=json&per_page=30000&date=1960:2025",
+      "path": "SP.URB.TOTL.IN.ZS.json",
+      "sha256": "2999e79767ce0c49965c1cf93207166d68edba9b7ceb0a55a09500e94f084735",
+      "size_bytes": 4178803
+    },
+    {
+      "url": "https://api.worldbank.org/v2/sources/2/series/SP.URB.TOTL.IN.ZS/metadata?format=json",
+      "path": "SP.URB.TOTL.IN.ZS.metadata.json",
+      "sha256": "f2779c540a4250cefe2be32d758bc13c571d33b6186debc6d31c13f74b1d6a99",
+      "size_bytes": 3559
+    }
+  ]
+}

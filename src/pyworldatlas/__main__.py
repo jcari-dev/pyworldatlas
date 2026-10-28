@@ -70,6 +70,15 @@ def _parser() -> argparse.ArgumentParser:
     heritage.add_argument("where", help="city or place name")
     heritage.add_argument("--limit", type=int, default=10, help="how many sites to show (default 10)")
     heritage.add_argument("--data-dir", help="pack folder with the landmarks pack")
+    stat = subcommands.add_parser(
+        "stat",
+        help="show a statistic for a country since 1960 (statistics pack)",
+        description="Show an indicator such as life_expectancy for a country, with a one-line chart.",
+    )
+    stat.add_argument("country", help='country name or code, or "world"')
+    stat.add_argument("indicator", help="indicator such as population or life_expectancy")
+    stat.add_argument("--data-dir", help="pack folder with the statistics pack")
+
     antipode = subcommands.add_parser(
         "antipode",
         help="find the opposite side of the Earth from a place",
@@ -195,6 +204,11 @@ def main(argv: Sequence[str] | None = None) -> int:
                 for near_site in atlas.world_heritage_sites_near(args.where, limit=args.limit):
                     year = f" ({near_site.site.inscribed})" if near_site.site.inscribed else ""
                     print(f"{near_site.distance:8.1f} km  {near_site.site.label}{year}")
+            elif args.command == "stat":
+                series = atlas.time_series(args.country, args.indicator)
+                print(series.summary)
+                if series.points:
+                    print(f"{series.points[0][0]} {series.sparkline()} {series.points[-1][0]}")
             elif args.command == "antipode":
                 print(atlas.antipode(args.where).summary)
             elif args.command == "sun":

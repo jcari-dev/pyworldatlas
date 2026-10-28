@@ -41,6 +41,13 @@
         "landmarks.json.xz": "landmarks/landmarks.json.xz",
         "NOTICE.md": "NOTICE-landmarks.md"
       }
+    },
+    "statistics": {
+      "title": "Statistics: basic World Bank indicators by country since 1960",
+      "files": {
+        "statistics.json.xz": "statistics/statistics.json.xz",
+        "NOTICE.md": "NOTICE-statistics.md"
+      }
     }
   }
 }

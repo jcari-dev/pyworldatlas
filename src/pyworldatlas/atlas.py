@@ -25,13 +25,14 @@ from .exceptions import (AmbiguousCountryError, AmbiguousPlaceError,
                          CountryNotFoundError, DatasetVersionError,
                          PackNotInstalledError, PlaceNotFoundError)
 from .models import (Airport, Antipode, BorderPathResult, Capital, CapitalDistance, City,
-                     CityDistance, Coordinate, Country,
+                     CityDistance, Coordinate, Country, Indicator, StatisticSeries, StatisticValue,
                      CountryMatch, CountryRanking, DatasetInfo, Flashcard, LocalizedName, Place,
                      PlaceDistance, PlaceQuestion, QuizQuestion, SiteDistance, SunTimes, WorldHeritageSite)
 
 if TYPE_CHECKING:
     from . import _placefile, packs
     from ._landmarks import Landmarks
+    from ._statistics import Statistics
     from .maps import CountryMap
 else:
     from ._lazy import LazyModule
@@ -97,6 +98,7 @@ class Atlas:
         self._city_cache: list[tuple[sqlite3.Row, float, float, float]] | None = None
         self._place_indexes: list[sqlite3.Connection] | None = None
         self._landmarks: Landmarks | None = None
+        self._statistics: Statistics | None = None
         found = int(self._meta("schema_version"))
         if found != SCHEMA_VERSION:
             self.close()
@@ -1259,6 +1261,87 @@ class Atlas:
                     (row, latitude, radians(row["longitude"]), cos(latitude))
                 )
         return self._city_cache
+
+    def _statistics_pack(self) -> Statistics:
+        """Load the statistics pack once, or explain how to install it."""
+        self._ensure_open()
+        if self._statistics is None:
+            from ._statistics import FILE, Statistics
+
+            folder = packs.pack_path("statistics", self._data_dir)
+            if folder is None or not (folder / FILE).is_file():
+                raise PackNotInstalledError(
+                    "Statistics need the statistics pack. Run: pyworldatlas get statistics"
+                )
+            self._statistics = Statistics(folder / FILE)
+        return self._statistics
+
+    def indicators(self) -> tuple[Indicator, ...]:
+        """Return every statistic in the statistics pack, such as ``life_expectancy``.
+
+        Needs the statistics pack (``pyworldatlas get statistics``).
+        """
+        return tuple(self._statistics_pack().indicators.values())
+
+    def _indicator(self, key: str) -> Indicator:
+        found = self._statistics_pack().indicators.get(str(key).strip().casefold().replace(" ", "_").replace("-", "_"))
+        if found is None:
+            choices = ", ".join(self._statistics_pack().indicators)
+            raise ValueError(f"Unknown indicator {key!r}; choose from {choices}")
+        return found
+
+    def time_series(self, country: str | Country, indicator: str) -> StatisticSeries:
+        """Return the yearly values of an indicator for a country, from 1960.
+
+        ``country`` is a country name, code, or profile, or ``"world"`` for the
+        World Bank's world total. Years without a published value are ``None``.
+        Needs the statistics pack (``pyworldatlas get statistics``).
+        """
+        found = self._indicator(indicator)
+        if isinstance(country, str) and country.strip().casefold() == "world":
+            area, area_name = "world", "the world"
+        else:
+            profile = country if isinstance(country, Country) else self.country(country)
+            area, area_name = profile.alpha2, profile.name
+        first, values = self._statistics_pack().series[found.key].get(area, (0, ()))
+        return StatisticSeries(found, area, area_name, first, values)
+
+    def statistic(self, country: str | Country, indicator: str, year: int | None = None) -> StatisticValue | None:
+        """Return one published value, the latest unless ``year`` is given.
+
+        Returns ``None`` when the publisher has no value; missing values are
+        never estimated. Needs the statistics pack.
+        """
+        series = self.time_series(country, indicator)
+        if year is None:
+            return series.latest
+        value = series.value(year)
+        return None if value is None else StatisticValue(series.indicator, series.area, year, value)
+
+    def sort_by_statistic(
+        self, indicator: str, *, year: int | None = None, descending: bool = True, limit: int | None = 10
+    ) -> tuple[StatisticValue, ...]:
+        """List countries sorted by one indicator, for a year or each one's latest.
+
+        Sorting only orders the published numbers; it says nothing about which
+        is better. Countries without a value are left out. Needs the
+        statistics pack.
+        """
+        found = self._indicator(indicator)
+        if limit is not None and (isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0):
+            raise ValueError("limit must be a positive integer or None")
+        rows: list[StatisticValue] = []
+        for area, (first, values) in self._statistics_pack().series[found.key].items():
+            if area == "world":
+                continue
+            series = StatisticSeries(found, area, area, first, values)
+            item = series.latest if year is None else (
+                None if series.value(year) is None else StatisticValue(found, area, year, series.value(year) or 0.0)
+            )
+            if item is not None:
+                rows.append(item)
+        rows.sort(key=lambda item: (-item.value if descending else item.value, item.area))
+        return tuple(rows if limit is None else rows[:limit])
 
     def _landmark_pack(self) -> Landmarks:
         """Load the landmarks pack once, or explain how to install it."""

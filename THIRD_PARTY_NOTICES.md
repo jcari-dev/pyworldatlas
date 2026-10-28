@@ -47,6 +47,12 @@ statements. Wikidata structured data is released under Creative Commons CC0
 1.0. The query snapshot, statement IDs, ranks, and values are retained. See
 https://www.wikidata.org/wiki/Wikidata:Licensing.
 
+The optional statistics pack uses the World Bank's World Development
+Indicators, licensed under Creative Commons Attribution 4.0 (CC BY 4.0),
+https://creativecommons.org/licenses/by/4.0/. Values are kept as published and
+matched by ISO code; see `packs/NOTICE-statistics.md`. PyWorldAtlas is not
+affiliated with or endorsed by the World Bank.
+
 The optional landmarks pack uses OurAirports airport data (public domain) and
 Wikidata World Heritage statements (CC0 1.0); see `packs/NOTICE-landmarks.md`.
 

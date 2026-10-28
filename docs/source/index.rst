@@ -329,6 +329,7 @@ The current source checkout can be installed with ``python -m pip install -e .``
    country_profile
    places
    landmarks
+   statistics
    maps
    physical_geography
    reference_facts

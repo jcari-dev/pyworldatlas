@@ -26,7 +26,7 @@ class PackBuildTests(unittest.TestCase):
         self.assertEqual(index_document(index), committed)
         self.assertEqual(
             {pack.name for pack in packs.available()},
-            {"landmarks", "maps", "maps-lite", "places-explorer", "places-world"},
+            {"landmarks", "maps", "maps-lite", "places-explorer", "places-world", "statistics"},
         )
 
     def test_every_pack_carries_its_licenses_and_notice(self) -> None:
@@ -37,6 +37,8 @@ class PackBuildTests(unittest.TestCase):
                 required = {"manifest.json", "places.pwpl", "NOTICE.md"}
             elif file.name == "pyworldatlas-landmarks.pack":
                 required = {"manifest.json", "landmarks.json.xz", "NOTICE.md"}
+            elif file.name == "pyworldatlas-statistics.pack":
+                required = {"manifest.json", "statistics.json.xz", "NOTICE.md"}
             else:
                 required = {"manifest.json", "maps.sqlite3", "plotly.min.js", "LICENSE-plotly.txt", "NOTICE.md"}
             self.assertTrue(required <= names, file.name)

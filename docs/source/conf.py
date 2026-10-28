@@ -123,7 +123,7 @@ LLMS_SECTIONS = (
     (
         "Explore the atlas",
         (
-            "country_profile", "places", "landmarks", "maps", "physical_geography", "reference_facts",
+            "country_profile", "places", "landmarks", "statistics", "maps", "physical_geography", "reference_facts",
             "rankings", "local_names", "capitals_cities", "coordinates_distances", "sun",
             "borders", "discovery", "searching", "serialization",
         ),
