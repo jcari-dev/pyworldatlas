@@ -7,7 +7,7 @@ project = "PyWorldAtlas"
 author = "PyWorldAtlas maintainers"
 copyright = "2026, PyWorldAtlas maintainers"
 release = "0.11.0"
-version = "0.10"
+version = "0.11"
 extensions = [
     "sphinx.ext.autodoc", "sphinx.ext.autosummary", "sphinx.ext.napoleon",
     "sphinx.ext.doctest", "sphinx.ext.viewcode", "sphinx.ext.intersphinx",
@@ -121,7 +121,7 @@ LLMS_SECTIONS = (
         "Explore the atlas",
         (
             "country_profile", "places", "maps", "physical_geography", "reference_facts",
-            "rankings", "local_names", "capitals_cities", "coordinates_distances",
+            "rankings", "local_names", "capitals_cities", "coordinates_distances", "sun",
             "borders", "discovery", "searching", "serialization",
         ),
     ),
