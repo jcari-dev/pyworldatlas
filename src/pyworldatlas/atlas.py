@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections import deque
+from datetime import date, datetime
 import heapq
 from math import asin, cos, radians, sin, sqrt
 from pathlib import Path
@@ -19,6 +20,7 @@ from ._rankings import METRIC_UNITS, metric_value, normalize_metric
 from ._profiles import build_country, city_from_row, read_local_names
 from . import _placefile, packs
 from ._placekinds import CATEGORIES, KINDS, category_of, kind_of
+from ._sun import sun_times
 from .exceptions import (AmbiguousCountryError, AmbiguousPlaceError,
                          AtlasClosedError, CapitalNotFoundError,
                          CountryNotFoundError, DatasetVersionError,
@@ -26,7 +28,7 @@ from .exceptions import (AmbiguousCountryError, AmbiguousPlaceError,
 from .models import (BorderPathResult, Capital, CapitalDistance, City,
                      CityDistance, Coordinate, Country,
                      CountryMatch, CountryRanking, DatasetInfo, Flashcard, LocalizedName, Place,
-                     PlaceDistance, QuizQuestion)
+                     PlaceDistance, QuizQuestion, SunTimes)
 
 if TYPE_CHECKING:
     from .maps import CountryMap
@@ -1247,6 +1249,34 @@ class Atlas:
                     (row, latitude, radians(row["longitude"]), cos(latitude))
                 )
         return self._city_cache
+
+    def sun(
+        self,
+        where: str | Country | Capital | City | Place | Coordinate | tuple[float, float],
+        on: date | None = None,
+    ) -> SunTimes:
+        """Return sunrise, sunset, day length, and the noon sun height for a place.
+
+        ``where`` is a city or place name, a country (its capital), a model with
+        coordinates, or a ``(latitude, longitude)`` tuple. ``on`` defaults to
+        today. Times are in UTC and agree with almanac times to about a minute
+        between latitudes 72° north and south. Compare ``atlas.sun("Oslo",
+        date(2026, 6, 21))`` with December to see why seasons happen.
+        """
+        if isinstance(where, str):
+            try:
+                point = self._coordinates_of(where, country=None)
+            except (PlaceNotFoundError, AmbiguousPlaceError):
+                point = self.place(where).coordinates
+        else:
+            point = self._coordinates_of(where, country=None)
+        day = on if on is not None else date.today()
+        if not isinstance(day, date):
+            raise TypeError("on must be a datetime.date")
+        if isinstance(day, datetime):
+            day = day.date()
+        noon, sunrise, sunset, hours, height = sun_times(point.latitude, point.longitude, day)
+        return SunTimes(point, day, noon, sunrise, sunset, round(hours, 4), round(height, 2))
 
     def _coordinates_of(
         self,

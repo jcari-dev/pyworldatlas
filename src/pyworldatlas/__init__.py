@@ -14,7 +14,7 @@ from .models import (Area, BorderPathResult, Capital, CapitalDistance, City,
                      Demonym, ElevationPoint, Flashcard, Geography, Lake,
                      Language, LocalizedName, NationalAnthem, NationalMotto,
                      PhysicalGeography, Place, PlaceDistance, PostalCodeFormat, QuizQuestion, River,
-                     SourceReference, Timezone, TravelBasics)
+                     SourceReference, SunTimes, Timezone, TravelBasics)
 
 __all__ = [
     "Atlas", "Country", "CountryCodes", "CountryReference", "CountryDiscoveryCard",
@@ -23,7 +23,7 @@ __all__ = [
     "Coordinate", "Area", "Geography", "Capital", "City", "Place", "PlaceDistance", "Currency", "Language", "CountryMatch",
     "PhysicalGeography", "ElevationPoint", "River", "Lake", "ClimateProfile", "ClimateZone",
     "NationalAnthem", "NationalMotto", "Demonym", "Timezone", "PostalCodeFormat", "TravelBasics",
-    "DatasetInfo", "SourceReference", "AtlasError", "AtlasClosedError",
+    "DatasetInfo", "SourceReference", "SunTimes", "AtlasError", "AtlasClosedError",
     "DatasetError", "DatasetNotFoundError", "DatasetVersionError",
     "DatasetIntegrityError", "CountryNotFoundError", "AmbiguousCountryError",
     "PlaceNotFoundError", "AmbiguousPlaceError", "CapitalNotFoundError",

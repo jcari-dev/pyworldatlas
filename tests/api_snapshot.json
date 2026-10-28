@@ -47,6 +47,7 @@
     "River",
     "SCHEMA_VERSION",
     "SourceReference",
+    "SunTimes",
     "Timezone",
     "TravelBasics",
     "__version__"
@@ -155,7 +156,8 @@
         "search_countries": "method(self, query: 'str', *, limit: 'int' = 20) -> 'tuple[CountryMatch, ...]'",
         "search_places": "method(self, query: 'str', *, kind: 'str | None' = None, category: 'str | None' = None, country: 'str | None' = None, limit: 'int' = 10) -> 'tuple[Place, ...]'",
         "shared_neighbors": "method(self, country1: 'str', country2: 'str') -> 'tuple[Country, ...]'",
-        "shares_border": "method(self, country1: 'str', country2: 'str') -> 'bool'"
+        "shares_border": "method(self, country1: 'str', country2: 'str') -> 'bool'",
+        "sun": "method(self, where: 'str | Country | Capital | City | Place | Coordinate | tuple[float, float]', on: 'date | None' = None) -> 'SunTimes'"
       }
     },
     "AtlasClosedError": {
@@ -1675,6 +1677,54 @@
         }
       ]
     },
+    "SunTimes": {
+      "kind": "dataclass",
+      "signature": "(coordinates: 'Coordinate', date: 'date', solar_noon: 'datetime', sunrise: 'datetime | None', sunset: 'datetime | None', day_length_hours: 'float', noon_sun_height: 'float') -> None",
+      "members": {
+        "daylight": "property",
+        "summary": "property",
+        "to_dict": "method(self) -> 'dict[str, Any]'",
+        "to_json": "method(self, indent: 'int | None' = None) -> 'str'"
+      },
+      "frozen": true,
+      "fields": [
+        {
+          "name": "coordinates",
+          "type": "Coordinate",
+          "default": null
+        },
+        {
+          "name": "date",
+          "type": "date",
+          "default": null
+        },
+        {
+          "name": "solar_noon",
+          "type": "datetime",
+          "default": null
+        },
+        {
+          "name": "sunrise",
+          "type": "datetime | None",
+          "default": null
+        },
+        {
+          "name": "sunset",
+          "type": "datetime | None",
+          "default": null
+        },
+        {
+          "name": "day_length_hours",
+          "type": "float",
+          "default": null
+        },
+        {
+          "name": "noon_sun_height",
+          "type": "float",
+          "default": null
+        }
+      ]
+    },
     "Timezone": {
       "kind": "dataclass",
       "signature": "(id: 'str', january_utc_offset_hours: 'float', july_utc_offset_hours: 'float', raw_utc_offset_hours: 'float', source: 'SourceReference | None' = None) -> None",
@@ -1778,6 +1828,7 @@
     "QuizQuestion",
     "River",
     "SourceReference",
+    "SunTimes",
     "Timezone",
     "TravelBasics"
   ]

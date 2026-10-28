@@ -3,8 +3,8 @@
 > This file is generated from `build_data/reports/status.json`.
 
 Library version: 0.11.0
-Dataset version: 2026.10.26.1
-Schema version: 7
+Dataset version: 2026.10.27.1
+Schema version: 8
 
 Countries and areas: 248 (UN M49 scope)
 Capitals: 241 / 248

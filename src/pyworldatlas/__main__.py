@@ -55,6 +55,15 @@ def _parser() -> argparse.ArgumentParser:
     find.add_argument("--limit", type=int, default=10, help="how many results to show (default 10)")
     find.add_argument("--data-dir", help="pack folder with optional place packs")
 
+    sun = subcommands.add_parser(
+        "sun",
+        help="sunrise, sunset, and day length for a place",
+        description="Show sunrise, sunset, and day length (UTC) for a city or place on a date.",
+    )
+    sun.add_argument("where", help="city or place name")
+    sun.add_argument("--date", help="date as YYYY-MM-DD (default: today)")
+    sun.add_argument("--data-dir", help="pack folder with optional place packs")
+
     place = subcommands.add_parser(
         "place",
         help="find any place on Earth by name",
@@ -155,7 +164,11 @@ def main(argv: Sequence[str] | None = None) -> int:
             parser.exit(1, f"pyworldatlas: error: {error}\n")
     try:
         with Atlas(data_dir=getattr(args, "data_dir", None)) as atlas:
-            if args.command == "find":
+            if args.command == "sun":
+                from datetime import date
+                day = date.fromisoformat(args.date) if args.date else None
+                print(atlas.sun(args.where, day).summary)
+            elif args.command == "find":
                 found_items = atlas.lookup(args.query, limit=args.limit)
                 if not found_items:
                     parser.exit(1, f"Nothing found for {args.query!r}.\n")
