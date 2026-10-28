@@ -9,6 +9,7 @@ from typing import Any
 from ._serialize import _jsonable
 from .reference import Currency, LocalizedName
 from .geography import Coordinate, ElevationPoint
+from .places import Place
 from .results import CountryReference
 
 
@@ -33,6 +34,50 @@ class Flashcard:
 
     def to_json(self, indent: int | None = None) -> str:
         """Serialize this flashcard as JSON without escaping Unicode text."""
+        return json.dumps(self.to_dict(), ensure_ascii=False, indent=indent)
+
+
+@dataclass(frozen=True, slots=True)
+class PlaceQuestion:
+    """A deterministic multiple-choice question about famous places.
+
+    ``places`` holds the places the question is about, so a learner can look
+    up more after answering. Choices are in display order and ``answer`` is
+    always one of them.
+    """
+
+    topic: str
+    prompt: str
+    choices: tuple[str, ...]
+    answer: str
+    places: tuple[Place, ...]
+
+    def __post_init__(self) -> None:
+        if len(self.choices) < 2 or len(set(self.choices)) != len(self.choices):
+            raise ValueError("a question needs at least two different choices")
+        if self.answer not in self.choices:
+            raise ValueError("answer must be present in choices")
+
+    @property
+    def answer_number(self) -> int:
+        """Return the correct choice number, counting from one."""
+        return self.choices.index(self.answer) + 1
+
+    def is_correct(self, response: str | int) -> bool:
+        """Check a displayed answer (case-insensitive) or a one-based choice number."""
+        if isinstance(response, bool):
+            return False
+        if isinstance(response, int):
+            return response == self.answer_number
+        return response.strip().casefold() == self.answer.casefold()
+
+    def to_dict(self) -> dict[str, Any]:
+        """Return JSON-compatible primitives for this question."""
+        data: dict[str, Any] = _jsonable(self)
+        return data
+
+    def to_json(self, indent: int | None = None) -> str:
+        """Serialize this question as JSON without escaping Unicode text."""
         return json.dumps(self.to_dict(), ensure_ascii=False, indent=indent)
 
 

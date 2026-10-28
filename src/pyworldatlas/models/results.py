@@ -132,6 +132,40 @@ class SiteDistance:
 
 
 @dataclass(frozen=True, slots=True)
+class Antipode:
+    """The point on the exact opposite side of the Earth from an origin.
+
+    ``nearest`` lists the known places closest to the antipode, nearest first;
+    most antipodes are at sea, so the nearest place can be far away.
+    """
+
+    origin: Coordinate
+    antipode: Coordinate
+    nearest: tuple[PlaceDistance, ...]
+
+    @property
+    def summary(self) -> str:
+        """Return a plain-language description of the antipode."""
+        text = (
+            f"Straight through the centre of the Earth from {self.origin.format(precision=2)} "
+            f"you would come out at {self.antipode.format(precision=2)}."
+        )
+        if self.nearest:
+            first = self.nearest[0]
+            text += f" The nearest known place there is {first.place}, {first.distance:,.0f} {first.unit} away."
+        return text
+
+    def to_dict(self) -> dict[str, Any]:
+        """Return JSON-compatible primitives for this antipode."""
+        data: dict[str, Any] = _jsonable(self)
+        return data
+
+    def to_json(self, indent: int | None = None) -> str:
+        """Serialize this antipode as JSON."""
+        return json.dumps(self.to_dict(), ensure_ascii=False, indent=indent)
+
+
+@dataclass(frozen=True, slots=True)
 class SunTimes:
     """Sunrise, sunset, and daylight for one place on one date, in UTC.
 

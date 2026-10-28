@@ -9,12 +9,13 @@ from __future__ import annotations
 from .reference import CountryCodes, Currency, DatasetInfo, Demonym, Language, LocalizedName, NationalAnthem, NationalMotto, PostalCodeFormat, SourceReference, Timezone, TravelBasics
 from .geography import Area, ClimateProfile, ClimateZone, Coordinate, ElevationPoint, Geography, Lake, PhysicalGeography, River
 from .places import Airport, Capital, City, Place, WorldHeritageSite
-from .results import BorderPathResult, CapitalDistance, CityDistance, CountryMatch, CountryRanking, CountryReference, PlaceDistance, SiteDistance, SunTimes
-from .learning import CountryDiscoveryCard, Flashcard, QuizQuestion
+from .results import Antipode, BorderPathResult, CapitalDistance, CityDistance, CountryMatch, CountryRanking, CountryReference, PlaceDistance, SiteDistance, SunTimes
+from .learning import CountryDiscoveryCard, Flashcard, PlaceQuestion, QuizQuestion
 from .country import Country
 
 __all__ = [
     "Airport",
+    "Antipode",
     "Area",
     "BorderPathResult",
     "Capital",
@@ -44,6 +45,7 @@ __all__ = [
     "PhysicalGeography",
     "Place",
     "PlaceDistance",
+    "PlaceQuestion",
     "PostalCodeFormat",
     "QuizQuestion",
     "River",
