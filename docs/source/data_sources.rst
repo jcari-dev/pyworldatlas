@@ -287,6 +287,42 @@ Wikidata national-motto statements
    are included. The runtime does not infer constitutional, statutory,
    traditional, or current legal status, and it does not ingest tourism slogans.
 
+OurAirports
+-----------
+
+**Purpose**
+   Airports with scheduled passenger service for the optional landmarks pack.
+
+**Official location**
+   https://ourairports.com/data/
+
+**Current snapshot**
+   ``airports.csv`` retrieved 2026-10-28, with its checksum retained. Only
+   airports with scheduled service and an IATA code are kept. Country codes
+   are kept as OurAirports publishes them.
+
+**Terms**
+   Released to the public domain.
+
+Wikidata World Heritage statements
+----------------------------------
+
+**Purpose**
+   UNESCO World Heritage List numbers, names, locations, years of inscription,
+   and selection criteria for the optional landmarks pack.
+
+**Official locations**
+   https://query.wikidata.org/sparql and
+   https://www.wikidata.org/wiki/Wikidata:Licensing
+
+**Current snapshot**
+   A 2026-10-28 SPARQL response; the exact query and response checksum are
+   retained. One record is kept per list number. Sites carry coordinates and
+   no country field.
+
+**Terms**
+   Wikidata structured data is released under Creative Commons CC0 1.0.
+
 Wikidata travel-basics statements
 ---------------------------------
 

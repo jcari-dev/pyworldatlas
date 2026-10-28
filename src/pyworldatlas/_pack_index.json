@@ -1,6 +1,12 @@
 {
   "format": 1,
   "packs": {
+    "landmarks": {
+      "file": "pyworldatlas-landmarks.pack",
+      "sha256": "d0da27cc73dfd32ce5770790a32c51fcb9f56148e8b94add9ade5336abbc69c1",
+      "size_bytes": 144032,
+      "title": "Landmarks: airports with scheduled flights and UNESCO World Heritage sites"
+    },
     "maps": {
       "file": "pyworldatlas-maps.pack",
       "sha256": "465192b045f0649f717e22e4603f439762a52167b8b54bad3d5a267758cf4f84",

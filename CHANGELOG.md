@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased: 0.11.2
+
+- New optional **landmarks** pack (about 150 KB): 4,010 airports with
+  scheduled flights (OurAirports, public domain) and 1,266 UNESCO World
+  Heritage sites (Wikidata, CC0). `Atlas.airport`, `Atlas.airports`,
+  `Atlas.world_heritage_sites`, `Atlas.world_heritage_site`,
+  `Atlas.world_heritage_sites_near`, and the `pyworldatlas airport` and
+  `pyworldatlas heritage` commands.
+- New `PackNotInstalledError` names the command that installs a missing pack.
+
 ## 0.11.1
 
 - New: travel basics for 245 countries and areas. `Country.travel` gives plug

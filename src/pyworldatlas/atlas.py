@@ -20,15 +20,16 @@ from ._rankings import METRIC_UNITS, metric_value, normalize_metric
 from ._profiles import build_country, city_from_row, read_local_names
 from . import _placefile, packs
 from ._placekinds import CATEGORIES, KINDS, category_of, kind_of
+from ._landmarks import FILE as LANDMARKS_FILE, Landmarks
 from ._sun import sun_times
 from .exceptions import (AmbiguousCountryError, AmbiguousPlaceError,
                          AtlasClosedError, CapitalNotFoundError,
                          CountryNotFoundError, DatasetVersionError,
-                         PlaceNotFoundError)
-from .models import (BorderPathResult, Capital, CapitalDistance, City,
+                         PackNotInstalledError, PlaceNotFoundError)
+from .models import (Airport, BorderPathResult, Capital, CapitalDistance, City,
                      CityDistance, Coordinate, Country,
                      CountryMatch, CountryRanking, DatasetInfo, Flashcard, LocalizedName, Place,
-                     PlaceDistance, QuizQuestion, SunTimes)
+                     PlaceDistance, QuizQuestion, SiteDistance, SunTimes, WorldHeritageSite)
 
 if TYPE_CHECKING:
     from .maps import CountryMap
@@ -87,6 +88,7 @@ class Atlas:
         self._code_cache: dict[str, tuple[int, ...]] | None = None
         self._city_cache: list[tuple[sqlite3.Row, float, float, float]] | None = None
         self._place_indexes: list[sqlite3.Connection] | None = None
+        self._landmarks: Landmarks | None = None
         found = int(self._meta("schema_version"))
         if found != SCHEMA_VERSION:
             self.close()
@@ -1249,6 +1251,129 @@ class Atlas:
                     (row, latitude, radians(row["longitude"]), cos(latitude))
                 )
         return self._city_cache
+
+    def _landmark_pack(self) -> Landmarks:
+        """Load the landmarks pack once, or explain how to install it."""
+        self._ensure_open()
+        if self._landmarks is None:
+            folder = packs.pack_path("landmarks", self._data_dir)
+            if folder is None or not (folder / LANDMARKS_FILE).is_file():
+                raise PackNotInstalledError(
+                    "Airports and World Heritage sites need the landmarks pack. "
+                    "Run: pyworldatlas get landmarks"
+                )
+            self._landmarks = Landmarks(folder / LANDMARKS_FILE)
+        return self._landmarks
+
+    def airport(self, code: str) -> Airport:
+        """Return the airport with this IATA (``"LHR"``) or ICAO (``"EGLL"``) code.
+
+        Needs the landmarks pack (``pyworldatlas get landmarks``). Raises
+        :class:`PlaceNotFoundError` for an unknown code.
+        """
+        if not isinstance(code, str):
+            raise TypeError("code must be a string")
+        found = self._landmark_pack().by_code.get(code.strip().upper())
+        if found is None:
+            raise PlaceNotFoundError(f"No airport with scheduled flights has the code {code!r}")
+        return found
+
+    def airports(
+        self, country: str | Country | None = None, *, size: str | None = None
+    ) -> tuple[Airport, ...]:
+        """Return airports with scheduled flights, largest first, then by name.
+
+        Narrow with ``country`` and ``size`` (``"large"``, ``"medium"``, or
+        ``"small"``). Needs the landmarks pack (``pyworldatlas get landmarks``).
+        """
+        if size is not None and size not in {"large", "medium", "small"}:
+            raise ValueError("size must be 'large', 'medium', or 'small'")
+        found = self._landmark_pack().airports
+        if country is not None:
+            code = (country if isinstance(country, Country) else self.country(country)).alpha2
+            found = tuple(airport for airport in found if airport.country_code == code)
+        if size is not None:
+            found = tuple(airport for airport in found if airport.size == size)
+        order = {"large": 0, "medium": 1, "small": 2}
+        return tuple(sorted(found, key=lambda airport: (order[airport.size], airport.name.casefold())))
+
+    def world_heritage_sites(self, *, category: str | None = None) -> tuple[WorldHeritageSite, ...]:
+        """Return UNESCO World Heritage sites in list order.
+
+        Narrow with ``category`` (``"cultural"``, ``"natural"``, or ``"mixed"``).
+        Use :meth:`world_heritage_sites_near` to find the sites around a place.
+        Needs the landmarks pack (``pyworldatlas get landmarks``).
+        """
+        if category is not None and category not in {"cultural", "natural", "mixed"}:
+            raise ValueError("category must be 'cultural', 'natural', or 'mixed'")
+        found = self._landmark_pack().world_heritage
+        if category is not None:
+            found = tuple(site for site in found if site.category == category)
+        return found
+
+    def world_heritage_sites_near(
+        self,
+        origin: str | Country | Capital | City | Place | Coordinate | tuple[float, float],
+        *,
+        limit: int = 10,
+        category: str | None = None,
+        unit: str = "km",
+    ) -> tuple[SiteDistance, ...]:
+        """Return the World Heritage sites nearest to a place, nearest first.
+
+        ``origin`` is a city or place name, a country (its capital), a model
+        with coordinates, or a ``(latitude, longitude)`` tuple. ``unit`` is
+        ``"km"`` or ``"mi"``. Needs the landmarks pack.
+        """
+        if isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0:
+            raise ValueError("limit must be a positive integer")
+        if unit not in {"km", "mi"}:
+            raise ValueError("unit must be 'km' or 'mi'")
+        if isinstance(origin, str):
+            try:
+                point = self._coordinates_of(origin, country=None)
+            except (PlaceNotFoundError, AmbiguousPlaceError):
+                point = self.place(origin).coordinates
+        else:
+            point = self._coordinates_of(origin, country=None)
+        scale = 1.0 if unit == "km" else 1 / 1.609344
+        ranked = sorted(
+            (
+                (_placefile.distance_km(point.latitude, point.longitude,
+                                        site.coordinates.latitude, site.coordinates.longitude), site.site_id, site)
+                for site in self.world_heritage_sites(category=category)
+                if site.coordinates is not None
+            ),
+            key=lambda item: (item[0], item[1]),
+        )
+        return tuple(SiteDistance(site, round(km * scale, 3), unit) for km, _, site in ranked[:limit])
+
+    def world_heritage_site(self, query: str | int) -> WorldHeritageSite:
+        """Return one World Heritage site by list number or name.
+
+        Names match without regard to case or accents: an exact name first,
+        then the one site whose name contains the query. Raises
+        :class:`PlaceNotFoundError` or :class:`AmbiguousPlaceError`.
+        """
+        sites = self._landmark_pack().world_heritage
+        if isinstance(query, int) and not isinstance(query, bool):
+            for site in sites:
+                if site.site_id == query:
+                    return site
+            raise PlaceNotFoundError(f"No World Heritage site has the list number {query}")
+        if not isinstance(query, str):
+            raise TypeError("query must be a name or a list number")
+        key = normalize_name(query)
+        if not key:
+            raise ValueError("query must contain at least one letter or number")
+        exact = [site for site in sites if normalize_name(site.name) == key]
+        matches = exact or [site for site in sites if key in normalize_name(site.name)]
+        if not matches:
+            raise PlaceNotFoundError(f"No World Heritage site is named {query!r}")
+        if len(matches) > 1:
+            names = "; ".join(site.name for site in matches[:5])
+            raise AmbiguousPlaceError(f"{query!r} matches several World Heritage sites: {names}")
+        return matches[0]
 
     def sun(
         self,

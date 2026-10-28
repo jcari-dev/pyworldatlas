@@ -1,5 +1,6 @@
 {
   "pyworldatlas.__all__": [
+    "Airport",
     "AmbiguousCountryError",
     "AmbiguousPlaceError",
     "Area",
@@ -38,6 +39,7 @@
     "MapSupportNotInstalledError",
     "NationalAnthem",
     "NationalMotto",
+    "PackNotInstalledError",
     "PhysicalGeography",
     "Place",
     "PlaceDistance",
@@ -46,13 +48,65 @@
     "QuizQuestion",
     "River",
     "SCHEMA_VERSION",
+    "SiteDistance",
     "SourceReference",
     "SunTimes",
     "Timezone",
     "TravelBasics",
+    "WorldHeritageSite",
     "__version__"
   ],
   "pyworldatlas": {
+    "Airport": {
+      "kind": "dataclass",
+      "signature": "(iata_code: 'str', icao_code: 'str | None', name: 'str', municipality: 'str | None', country_code: 'str', coordinates: 'Coordinate', elevation_m: 'int | None', size: 'str') -> None",
+      "members": {
+        "label": "property"
+      },
+      "frozen": true,
+      "fields": [
+        {
+          "name": "iata_code",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "icao_code",
+          "type": "str | None",
+          "default": null
+        },
+        {
+          "name": "name",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "municipality",
+          "type": "str | None",
+          "default": null
+        },
+        {
+          "name": "country_code",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "coordinates",
+          "type": "Coordinate",
+          "default": null
+        },
+        {
+          "name": "elevation_m",
+          "type": "int | None",
+          "default": null
+        },
+        {
+          "name": "size",
+          "type": "str",
+          "default": null
+        }
+      ]
+    },
     "AmbiguousCountryError": {
       "kind": "exception",
       "bases": [
@@ -116,6 +170,8 @@
         "__getitem__": "method(self, query: 'str') -> 'Country'",
         "__iter__": "method(self) -> 'Iterator[Country]'",
         "__len__": "method(self) -> 'int'",
+        "airport": "method(self, code: 'str') -> 'Airport'",
+        "airports": "method(self, country: 'str | Country | None' = None, *, size: 'str | None' = None) -> 'tuple[Airport, ...]'",
         "border_crossings": "method(self, origin: 'str', destination: 'str') -> 'int | None'",
         "border_path": "method(self, origin: 'str', destination: 'str') -> 'BorderPathResult | None'",
         "city": "method(self, query: 'str', *, country: 'str | None' = None) -> 'City'",
@@ -157,7 +213,10 @@
         "search_places": "method(self, query: 'str', *, kind: 'str | None' = None, category: 'str | None' = None, country: 'str | None' = None, limit: 'int' = 10) -> 'tuple[Place, ...]'",
         "shared_neighbors": "method(self, country1: 'str', country2: 'str') -> 'tuple[Country, ...]'",
         "shares_border": "method(self, country1: 'str', country2: 'str') -> 'bool'",
-        "sun": "method(self, where: 'str | Country | Capital | City | Place | Coordinate | tuple[float, float]', on: 'date | None' = None) -> 'SunTimes'"
+        "sun": "method(self, where: 'str | Country | Capital | City | Place | Coordinate | tuple[float, float]', on: 'date | None' = None) -> 'SunTimes'",
+        "world_heritage_site": "method(self, query: 'str | int') -> 'WorldHeritageSite'",
+        "world_heritage_sites": "method(self, *, category: 'str | None' = None) -> 'tuple[WorldHeritageSite, ...]'",
+        "world_heritage_sites_near": "method(self, origin: 'str | Country | Capital | City | Place | Coordinate | tuple[float, float]', *, limit: 'int' = 10, category: 'str | None' = None, unit: 'str' = 'km') -> 'tuple[SiteDistance, ...]'"
       }
     },
     "AtlasClosedError": {
@@ -1389,6 +1448,15 @@
         }
       ]
     },
+    "PackNotInstalledError": {
+      "kind": "exception",
+      "bases": [
+        "AtlasError",
+        "Exception",
+        "BaseException",
+        "object"
+      ]
+    },
     "PhysicalGeography": {
       "kind": "dataclass",
       "signature": "(coastline_km: 'float | None' = None, mean_elevation_m: 'float | None' = None, highest_point: 'ElevationPoint | None' = None, lowest_point: 'ElevationPoint | None' = None, rivers: 'tuple[River, ...]' = (), lakes: 'tuple[Lake, ...]' = (), climate: 'ClimateProfile' = ClimateProfile(summary=None, koppen_geiger_zones=(), reference_period=None, resolution_degrees=None, minimum_share_percent=None, summary_source=None, classification_source=None), source: 'SourceReference | None' = None, source_locator: 'str | None' = None) -> None",
@@ -1629,6 +1697,32 @@
       "kind": "int",
       "value": "8"
     },
+    "SiteDistance": {
+      "kind": "dataclass",
+      "signature": "(site: 'WorldHeritageSite', distance: 'float', unit: 'str') -> None",
+      "members": {
+        "to_dict": "method(self) -> 'dict[str, Any]'",
+        "to_json": "method(self, indent: 'int | None' = None) -> 'str'"
+      },
+      "frozen": true,
+      "fields": [
+        {
+          "name": "site",
+          "type": "WorldHeritageSite",
+          "default": null
+        },
+        {
+          "name": "distance",
+          "type": "float",
+          "default": null
+        },
+        {
+          "name": "unit",
+          "type": "str",
+          "default": null
+        }
+      ]
+    },
     "SourceReference": {
       "kind": "dataclass",
       "signature": "(id: 'str', name: 'str', homepage: 'str', retrieved_at: 'str', version: 'str | None' = None, license_name: 'str | None' = None, license_url: 'str | None' = None, notes: 'str | None' = None) -> None",
@@ -1792,9 +1886,45 @@
           "default": "None"
         }
       ]
+    },
+    "WorldHeritageSite": {
+      "kind": "dataclass",
+      "signature": "(site_id: 'int', name: 'str', coordinates: 'Coordinate | None', inscribed: 'int | None', category: 'str | None') -> None",
+      "members": {
+        "label": "property"
+      },
+      "frozen": true,
+      "fields": [
+        {
+          "name": "site_id",
+          "type": "int",
+          "default": null
+        },
+        {
+          "name": "name",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "coordinates",
+          "type": "Coordinate | None",
+          "default": null
+        },
+        {
+          "name": "inscribed",
+          "type": "int | None",
+          "default": null
+        },
+        {
+          "name": "category",
+          "type": "str | None",
+          "default": null
+        }
+      ]
     }
   },
   "pyworldatlas.models": [
+    "Airport",
     "Area",
     "BorderPathResult",
     "Capital",
@@ -1827,9 +1957,11 @@
     "PostalCodeFormat",
     "QuizQuestion",
     "River",
+    "SiteDistance",
     "SourceReference",
     "SunTimes",
     "Timezone",
-    "TravelBasics"
+    "TravelBasics",
+    "WorldHeritageSite"
   ]
 }

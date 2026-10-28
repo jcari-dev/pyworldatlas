@@ -1,0 +1,17 @@
+{
+  "source_id": "wikidata-world-heritage-2026-10-28",
+  "source_version": "2026-10-28 query snapshot",
+  "retrieved_at": "2026-10-28T00:00:00Z",
+  "endpoint": "https://query.wikidata.org/sparql",
+  "query": {
+    "path": "pipeline/queries/wikidata_world_heritage.rq",
+    "sha256": "7ee1b0436d170fbe016ce2833c6ad76d61c1809bcc0b3fa5189f3dfba6d2da1a"
+  },
+  "file": {
+    "path": "world-heritage.json",
+    "sha256": "975f1bc53d02387a1b6b5bef67321ace6f59f10b0996ba490e3720c99a43e354",
+    "size_bytes": 3216844
+  },
+  "rights": "Creative Commons CC0 1.0",
+  "rights_url": "https://www.wikidata.org/wiki/Wikidata:Licensing"
+}

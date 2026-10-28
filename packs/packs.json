@@ -34,6 +34,13 @@
         "places.pwpl": "places-world/places.pwpl",
         "NOTICE.md": "NOTICE-places.md"
       }
+    },
+    "landmarks": {
+      "title": "Landmarks: airports with scheduled flights and UNESCO World Heritage sites",
+      "files": {
+        "landmarks.json.xz": "landmarks/landmarks.json.xz",
+        "NOTICE.md": "NOTICE-landmarks.md"
+      }
     }
   }
 }
