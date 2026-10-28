@@ -2,29 +2,33 @@
 
 ## 0.12.1
 
-Honest licensing, a cleaner API, and up-to-date documentation.
+A more welcoming atlas, honest licensing, and up-to-date documentation.
 
-- A clearer package page: a new one-line description, more search keywords,
-  and classifiers for typing, education, and the command line. The README,
-  documentation summary, and plain-text documentation index describe the
-  statistics, landmarks, sun, and travel features, and the quickstart adds an
-  "Explore the world in five minutes" section.
-- Documentation brought up to date: the home page, installation guide, and
-  API reference overview cover every feature and data pack.
-
-- Removed six fields that were always empty in every profile:
-  `Area.disputed_km2`, `Geography.centroid`, `CountryCodes.wikidata`,
-  `Capital.largest_city`, `Capital.alternate_names`, and
-  `City.alternate_names`, and the `include_history` argument of
-  `Country.to_dict` and `Country.to_json`, which had no effect. Code that read
-  them only ever saw `None` or an empty tuple.
-
-- Clearer licensing: the package metadata now reads
-  `MIT AND CC-BY-4.0 AND Unicode-3.0 AND CC0-1.0`, matching the data it
-  ships. The wheel now includes the CC BY 4.0 license text and the
-  third-party notices, which open with a table of every source and its terms
-  and describe the changes made to GeoNames data. The README and playground
-  credit the main data sources.
+- **Welcome:** the documentation home page opens with a "Look up anything"
+  search box that answers in the playground, and starting points for
+  students, teachers, and developers. A new "Teaching with PyWorldAtlas" guide
+  offers a 15-minute lesson and a printable class quiz with its answer key.
+- **Playground:** **Surprise me** shows a famous place, **Quiz me** asks five
+  questions with answer buttons and a score, and three challenge recipes find
+  the shortest December day, the capitals closest to the equator, and the two
+  capitals farthest apart.
+- **Shorter pages:** the README is a third of its old length, the main guides
+  open with an "In 30 seconds" example, guides show real output, and every
+  code block has a Copy button that copies only the code.
+- **Maps:** place markers rest on the ground, small islands sit at sea level,
+  and the blue layer is renamed "Water and ice". The map animation shows the
+  place layers.
+- **Quizzes:** place quizzes use only mountains of 3,000 m and higher.
+- **Licensing:** the package metadata reads
+  `MIT AND CC-BY-4.0 AND Unicode-3.0 AND CC0-1.0`, and the wheel includes the
+  CC BY 4.0 text and the third-party notices, which list every source, its
+  terms, and the changes made.
+- **Removed:** six fields that were always empty (`Area.disputed_km2`,
+  `Geography.centroid`, `CountryCodes.wikidata`, `Capital.largest_city`,
+  `Capital.alternate_names`, `City.alternate_names`) and the `include_history`
+  argument of `Country.to_dict` and `to_json`, which had no effect.
+- **Package page and docs:** a new description, keywords, and classifiers,
+  and documentation that covers every feature and data pack.
 
 ## 0.12.0
 
@@ -53,7 +57,8 @@ The world in numbers, landmarks, and a new playground.
 - New `PackNotInstalledError` names the command that installs a missing pack.
 - Lower memory: the first search after installing the place packs now peaks
   near 280 MB for the world pack (was about 520 MB for the explorer pack), so
-  every pack unpacks on a computer with 512 MB, such as a Raspberry Pi Zero 2 W.
+  every pack fits a computer with 512 MB, such as a Raspberry Pi Zero 2 W
+  (measured on a desktop computer).
 - Faster start: compression, hashing, and pack modules load on first use.
 - New: `Atlas.place_quiz` asks about famous places: what kind of place it is,
   which of two mountains is higher, and which of two places is closer to the

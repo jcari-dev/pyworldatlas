@@ -1,6 +1,6 @@
 # PyWorldAtlas: offline world geography for Python
 
-> Offline world atlas for Python: 248 countries, 11 million places, statistics since 1960, and 3D maps, with zero dependencies. Runs on a Raspberry Pi Zero; the core installs in under a minute on slow 3G.
+> Offline world atlas for Python: 248 countries, 11 million places, statistics since 1960, and 3D maps, with zero dependencies. Built for low-cost computers with 512 MB of memory, such as a Raspberry Pi Zero 2 W; the core installs in under a minute on slow 3G.
 
 [![PyPI](https://img.shields.io/pypi/v/pyworldatlas.svg?label=PyPI&color=287aa3)](https://pypi.org/project/pyworldatlas/)
 [![Python 3.10–3.14](https://img.shields.io/badge/Python-3.10%E2%80%933.14-3776ab)](https://www.python.org/)
@@ -10,280 +10,68 @@
 
 **248 countries · 200,000 places built in · 11 million with packs · statistics since 1960 · airports and World Heritage sites · 248 3D maps · 0 dependencies**
 
-[Documentation](https://jcari-dev.github.io/pyworldatlas-documentation/) ·
-[Quickstart](https://jcari-dev.github.io/pyworldatlas-documentation/quickstart.html) ·
-[Playground](https://jcari-dev.github.io/pyworldatlas-documentation/playground.html) ·
-[3D maps](https://jcari-dev.github.io/pyworldatlas-documentation/maps.html) ·
-[Examples](https://jcari-dev.github.io/pyworldatlas-documentation/recipes.html) ·
-[API reference](https://jcari-dev.github.io/pyworldatlas-documentation/api.html)
+[![Animated PyWorldAtlas 3D map of Iceland with towns, mountains, water, and landmarks](https://raw.githubusercontent.com/jcari-dev/pyworldatlas/main/docs/source/_static/iceland-rotation.gif)](https://jcari-dev.github.io/pyworldatlas-documentation/maps.html)
 
-> **No installation needed:** open the
-> [browser playground](https://jcari-dev.github.io/pyworldatlas-documentation/playground.html)
-> and run the guided Python examples.
+## Try it in 10 seconds
 
-PyWorldAtlas is an offline world-geography Python package built around one
-bundled, source-aware database. It turns country profiles, physical geography,
-cities, distances, borders, optional 3D maps, and learning tools into ordinary
-Python objects for developers, classrooms, and curious learners. No API key is
-required, and installed features work offline.
+No install: open the [browser playground](https://jcari-dev.github.io/pyworldatlas-documentation/playground.html), type a
+country or place, take a quiz, or run a ready-made program.
 
-[![Animated PyWorldAtlas Standard 3D elevation map of Iceland](https://raw.githubusercontent.com/jcari-dev/pyworldatlas/main/docs/source/_static/iceland-rotation.gif)](https://jcari-dev.github.io/pyworldatlas-documentation/maps.html)
-
-*One complete rotation of Iceland rendered by the Standard map edition with
-elevation, coastline, Reykjavík, a river overlay, and source notes. Select the
-animation for the map guide.*
-
-## Install
+Or install it (Python 3.10 to 3.14, nothing else needed):
 
 ```console
 python -m pip install pyworldatlas
-```
-
-PyWorldAtlas supports Python 3.10 through 3.14. The installed package works
-offline and has no third-party runtime dependencies.
-
-Confirm the installation or make a quick terminal lookup:
-
-```console
 pyworldatlas --version
-pyworldatlas country Japan
-pyworldatlas search guinea
+pyworldatlas find Everest
 ```
 
-The command is a small companion to the Python API. It reads the same bundled
-database and prints concise messages instead of Python tracebacks for ordinary
-lookup errors. Run `pyworldatlas --help` for every command.
-
-Add interactive 3D terrain maps with one command. Maps need no extra Python
-packages, only their data:
-
-```console
-pyworldatlas get maps
-```
-
-Use `pyworldatlas get maps-lite` for the smaller Overview edition. Packs are
-checked against fingerprints pinned in the library, and `pyworldatlas add FILE`
-installs a copied pack on a machine without internet. To replace an older
-installation of the package, add `--upgrade` to the pip command.
-
-## Meet a country
+## A taste
 
 ```python
+from datetime import date
 from pyworldatlas import Atlas
 
 with Atlas() as atlas:
-    brazil = atlas.country("Brazil")
-    print(brazil.summary())
+    print(atlas.country("Japan").travel.summary)      # Plugs A, B · 100 V, 50/60 Hz · drives on the left
+    print(atlas.search_places("Everest", limit=1)[0])  # Mount Everest, mountain (NP)
+    print(atlas.sun("Oslo", date(2026, 12, 21)).daylight)  # 5 h 54 min
+    print(atlas.antipode("Madrid").nearest[0].place)  # Ossa, mountain (NZ): dig through the Earth
+    atlas.map("Iceland").show(auto_rotate=True)        # 3D map (pyworldatlas get maps)
 ```
 
-```text
-🇧🇷 Brazil · Brasil
-Formal name: Federative Republic of Brazil
-Capital: Brasília
-Location: Americas · South America
-Population snapshot: 209,469,333
-Currency: Brazilian Real (BRL, R$)
-Languages: English (en), Spanish (es), French (fr), Portuguese (pt-BR)
-Anthem title: Hino Nacional Brasileiro · Brazilian National Anthem
-Motto: Ordem e Progresso · Order and Progress
-Highest point: Pico da Neblina (2,994 m)
-Dominant climate class: Aw · Tropical, savannah
-Source-listed rivers: Amazon, Río de la Plata/Paraná, Tocantins
-Source-listed lakes: Lagoa dos Patos, Lagoa Mirim
-```
+## What's inside
 
-`Atlas` opens a bundled, read-only SQLite database. Results are immutable,
-typed models rather than loosely structured dictionaries, and loaded records
-remain usable after the atlas is closed.
-
-## Find any place on Earth
-
-```python
-from pyworldatlas import Atlas
-
-with Atlas() as atlas:
-    print(atlas.place("Lake Titicaca"))
-    print([str(item) for item in atlas.lookup("Georgia", limit=2)])  # the country, then the US state
-    for result in atlas.places_near("Nairobi", category="water", limit=3):
-        print(f"{result.distance:.0f} km  {result.place}")
-```
-
-Every install includes a school atlas of about 200,000 places chosen by
-educational value: every country, region, and town of 5,000 people or more,
-and the mountains, volcanoes, lakes, rivers, deserts, islands, and landmarks
-that people around the world know. It adds about 2 MB, under a minute on a
-slow 3G connection. Search by local or English name, best known first, and ask
-what is near any point in a few milliseconds.
-
-Want everything? `pyworldatlas get places-explorer places-world` adds every
-other village, stream, and hill in the GeoNames gazetteer, 11 million places in
-all. [Read the places guide](https://jcari-dev.github.io/pyworldatlas-documentation/places.html).
-
-`pyworldatlas get landmarks` (about 150 KB) adds 4,010 airports with scheduled
-flights and 1,266 UNESCO World Heritage sites: `atlas.airport("LHR")`,
-`atlas.world_heritage_sites_near("Cusco")`.
-
-`pyworldatlas get statistics` (about 150 KB) adds eleven World Bank indicators
-since 1960, with one-line charts: `atlas.time_series("Kenya",
-"electricity_access").sparkline()`.
-
-## Open the terrain
-
-```python
-from pyworldatlas import Atlas
-
-with Atlas() as atlas:
-    atlas.map("Iceland").show(auto_rotate=True)
-```
-
-The one-line call opens a local, rotatable 3D map in the default browser with
-elevation, Köppen-Geiger climate coloring, rivers, the country outline, and the
-primary capital. Adjust terrain height, show every bundled river name, or hide
-labels for a clean presentation view. Play or pause rotation, adjust its speed,
-and download a high-resolution PNG of the current angle. The viewer and data
-remain offline after installation. Use
-`atlas.map("Iceland").write_html("iceland-map.html", auto_rotate=True)` to
-create a standalone rotating document for a lesson or presentation.
-
-[Compare the map editions and learn the API](https://jcari-dev.github.io/pyworldatlas-documentation/maps.html).
-
-## What you can explore
-
-| Area | Included capabilities |
+| | |
 |---|---|
-| Country profiles | Codes, names, capitals, population, currencies, languages, timezones, postal formats, anthem titles, reviewed mottos, and demonyms |
-| Names and writing systems | English identities, selected local-language names, scripts, reviewed official forms, and source-provided romanization |
-| Physical geography | Land and water area, coastline, elevation extremes, rivers, lakes, and climate summaries |
-| Interactive maps | Optional offline 3D elevation and climate surfaces for all 248 profiles, with rotation and speed controls, crisp PNG export, terrain-height settings, and selectable labels |
-| Places and measurement | About 200,000 places built in (11 million with packs) and 6,265 detailed city profiles, with search by local or English name, nearest-place discovery, readable coordinates, distance, compass direction, bearing, and midpoint calculations |
-| Land connections | Reviewed neighbors, shared neighbors, shortest border paths, crossings, and connected components |
-| Learning tools | Readable profiles, stable samples, flashcards, deterministic multiple-choice questions, rankings, discovery cards, and Unicode-preserving JSON |
+| **Countries** | 248 profiles: names in local scripts, capitals, languages, currencies, travel basics, climate, highest points, rivers, and borders |
+| **Places** | 200,000 towns, mountains, lakes, and landmarks built in; 11 million with packs; search by local or English name and list what is nearby |
+| **Learning** | Flashcards and quizzes that repeat for a whole class, place quizzes, sun and seasons, and antipodes |
+| **Optional packs** | `pyworldatlas get maps` (3D maps), `statistics` (World Bank numbers since 1960), `landmarks` (airports and World Heritage sites), `places-explorer` and `places-world` |
 
-## Explore with small, readable programs
+Everything works offline after installation, needs no API key, and is built
+for low-cost computers and slow connections. Every value is traced to a named
+source; missing data stays missing.
 
-Look up countries by familiar name or standard code:
+## Start here
 
-```python
-with Atlas() as atlas:
-    assert atlas.country("Japan") == atlas.country("JP")
-    assert atlas.country("JPN") == atlas.country("392")
-    print(atlas.country("Japan").name_in("ja"))
-```
+- 🧒 **Students:** the [playground](https://jcari-dev.github.io/pyworldatlas-documentation/playground.html) and [learning activities](https://jcari-dev.github.io/pyworldatlas-documentation/learning.html)
+- 🍎 **Teachers and classrooms:** [teaching with PyWorldAtlas](https://jcari-dev.github.io/pyworldatlas-documentation/teaching.html), with a 15-minute lesson and printable quizzes
+- 💻 **Developers:** the [quickstart](https://jcari-dev.github.io/pyworldatlas-documentation/quickstart.html), [example programs](https://jcari-dev.github.io/pyworldatlas-documentation/recipes.html), and [API reference](https://jcari-dev.github.io/pyworldatlas-documentation/api.html)
 
-Measure and connect places:
+## Trust and neutrality
 
-```python
-with Atlas() as atlas:
-    tokyo = atlas.city("Tokyo", country="JP")
-    paris = atlas.city("Paris", country="FR")
+PyWorldAtlas presents factual geography from public sources, with no political
+commentary. Country names and codes follow published international standards,
+and the project takes no position on disputes. See the
+[educational and neutrality policy](https://github.com/jcari-dev/pyworldatlas/blob/main/docs/project/EDUCATIONAL_AND_NEUTRALITY_POLICY.md),
+[data sources](https://jcari-dev.github.io/pyworldatlas-documentation/data_sources.html), and [data quality](https://jcari-dev.github.io/pyworldatlas-documentation/data_quality.html).
 
-    print(tokyo.coordinates.format())
-    print(tokyo.coordinates.dms())
-    print(f"{atlas.distance_between(tokyo, paris):,.0f} km")
-    print(tokyo.coordinates.compass_direction_to(paris.coordinates))
+## Contributing
 
-    nearby = atlas.nearest_cities(tokyo, within_country="JP", limit=3)
-    print([result.city.name for result in nearby])
-
-    route = atlas.border_path("Portugal", "China")
-    print(" → ".join(route.names))
-```
-
-Build a repeatable lesson:
-
-```python
-with Atlas() as atlas:
-    questions = atlas.quiz(topic="local_names", count=5, seed=42)
-
-    for question in questions:
-        print(question.prompt)
-        for number, choice in enumerate(question.choices, 1):
-            print(f"  {number}. {choice}")
-        print("Answer:", question.answer_number)
-```
-
-Distances are great-circle surface measurements, not road or flight routes.
-Border paths use the reviewed land-border graph and do not infer maritime or
-boundary geometry.
-
-## Built for learning
-
-- **Offline:** lessons and programs do not depend on an external service.
-- **Repeatable:** seeded samples, flashcards, and quizzes produce stable results.
-- **Source-aware:** provenance and coverage limits are documented.
-- **Beginner-friendly:** common tasks use small Python objects and methods.
-- **Honest about missing data:** unavailable values remain `None` or empty tuples.
-
-The project provides factual geography and transparent calculations, not
-political commentary or opinion. Read the
-[educational and neutrality policy](https://github.com/jcari-dev/pyworldatlas/blob/main/docs/project/EDUCATIONAL_AND_NEUTRALITY_POLICY.md) for
-the formal publication standard.
-
-## Coverage at a glance
-
-Library `0.12.1` includes dataset `2026.10.27.1` and schema `8`.
-
-| Dataset area | Coverage |
-|---|---:|
-| Countries and areas | 248 |
-| Primary capitals | 241 / 248 |
-| Populated places with detailed profiles | 6,265 |
-| Places in the built-in school atlas | 207,664 |
-| Places with the explorer and world packs | 11,112,657 |
-| Airports and World Heritage sites (landmarks pack) | 4,010 and 1,266 |
-| Selected local-language identities | 248 / 248 |
-| Anthem titles | 234 / 248 |
-| Reviewed land-border relationships | 319 |
-| Highest and lowest points | 240 / 248 |
-| Köppen-Geiger climate profiles | 241 / 248 |
-| Overview and Standard map coverage | 248 / 248 each |
-
-See the generated [project status](https://jcari-dev.github.io/pyworldatlas-documentation/_generated/project_status.html)
-for complete coverage and [data quality](https://jcari-dev.github.io/pyworldatlas-documentation/data_quality.html)
-for interpretation limits.
-
-## Data and trust
-
-Field families use defined source roles rather than one unreviewed compilation.
-The builder retains source snapshots, checksums, review decisions, and exact
-coverage gates. Sources include United Nations M49, GeoNames, Unicode CLDR,
-UNGEGN, Natural Earth, the CIA World Factbook, Wikidata, IANA registries, the
-Beck et al. Köppen-Geiger dataset, and NOAA NCEI ETOPO 2022.
-
-- [Data sources and freshness](https://jcari-dev.github.io/pyworldatlas-documentation/data_sources.html)
-- [Data quality and limitations](https://jcari-dev.github.io/pyworldatlas-documentation/data_quality.html)
-- [Educational purpose and editorial policy](https://github.com/jcari-dev/pyworldatlas/blob/main/docs/project/EDUCATIONAL_AND_NEUTRALITY_POLICY.md)
-- [Third-party notices](https://github.com/jcari-dev/pyworldatlas/blob/main/THIRD_PARTY_NOTICES.md)
-
-## Documentation and community
-
-- [Run Python in the browser](https://jcari-dev.github.io/pyworldatlas-documentation/playground.html)
-- [Try the classroom-friendly learning lab](https://jcari-dev.github.io/pyworldatlas-documentation/learning.html)
-- [Browse complete recipes](https://jcari-dev.github.io/pyworldatlas-documentation/recipes.html)
-- [Read the country-profile guide](https://jcari-dev.github.io/pyworldatlas-documentation/country_profile.html)
-- [Explore physical geography](https://jcari-dev.github.io/pyworldatlas-documentation/physical_geography.html)
-- [Open interactive 3D maps](https://jcari-dev.github.io/pyworldatlas-documentation/maps.html)
-- [Review the API](https://jcari-dev.github.io/pyworldatlas-documentation/api.html)
-- [See the roadmap](https://github.com/jcari-dev/pyworldatlas/blob/main/ROADMAP.md)
-
-Questions, factual corrections, documentation improvements, and focused code
-contributions are welcome. Start with
-[CONTRIBUTING.md](https://github.com/jcari-dev/pyworldatlas/blob/main/CONTRIBUTING.md),
-follow the
-[code of conduct](https://github.com/jcari-dev/pyworldatlas/blob/main/CODE_OF_CONDUCT.md),
-and report security concerns through
-[SECURITY.md](https://github.com/jcari-dev/pyworldatlas/blob/main/SECURITY.md).
-
-## Development
-
-```console
-python maintain.py bootstrap
-python maintain.py check
-```
-
-`maintain.py check` runs tests, builds the core and optional-map distributions,
-installs the wheels in isolation, renders an offline map, executes examples,
-builds strict documentation and doctests, and audits the release contents.
+Questions, corrections, and focused contributions are welcome: see
+[CONTRIBUTING.md](https://github.com/jcari-dev/pyworldatlas/blob/main/CONTRIBUTING.md), the
+[code of conduct](https://github.com/jcari-dev/pyworldatlas/blob/main/CODE_OF_CONDUCT.md), and [SECURITY.md](https://github.com/jcari-dev/pyworldatlas/blob/main/SECURITY.md).
+`python maintain.py check` runs the full test, build, and documentation gate.
 
 ## License
 

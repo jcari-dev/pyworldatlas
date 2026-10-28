@@ -51,7 +51,7 @@ html_context = {
 html_static_path = ["_static"]
 html_extra_path = ["robots.txt", "explore.html", ".gitignore", "README.md"]
 html_css_files = ["pyworldatlas.css"]
-html_js_files = [("playground.js", {"defer": "defer"})]
+html_js_files = [("playground.js", {"defer": "defer"}), ("copy.js", {"defer": "defer"})]
 rst_prolog = """
 .. role:: atlas-flag
    :class: atlas-flag
@@ -119,7 +119,7 @@ def _write_sitemap(app, exception):
 
 LLMS_SECTIONS = (
     ("Start here", ("quickstart", "playground", "installation")),
-    ("Examples and learning", ("learning", "recipes")),
+    ("Examples and learning", ("learning", "teaching", "recipes")),
     (
         "Explore the atlas",
         (
@@ -145,7 +145,7 @@ LLMS_SUMMARY = (
     "sunrise and day length, distances, quizzes, and optional packs for 3D maps, "
     "airports and World Heritage sites, and World Bank statistics since 1960. "
     "It has no core runtime dependencies, needs no API key, and never uses the "
-    "network at runtime. It runs on a Raspberry Pi Zero 2 W."
+    "network at runtime. It is built to fit the 512 MB of a Raspberry Pi Zero 2 W."
 )
 
 
