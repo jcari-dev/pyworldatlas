@@ -198,32 +198,70 @@ def read_header(data: bytes) -> dict[str, object]:
     return header
 
 
+def _decompressor(codec: str, name: str) -> lzma.LZMADecompressor | bz2.BZ2Decompressor:
+    if codec == "lzma":
+        return lzma.LZMADecompressor(format=lzma.FORMAT_RAW, filters=_LZMA)
+    if codec == "bz2":
+        return bz2.BZ2Decompressor()
+    raise PlaceFileError(f"unknown codec {codec!r} in the {name} column")
+
+
+def _lines(payload: bytes, codec: str, name: str, count: int) -> Iterator[str]:
+    """Yield exactly ``count`` names from a compressed column, 1 MB at a time.
+
+    Names are the largest column, so they are never unpacked all at once: even
+    the 7.6 million-place world pack then unpacks on a computer with 512 MB.
+    """
+    decompressor = _decompressor(codec, name)
+    pending = b""
+    produced = 0
+    data = payload
+    try:
+        while True:
+            if decompressor.eof:
+                chunk, finished = b"", True
+            else:
+                chunk = decompressor.decompress(data, max_length=1 << 20)
+                data = b""
+                finished = decompressor.eof or (not chunk and decompressor.needs_input)
+            pending += chunk
+            lines = pending.split(b"\n")
+            pending = lines.pop() if not finished else b""
+            for line in lines:
+                produced += 1
+                yield line.decode("utf-8")
+            if finished:
+                break
+    except (lzma.LZMAError, OSError, EOFError, ValueError) as error:
+        raise PlaceFileError(f"damaged {name} column") from error
+    if produced != count:
+        raise PlaceFileError("place file columns disagree")
+
+
 def decode(data: bytes) -> Iterator[PlaceRecord]:
     """Yield every record in a place file, in stored order."""
     header = read_header(data)
     offset = int(header["_offset"])  # type: ignore[call-overload]
+    count = int(header["count"])  # type: ignore[call-overload]
     columns: dict[str, bytes] = {}
+    streams: dict[str, Iterator[str]] = {}
     for column in header["columns"]:  # type: ignore[attr-defined]
         payload = data[offset:offset + column["size"]]
         offset += column["size"]
+        if column["name"] in {"names", "english"}:
+            streams[column["name"]] = _lines(payload, column["codec"], column["name"], count)
+            continue
         try:
-            if column["codec"] == "lzma":
-                columns[column["name"]] = lzma.decompress(payload, format=lzma.FORMAT_RAW, filters=_LZMA)
-            elif column["codec"] == "bz2":
-                columns[column["name"]] = bz2.decompress(payload)
-            else:
-                raise PlaceFileError(f"unknown codec {column['codec']!r}")
+            columns[column["name"]] = _decompressor(column["codec"], column["name"]).decompress(payload)
         except (lzma.LZMAError, OSError, EOFError, ValueError) as error:
             raise PlaceFileError(f"damaged {column['name']} column") from error
-    count = int(header["count"])  # type: ignore[call-overload]
     precision = float(header["precision"])  # type: ignore[arg-type]
     codes: list[str] = header["codes"]  # type: ignore[assignment]
     countries: list[str] = header["countries"]  # type: ignore[assignment]
-    names = columns["names"].decode("utf-8").split("\n")
-    english = columns["english"].decode("utf-8").split("\n")
     fame = columns["fame"]
-    if not (len(names) == len(english) == len(fame) == count):
+    if len(fame) != count:
         raise PlaceFileError("place file columns disagree")
+    names, english = streams["names"], streams["english"]
     coords = _varints(columns["coords"])
     kinds = _varints(columns["kinds"])
     numbers = columns["numbers"]
@@ -249,9 +287,10 @@ def decode(data: bytes) -> Iterator[PlaceRecord]:
             else:
                 values.append(None)
         population, elevation = values
+        name, english_name = next(names), next(english)
         yield PlaceRecord(
-            names[index],
-            english[index] or names[index],
+            name,
+            english_name or name,
             codes[code],
             countries[country],
             lat / precision,
@@ -260,6 +299,8 @@ def decode(data: bytes) -> Iterator[PlaceRecord]:
             _unzigzag(elevation) if elevation is not None else None,
             fame[index],
         )
+    for _ in names:  # a names column with extra lines is damaged
+        raise PlaceFileError("place file columns disagree")
 
 
 # --- the local index ------------------------------------------------------------

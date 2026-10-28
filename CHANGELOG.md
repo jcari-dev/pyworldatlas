@@ -9,6 +9,10 @@
   `Atlas.world_heritage_sites_near`, and the `pyworldatlas airport` and
   `pyworldatlas heritage` commands.
 - New `PackNotInstalledError` names the command that installs a missing pack.
+- Lower memory: the first search after installing the place packs now peaks
+  near 280 MB for the world pack (was about 520 MB for the explorer pack), so
+  every pack unpacks on a computer with 512 MB, such as a Raspberry Pi Zero 2 W.
+- Faster start: compression, hashing, and pack modules load on first use.
 
 ## 0.11.1
 
