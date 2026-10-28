@@ -20,7 +20,7 @@ def flag(alpha2: str) -> str:
 
 def city_from_row(row: sqlite3.Row) -> City:
     """Build one populated place from a city row joined with its country code."""
-    return City(row["name"], row["alpha2"], Coordinate(row["latitude"], row["longitude"]), row["population"], row["elevation_m"], row["timezone_id"], ("official",) if row["is_capital"] else (), (), row["geonames_id"])
+    return City(row["name"], row["alpha2"], Coordinate(row["latitude"], row["longitude"]), row["population"], row["elevation_m"], row["timezone_id"], ("official",) if row["is_capital"] else (), row["geonames_id"])
 
 
 def build_country(
@@ -37,9 +37,9 @@ def build_country(
     names = tuple(LocalizedName(n["name"], n["language_code"], n["kind"], bool(n["preferred"])) for n in names_rows)
     aliases = tuple(n.text for n in names if n.kind == "alias")
     capital_rows = child_rows("SELECT * FROM capital WHERE country_id=? ORDER BY is_primary DESC, name")
-    capitals = tuple(Capital(c["name"], row["alpha2"], Coordinate(c["latitude"], c["longitude"]), c["role"], bool(c["is_primary"]), None, c["population"], c["elevation_m"], c["timezone_id"], (), c["geonames_id"]) for c in capital_rows)
+    capitals = tuple(Capital(c["name"], row["alpha2"], Coordinate(c["latitude"], c["longitude"]), c["role"], bool(c["is_primary"]), c["population"], c["elevation_m"], c["timezone_id"], c["geonames_id"]) for c in capital_rows)
     city_rows = child_rows("SELECT * FROM city WHERE country_id=? ORDER BY population DESC, name")
-    cities = tuple(City(c["name"], row["alpha2"], Coordinate(c["latitude"], c["longitude"]), c["population"], c["elevation_m"], c["timezone_id"], ("official",) if c["is_capital"] else (), (), c["geonames_id"]) for c in city_rows)
+    cities = tuple(City(c["name"], row["alpha2"], Coordinate(c["latitude"], c["longitude"]), c["population"], c["elevation_m"], c["timezone_id"], ("official",) if c["is_capital"] else (), c["geonames_id"]) for c in city_rows)
     source_rows = child_rows("SELECT DISTINCT f.country_id AS country_id, s.* FROM source s JOIN field_source f ON f.source_id=s.id WHERE f.country_id=? ORDER BY s.id")
     sources = tuple(
         SourceReference(
@@ -207,7 +207,7 @@ def build_country(
         official_name=row["official_name"],
         names=names,
         aliases=aliases,
-        codes=CountryCodes(row["alpha2"], row["alpha3"], row["numeric_code"], None, row["geonames_id"]),
+        codes=CountryCodes(row["alpha2"], row["alpha3"], row["numeric_code"], row["geonames_id"]),
         flag=flag(row["alpha2"]),
         geography=geography,
         capitals=capitals,

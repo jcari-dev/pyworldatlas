@@ -16,11 +16,9 @@ class Capital:
     coordinates: Coordinate
     role: str = "official"
     primary: bool = True
-    largest_city: bool | None = None
     population: int | None = None
     elevation_m: float | None = None
     timezone_id: str | None = None
-    alternate_names: tuple[str, ...] = ()
     geonames_id: int | None = None
 
     def __repr__(self) -> str:
@@ -32,8 +30,8 @@ class City:
     """An immutable bundled populated place.
 
     Every city has a display name, country code, and WGS84 coordinates.
-    Population, elevation, timezone, capital roles, alternate names, and the
-    GeoNames identifier are optional snapshot fields.
+    Population, elevation, timezone, capital roles, and the GeoNames
+    identifier are optional snapshot fields.
     """
 
     name: str
@@ -43,7 +41,6 @@ class City:
     elevation_m: float | None = None
     timezone_id: str | None = None
     capital_roles: tuple[str, ...] = ()
-    alternate_names: tuple[str, ...] = ()
     geonames_id: int | None = None
 
     @property

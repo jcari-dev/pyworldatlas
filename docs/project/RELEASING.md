@@ -20,8 +20,10 @@ Packs are built byte for byte reproducibly from `packs/` by
 `src/pyworldatlas/_pack_index.json`. The library accepts only packs with those
 checksums and downloads them from the release that matches its own version.
 
-The `pyworldatlas-mapview` and `pyworldatlas-mapdata-*` PyPI projects were last
-published at 0.9.5 and are no longer released.
+The `pyworldatlas-mapview`, `pyworldatlas-mapdata-standard`, and
+`pyworldatlas-mapdata-overview` PyPI projects are retired. Their final 0.10.0
+releases contain only a README that points to `pyworldatlas get maps`; 0.9.5
+stays available for existing `pyworldatlas` 0.9.x installs, which pin it.
 
 ## One-time repository setup
 

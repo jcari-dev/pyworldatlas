@@ -23,7 +23,6 @@ class CountryCodes:
     alpha2: str
     alpha3: str | None
     numeric: str | None
-    wikidata: str | None = None
     geonames: int | None = None
 
 
