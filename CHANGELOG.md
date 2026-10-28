@@ -2,6 +2,13 @@
 
 ## Unreleased: 0.12.1
 
+- Removed six fields that were always empty in every profile:
+  `Area.disputed_km2`, `Geography.centroid`, `CountryCodes.wikidata`,
+  `Capital.largest_city`, `Capital.alternate_names`, and
+  `City.alternate_names`, and the `include_history` argument of
+  `Country.to_dict` and `Country.to_json`, which had no effect. Code that read
+  them only ever saw `None` or an empty tuple.
+
 - Clearer licensing: the package metadata now reads
   `MIT AND CC-BY-4.0 AND Unicode-3.0 AND CC0-1.0`, matching the data it
   ships. The wheel now includes the CC BY 4.0 license text and the

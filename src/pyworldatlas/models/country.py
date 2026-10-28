@@ -388,23 +388,14 @@ class Country:
             )
         return "\n".join(lines)
 
-    def to_dict(self, include_history: bool = False) -> dict[str, Any]:
-        """Serialize this profile to JSON-compatible primitives.
-
-        ``include_history`` is reserved for compatibility and currently has no
-        effect because the bundled dataset has no historical series.
-        """
-        del include_history
+    def to_dict(self) -> dict[str, Any]:
+        """Serialize this profile to JSON-compatible primitives."""
         data: dict[str, Any] = _jsonable(self)
         return data
 
-    def to_json(self, indent: int | None = None, include_history: bool = False) -> str:
-        """Serialize this profile as JSON.
-
-        ``include_history`` is reserved for compatibility and currently has no
-        effect because the bundled dataset has no historical series.
-        """
-        return json.dumps(self.to_dict(include_history), ensure_ascii=False, indent=indent)
+    def to_json(self, indent: int | None = None) -> str:
+        """Serialize this profile as JSON."""
+        return json.dumps(self.to_dict(), ensure_ascii=False, indent=indent)
 
     def _repr_html_(self) -> str:
         """Show the profile as a fact card in Jupyter and other notebook tools.

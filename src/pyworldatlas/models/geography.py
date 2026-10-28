@@ -185,7 +185,6 @@ class Area:
     land_km2: float | None = None
     water_km2: float | None = None
     water_percent: float | None = None
-    disputed_km2: float | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -310,6 +309,5 @@ class Geography:
     region: str | None
     subregion: str | None
     area: Area = Area()
-    centroid: Coordinate | None = None
     landlocked: bool | None = None
     physical: PhysicalGeography = PhysicalGeography()
