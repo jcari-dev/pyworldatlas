@@ -1499,8 +1499,8 @@ class Atlas:
         Topics are ``"kinds"`` (what kind of place is it?), ``"higher"`` (which
         of two mountains is higher?), and ``"closer_to_equator"`` (which of two
         places is closer to the equator?). Questions come from the best-known
-        mountains, islands, lakes, rivers, and seas in the school atlas, and the
-        same ``seed`` always gives the same questions.
+        mountains (3,000 m and higher), islands, lakes, rivers, and seas in the
+        school atlas, and the same ``seed`` always gives the same questions.
         """
         if topic not in self.PLACE_QUIZ_TOPICS:
             raise ValueError(f"topic must be one of {', '.join(self.PLACE_QUIZ_TOPICS)}")
@@ -1515,6 +1515,9 @@ class Atlas:
         pool = [
             place for place in map(self._place_from_row, rows)
             if place.english_name.isascii() and "," not in place.english_name
+            # Many small hills carry machine-copied names in dozens of
+            # languages, which inflates their fame; keep only real mountains.
+            and not (place.kind in {"mountain", "volcano", "peak", "hill", "hills"} and (place.elevation_m or 0) < 3000)
         ]
 
         def shuffled(items: list[Place], salt: str) -> list[Place]:

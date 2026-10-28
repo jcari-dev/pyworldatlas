@@ -143,8 +143,8 @@ class EducationalPolicyTests(unittest.TestCase):
 
         preset_ids = re.findall(r'\n\s+id: "([^"]+)"', interface)
         recipe_links = re.findall(r"playground\.html#recipe=([a-z-]+)", recipes)
-        self.assertEqual(len(preset_ids), 18)
-        self.assertEqual(len(set(preset_ids)), 18)
+        self.assertEqual(len(preset_ids), 21)
+        self.assertEqual(len(set(preset_ids)), 21)
         self.assertTrue(set(recipe_links).issubset(preset_ids))
 
     def test_documentation_has_one_primary_onboarding_path(self):
@@ -347,7 +347,7 @@ class EducationalPolicyTests(unittest.TestCase):
             flags=re.DOTALL,
         )
 
-        self.assertEqual(len(examples), 18)
+        self.assertEqual(len(examples), 21)
         for number, example in enumerate(examples, 1):
             with self.subTest(example=number), redirect_stdout(StringIO()):
                 exec(

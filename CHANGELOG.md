@@ -2,6 +2,12 @@
 
 ## Unreleased: 0.12.1
 
+- Playground: **Surprise me** shows a famous place, **Quiz me** asks five
+  questions with answer buttons and a score, and three new challenge recipes
+  find the capital with the shortest December day, the capitals closest to the
+  equator, and the two capitals farthest apart.
+- Place quizzes use only mountains of 3,000 m and higher, so questions are
+  about well-known summits rather than small local hills.
 - A more welcoming documentation home page: a "Look up anything" search box
   that opens the playground with the answer, and three starting points for
   students, teachers, and developers. Guides show real output: statistics

@@ -783,6 +783,106 @@
   color: #2f3b45;
 }
 
+.atlas-explore-surprise {
+  background: #fff;
+  border-color: #8fb6c8;
+  color: #24485a;
+  min-height: 2.4rem;
+  padding: 0.3rem 0.9rem;
+  font-size: 0.85rem;
+}
+
+.atlas-quiz {
+  padding: 0.6rem 1.3rem 1rem;
+  border-bottom: 1px solid var(--atlas-line);
+}
+
+.atlas-playground .atlas-quiz-intro {
+  margin: 0 0 0.6rem;
+  color: #4f6370;
+  font-size: 0.85rem;
+}
+
+.atlas-quiz-card {
+  margin-top: 0.7rem;
+  padding: 0.9rem 1rem;
+  background: #fff;
+  border: 1px solid #d7e2e8;
+  border-left: 4px solid #9a762f;
+  border-radius: 7px;
+}
+
+.atlas-playground .atlas-quiz-progress {
+  margin: 0;
+  color: #5c6b75;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.atlas-playground .atlas-quiz-prompt {
+  margin: 0.3rem 0 0.7rem;
+  color: #24485a;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.atlas-quiz-choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 0.45rem;
+}
+
+.atlas-quiz-choice {
+  min-height: 2.6rem;
+  padding: 0.45rem 0.7rem;
+  background: var(--atlas-blue-soft);
+  border: 1px solid #8fb6c8;
+  border-radius: 8px;
+  color: #24485a;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.95rem;
+  text-align: left;
+}
+
+.atlas-quiz-choice:hover:not(:disabled),
+.atlas-quiz-choice:focus-visible {
+  background: #dcecf5;
+  outline: 2px solid #3981a5;
+  outline-offset: 1px;
+}
+
+.atlas-quiz-choice:disabled {
+  cursor: default;
+}
+
+.atlas-quiz-choice[data-state="right"] {
+  background: #e3f4ec;
+  border-color: #2f7d6d;
+  color: #1d5b4e;
+  font-weight: 700;
+}
+
+.atlas-quiz-choice[data-state="right"]::before {
+  content: "✓ ";
+}
+
+.atlas-quiz-choice[data-state="wrong"] {
+  background: #fbeaea;
+  border-color: #b33a3a;
+  color: #8a2a2a;
+}
+
+.atlas-quiz-choice[data-state="wrong"]::before {
+  content: "✗ ";
+}
+
+.atlas-playground .atlas-quiz-feedback {
+  min-height: 1.2em;
+  margin: 0.6rem 0 0.4rem;
+  font-weight: 600;
+}
+
 .atlas-explore-open {
   background: var(--atlas-blue-soft);
   border-color: #8fb6c8;

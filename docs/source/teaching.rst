@@ -70,8 +70,8 @@ More activities
 ---------------
 
 - **Which is higher?** :meth:`~pyworldatlas.Atlas.place_quiz` asks about
-  famous mountains, islands, and lakes: "Which is higher: Mont Blanc or Ben
-  Nevis?" (:doc:`learning`).
+  famous mountains, islands, and lakes: "Which is higher: Mont Blanc or
+  Denali?" (:doc:`learning`).
 - **Why seasons happen.** Compare the length of the same day in Oslo and Cape
   Town, then in June (:doc:`sun`).
 - **Dig through the Earth.** Find what is on the other side of the planet from
