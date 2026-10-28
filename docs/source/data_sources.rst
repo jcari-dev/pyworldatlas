@@ -292,7 +292,7 @@ Wikidata travel-basics statements
 
 **Purpose**
    Plug types, household mains voltage and frequency, and driving side for
-   :attr:`Country.travel <pyworldatlas.Country.travel>`.
+   ``Country.travel``.
 
 **Official locations**
    https://query.wikidata.org/sparql and

@@ -19,7 +19,10 @@ autodoc_class_signature = "separated"
 autodoc_typehints_format = "short"
 python_use_unqualified_type_names = True
 nitpicky = True
-nitpick_ignore = [("py:class", "pathlib.Path"), ("py:class", "collections.abc.Callable")]
+nitpick_ignore = [
+    ("py:class", "pathlib.Path"), ("py:class", "collections.abc.Callable"),
+    ("py:class", "datetime.date"), ("py:class", "datetime.datetime"),
+]
 html_theme = "sphinx_rtd_theme"
 pygments_style = "friendly"
 html_title = "PyWorldAtlas 0.11.0"
