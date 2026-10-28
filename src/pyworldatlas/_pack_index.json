@@ -30,6 +30,12 @@
       "sha256": "06463185354e71f587767387c3946e7f12a97b79c3a6288026d3e80ec1974fce",
       "size_bytes": 43918966,
       "title": "World places: every remaining village, stream, hill, and local area (add after explorer)"
+    },
+    "statistics": {
+      "file": "pyworldatlas-statistics.pack",
+      "sha256": "1ec90779e6722fdab8bd73dfb656bb911397094f5da062124be9b8e0aa96a53c",
+      "size_bytes": 145590,
+      "title": "Statistics: basic World Bank indicators by country since 1960"
     }
   }
 }

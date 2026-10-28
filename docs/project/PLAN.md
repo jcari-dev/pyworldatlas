@@ -162,8 +162,8 @@ on a slow 3G connection, and every place on Earth under 2 minutes on a slow
   CC BY 4.0 before it is admitted. The UN World Population Prospects terms
   still need to be confirmed from the publisher before any WPP value is used.
 
-- **Statistics pack:** selected World Bank indicators from 1960 and UN
-  population estimates from 1950, with UN projections labeled as projections.
+- **Done: statistics pack.** Eleven World Bank indicators from 1960 (CC BY
+  4.0), with time series, sorting, one-line charts, and sentences.
 - Every value carries unit, reference year, and source.
 - Time series, side-by-side fact listing without judgement, and one-line
   charts.

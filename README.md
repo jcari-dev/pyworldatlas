@@ -123,6 +123,10 @@ all. [Read the places guide](https://jcari-dev.github.io/pyworldatlas-documentat
 flights and 1,266 UNESCO World Heritage sites: `atlas.airport("LHR")`,
 `atlas.world_heritage_sites_near("Cusco")`.
 
+`pyworldatlas get statistics` (about 150 KB) adds eleven World Bank indicators
+since 1960, with one-line charts: `atlas.time_series("Kenya",
+"electricity_access").sparkline()`.
+
 ## Open the terrain
 
 ```python

@@ -287,6 +287,31 @@ Wikidata national-motto statements
    are included. The runtime does not infer constitutional, statutory,
    traditional, or current legal status, and it does not ingest tourism slogans.
 
+World Bank World Development Indicators
+---------------------------------------
+
+**Purpose**
+   Eleven basic indicators by country and year for the optional statistics
+   pack: population, population density, urban population, life expectancy,
+   birth and death rates, forest and agricultural land, access to electricity
+   and basic drinking water, and internet use.
+
+**Official location**
+   https://datacatalog.worldbank.org/ (API: https://api.worldbank.org/v2/)
+
+**Current snapshot**
+   API responses retrieved 2026-10-28 (data last updated by the World Bank on
+   2026-10-08), with each file's checksum retained in the manifest.
+
+**Terms**
+   Creative Commons Attribution 4.0. Each indicator's own license field is
+   checked to read CC BY 4.0 before it is used.
+
+**Review boundary**
+   Values are used as published. The official statistics section of the
+   editorial policy sets which indicators are admitted: basic, descriptive
+   measures only, with no composite indices or judgement-laden indicators.
+
 OurAirports
 -----------
 

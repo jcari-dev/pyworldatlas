@@ -34,6 +34,7 @@
     "ElevationPoint",
     "Flashcard",
     "Geography",
+    "Indicator",
     "Lake",
     "Language",
     "LocalizedName",
@@ -52,6 +53,8 @@
     "SCHEMA_VERSION",
     "SiteDistance",
     "SourceReference",
+    "StatisticSeries",
+    "StatisticValue",
     "SunTimes",
     "Timezone",
     "TravelBasics",
@@ -222,6 +225,7 @@
         "flashcards": "method(self, *, topic: 'str', count: 'int', continent: 'str | None' = None, region: 'str | None' = None, seed: 'int | str' = 0) -> 'tuple[Flashcard, ...]'",
         "get": "method(self, query: 'str', default: 'Country | None' = None) -> 'Country | None'",
         "has_land_route": "method(self, origin: 'str', destination: 'str') -> 'bool'",
+        "indicators": "method(self) -> 'tuple[Indicator, ...]'",
         "learning_topics": "method(self) -> 'tuple[str, ...]'",
         "lookup": "method(self, query: 'str', *, limit: 'int' = 10) -> 'tuple[Country | Place, ...]'",
         "major_cities": "method(self, country: 'str', *, limit: 'int | None' = None) -> 'tuple[City, ...]'",
@@ -244,7 +248,10 @@
         "search_places": "method(self, query: 'str', *, kind: 'str | None' = None, category: 'str | None' = None, country: 'str | None' = None, limit: 'int' = 10) -> 'tuple[Place, ...]'",
         "shared_neighbors": "method(self, country1: 'str', country2: 'str') -> 'tuple[Country, ...]'",
         "shares_border": "method(self, country1: 'str', country2: 'str') -> 'bool'",
+        "sort_by_statistic": "method(self, indicator: 'str', *, year: 'int | None' = None, descending: 'bool' = True, limit: 'int | None' = 10) -> 'tuple[StatisticValue, ...]'",
+        "statistic": "method(self, country: 'str | Country', indicator: 'str', year: 'int | None' = None) -> 'StatisticValue | None'",
         "sun": "method(self, where: 'str | Country | Capital | City | Place | Coordinate | tuple[float, float]', on: 'date | None' = None) -> 'SunTimes'",
+        "time_series": "method(self, country: 'str | Country', indicator: 'str') -> 'StatisticSeries'",
         "world_heritage_site": "method(self, query: 'str | int') -> 'WorldHeritageSite'",
         "world_heritage_sites": "method(self, *, category: 'str | None' = None) -> 'tuple[WorldHeritageSite, ...]'",
         "world_heritage_sites_near": "method(self, origin: 'str | Country | Capital | City | Place | Coordinate | tuple[float, float]', *, limit: 'int' = 10, category: 'str | None' = None, unit: 'str' = 'km') -> 'tuple[SiteDistance, ...]'"
@@ -1271,6 +1278,46 @@
         }
       ]
     },
+    "Indicator": {
+      "kind": "dataclass",
+      "signature": "(key: 'str', name: 'str', unit: 'str', code: 'str', source: 'str', decimals: 'int' = 1) -> None",
+      "members": {
+        "format": "method(self, value: 'float') -> 'str'"
+      },
+      "frozen": true,
+      "fields": [
+        {
+          "name": "key",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "name",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "unit",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "code",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "source",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "decimals",
+          "type": "int",
+          "default": "1"
+        }
+      ]
+    },
     "Lake": {
       "kind": "dataclass",
       "signature": "(name: 'str', area_km2: 'float | None', water_type: 'str | None', source_label: 'str') -> None",
@@ -1840,6 +1887,79 @@
         }
       ]
     },
+    "StatisticSeries": {
+      "kind": "dataclass",
+      "signature": "(indicator: 'Indicator', area: 'str', area_name: 'str', first_year: 'int', values: 'tuple[float | None, ...]') -> None",
+      "members": {
+        "last_year": "property",
+        "latest": "property",
+        "points": "property",
+        "sparkline": "method(self, width: 'int' = 30) -> 'str'",
+        "summary": "property",
+        "to_dict": "method(self) -> 'dict[str, Any]'",
+        "to_json": "method(self, indent: 'int | None' = None) -> 'str'",
+        "value": "method(self, year: 'int') -> 'float | None'"
+      },
+      "frozen": true,
+      "fields": [
+        {
+          "name": "indicator",
+          "type": "Indicator",
+          "default": null
+        },
+        {
+          "name": "area",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "area_name",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "first_year",
+          "type": "int",
+          "default": null
+        },
+        {
+          "name": "values",
+          "type": "tuple[float | None, ...]",
+          "default": null
+        }
+      ]
+    },
+    "StatisticValue": {
+      "kind": "dataclass",
+      "signature": "(indicator: 'Indicator', area: 'str', year: 'int', value: 'float') -> None",
+      "members": {
+        "to_dict": "method(self) -> 'dict[str, Any]'",
+        "to_json": "method(self, indent: 'int | None' = None) -> 'str'"
+      },
+      "frozen": true,
+      "fields": [
+        {
+          "name": "indicator",
+          "type": "Indicator",
+          "default": null
+        },
+        {
+          "name": "area",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "year",
+          "type": "int",
+          "default": null
+        },
+        {
+          "name": "value",
+          "type": "float",
+          "default": null
+        }
+      ]
+    },
     "SunTimes": {
       "kind": "dataclass",
       "signature": "(coordinates: 'Coordinate', date: 'date', solar_noon: 'datetime', sunrise: 'datetime | None', sunset: 'datetime | None', day_length_hours: 'float', noon_sun_height: 'float') -> None",
@@ -2016,6 +2136,7 @@
     "ElevationPoint",
     "Flashcard",
     "Geography",
+    "Indicator",
     "Lake",
     "Language",
     "LocalizedName",
@@ -2030,6 +2151,8 @@
     "River",
     "SiteDistance",
     "SourceReference",
+    "StatisticSeries",
+    "StatisticValue",
     "SunTimes",
     "Timezone",
     "TravelBasics",

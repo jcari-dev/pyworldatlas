@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased: 0.12.0, the world in numbers
+
+- New optional **statistics** pack (about 150 KB): eleven basic World Bank
+  indicators for every country since 1960 (CC BY 4.0, credited): population,
+  population density, urban population, life expectancy, birth and death
+  rates, forest and agricultural land, access to electricity and drinking
+  water, and internet use. Missing years stay missing.
+- `Atlas.time_series`, `Atlas.statistic`, `Atlas.sort_by_statistic`, and
+  `Atlas.indicators`; `StatisticSeries.sparkline()` draws a one-line chart and
+  `summary` describes the change in a sentence. New `pyworldatlas stat`
+  command and "The world in numbers" guide.
+
 ## Unreleased: 0.11.2
 
 - New playground: **Look up anything** answers any country or place in plain

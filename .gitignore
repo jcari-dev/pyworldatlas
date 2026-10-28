@@ -39,3 +39,7 @@ desktop.ini
 
 # Too large for git; see build_data/raw/ourairports/*/manifest.json
 build_data/raw/ourairports/*/airports.csv
+
+# Too large for git; see build_data/raw/worldbank/*/manifest.json
+build_data/raw/worldbank/*/*.json
+!build_data/raw/worldbank/*/manifest.json
