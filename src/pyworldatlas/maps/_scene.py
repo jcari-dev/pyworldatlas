@@ -47,7 +47,7 @@ _ELEVATION_SCALE = (
 PLACE_LAYERS = (
     ("town", "Towns", "circle", "#ffffff"),
     ("landform", "Mountains and islands", "square", "#c2410c"),
-    ("water", "Lakes and seas", "diamond", "#0284c7"),
+    ("water", "Water and ice", "diamond", "#0284c7"),
     ("landmark", "Landmarks", "x", "#7c3aed"),
 )
 
@@ -129,6 +129,29 @@ def _decode_climate(
 
 def _axis(start: float, step: float, count: int) -> list[float]:
     return [round(start + step * index, 8) for index in range(count)]
+
+
+def _marker_height(
+    longitude: float,
+    latitude: float,
+    own_height: int | None,
+    longitudes: list[float],
+    latitudes: list[float],
+    elevation: list[list[int | None]],
+    lift: float,
+) -> float:
+    """Return the height to draw a place marker: just above the ground under it.
+
+    A place over the sea, such as a small island, has no terrain cell, so it
+    sits at its own known height, or at sea level, instead of borrowing the
+    height of the nearest land.
+    """
+    x = min(len(longitudes) - 1, max(0, round((longitude - longitudes[0]) / (longitudes[1] - longitudes[0]))))
+    y = min(len(latitudes) - 1, max(0, round((latitude - latitudes[0]) / (latitudes[1] - latitudes[0]))))
+    ground = elevation[y][x]
+    if ground is None:
+        ground = max(own_height or 0, 0)
+    return ground + lift
 
 
 def _nearest_elevation(
@@ -346,6 +369,9 @@ def build_figure(
             "borderpad": 4,
             "font": {"color": "#7f1734", "size": 13},
         }
+    # Lift markers only a hair above the ground (1.5% of the height range), so
+    # they rest on the terrain instead of floating above it.
+    lift = max(10.0, 0.015 * (maximum - minimum))
     for category, layer, symbol, color in PLACE_LAYERS:
         members = [place for place in request.places if place[2] == category]
         if not members:
@@ -361,7 +387,7 @@ def build_figure(
                 longitude -= 360.0
             xs.append(longitude)
             ys.append(latitude)
-            zs.append(_nearest_elevation(longitude, latitude, longitudes, latitudes, elevation) + 90)
+            zs.append(_marker_height(longitude, latitude, height, longitudes, latitudes, elevation, lift))
             details.append(f"{kind}, {height:,} m" if height is not None else kind)
         traces.append(
             _trace(

@@ -63,9 +63,15 @@ is better.
 
 From the command line:
 
-.. code-block:: bash
+.. code-block:: console
 
-   pyworldatlas stat Kenya electricity_access
+   $ pyworldatlas stat Kenya electricity_access
+   Access to electricity in Kenya rose from 10.9% of people in 1993 to 77.0% of people in 2024.
+   1993 ▁▁▂▂▂▃▃▃▃▄▄▅▆▇██ 2024
+
+   $ pyworldatlas stat Japan life_expectancy
+   Life expectancy at birth in Japan rose from 67.7 years in 1960 to 84.0 years in 2024.
+   1960 ▁▂▃▃▃▄▄▅▅▅▆▆▆▇▇▇▇▇████ 2024
 
 How the numbers are kept
 ------------------------

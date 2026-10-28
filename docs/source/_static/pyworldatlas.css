@@ -415,6 +415,105 @@
   max-width: 1120px;
 }
 
+.atlas-hero-search {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1rem 0 0.4rem;
+  max-width: 34rem;
+}
+
+.atlas-hero-search input {
+  flex: 1;
+  min-width: 0;
+  min-height: 2.9rem;
+  padding: 0.5rem 0.9rem;
+  border: 2px solid #8fb6c8;
+  border-radius: 9px;
+  font: inherit;
+  font-size: 1.05rem;
+}
+
+.atlas-hero-search input:focus-visible {
+  outline: 3px solid #3981a5;
+  outline-offset: 1px;
+}
+
+.atlas-hero-search button {
+  min-height: 2.9rem;
+  padding: 0.4rem 1.3rem;
+  background: #2f7d6d;
+  border: 0;
+  border-radius: 9px;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.atlas-hero-search button:hover,
+.atlas-hero-search button:focus-visible {
+  background: #276a5c;
+  outline: 3px solid #8fc4dc;
+  outline-offset: 2px;
+}
+
+.rst-content .atlas-hero-try {
+  margin: 0;
+  color: var(--atlas-muted);
+  font-size: 0.85rem;
+}
+
+.atlas-doors {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 0.8rem;
+  margin: 0.4rem 0 1.6rem;
+}
+
+.rst-content a.atlas-door {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 1rem 1.1rem;
+  background: #fff;
+  border: 1px solid var(--atlas-line);
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(38, 68, 85, 0.06);
+  color: var(--atlas-ink);
+  text-decoration: none;
+  transition: border-color 120ms ease, box-shadow 120ms ease, transform 120ms ease;
+}
+
+.rst-content a.atlas-door:hover,
+.rst-content a.atlas-door:focus-visible {
+  border-color: #6fa6bf;
+  box-shadow: 0 6px 18px rgba(38, 68, 85, 0.12);
+  outline: none;
+  transform: translateY(-2px);
+}
+
+.atlas-door-icon {
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.atlas-door strong {
+  color: #24485a;
+  font-size: 1.05rem;
+}
+
+.atlas-door span:last-child {
+  color: var(--atlas-muted);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rst-content a.atlas-door { transition: none; }
+  .rst-content a.atlas-door:hover { transform: none; }
+}
+
 .atlas-project-links {
   display: flex;
   flex-wrap: wrap;

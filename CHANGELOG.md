@@ -2,6 +2,14 @@
 
 ## Unreleased: 0.12.1
 
+- A more welcoming documentation home page: a "Look up anything" search box
+  that opens the playground with the answer, and three starting points for
+  students, teachers, and developers. Guides show real output: statistics
+  charts, a daylight chart, and a quiz.
+- Map place markers now rest on the ground instead of floating above it, small
+  islands sit at sea level, and the blue layer is renamed "Water and ice"
+  because it includes glaciers and waterfalls. The map animation in the README
+  and documentation shows the place layers.
 - A clearer package page: a new one-line description, more search keywords,
   and classifiers for typing, education, and the command line. The README,
   documentation summary, and plain-text documentation index describe the
