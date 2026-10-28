@@ -7,21 +7,21 @@ from .exceptions import (AmbiguousCountryError, AmbiguousPlaceError, AtlasClosed
                          DatasetError, DatasetIntegrityError, DatasetNotFoundError,
                          DatasetVersionError, MapSupportNotInstalledError,
                          PackNotInstalledError, PlaceNotFoundError)
-from .models import (Airport, Area, BorderPathResult, Capital, CapitalDistance, City,
+from .models import (Airport, Antipode, Area, BorderPathResult, Capital, CapitalDistance, City,
                      CityDistance, ClimateProfile, ClimateZone, Coordinate, Country,
                      CountryCodes, CountryDiscoveryCard, CountryMatch,
                      CountryRanking, CountryReference, Currency, DatasetInfo,
                      Demonym, ElevationPoint, Flashcard, Geography, Lake,
                      Language, LocalizedName, NationalAnthem, NationalMotto,
-                     PhysicalGeography, Place, PlaceDistance, PostalCodeFormat, QuizQuestion, River,
+                     PhysicalGeography, Place, PlaceDistance, PlaceQuestion, PostalCodeFormat, QuizQuestion, River,
                      SiteDistance, SourceReference, SunTimes, Timezone, TravelBasics,
                      WorldHeritageSite)
 
 __all__ = [
     "Atlas", "Country", "CountryCodes", "CountryReference", "CountryDiscoveryCard",
     "BorderPathResult", "CountryRanking", "CapitalDistance", "CityDistance",
-    "LocalizedName", "Flashcard", "QuizQuestion",
-    "Coordinate", "Area", "Geography", "Capital", "City", "Place", "PlaceDistance",
+    "LocalizedName", "Flashcard", "QuizQuestion", "PlaceQuestion",
+    "Coordinate", "Antipode", "Area", "Geography", "Capital", "City", "Place", "PlaceDistance",
     "Airport", "WorldHeritageSite", "SiteDistance", "Currency", "Language", "CountryMatch",
     "PhysicalGeography", "ElevationPoint", "River", "Lake", "ClimateProfile", "ClimateZone",
     "NationalAnthem", "NationalMotto", "Demonym", "Timezone", "PostalCodeFormat", "TravelBasics",

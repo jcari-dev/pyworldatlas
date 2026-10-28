@@ -24,10 +24,10 @@ from .exceptions import (AmbiguousCountryError, AmbiguousPlaceError,
                          AtlasClosedError, CapitalNotFoundError,
                          CountryNotFoundError, DatasetVersionError,
                          PackNotInstalledError, PlaceNotFoundError)
-from .models import (Airport, BorderPathResult, Capital, CapitalDistance, City,
+from .models import (Airport, Antipode, BorderPathResult, Capital, CapitalDistance, City,
                      CityDistance, Coordinate, Country,
                      CountryMatch, CountryRanking, DatasetInfo, Flashcard, LocalizedName, Place,
-                     PlaceDistance, QuizQuestion, SiteDistance, SunTimes, WorldHeritageSite)
+                     PlaceDistance, PlaceQuestion, QuizQuestion, SiteDistance, SunTimes, WorldHeritageSite)
 
 if TYPE_CHECKING:
     from . import _placefile, packs
@@ -1339,13 +1339,7 @@ class Atlas:
             raise ValueError("limit must be a positive integer")
         if unit not in {"km", "mi"}:
             raise ValueError("unit must be 'km' or 'mi'")
-        if isinstance(origin, str):
-            try:
-                point = self._coordinates_of(origin, country=None)
-            except (PlaceNotFoundError, AmbiguousPlaceError):
-                point = self.place(origin).coordinates
-        else:
-            point = self._coordinates_of(origin, country=None)
+        point = self._point_of(origin)
         scale = 1.0 if unit == "km" else 1 / 1.609344
         ranked = sorted(
             (
@@ -1398,13 +1392,7 @@ class Atlas:
         between latitudes 72° north and south. Compare ``atlas.sun("Oslo",
         date(2026, 6, 21))`` with December to see why seasons happen.
         """
-        if isinstance(where, str):
-            try:
-                point = self._coordinates_of(where, country=None)
-            except (PlaceNotFoundError, AmbiguousPlaceError):
-                point = self.place(where).coordinates
-        else:
-            point = self._coordinates_of(where, country=None)
+        point = self._point_of(where)
         day = on if on is not None else date.today()
         if not isinstance(day, date):
             raise TypeError("on must be a datetime.date")
@@ -1412,6 +1400,114 @@ class Atlas:
             day = day.date()
         noon, sunrise, sunset, hours, height = sun_times(point.latitude, point.longitude, day)
         return SunTimes(point, day, noon, sunrise, sunset, round(hours, 4), round(height, 2))
+
+    PLACE_QUIZ_TOPICS = ("closer_to_equator", "higher", "kinds")
+    """Topics accepted by :meth:`place_quiz`."""
+
+    _QUIZ_KINDS = (
+        "atoll", "bay", "cape", "desert", "glacier", "gulf", "island", "lake", "mountain",
+        "mountain range", "ocean", "peninsula", "plateau", "river", "sea", "strait", "valley",
+        "volcano", "waterfall",
+    )
+
+    def place_quiz(self, topic: str, *, count: int = 5, seed: int | str = 0) -> tuple[PlaceQuestion, ...]:
+        """Return multiple-choice questions about famous natural places.
+
+        Topics are ``"kinds"`` (what kind of place is it?), ``"higher"`` (which
+        of two mountains is higher?), and ``"closer_to_equator"`` (which of two
+        places is closer to the equator?). Questions come from the best-known
+        mountains, islands, lakes, rivers, and seas in the school atlas, and the
+        same ``seed`` always gives the same questions.
+        """
+        if topic not in self.PLACE_QUIZ_TOPICS:
+            raise ValueError(f"topic must be one of {', '.join(self.PLACE_QUIZ_TOPICS)}")
+        if isinstance(count, bool) or not isinstance(count, int) or not 1 <= count <= 50:
+            raise ValueError("count must be an integer from 1 through 50")
+        from hashlib import sha256
+
+        # The best-known natural places, with a plain English name.
+        rows = self._places()[0].execute(
+            "SELECT * FROM place WHERE substr(code, 1, 1) IN ('T', 'H', 'V') ORDER BY fame DESC, id LIMIT 300"
+        ).fetchall()
+        pool = [
+            place for place in map(self._place_from_row, rows)
+            if place.english_name.isascii() and "," not in place.english_name
+        ]
+
+        def shuffled(items: list[Place], salt: str) -> list[Place]:
+            def rank(place: Place) -> bytes:
+                key = f"pyworldatlas:place-quiz:{topic}:{seed}:{salt}:{place.english_name}:{place.coordinates}"
+                return sha256(key.encode()).digest()
+            return sorted(items, key=rank)
+
+        questions: list[PlaceQuestion] = []
+        if topic == "kinds":
+            kinds = [place for place in pool if place.kind in self._QUIZ_KINDS]
+            for place in shuffled(kinds, "pick")[:count]:
+                others = [kind for kind in self._QUIZ_KINDS if kind != place.kind]
+                wrong = stable_text_order(tuple(others), seed=seed, namespace=f"place-kinds:{place.english_name}")[:3]
+                choices = stable_text_order((place.kind, *wrong), seed=seed, namespace=f"place-order:{place.english_name}")
+                questions.append(PlaceQuestion(topic, f"What kind of place is {place.english_name}?", choices, place.kind, (place,)))
+        else:
+            if topic == "higher":
+                candidates = [p for p in pool if p.kind in {"mountain", "volcano", "peak"} and p.elevation_m]
+            else:  # compact places only: an ocean or a mountain range has no single latitude
+                compact = {"mountain", "volcano", "peak", "island", "atoll", "lake", "waterfall"}
+                candidates = [p for p in pool if p.kind in compact]
+            order = shuffled(candidates, "pick")
+            for first, second in zip(order[0::2], order[1::2], strict=False):
+                if len(questions) == count:
+                    break
+                if first.english_name == second.english_name:
+                    continue
+                if topic == "higher":
+                    assert first.elevation_m is not None and second.elevation_m is not None
+                    if first.elevation_m == second.elevation_m:
+                        continue
+                    winner = first if first.elevation_m > second.elevation_m else second
+                    prompt = f"Which is higher: {first.english_name} or {second.english_name}?"
+                else:
+                    a, b = abs(first.coordinates.latitude), abs(second.coordinates.latitude)
+                    if abs(a - b) < 1:
+                        continue
+                    winner = first if a < b else second
+                    prompt = f"Which is closer to the equator: {first.english_name} or {second.english_name}?"
+                questions.append(PlaceQuestion(
+                    topic, prompt, (first.english_name, second.english_name), winner.english_name, (first, second)
+                ))
+        if len(questions) < count:
+            raise ValueError(f"only {len(questions)} {topic!r} questions are available")
+        return tuple(questions)
+
+    def antipode(
+        self,
+        where: str | Country | Capital | City | Place | Coordinate | tuple[float, float],
+        *,
+        limit: int = 3,
+    ) -> Antipode:
+        """Return the point on the opposite side of the Earth, and the places nearest it.
+
+        Dig straight down through the centre of the Earth and you come out at
+        the antipode: the latitude flips north and south, and the longitude
+        moves halfway around the world. ``where`` is a city or place name, a
+        country (its capital), a model with coordinates, or a ``(latitude,
+        longitude)`` tuple. Most antipodes are at sea.
+        """
+        point = self._point_of(where)
+        longitude = point.longitude + 180 if point.longitude <= 0 else point.longitude - 180
+        opposite = Coordinate(round(-point.latitude, 6), round(longitude, 6))
+        return Antipode(point, opposite, self.places_near(opposite, limit=limit))
+
+    def _point_of(
+        self, where: str | Country | Capital | City | Place | Coordinate | tuple[float, float]
+    ) -> Coordinate:
+        """Resolve a place-like value; a name that is not one city is looked up as a place."""
+        if isinstance(where, str):
+            try:
+                return self._coordinates_of(where, country=None)
+            except (PlaceNotFoundError, AmbiguousPlaceError):
+                return self.place(where).coordinates
+        return self._coordinates_of(where, country=None)
 
     def _coordinates_of(
         self,

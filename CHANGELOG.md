@@ -13,6 +13,11 @@
   near 280 MB for the world pack (was about 520 MB for the explorer pack), so
   every pack unpacks on a computer with 512 MB, such as a Raspberry Pi Zero 2 W.
 - Faster start: compression, hashing, and pack modules load on first use.
+- New: `Atlas.place_quiz` asks about famous places: what kind of place it is,
+  which of two mountains is higher, and which of two places is closer to the
+  equator. Answers come from the data; seeds make lessons repeatable.
+- New: `Atlas.antipode` and `pyworldatlas antipode` find the point straight
+  through the Earth from any place, and the places nearest it.
 
 ## 0.11.1
 
