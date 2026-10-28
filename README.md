@@ -213,7 +213,7 @@ the formal publication standard.
 
 ## Coverage at a glance
 
-Library `0.10.0` includes dataset `2026.10.26.1` and schema `7`.
+Library `0.11.0` includes dataset `2026.10.26.1` and schema `7`.
 
 | Dataset area | Coverage |
 |---|---:|

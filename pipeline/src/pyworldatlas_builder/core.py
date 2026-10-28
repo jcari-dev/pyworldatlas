@@ -1898,6 +1898,16 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
                 "docs": "Release plan, data-pack and map guides, accessibility, plain-text llms indexes, and release instructions",
                 "release": "Published as v0.10.0",
             },
+            {
+                "name": "11: Every place on Earth",
+                "version": "0.11.0",
+                "status": "complete",
+                "functions": "School atlas of every well-known place, place packs, place search by local or English name, exact nearest-place search, one lookup across countries and places, and places on 3D maps",
+                "tests": "Place-file round trips and damage checks, exact proximity at the poles and date line, index caching, search ranking, map layers, pack integrity, and speed guards",
+                "dataset": "207,664 school-atlas places built in and 11,112,657 with packs, from the pinned GeoNames 2026-10-27 snapshot",
+                "docs": "Places guide, map layers and Find a place, pack sizes and first-search times, and data sources",
+                "release": "Published as v0.11.0",
+            },
         ]
     )
     status = {

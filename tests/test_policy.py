@@ -83,11 +83,11 @@ class EducationalPolicyTests(unittest.TestCase):
 
         self.assertIn("browser playground", readme)
         self.assertIn("classrooms", readme)
-        self.assertIn("Current release: Stable and instant (0.10)", roadmap)
+        self.assertIn("Current release: Every place on Earth (0.11)", roadmap)
         self.assertIn("does not publish their coordinates", roadmap)
-        self.assertEqual(status["milestones"][-2]["name"], "9: Optional interactive maps")
+        self.assertEqual(status["milestones"][-2]["name"], "10: Stable and instant")
         self.assertEqual(status["milestones"][-2]["status"], "complete")
-        self.assertEqual(status["milestones"][-2]["release"], "Published in v0.9.0")
+        self.assertEqual(status["milestones"][-1]["release"], "Published as v0.11.0")
 
         for path in (
             "SECURITY.md",

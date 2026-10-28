@@ -2,7 +2,7 @@
 
 > This file is generated from `build_data/reports/status.json`.
 
-Library version: 0.10.0
+Library version: 0.11.0
 Dataset version: 2026.10.26.1
 Schema version: 7
 
@@ -36,3 +36,4 @@ Last validation: PASS
 | 8: Education and usability | 0.8.0 | complete | Readable country summaries, city-name and proximity discovery, coordinate display helpers, discoverable learning topics, and deterministic multiple-choice questions | Public API behavior, deterministic quiz construction, coordinate formatting, city discovery, serialization, examples, browser runtime, documentation, and supported-Python release gates | Reuses the complete reviewed 0.7 dataset without changing schema or coverage | Learning guide, classroom recipes, refreshed playground, usability examples, polished docstrings, and complete API reference | Published as v0.8.0 |
 | 9: Optional interactive maps | 0.9.0 | complete | Optional offline 3D elevation and climate maps, browser display, HTML export, river overlays, and capital markers | Complete map-pack coverage, record integrity, viewer controls, offline HTML, clean-wheel rendering, documentation, and release gates | 248 Overview maps / 248 Standard maps from pinned elevation, climate, outline, and river snapshots | Map-edition guide, installation choices, viewer API, source limits, examples, and release instructions | Published in v0.9.0 |
 | 10: Stable and instant | 0.10.0 | complete | Frozen public API, per-atlas caches, zero-dependency maps, data packs with get/add/packs/remove, redesigned accessible map page, notebook fact cards, and everyday country names | API snapshot, strict typing, lint, branch coverage, speed guards, pack integrity, figure fingerprints, accessibility checks, and Linux, Windows, and macOS CI | 248 profiles with 18 more reviewed everyday aliases; map data moved unchanged into checksummed packs | Release plan, data-pack and map guides, accessibility, plain-text llms indexes, and release instructions | Published as v0.10.0 |
+| 11: Every place on Earth | 0.11.0 | complete | School atlas of every well-known place, place packs, place search by local or English name, exact nearest-place search, one lookup across countries and places, and places on 3D maps | Place-file round trips and damage checks, exact proximity at the poles and date line, index caching, search ranking, map layers, pack integrity, and speed guards | 207,664 school-atlas places built in and 11,112,657 with packs, from the pinned GeoNames 2026-10-27 snapshot | Places guide, map layers and Find a place, pack sizes and first-search times, and data sources | Published as v0.11.0 |
