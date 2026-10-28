@@ -1,6 +1,6 @@
 # PyWorldAtlas: offline world geography for Python
 
-> Offline world atlas for Python: 248 countries, 11 million places, statistics since 1960, and 3D maps, with zero dependencies. Runs on a Raspberry Pi Zero; the core installs in under a minute on slow 3G.
+> Offline world atlas for Python: 248 countries, 11 million places, statistics since 1960, and 3D maps, with zero dependencies. Built for low-cost computers with 512 MB of memory, such as a Raspberry Pi Zero 2 W; the core installs in under a minute on slow 3G.
 
 [![PyPI](https://img.shields.io/pypi/v/pyworldatlas.svg?label=PyPI&color=287aa3)](https://pypi.org/project/pyworldatlas/)
 [![Python 3.10–3.14](https://img.shields.io/badge/Python-3.10%E2%80%933.14-3776ab)](https://www.python.org/)
