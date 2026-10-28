@@ -2,6 +2,8 @@
 
 ## Unreleased: 0.12.1
 
+- Every code block in the documentation has a Copy button; for interactive
+  examples it copies only the code, without the `>>>` prompts or output.
 - Shorter, friendlier front pages: the README is a third of its old length,
   and the main guides open with an "In 30 seconds" example.
 - Playground: **Surprise me** shows a famous place, **Quiz me** asks five

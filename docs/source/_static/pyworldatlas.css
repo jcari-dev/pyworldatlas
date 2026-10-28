@@ -1315,3 +1315,28 @@
 .rst-content .admonition.atlas-quick > .admonition-title {
   background: var(--atlas-teal);
 }
+
+.rst-content div.highlight.atlas-copyable {
+  position: relative;
+}
+
+.rst-content .atlas-copy {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.35rem;
+  padding: 0.2rem 0.55rem;
+  background: #fff;
+  border: 1px solid #9fb6c2;
+  border-radius: 6px;
+  color: #24485a;
+  cursor: pointer;
+  font: 600 0.72rem/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  opacity: 0.85;
+}
+
+.rst-content .atlas-copy:hover,
+.rst-content .atlas-copy:focus-visible {
+  opacity: 1;
+  outline: 2px solid #3981a5;
+  outline-offset: 1px;
+}
