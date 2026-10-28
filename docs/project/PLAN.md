@@ -147,7 +147,20 @@ on a slow 3G connection, and every place on Earth under 2 minutes on a slow
 
 ## 0.12: The world in numbers
 
-Requires an "official statistics" section in the editorial policy first.
+- **Done: official statistics policy.** The "Official statistics" section of
+  the editorial policy sets the publishers, labelling, scope, presentation,
+  and missing-value rules below.
+- **First indicator shortlist** (each needs its license and definition checked
+  before collection): population, population density, urban population share,
+  life expectancy at birth, births and deaths per 1,000 people, median age,
+  forest area share, agricultural land share, access to electricity, access
+  to safe drinking water, internet users share, and primary school
+  enrollment.
+- **License notes (checked 2026-10-27).** The World Bank data catalog lists
+  World Development Indicators under CC BY 4.0. WDI collects some series from
+  partner agencies, so each indicator's own license field must also read
+  CC BY 4.0 before it is admitted. The UN World Population Prospects terms
+  still need to be confirmed from the publisher before any WPP value is used.
 
 - **Statistics pack:** selected World Bank indicators from 1960 and UN
   population estimates from 1950, with UN projections labeled as projections.

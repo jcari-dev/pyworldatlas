@@ -70,6 +70,40 @@ human worth, and speculative narrative are outside the dataset. A future field
 must have a precise educational use, suitable reuse terms, dependable sources,
 and a documented review method before it can be considered.
 
+## Official statistics
+
+Statistics (planned for 0.12) follow stricter rules than other fields, because
+numbers about countries are easy to read as judgements.
+
+1. **Publishers.** Only international statistical publishers: the United
+   Nations (Statistics Division and the Population Division of DESA) and the
+   World Bank (World Development Indicators). Values are used exactly as
+   published, apart from documented unit conversion.
+2. **Every value is labelled.** Each value carries its indicator code, unit,
+   reference year, publisher, and snapshot date. Estimates and projections are
+   labelled as such, and a projection is never presented as an observation.
+3. **Basic, descriptive indicators only.** Indicators describe population,
+   land, environment, health, education, and infrastructure in plain physical
+   or counted terms, such as population, life expectancy at birth, forest area,
+   or the share of people with electricity. A new indicator needs a stated
+   learning purpose.
+4. **Out of scope.** Composite indices and scores of any kind; governance,
+   corruption, freedom, rights, or "fragility" measures; military, conflict,
+   crime, or security data; religion or ethnicity; migration and refugee
+   counts; aid, debt, and poverty or inequality measures; and any indicator
+   whose name or definition carries a judgement. When an indicator is in
+   doubt, it is left out.
+5. **No judgement in presentation.** Statistics may be listed, charted, and
+   sorted, but never labelled better or worse. Map colors use one neutral,
+   ordered scale with no good or bad colors, and sorted lists say only what
+   was sorted and in which direction.
+6. **Missing stays missing.** Gaps are never filled by estimation, carried
+   forward from other years, or borrowed from another publisher. Regional and
+   world totals are shown only as published.
+7. **Pinned and dated.** Each statistics pack pins a dated snapshot.
+   Publishers revise past values, so a value can differ from the publisher's
+   current release; the snapshot date says which release was used.
+
 ## Classroom and public use
 
 PyWorldAtlas is designed for classrooms, tutorials, portfolios, research
