@@ -7,6 +7,17 @@ no extra data. It uses the NOAA solar position equations, which agree with
 almanac times to about a minute between latitudes 72° north and south. Times
 are in UTC.
 
+.. admonition:: In 30 seconds
+   :class: atlas-quick
+
+   .. doctest::
+
+      >>> from datetime import date
+      >>> from pyworldatlas import Atlas
+      >>> with Atlas() as atlas:
+      ...     print(atlas.sun("Oslo", date(2026, 12, 21)).daylight)
+      5 h 54 min
+
 .. doctest::
 
    >>> from datetime import date

@@ -1305,3 +1305,13 @@
 #main-content:focus {
   outline: none;
 }
+
+.rst-content .admonition.atlas-quick {
+  background: var(--atlas-teal-soft);
+  border-left: 4px solid var(--atlas-teal);
+  border-radius: 8px;
+}
+
+.rst-content .admonition.atlas-quick > .admonition-title {
+  background: var(--atlas-teal);
+}

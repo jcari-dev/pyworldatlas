@@ -7,6 +7,16 @@ Indicators: population, population density, urban population, life
 expectancy, births and deaths, forest and agricultural land, access to
 electricity and drinking water, and internet use.
 
+.. admonition:: In 30 seconds
+   :class: atlas-quick
+
+   .. doctest::
+
+      >>> from pyworldatlas import Atlas
+      >>> with Atlas() as atlas:
+      ...     print(atlas.time_series("Kenya", "electricity_access").summary)
+      Access to electricity in Kenya rose from 10.9% of people in 1993 to 77.0% of people in 2024.
+
 .. code-block:: bash
 
    pyworldatlas get statistics
