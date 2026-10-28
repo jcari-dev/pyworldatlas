@@ -80,7 +80,7 @@ Start here
        <strong>I'm a student</strong>
        <span>Look things up, take a quiz, and try changing a little Python in your browser. No install.</span>
      </a>
-     <a class="atlas-door" href="learning.html">
+     <a class="atlas-door" href="teaching.html">
        <span class="atlas-door-icon" aria-hidden="true">🍎</span>
        <strong>I'm a teacher</strong>
        <span>Quizzes and flashcards that are the same for the whole class, lesson ideas, and offline use.</span>
@@ -375,6 +375,7 @@ The current source checkout can be installed with ``python -m pip install -e .``
    :caption: Examples and learning
 
    learning
+   teaching
    recipes
 
 .. toctree::

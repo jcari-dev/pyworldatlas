@@ -6,6 +6,8 @@
   that opens the playground with the answer, and three starting points for
   students, teachers, and developers. Guides show real output: statistics
   charts, a daylight chart, and a quiz.
+- New "Teaching with PyWorldAtlas" guide: a 15-minute lesson plan, a printable
+  class quiz with its answer key, activity ideas, and offline classroom setup.
 - Map place markers now rest on the ground instead of floating above it, small
   islands sit at sea level, and the blue layer is renamed "Water and ice"
   because it includes glaciers and waterfalls. The map animation in the README
@@ -57,7 +59,8 @@ The world in numbers, landmarks, and a new playground.
 - New `PackNotInstalledError` names the command that installs a missing pack.
 - Lower memory: the first search after installing the place packs now peaks
   near 280 MB for the world pack (was about 520 MB for the explorer pack), so
-  every pack unpacks on a computer with 512 MB, such as a Raspberry Pi Zero 2 W.
+  every pack fits a computer with 512 MB, such as a Raspberry Pi Zero 2 W
+  (measured on a desktop computer).
 - Faster start: compression, hashing, and pack modules load on first use.
 - New: `Atlas.place_quiz` asks about famous places: what kind of place it is,
   which of two mountains is higher, and which of two places is closer to the
