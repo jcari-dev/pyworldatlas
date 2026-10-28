@@ -471,7 +471,7 @@ Inspect sources in Python
    >>> with Atlas() as atlas:
    ...     sources = atlas.country("Japan").sources
    >>> [source.id for source in sources]
-   ['cia-world-factbook-2025', 'geonames', 'geonames-timezones-2026-07-22', 'koppen-geiger-1991-2020', 'natural-earth', 'reviewed-borders', 'un-m49', 'ungegn-country-names-2017', 'unicode-cldr-48.2-reference']
+   ['cia-world-factbook-2025', 'geonames', 'geonames-timezones-2026-07-22', 'koppen-geiger-1991-2020', 'natural-earth', 'reviewed-borders', 'un-m49', 'ungegn-country-names-2017', 'unicode-cldr-48.2-reference', 'wikidata-travel-basics-2026-10-27']
 
 ``Country.sources`` is a profile-level summary. Fact-bearing models also
 expose their direct ``source``. Use
