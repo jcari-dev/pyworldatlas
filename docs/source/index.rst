@@ -9,16 +9,26 @@ PyWorldAtlas
 
       .. container:: atlas-hero-title
 
-         Geography data that feels like ordinary Python.
+         The whole world, offline, in plain Python.
 
       .. container:: atlas-hero-copy
 
-         Explore country profiles, names and writing systems, capitals, cities,
-         physical geography, climate classes, optional interactive 3D maps,
-         coordinates, distances, reviewed land neighbors, rankings, and learning
-         tools from one bundled database.
-         Built for classrooms, curious learners, and developers. No API key and
-         no runtime download.
+         Every country, 200,000 places, the sun, statistics since 1960, and 3D
+         maps. Free, no account, and it works without internet.
+
+      .. raw:: html
+
+         <form class="atlas-hero-search" action="playground.html" method="get" role="search">
+           <label class="visually-hidden" for="atlas-hero-query">Look up a country or place</label>
+           <input id="atlas-hero-query" name="q" type="search" autocomplete="off"
+                  placeholder="Look up anything: Japan, Everest, Sahara…" required>
+           <button type="submit">Explore</button>
+         </form>
+         <p class="atlas-hero-try">Try
+           <a href="playground.html?q=Japan">Japan</a>,
+           <a href="playground.html?q=Mount%20Everest">Mount Everest</a>, or
+           <a href="playground.html?q=Lake%20Titicaca">Lake Titicaca</a>.
+           Opens the playground, which runs Python in your browser.</p>
 
    .. container:: atlas-hero-map
 
@@ -58,6 +68,29 @@ PyWorldAtlas
       **0**
 
       runtime dependencies
+
+Start here
+----------
+
+.. raw:: html
+
+   <div class="atlas-doors">
+     <a class="atlas-door" href="playground.html">
+       <span class="atlas-door-icon" aria-hidden="true">🧒</span>
+       <strong>I'm a student</strong>
+       <span>Look things up, take a quiz, and try changing a little Python in your browser. No install.</span>
+     </a>
+     <a class="atlas-door" href="learning.html">
+       <span class="atlas-door-icon" aria-hidden="true">🍎</span>
+       <strong>I'm a teacher</strong>
+       <span>Quizzes and flashcards that are the same for the whole class, lesson ideas, and offline use.</span>
+     </a>
+     <a class="atlas-door" href="quickstart.html">
+       <span class="atlas-door-icon" aria-hidden="true">💻</span>
+       <strong>I'm a developer</strong>
+       <span>Install with pip, zero dependencies, typed and tested. Quickstart and full API reference.</span>
+     </a>
+   </div>
 
 Open the terrain
 ----------------

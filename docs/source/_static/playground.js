@@ -509,6 +509,13 @@ with Atlas() as atlas:
       editorHint.textContent = "Your Python session persists between runs.";
       setControls();
       clearOutput("Ready. A complete recipe is already loaded. Press Run Python.");
+      // A search started from the home page (playground.html?q=Japan) runs now.
+      const asked = new URLSearchParams(window.location.search).get("q");
+      if (asked && !exploreQuery.value) {
+        exploreQuery.value = asked.slice(0, 80);
+        exploreForm.requestSubmit();
+        exploreForm.scrollIntoView({ block: "start" });
+      }
       return;
     }
 

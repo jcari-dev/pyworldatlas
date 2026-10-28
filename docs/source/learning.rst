@@ -166,6 +166,14 @@ choices are not needed.
 Questions about famous places
 -----------------------------
 
+.. code-block:: text
+
+   >>> question = atlas.place_quiz("higher", count=1, seed=33)[0]
+   Which is higher: Mont Blanc or Ben Nevis?
+     1. Mont Blanc
+     2. Ben Nevis
+   Answer: 1 (Mont Blanc, 4,806 m)
+
 :meth:`~pyworldatlas.Atlas.place_quiz` asks about the best-known mountains,
 islands, lakes, and waterfalls. ``"kinds"`` asks what kind of place something
 is, ``"higher"`` which of two mountains is higher, and ``"closer_to_equator"``
