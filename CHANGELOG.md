@@ -1,46 +1,34 @@
 # Changelog
 
-## Unreleased: 0.12.1
+## 0.12.1
 
-- Every code block in the documentation has a Copy button; for interactive
-  examples it copies only the code, without the `>>>` prompts or output.
-- Shorter, friendlier front pages: the README is a third of its old length,
-  and the main guides open with an "In 30 seconds" example.
-- Playground: **Surprise me** shows a famous place, **Quiz me** asks five
-  questions with answer buttons and a score, and three new challenge recipes
-  find the capital with the shortest December day, the capitals closest to the
-  equator, and the two capitals farthest apart.
-- Place quizzes use only mountains of 3,000 m and higher, so questions are
-  about well-known summits rather than small local hills.
-- A more welcoming documentation home page: a "Look up anything" search box
-  that opens the playground with the answer, and three starting points for
-  students, teachers, and developers. Guides show real output: statistics
-  charts, a daylight chart, and a quiz.
-- New "Teaching with PyWorldAtlas" guide: a 15-minute lesson plan, a printable
-  class quiz with its answer key, activity ideas, and offline classroom setup.
-- Map place markers now rest on the ground instead of floating above it, small
-  islands sit at sea level, and the blue layer is renamed "Water and ice"
-  because it includes glaciers and waterfalls. The map animation in the README
-  and documentation shows the place layers.
-- A clearer package page: a new one-line description, more search keywords,
-  and classifiers for typing, education, and the command line. The README,
-  documentation summary, and plain-text documentation index describe the
-  statistics, landmarks, sun, and travel features, and the quickstart adds an
-  "Explore the world in five minutes" section.
+A more welcoming atlas, honest licensing, and up-to-date documentation.
 
-- Removed six fields that were always empty in every profile:
-  `Area.disputed_km2`, `Geography.centroid`, `CountryCodes.wikidata`,
-  `Capital.largest_city`, `Capital.alternate_names`, and
-  `City.alternate_names`, and the `include_history` argument of
-  `Country.to_dict` and `Country.to_json`, which had no effect. Code that read
-  them only ever saw `None` or an empty tuple.
-
-- Clearer licensing: the package metadata now reads
-  `MIT AND CC-BY-4.0 AND Unicode-3.0 AND CC0-1.0`, matching the data it
-  ships. The wheel now includes the CC BY 4.0 license text and the
-  third-party notices, which open with a table of every source and its terms
-  and describe the changes made to GeoNames data. The README and playground
-  credit the main data sources.
+- **Welcome:** the documentation home page opens with a "Look up anything"
+  search box that answers in the playground, and starting points for
+  students, teachers, and developers. A new "Teaching with PyWorldAtlas" guide
+  offers a 15-minute lesson and a printable class quiz with its answer key.
+- **Playground:** **Surprise me** shows a famous place, **Quiz me** asks five
+  questions with answer buttons and a score, and three challenge recipes find
+  the shortest December day, the capitals closest to the equator, and the two
+  capitals farthest apart.
+- **Shorter pages:** the README is a third of its old length, the main guides
+  open with an "In 30 seconds" example, guides show real output, and every
+  code block has a Copy button that copies only the code.
+- **Maps:** place markers rest on the ground, small islands sit at sea level,
+  and the blue layer is renamed "Water and ice". The map animation shows the
+  place layers.
+- **Quizzes:** place quizzes use only mountains of 3,000 m and higher.
+- **Licensing:** the package metadata reads
+  `MIT AND CC-BY-4.0 AND Unicode-3.0 AND CC0-1.0`, and the wheel includes the
+  CC BY 4.0 text and the third-party notices, which list every source, its
+  terms, and the changes made.
+- **Removed:** six fields that were always empty (`Area.disputed_km2`,
+  `Geography.centroid`, `CountryCodes.wikidata`, `Capital.largest_city`,
+  `Capital.alternate_names`, `City.alternate_names`) and the `include_history`
+  argument of `Country.to_dict` and `to_json`, which had no effect.
+- **Package page and docs:** a new description, keywords, and classifiers,
+  and documentation that covers every feature and data pack.
 
 ## 0.12.0
 
