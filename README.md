@@ -1,6 +1,6 @@
 # PyWorldAtlas: offline world geography for Python
 
-> Offline country profiles, every place on Earth, physical geography, optional 3D maps, distances, and learning tools for Python.
+> Offline world atlas for Python: 248 countries, 11 million places, statistics since 1960, and 3D maps, with zero dependencies. Runs on a Raspberry Pi Zero; the core installs in under a minute on slow 3G.
 
 [![PyPI](https://img.shields.io/pypi/v/pyworldatlas.svg?label=PyPI&color=287aa3)](https://pypi.org/project/pyworldatlas/)
 [![Python 3.10–3.14](https://img.shields.io/badge/Python-3.10%E2%80%933.14-3776ab)](https://www.python.org/)
@@ -8,7 +8,7 @@
 [![Documentation](https://img.shields.io/badge/docs-online-317f78)](https://jcari-dev.github.io/pyworldatlas-documentation/)
 [![Code: MIT](https://img.shields.io/badge/code-MIT-607087)](https://github.com/jcari-dev/pyworldatlas/blob/main/LICENSE) [![Data: CC BY 4.0 and others](https://img.shields.io/badge/data-CC%20BY%204.0%20%2B%20others-607087)](https://github.com/jcari-dev/pyworldatlas/blob/main/THIRD_PARTY_NOTICES.md)
 
-**248 profiles · 200,000 places built in · 11 million with packs · 248 optional 3D maps · 0 core runtime dependencies**
+**248 countries · 200,000 places built in · 11 million with packs · statistics since 1960 · airports and World Heritage sites · 248 3D maps · 0 dependencies**
 
 [Documentation](https://jcari-dev.github.io/pyworldatlas-documentation/) ·
 [Quickstart](https://jcari-dev.github.io/pyworldatlas-documentation/quickstart.html) ·

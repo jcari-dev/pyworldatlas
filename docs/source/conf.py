@@ -44,8 +44,8 @@ html_context = {
     "current_version": release,
     "site_url": html_baseurl,
     "seo_description": (
-        "Explore 248 country profiles, every place on Earth, optional 3D maps, "
-        "physical geography, distances, and learning tools offline with PyWorldAtlas."
+        "Offline world atlas for Python: 248 countries, 11 million places, World Bank "
+        "statistics since 1960, 3D maps, sun times, and quizzes, with zero dependencies."
     ),
 }
 html_static_path = ["_static"]
@@ -141,9 +141,11 @@ LLMS_SUMMARY = (
     "PyWorldAtlas is an offline world-geography Python package built around one "
     "bundled, source-aware database: country profiles, names, capitals, cities, "
     "a searchable school atlas of 200,000 places (11 million with packs), "
-    "physical geography, climate classes, reviewed land borders, distances, "
-    "rankings, learning tools, and optional 3D maps. It has no core runtime "
-    "dependencies, needs no API key, and never uses the network at runtime."
+    "physical geography, climate classes, reviewed land borders, travel basics, "
+    "sunrise and day length, distances, quizzes, and optional packs for 3D maps, "
+    "airports and World Heritage sites, and World Bank statistics since 1960. "
+    "It has no core runtime dependencies, needs no API key, and never uses the "
+    "network at runtime. It runs on a Raspberry Pi Zero 2 W."
 )
 
 
