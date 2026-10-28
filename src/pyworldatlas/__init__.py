@@ -7,20 +7,20 @@ from .exceptions import (AmbiguousCountryError, AmbiguousPlaceError, AtlasClosed
                          DatasetError, DatasetIntegrityError, DatasetNotFoundError,
                          DatasetVersionError, MapSupportNotInstalledError,
                          PlaceNotFoundError)
-from .models import (Area, BorderPathResult, Capital, CapitalDistance, City,
+from .models import (Antipode, Area, BorderPathResult, Capital, CapitalDistance, City,
                      CityDistance, ClimateProfile, ClimateZone, Coordinate, Country,
                      CountryCodes, CountryDiscoveryCard, CountryMatch,
                      CountryRanking, CountryReference, Currency, DatasetInfo,
                      Demonym, ElevationPoint, Flashcard, Geography, Lake,
                      Language, LocalizedName, NationalAnthem, NationalMotto,
-                     PhysicalGeography, Place, PlaceDistance, PostalCodeFormat, QuizQuestion, River,
+                     PhysicalGeography, Place, PlaceDistance, PlaceQuestion, PostalCodeFormat, QuizQuestion, River,
                      SourceReference, SunTimes, Timezone, TravelBasics)
 
 __all__ = [
     "Atlas", "Country", "CountryCodes", "CountryReference", "CountryDiscoveryCard",
     "BorderPathResult", "CountryRanking", "CapitalDistance", "CityDistance",
-    "LocalizedName", "Flashcard", "QuizQuestion",
-    "Coordinate", "Area", "Geography", "Capital", "City", "Place", "PlaceDistance", "Currency", "Language", "CountryMatch",
+    "LocalizedName", "Flashcard", "QuizQuestion", "PlaceQuestion",
+    "Coordinate", "Antipode", "Area", "Geography", "Capital", "City", "Place", "PlaceDistance", "Currency", "Language", "CountryMatch",
     "PhysicalGeography", "ElevationPoint", "River", "Lake", "ClimateProfile", "ClimateZone",
     "NationalAnthem", "NationalMotto", "Demonym", "Timezone", "PostalCodeFormat", "TravelBasics",
     "DatasetInfo", "SourceReference", "SunTimes", "AtlasError", "AtlasClosedError",

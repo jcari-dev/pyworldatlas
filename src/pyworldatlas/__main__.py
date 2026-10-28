@@ -55,6 +55,14 @@ def _parser() -> argparse.ArgumentParser:
     find.add_argument("--limit", type=int, default=10, help="how many results to show (default 10)")
     find.add_argument("--data-dir", help="pack folder with optional place packs")
 
+    antipode = subcommands.add_parser(
+        "antipode",
+        help="find the opposite side of the Earth from a place",
+        description="Show the point straight through the Earth from a city or place, and the places nearest it.",
+    )
+    antipode.add_argument("where", help="city or place name")
+    antipode.add_argument("--data-dir", help="pack folder with optional place packs")
+
     sun = subcommands.add_parser(
         "sun",
         help="sunrise, sunset, and day length for a place",
@@ -164,7 +172,9 @@ def main(argv: Sequence[str] | None = None) -> int:
             parser.exit(1, f"pyworldatlas: error: {error}\n")
     try:
         with Atlas(data_dir=getattr(args, "data_dir", None)) as atlas:
-            if args.command == "sun":
+            if args.command == "antipode":
+                print(atlas.antipode(args.where).summary)
+            elif args.command == "sun":
                 from datetime import date
                 day = date.fromisoformat(args.date) if args.date else None
                 print(atlas.sun(args.where, day).summary)
