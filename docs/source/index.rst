@@ -49,9 +49,9 @@ PyWorldAtlas
 
    .. container:: atlas-stat
 
-      **6,265**
+      **200,000**
 
-      bundled populated places
+      places built in, 11 million with packs
 
    .. container:: atlas-stat
 
@@ -164,10 +164,33 @@ Explore the atlas
 
    .. container:: atlas-card atlas-card-blue
 
-      .. rubric:: Explore cities
+      .. rubric:: Find any place on Earth
 
-      Search 6,265 populated places, resolve ambiguous names, inspect
-      coordinates, and find nearby cities in :doc:`capitals_cities`.
+      Search 200,000 towns, mountains, lakes, rivers, and landmarks by local or
+      English name, or 11 million with packs, and list what is nearby. See
+      :doc:`places`.
+
+   .. container:: atlas-card atlas-card-teal
+
+      .. rubric:: The world in numbers
+
+      Follow population, life expectancy, forest area, electricity, and more
+      since 1960, with one-line charts. See :doc:`statistics`.
+
+   .. container:: atlas-card atlas-card-gold
+
+      .. rubric:: Sun, seasons, and travel
+
+      Work out sunrise and day length anywhere, see why seasons happen, and
+      check plugs, mains power, and driving side. See :doc:`sun` and
+      :doc:`reference_facts`.
+
+   .. container:: atlas-card atlas-card-blue
+
+      .. rubric:: Airports and World Heritage
+
+      Look up airports by code and find the World Heritage sites near any
+      place. See :doc:`landmarks`.
 
    .. container:: atlas-card atlas-card-teal
 
@@ -187,9 +210,9 @@ Explore the atlas
 
       .. rubric:: Teach and learn
 
-      Create stable samples, deterministic flashcards, compact discovery cards,
-      multiple-choice questions, and Unicode-preserving JSON with
-      :doc:`learning`, :doc:`discovery`, and :doc:`serialization`.
+      Create flashcards, multiple-choice quizzes about countries and famous
+      places, antipodes, and discovery cards with :doc:`learning` and
+      :doc:`discovery`.
 
    .. container:: atlas-card atlas-card-teal
 

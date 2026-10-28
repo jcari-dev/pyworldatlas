@@ -128,7 +128,7 @@ What to remember
 Where to go next
 ----------------
 
-- Run fourteen editable programs in the :doc:`playground`.
+- Run eighteen editable programs in the :doc:`playground`.
 - Copy complete projects from :doc:`recipes`.
 - Try classroom activities in :doc:`learning`.
 - Open :doc:`country_profile`, :doc:`physical_geography`, or
