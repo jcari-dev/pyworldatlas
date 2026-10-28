@@ -1,8 +1,39 @@
 # Third-party notices
 
+PyWorldAtlas code is released under the MIT License (`LICENSE`). The data it
+ships keeps the terms set by each source. In short:
+
+| Where | Source | Terms |
+|---|---|---|
+| Core package | GeoNames (places, cities, capitals, country metadata, timezones) | CC BY 4.0 |
+| Core package | Unicode CLDR (local names, currency and language names) | Unicode License v3 |
+| Core package | CIA World Factbook, Natural Earth | Public domain |
+| Core package | IANA Language Subtag Registry, Wikidata, Beck et al. Köppen-Geiger | CC0 1.0 |
+| Core package | United Nations M49 and naming documents | Credited; no endorsement implied |
+| `places-explorer`, `places-world` packs | GeoNames | CC BY 4.0 |
+| `statistics` pack | World Bank World Development Indicators | CC BY 4.0 |
+| `landmarks` pack | OurAirports; Wikidata | Public domain; CC0 1.0 |
+| `maps`, `maps-lite` packs | Natural Earth; NOAA ETOPO 2022; plotly.js | Public domain; CC0 1.0; MIT |
+
+The texts of the CC BY 4.0 and Unicode licenses are in `licenses/`. Each data
+pack also carries its own `NOTICE.md`. The package metadata license expression
+is `MIT AND CC-BY-4.0 AND Unicode-3.0 AND CC0-1.0`.
+
+## GeoNames
+
 GeoNames data is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 This product includes data created by GeoNames users and made available from
 https://www.geonames.org/.
+
+Changes made: PyWorldAtlas selects and ranks places by educational value,
+rounds coordinates to about 110 m, adds English names from the GeoNames
+alternate-names file, corrects a short reviewed list of misspelled English
+names, and stores the result in its own compact format (the built-in school
+atlas and the place packs). Country metadata, capitals, populated places, and
+timezones are normalized into the bundled database. GeoNames does not endorse
+PyWorldAtlas.
+
+## Other sources
 
 Country identities and classifications are sourced from the United Nations M49
 methodology site. United Nations names and material do not imply endorsement.

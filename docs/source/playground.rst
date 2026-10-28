@@ -93,6 +93,9 @@ PyPI. Code entered in the editor is evaluated on your device; this project does
 not receive its contents. Each run has a 20-second safety limit, and interactive
 ``input()`` calls are not supported.
 
+Place, city, and country data come from GeoNames (CC BY 4.0) and Unicode CLDR
+(Unicode License v3), among other credited sources; see :doc:`data_sources`.
+
 .. _Pyodide: https://pyodide.org/
 
 Things worth trying
