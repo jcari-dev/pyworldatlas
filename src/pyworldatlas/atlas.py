@@ -18,9 +18,7 @@ from ._learning import (FLASHCARD_TOPICS, build_flashcard, has_flashcard_answer,
                         stable_country_sample, stable_text_order)
 from ._rankings import METRIC_UNITS, metric_value, normalize_metric
 from ._profiles import build_country, city_from_row, read_local_names
-from . import _placefile, packs
 from ._placekinds import CATEGORIES, KINDS, category_of, kind_of
-from ._landmarks import FILE as LANDMARKS_FILE, Landmarks
 from ._sun import sun_times
 from .exceptions import (AmbiguousCountryError, AmbiguousPlaceError,
                          AtlasClosedError, CapitalNotFoundError,
@@ -32,7 +30,17 @@ from .models import (Airport, Antipode, BorderPathResult, Capital, CapitalDistan
                      PlaceDistance, PlaceQuestion, QuizQuestion, SiteDistance, SunTimes, WorldHeritageSite)
 
 if TYPE_CHECKING:
+    from . import _placefile, packs
+    from ._landmarks import Landmarks
     from .maps import CountryMap
+else:
+    from ._lazy import LazyModule
+
+    # Place files, packs, and landmarks need compression, hashing, and zip
+    # modules. They load on first use, so ``import pyworldatlas`` stays quick
+    # on small computers such as a Raspberry Pi.
+    _placefile = LazyModule("pyworldatlas._placefile")
+    packs = LazyModule("pyworldatlas.packs")
 
 
 def _name_variants(key: str) -> tuple[str, ...]:
@@ -1256,13 +1264,15 @@ class Atlas:
         """Load the landmarks pack once, or explain how to install it."""
         self._ensure_open()
         if self._landmarks is None:
+            from ._landmarks import FILE, Landmarks
+
             folder = packs.pack_path("landmarks", self._data_dir)
-            if folder is None or not (folder / LANDMARKS_FILE).is_file():
+            if folder is None or not (folder / FILE).is_file():
                 raise PackNotInstalledError(
                     "Airports and World Heritage sites need the landmarks pack. "
                     "Run: pyworldatlas get landmarks"
                 )
-            self._landmarks = Landmarks(folder / LANDMARKS_FILE)
+            self._landmarks = Landmarks(folder / FILE)
         return self._landmarks
 
     def airport(self, code: str) -> Airport:

@@ -32,3 +32,12 @@ __all__ = [
     "MapSupportNotInstalledError", "PackNotInstalledError",
     "SCHEMA_VERSION", "__version__",
 ]
+
+
+def __getattr__(name: str) -> object:
+    """Load the ``packs`` and ``maps`` submodules on first use."""
+    if name in {"maps", "packs"}:
+        from importlib import import_module
+
+        return import_module(f".{name}", __name__)
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
