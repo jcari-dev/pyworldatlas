@@ -3,6 +3,7 @@
     "Airport",
     "AmbiguousCountryError",
     "AmbiguousPlaceError",
+    "Antipode",
     "Area",
     "Atlas",
     "AtlasClosedError",
@@ -44,6 +45,7 @@
     "Place",
     "PlaceDistance",
     "PlaceNotFoundError",
+    "PlaceQuestion",
     "PostalCodeFormat",
     "QuizQuestion",
     "River",
@@ -127,6 +129,33 @@
         "object"
       ]
     },
+    "Antipode": {
+      "kind": "dataclass",
+      "signature": "(origin: 'Coordinate', antipode: 'Coordinate', nearest: 'tuple[PlaceDistance, ...]') -> None",
+      "members": {
+        "summary": "property",
+        "to_dict": "method(self) -> 'dict[str, Any]'",
+        "to_json": "method(self, indent: 'int | None' = None) -> 'str'"
+      },
+      "frozen": true,
+      "fields": [
+        {
+          "name": "origin",
+          "type": "Coordinate",
+          "default": null
+        },
+        {
+          "name": "antipode",
+          "type": "Coordinate",
+          "default": null
+        },
+        {
+          "name": "nearest",
+          "type": "tuple[PlaceDistance, ...]",
+          "default": null
+        }
+      ]
+    },
     "Area": {
       "kind": "dataclass",
       "signature": "(total_km2: 'float | None' = None, land_km2: 'float | None' = None, water_km2: 'float | None' = None, water_percent: 'float | None' = None, disputed_km2: 'float | None' = None) -> None",
@@ -172,6 +201,7 @@
         "__len__": "method(self) -> 'int'",
         "airport": "method(self, code: 'str') -> 'Airport'",
         "airports": "method(self, country: 'str | Country | None' = None, *, size: 'str | None' = None) -> 'tuple[Airport, ...]'",
+        "antipode": "method(self, where: 'str | Country | Capital | City | Place | Coordinate | tuple[float, float]', *, limit: 'int' = 3) -> 'Antipode'",
         "border_crossings": "method(self, origin: 'str', destination: 'str') -> 'int | None'",
         "border_path": "method(self, origin: 'str', destination: 'str') -> 'BorderPathResult | None'",
         "city": "method(self, query: 'str', *, country: 'str | None' = None) -> 'City'",
@@ -202,6 +232,7 @@
         "place": "method(self, query: 'str', *, kind: 'str | None' = None, country: 'str | None' = None) -> 'Place'",
         "place_categories": "staticmethod() -> 'tuple[str, ...]'",
         "place_kinds": "staticmethod() -> 'tuple[str, ...]'",
+        "place_quiz": "method(self, topic: 'str', *, count: 'int' = 5, seed: 'int | str' = 0) -> 'tuple[PlaceQuestion, ...]'",
         "places_in": "method(self, country: 'str | Country', *, kind: 'str | None' = None, category: 'str | None' = None, limit: 'int' = 20) -> 'tuple[Place, ...]'",
         "places_near": "method(self, origin: 'str | Country | Capital | City | Place | Coordinate | tuple[float, float]', *, limit: 'int' = 10, kind: 'str | None' = None, category: 'str | None' = None, unit: 'str' = 'km', include_origin: 'bool' = False, origin_country: 'str | None' = None) -> 'tuple[PlaceDistance, ...]'",
         "quiz": "method(self, *, topic: 'str', count: 'int', choices: 'int' = 4, continent: 'str | None' = None, region: 'str | None' = None, seed: 'int | str' = 0) -> 'tuple[QuizQuestion, ...]'",
@@ -1609,6 +1640,44 @@
         "object"
       ]
     },
+    "PlaceQuestion": {
+      "kind": "dataclass",
+      "signature": "(topic: 'str', prompt: 'str', choices: 'tuple[str, ...]', answer: 'str', places: 'tuple[Place, ...]') -> None",
+      "members": {
+        "answer_number": "property",
+        "is_correct": "method(self, response: 'str | int') -> 'bool'",
+        "to_dict": "method(self) -> 'dict[str, Any]'",
+        "to_json": "method(self, indent: 'int | None' = None) -> 'str'"
+      },
+      "frozen": true,
+      "fields": [
+        {
+          "name": "topic",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "prompt",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "choices",
+          "type": "tuple[str, ...]",
+          "default": null
+        },
+        {
+          "name": "answer",
+          "type": "str",
+          "default": null
+        },
+        {
+          "name": "places",
+          "type": "tuple[Place, ...]",
+          "default": null
+        }
+      ]
+    },
     "PostalCodeFormat": {
       "kind": "dataclass",
       "signature": "(format: 'str', regex: 'str | None' = None, source: 'SourceReference | None' = None) -> None",
@@ -1925,6 +1994,7 @@
   },
   "pyworldatlas.models": [
     "Airport",
+    "Antipode",
     "Area",
     "BorderPathResult",
     "Capital",
@@ -1954,6 +2024,7 @@
     "PhysicalGeography",
     "Place",
     "PlaceDistance",
+    "PlaceQuestion",
     "PostalCodeFormat",
     "QuizQuestion",
     "River",
