@@ -2,6 +2,10 @@
 
 ## Unreleased: 0.11.2
 
+- New playground: **Look up anything** answers any country or place in plain
+  cards (facts, nearby places, daylight), and **Open in the editor** loads the
+  Python behind each card. Four new recipes cover places, the sun, travel
+  basics, and one search for everything.
 - New optional **landmarks** pack (about 150 KB): 4,010 airports with
   scheduled flights (OurAirports, public domain) and 1,266 UNESCO World
   Heritage sites (Wikidata, CC0). `Atlas.airport`, `Atlas.airports`,
