@@ -4,13 +4,14 @@ PyWorldAtlas grows through small, installable releases with explicit data,
 documentation, and compatibility boundaries. Planned work is not part of the
 public API until it is implemented, tested, documented, and published.
 
-## Current release: Every place on Earth (0.11)
+## Current release: The world in numbers (0.12)
 
-Version 0.11 adds every place on Earth: a school atlas of 207,664 places in
-every install, 11 million places with the optional place packs, one search
-across countries and places, and places on the 3D maps. Version 0.10 made the
-public API stable, typed, and instant, with zero-dependency maps. Neither
-release adds boundary geometry, GeoJSON, or a point-in-country public API.
+Version 0.12 adds an optional statistics pack of eleven World Bank indicators
+since 1960, an optional landmarks pack of airports and World Heritage sites,
+place quizzes, and a new playground. Version 0.11 added every place on Earth:
+a school atlas of 207,664 places in every install and 11 million with packs.
+Neither release adds boundary geometry, GeoJSON, or a point-in-country public
+API.
 
 The complete shipped coverage is generated in the
 [roadmap status](docs/project/ROADMAP_STATUS.md).
@@ -19,10 +20,6 @@ The complete shipped coverage is generated in the
 
 The next releases each ship one large theme, on the way to 1.0:
 
-- **More of every place (0.11.x):** travel basics (plugs, mains supply, and
-  driving side) and more landmark detail.
-- **The world in numbers (0.12):** an optional statistics pack of official
-  indicators, each with unit, reference year, and source.
 - **The encyclopedia (0.13):** generated reference entries built only from
   sourced data, and an offline static-site export.
 
