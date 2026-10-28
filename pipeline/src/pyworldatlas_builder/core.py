@@ -193,6 +193,26 @@ def write_manifests(root: Path) -> None:
 
     additional_manifests = [
         (
+            root / "build_data/raw/wikidata/2026-10-27",
+            {
+                "source_id": "wikidata-travel-basics-2026-10-27",
+                "source_version": "2026-10-27 query snapshot",
+                "retrieved_at": "2026-10-27T00:00:00Z",
+                "endpoint": "https://query.wikidata.org/sparql",
+                "query": {
+                    "path": "pipeline/queries/wikidata_travel_basics.rq",
+                    "sha256": _sha(root / "pipeline/queries/wikidata_travel_basics.rq"),
+                },
+                "file": {
+                    "path": "travel-basics.json",
+                    "sha256": _sha(root / "build_data/raw/wikidata/2026-10-27/travel-basics.json"),
+                    "size_bytes": (root / "build_data/raw/wikidata/2026-10-27/travel-basics.json").stat().st_size,
+                },
+                "rights": "Creative Commons CC0 1.0",
+                "rights_url": "https://www.wikidata.org/wiki/Wikidata:Licensing",
+            },
+        ),
+        (
             root / "build_data/raw/geonames/2026-07-22",
             {
                 "source_id": "geonames-timezones-2026-07-22",
@@ -941,6 +961,90 @@ def parse_reviewed_mottos(
     return records
 
 
+# Wikidata plug and socket items and their IEC World Plugs letters. Items that
+# name a family of plugs rather than one type are left out.
+PLUG_TYPES = {
+    "Q24288454": "A",  # NEMA 1-15
+    "Q24288456": "B",  # NEMA 5-15
+    "Q1378312": "C",  # Europlug
+    "Q1383497": "D",  # BS 546
+    "Q2335536": "E",  # Type E
+    "Q1123613": "F",  # Schuko
+    "Q1528507": "G",  # BS 1363
+    "Q1266396": "H",  # Type H
+    "Q2335539": "I",  # AS/NZS 3112
+    "Q2335530": "J",  # SN 441011
+    "Q1502017": "K",  # Type K
+    "Q1520890": "L",  # Type L
+    "Q1653438": "N",  # IEC 60906-1
+}
+DRIVING_SIDES = {"Q11920728": "left", "Q14565199": "right"}
+HOUSEHOLD_VOLTAGE_LIMIT = 300  # higher values are three-phase or industrial supplies
+
+
+def parse_travel_basics(
+    root: Path, country_codes: set[str]
+) -> list[dict[str, object]]:
+    """Return plug types, household mains voltage and frequency, and driving side.
+
+    Values come from Wikidata statements. When a country has preferred-rank
+    statements for a property only those are used. A driving side is kept
+    only when the statements agree, so a disputed value stays missing.
+    """
+    bindings = _load_json(
+        root / "build_data/raw/wikidata/2026-10-27/travel-basics.json"
+    )["results"]["bindings"]
+    statements: dict[tuple[str, str], dict[str, dict[str, object]]] = defaultdict(dict)
+    for row in bindings:
+        code = row["alpha2"]["value"].upper()
+        rank = row["rank"]["value"].rsplit("#", 1)[-1]
+        if code not in country_codes or rank == "DeprecatedRank":
+            continue
+        statement_id = row["statement"]["value"].rsplit("/", 1)[-1]
+        statement = statements[(code, row["property"]["value"])].setdefault(
+            statement_id, {"rank": rank, "value": None, "frequencies": set()}
+        )
+        if "value" in row:
+            statement["value"] = row["value"]["value"].rsplit("/", 1)[-1]
+        if "amount" in row and row["unit"]["value"].endswith("/Q25250"):  # volt
+            statement["value"] = float(row["amount"]["value"])
+        if row.get("qualifier", {}).get("value") == "P2144" and row["qualifierUnit"]["value"].endswith("/Q39369"):  # hertz
+            statement["frequencies"].add(float(row["qualifierAmount"]["value"]))
+
+    def chosen(code: str, prop: str) -> list[dict[str, object]]:
+        found = list(statements.get((code, prop), {}).values())
+        preferred = [item for item in found if item["rank"] == "PreferredRank"]
+        return preferred or found
+
+    records = []
+    for code in sorted(country_codes):
+        plugs = sorted({PLUG_TYPES[item["value"]] for item in chosen(code, "P2853") if item["value"] in PLUG_TYPES})
+        supplies = [
+            item for item in chosen(code, "P2884")
+            if isinstance(item["value"], float) and 0 < item["value"] < HOUSEHOLD_VOLTAGE_LIMIT
+        ]
+        voltages = sorted({round(item["value"]) for item in supplies})
+        frequencies = sorted({round(value) for item in supplies for value in item["frequencies"]})
+        sides = {DRIVING_SIDES.get(str(item["value"])) for item in chosen(code, "P1622")} - {None}
+        side = sides.pop() if len(sides) == 1 else None
+        if not (plugs or voltages or side):
+            continue
+        records.append({
+            "country_code": code,
+            "source_id": "wikidata-travel-basics-2026-10-27",
+            "source_record_id": code,
+            "retrieved_at": "2026-10-27",
+            "data": {
+                "plug_types": plugs,
+                "voltages_v": voltages,
+                "frequencies_hz": frequencies,
+                "driving_side": side,
+                "source_locator": f"Wikidata P2853, P2884, and P1622 statements for {code}",
+            },
+        })
+    return records
+
+
 def parse_reference_metadata(
     root: Path,
     country_codes: set[str],
@@ -1210,6 +1314,7 @@ def normalize(root: Path) -> dict[str, object]:
     physical_profiles = parse_factbook_physical_geography(root, set(un))
     climate_profiles = parse_koppen_climate_profiles(root, set(un))
     mottos = parse_reviewed_mottos(root, set(un))
+    travel = parse_travel_basics(root, set(un))
     currency_metadata, language_profiles, timezones = parse_reference_metadata(
         root, set(un), geocountries
     )
@@ -1316,6 +1421,7 @@ def normalize(root: Path) -> dict[str, object]:
         "formal_names": formal_names,
         "anthems": anthems,
         "mottos": mottos,
+        "travel": travel,
         "demonyms": demonyms,
         "physical_profiles": physical_profiles,
         "climate_profiles": climate_profiles,
@@ -1352,6 +1458,7 @@ CREATE TABLE country_local_name (country_id INTEGER NOT NULL, language_code TEXT
 CREATE INDEX idx_country_local_name_country ON country_local_name(country_id);
 CREATE TABLE country_anthem (country_id INTEGER NOT NULL, title TEXT NOT NULL, english_title TEXT, source_text TEXT, source_id TEXT NOT NULL, source_record_id TEXT NOT NULL, source_locator TEXT NOT NULL, PRIMARY KEY(country_id,title), FOREIGN KEY(country_id) REFERENCES country(id), FOREIGN KEY(source_id) REFERENCES source(id)) WITHOUT ROWID;
 CREATE TABLE country_motto (country_id INTEGER NOT NULL, text TEXT NOT NULL, english_text TEXT, language_code TEXT NOT NULL, motto_item_id TEXT NOT NULL, source_id TEXT NOT NULL, source_record_id TEXT NOT NULL, source_locator TEXT NOT NULL, PRIMARY KEY(country_id,source_record_id), FOREIGN KEY(country_id) REFERENCES country(id), FOREIGN KEY(source_id) REFERENCES source(id)) WITHOUT ROWID;
+CREATE TABLE country_travel (country_id INTEGER PRIMARY KEY, plug_types TEXT NOT NULL, voltages_v TEXT NOT NULL, frequencies_hz TEXT NOT NULL, driving_side TEXT CHECK(driving_side IN ('left','right')), source_id TEXT NOT NULL, source_locator TEXT NOT NULL, FOREIGN KEY(country_id) REFERENCES country(id), FOREIGN KEY(source_id) REFERENCES source(id)) WITHOUT ROWID;
 CREATE TABLE country_demonym (country_id INTEGER NOT NULL, noun TEXT, adjective TEXT, language_code TEXT NOT NULL, source_id TEXT NOT NULL, source_record_id TEXT NOT NULL, source_locator TEXT NOT NULL, PRIMARY KEY(country_id,language_code), FOREIGN KEY(country_id) REFERENCES country(id), FOREIGN KEY(source_id) REFERENCES source(id)) WITHOUT ROWID;
 CREATE TABLE country_language (country_id INTEGER NOT NULL, code TEXT NOT NULL, primary_code TEXT NOT NULL, name TEXT NOT NULL, script_code TEXT, source_id TEXT NOT NULL, source_locator TEXT NOT NULL, PRIMARY KEY(country_id,code), FOREIGN KEY(country_id) REFERENCES country(id), FOREIGN KEY(source_id) REFERENCES source(id)) WITHOUT ROWID;
 CREATE TABLE country_timezone (country_id INTEGER NOT NULL, timezone_id TEXT NOT NULL, january_utc_offset_hours REAL NOT NULL, july_utc_offset_hours REAL NOT NULL, raw_utc_offset_hours REAL NOT NULL, source_id TEXT NOT NULL, PRIMARY KEY(country_id,timezone_id), FOREIGN KEY(country_id) REFERENCES country(id), FOREIGN KEY(source_id) REFERENCES source(id)) WITHOUT ROWID;
@@ -1383,7 +1490,7 @@ def build_database(
     epoch = os.environ.get("SOURCE_DATE_EPOCH")
     built_at = datetime.fromtimestamp(int(epoch), timezone.utc).isoformat().replace("+00:00", "Z") if epoch else "2026-07-21T00:00:00Z"
     library_version = _project_version(root)
-    meta = {"schema_version": "7", "dataset_version": "2026.10.26.1", "library_version": library_version, "built_at": built_at}
+    meta = {"schema_version": "8", "dataset_version": "2026.10.27.1", "library_version": library_version, "built_at": built_at}
     con.executemany("INSERT INTO schema_meta VALUES (?,?)", sorted(meta.items()))
     sources = [
         ("geonames", "GeoNames", "https://www.geonames.org/", "2026-07-20", "2026-07-20", "CC BY 4.0", "https://creativecommons.org/licenses/by/4.0/", _sha(root / "build_data/raw/geonames/2026-07-20/manifest.json"), "Country metadata and populated places"),
@@ -1401,12 +1508,14 @@ def build_database(
         ("iana-language-subtags-2026-06-14", "IANA Language Subtag Registry", "https://www.iana.org/assignments/language-subtag-registry/", "File-Date 2026-06-14", "2026-07-22", "CC0 1.0", "https://www.iana.org/help/licensing-terms", _sha(root / "build_data/raw/iana/2026-07-22/manifest.json"), "Fallback names for registered language subtags not labelled by CLDR"),
         ("geonames-timezones-2026-07-22", "GeoNames timezone table", "https://download.geonames.org/export/dump/", "2026-07-22", "2026-07-22", "CC BY 4.0", "https://creativecommons.org/licenses/by/4.0/", _sha(root / "build_data/raw/geonames/2026-07-22/manifest.json"), "Country timezone identifiers and January, July, and raw UTC offsets"),
         ("wikidata-national-mottos-2026-07-22", "Wikidata national-motto statements", "https://www.wikidata.org/", "2026-07-22 query snapshot", "2026-07-22", "CC0 1.0", "https://www.wikidata.org/wiki/Wikidata:Licensing", _sha(root / "build_data/raw/wikidata/2026-07-22/manifest.json"), "Reviewed national-motto item statements and selected labels"),
+        ("wikidata-travel-basics-2026-10-27", "Wikidata plug, mains supply, and driving-side statements", "https://www.wikidata.org/", "2026-10-27 query snapshot", "2026-10-27", "CC0 1.0", "https://www.wikidata.org/wiki/Wikidata:Licensing", _sha(root / "build_data/raw/wikidata/2026-10-27/manifest.json"), "Plug types, household mains voltage and frequency, and driving side"),
         ("reviewed-national-mottos", "PyWorldAtlas reviewed motto decisions", "https://jcari-dev.github.io/pyworldatlas-documentation/country_reference.html", library_version, "2026-07-22", "MIT", None, _sha(root / "build_data/reviewed/national_motto_decisions.csv"), "Explicit inclusion and exclusion decisions for every captured motto statement"),
     ]
     con.executemany("INSERT INTO source VALUES (?,?,?,?,?,?,?,?,?)", sources)
     anthem_codes = {record["country_code"] for record in normalized["anthems"]}
     demonym_codes = {record["country_code"] for record in normalized["demonyms"]}
     motto_codes = {record["country_code"] for record in normalized["mottos"]}
+    travel_codes = {record["country_code"] for record in normalized["travel"]}
     timezone_codes = {record["country_code"] for record in normalized["timezones"]}
     language_sources: dict[str, set[str]] = defaultdict(set)
     for record in normalized["language_profiles"]:
@@ -1468,6 +1577,8 @@ def build_database(
                 "koppen-geiger-1991-2020",
                 climate_record["source_record_id"],
             ))
+        if code in travel_codes:
+            field_sources.append((ident, "travel", "wikidata-travel-basics-2026-10-27", code))
         if code in motto_codes:
             field_sources.extend([
                 (ident, "mottos", "wikidata-national-mottos-2026-07-22", code),
@@ -1517,6 +1628,16 @@ def build_database(
         con.execute(
             "INSERT INTO country_motto VALUES (?,?,?,?,?,?,?,?)",
             (ids[record["country_code"]], d["text"], d["english_text"], d["language_code"], d["motto_item_id"], record["source_id"], record["source_record_id"], d["source_locator"]),
+        )
+    for record in sorted(normalized["travel"], key=lambda r: r["country_code"]):
+        d = record["data"]
+        con.execute(
+            "INSERT INTO country_travel VALUES (?,?,?,?,?,?,?)",
+            (
+                ids[record["country_code"]], ",".join(d["plug_types"]),
+                ",".join(map(str, d["voltages_v"])), ",".join(map(str, d["frequencies_hz"])),
+                d["driving_side"], record["source_id"], d["source_locator"],
+            ),
         )
     for record in sorted(normalized["demonyms"], key=lambda r: r["country_code"]):
         d = record["data"]
@@ -1654,6 +1775,10 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
         "language_script_records": sum(record["data"]["script_code"] is not None for record in normalized["language_profiles"]),
         "anthem_titles": len(normalized["anthems"]),
         "anthem_countries": len({record["country_code"] for record in normalized["anthems"]}),
+        "travel_profiles": len(normalized["travel"]),
+        "plug_type_profiles": sum(bool(record["data"]["plug_types"]) for record in normalized["travel"]),
+        "mains_voltage_profiles": sum(bool(record["data"]["voltages_v"]) for record in normalized["travel"]),
+        "driving_side_profiles": sum(record["data"]["driving_side"] is not None for record in normalized["travel"]),
         "mottos": len(normalized["mottos"]),
         "motto_countries": len({record["country_code"] for record in normalized["mottos"]}),
         "demonyms": len(normalized["demonyms"]),
@@ -1912,8 +2037,8 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
     )
     status = {
         "library_version": _project_version(root),
-        "schema_version": 7,
-        "dataset_version": "2026.10.26.1",
+        "schema_version": 8,
+        "dataset_version": "2026.10.27.1",
         "milestones": milestones,
         "coverage": coverage,
     }

@@ -126,6 +126,38 @@ class PostalCodeFormat:
 
 
 @dataclass(frozen=True, slots=True)
+class TravelBasics:
+    """Everyday facts a visitor needs: plugs, mains electricity, and driving side.
+
+    ``plug_types`` are IEC World Plugs letters such as ``"A"`` or ``"G"``.
+    ``voltages_v`` and ``frequencies_hz`` list the household mains supply; a
+    country can use more than one. ``driving_side`` is ``"left"`` or ``"right"``,
+    or ``None`` when the source does not agree on one side.
+    """
+
+    plug_types: tuple[str, ...]
+    voltages_v: tuple[int, ...]
+    frequencies_hz: tuple[int, ...]
+    driving_side: str | None
+    source: SourceReference | None = None
+
+    @property
+    def summary(self) -> str:
+        """Return one readable line, such as ``"Plugs A, B · 100 V, 50/60 Hz · drives on the left"``."""
+        parts = []
+        if self.plug_types:
+            parts.append(f"Plug{'s' if len(self.plug_types) > 1 else ''} {', '.join(self.plug_types)}")
+        if self.voltages_v:
+            supply = "/".join(str(volts) for volts in self.voltages_v) + " V"
+            if self.frequencies_hz:
+                supply += ", " + "/".join(str(hertz) for hertz in self.frequencies_hz) + " Hz"
+            parts.append(supply)
+        if self.driving_side:
+            parts.append(f"drives on the {self.driving_side}")
+        return " · ".join(parts)
+
+
+@dataclass(frozen=True, slots=True)
 class NationalAnthem:
     """A national-anthem title without lyrics, audio, or contributor data."""
 

@@ -7,7 +7,7 @@ import json
 from typing import Any
 
 from ._serialize import _jsonable
-from .reference import CountryCodes, Currency, Demonym, Language, LocalizedName, NationalAnthem, NationalMotto, PostalCodeFormat, SourceReference, Timezone
+from .reference import CountryCodes, Currency, Demonym, Language, LocalizedName, NationalAnthem, NationalMotto, PostalCodeFormat, SourceReference, Timezone, TravelBasics
 from .geography import ClimateProfile, Coordinate, ElevationPoint, Geography, Lake, PhysicalGeography, River
 from .places import Capital, City
 from .results import CountryReference
@@ -46,6 +46,7 @@ class Country:
     demonyms: tuple[Demonym, ...] = ()
     timezones: tuple[Timezone, ...] = ()
     postal_code: PostalCodeFormat | None = None
+    travel: TravelBasics | None = None
 
     @property
     def alpha2(self) -> str:
@@ -365,6 +366,8 @@ class Country:
             if self.motto.english_text and self.motto.english_text != motto:
                 motto += f" · {self.motto.english_text}"
             lines.append(f"Motto: {motto}")
+        if self.travel is not None and self.travel.summary:
+            lines.append(f"Travel: {self.travel.summary}")
         if self.highest_point is not None:
             lines.append(
                 f"Highest point: {self.highest_point.name} "

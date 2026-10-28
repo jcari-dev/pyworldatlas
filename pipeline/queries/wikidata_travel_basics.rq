@@ -1,0 +1,28 @@
+SELECT ?country ?alpha2 ?property ?statement ?rank ?value ?valueLabel ?amount ?unit ?qualifier ?qualifierAmount ?qualifierUnit WHERE {
+  ?country wdt:P297 ?alpha2.
+  FILTER(REGEX(?alpha2, "^[A-Z]{2}$"))
+  VALUES ?property { "P2853" "P2884" "P1622" }
+  {
+    BIND("P2853" AS ?property)
+    ?country p:P2853 ?statement.
+    ?statement ps:P2853 ?value; wikibase:rank ?rank.
+    ?value rdfs:label ?valueLabel. FILTER(LANG(?valueLabel) = "en")
+  } UNION {
+    BIND("P1622" AS ?property)
+    ?country p:P1622 ?statement.
+    ?statement ps:P1622 ?value; wikibase:rank ?rank.
+    ?value rdfs:label ?valueLabel. FILTER(LANG(?valueLabel) = "en")
+  } UNION {
+    BIND("P2884" AS ?property)
+    ?country p:P2884 ?statement.
+    ?statement psv:P2884 ?node; wikibase:rank ?rank.
+    ?node wikibase:quantityAmount ?amount; wikibase:quantityUnit ?unit.
+    OPTIONAL {
+      ?statement ?qualifierPredicate ?qualifierNode.
+      ?qualifierProperty wikibase:qualifierValue ?qualifierPredicate.
+      ?qualifierNode wikibase:quantityAmount ?qualifierAmount; wikibase:quantityUnit ?qualifierUnit.
+      BIND(STRAFTER(STR(?qualifierProperty), "entity/") AS ?qualifier)
+    }
+  }
+}
+ORDER BY ?alpha2 ?property ?statement ?qualifier

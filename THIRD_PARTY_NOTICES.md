@@ -47,6 +47,10 @@ statements. Wikidata structured data is released under Creative Commons CC0
 1.0. The query snapshot, statement IDs, ranks, and values are retained. See
 https://www.wikidata.org/wiki/Wikidata:Licensing.
 
+Travel basics (plug types, household mains voltage and frequency, and driving
+side) for 245 profiles come from Wikidata statements under CC0 1.0. The exact
+query and response checksum are retained.
+
 Thirty-two reviewed source-listed national motto records use exact Wikidata
 statements and labels under CC0 1.0. The exact query, response checksum,
 statement IDs, and include/exclude decisions are retained. The package does not

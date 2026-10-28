@@ -20,6 +20,10 @@
   "language_script_records": 709,
   "anthem_titles": 234,
   "anthem_countries": 234,
+  "travel_profiles": 245,
+  "plug_type_profiles": 220,
+  "mains_voltage_profiles": 220,
+  "driving_side_profiles": 244,
   "mottos": 32,
   "motto_countries": 32,
   "demonyms": 227,
@@ -78,6 +82,6 @@
     "TV",
     "UM"
   ],
-  "database_sha256": "c1f9f0f686cc66ff59296ec774744e49514c9b549e3a35445484c8b53f9c5689",
+  "database_sha256": "e0acdf819bad4a131fe59fbecd71e09ea6834bae6ef8f1d6dccd367a50571ba0",
   "validation": "PASS"
 }

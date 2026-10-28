@@ -409,6 +409,7 @@ class EducationalPolicyTests(unittest.TestCase):
                 "postal_code",
                 "sources",
                 "timezones",
+                "travel",
                 "top_level_domain",
             },
         )

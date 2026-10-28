@@ -7,6 +7,7 @@
   "physical_geography": ["cia-world-factbook-2025"],
   "koppen_geiger_climate": ["koppen-geiger-1991-2020", "natural-earth"],
   "national_mottos": ["wikidata-national-mottos-2026-07-22", "reviewed-national-mottos"],
+  "travel": ["wikidata-travel-basics-2026-10-27"],
   "local_display_names": ["unicode-cldr-48.2"],
   "national_official_names": ["ungegn-country-names-2017"],
   "currency_metadata": ["unicode-cldr-48.2-reference"],

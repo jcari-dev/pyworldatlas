@@ -287,6 +287,34 @@ Wikidata national-motto statements
    are included. The runtime does not infer constitutional, statutory,
    traditional, or current legal status, and it does not ingest tourism slogans.
 
+Wikidata travel-basics statements
+---------------------------------
+
+**Purpose**
+   Plug types, household mains voltage and frequency, and driving side for
+   ``Country.travel``.
+
+**Official locations**
+   https://query.wikidata.org/sparql and
+   https://www.wikidata.org/wiki/Wikidata:Licensing
+
+**Current snapshot**
+   A 2026-10-27 SPARQL response with electrical plug type (P2853), mains
+   voltage (P2884) with its frequency qualifier (P2144), and driving side
+   (P1622) statements and their ranks. The exact query and response checksum
+   are retained.
+
+**Terms**
+   Wikidata structured data is released under Creative Commons CC0 1.0.
+
+**Review boundary**
+   Preferred-rank statements are used when present. A driving side is kept
+   only when the statements agree; otherwise it is missing. Voltages of 300 V
+   or more (three-phase or industrial supplies) and plug entries that name a
+   family of plugs rather than one type are left out. Plug items are mapped to
+   their IEC World Plugs letter in the pipeline. 245 of 248 profiles have at
+   least one value.
+
 United Nations Protocol and Liaison Service
 -------------------------------------------
 
@@ -415,6 +443,9 @@ Source priority in the 0.11.0 release
    * - Reviewed source-listed motto
      - Wikidata item-valued statements
      - Explicit include/exclude review; no inferred legal status
+   * - Plug types, mains supply, and driving side
+     - Wikidata statements
+     - Missing when statements disagree; no inferred values
    * - Currency and language labels
      - Unicode CLDR 48.2
      - IANA description fallback for missing language labels
@@ -440,7 +471,7 @@ Inspect sources in Python
    >>> with Atlas() as atlas:
    ...     sources = atlas.country("Japan").sources
    >>> [source.id for source in sources]
-   ['cia-world-factbook-2025', 'geonames', 'geonames-timezones-2026-07-22', 'koppen-geiger-1991-2020', 'natural-earth', 'reviewed-borders', 'un-m49', 'ungegn-country-names-2017', 'unicode-cldr-48.2-reference']
+   ['cia-world-factbook-2025', 'geonames', 'geonames-timezones-2026-07-22', 'koppen-geiger-1991-2020', 'natural-earth', 'reviewed-borders', 'un-m49', 'ungegn-country-names-2017', 'unicode-cldr-48.2-reference', 'wikidata-travel-basics-2026-10-27']
 
 ``Country.sources`` is a profile-level summary. Fact-bearing models also
 expose their direct ``source``. Use

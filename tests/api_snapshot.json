@@ -47,7 +47,9 @@
     "River",
     "SCHEMA_VERSION",
     "SourceReference",
+    "SunTimes",
     "Timezone",
+    "TravelBasics",
     "__version__"
   ],
   "pyworldatlas": {
@@ -154,7 +156,8 @@
         "search_countries": "method(self, query: 'str', *, limit: 'int' = 20) -> 'tuple[CountryMatch, ...]'",
         "search_places": "method(self, query: 'str', *, kind: 'str | None' = None, category: 'str | None' = None, country: 'str | None' = None, limit: 'int' = 10) -> 'tuple[Place, ...]'",
         "shared_neighbors": "method(self, country1: 'str', country2: 'str') -> 'tuple[Country, ...]'",
-        "shares_border": "method(self, country1: 'str', country2: 'str') -> 'bool'"
+        "shares_border": "method(self, country1: 'str', country2: 'str') -> 'bool'",
+        "sun": "method(self, where: 'str | Country | Capital | City | Place | Coordinate | tuple[float, float]', on: 'date | None' = None) -> 'SunTimes'"
       }
     },
     "AtlasClosedError": {
@@ -493,7 +496,7 @@
     },
     "Country": {
       "kind": "dataclass",
-      "signature": "(name: 'str', official_name: 'str | None', names: 'tuple[LocalizedName, ...]', aliases: 'tuple[str, ...]', codes: 'CountryCodes', flag: 'str', geography: 'Geography', capitals: 'tuple[Capital, ...]', major_cities: 'tuple[City, ...]', sources: 'tuple[SourceReference, ...]', local_names: 'tuple[LocalizedName, ...]' = (), population: 'int | None' = None, currency: 'Currency | None' = None, languages: 'tuple[Language, ...]' = (), calling_codes: 'tuple[str, ...]' = (), top_level_domain: 'str | None' = None, observed_timezones: 'tuple[str, ...]' = (), formal_name: 'str | None' = None, anthems: 'tuple[NationalAnthem, ...]' = (), mottos: 'tuple[NationalMotto, ...]' = (), demonyms: 'tuple[Demonym, ...]' = (), timezones: 'tuple[Timezone, ...]' = (), postal_code: 'PostalCodeFormat | None' = None) -> None",
+      "signature": "(name: 'str', official_name: 'str | None', names: 'tuple[LocalizedName, ...]', aliases: 'tuple[str, ...]', codes: 'CountryCodes', flag: 'str', geography: 'Geography', capitals: 'tuple[Capital, ...]', major_cities: 'tuple[City, ...]', sources: 'tuple[SourceReference, ...]', local_names: 'tuple[LocalizedName, ...]' = (), population: 'int | None' = None, currency: 'Currency | None' = None, languages: 'tuple[Language, ...]' = (), calling_codes: 'tuple[str, ...]' = (), top_level_domain: 'str | None' = None, observed_timezones: 'tuple[str, ...]' = (), formal_name: 'str | None' = None, anthems: 'tuple[NationalAnthem, ...]' = (), mottos: 'tuple[NationalMotto, ...]' = (), demonyms: 'tuple[Demonym, ...]' = (), timezones: 'tuple[Timezone, ...]' = (), postal_code: 'PostalCodeFormat | None' = None, travel: 'TravelBasics | None' = None) -> None",
       "members": {
         "alpha2": "property",
         "alpha3": "property",
@@ -653,6 +656,11 @@
         {
           "name": "postal_code",
           "type": "PostalCodeFormat | None",
+          "default": "None"
+        },
+        {
+          "name": "travel",
+          "type": "TravelBasics | None",
           "default": "None"
         }
       ]
@@ -1619,7 +1627,7 @@
     },
     "SCHEMA_VERSION": {
       "kind": "int",
-      "value": "7"
+      "value": "8"
     },
     "SourceReference": {
       "kind": "dataclass",
@@ -1669,6 +1677,54 @@
         }
       ]
     },
+    "SunTimes": {
+      "kind": "dataclass",
+      "signature": "(coordinates: 'Coordinate', date: 'date', solar_noon: 'datetime', sunrise: 'datetime | None', sunset: 'datetime | None', day_length_hours: 'float', noon_sun_height: 'float') -> None",
+      "members": {
+        "daylight": "property",
+        "summary": "property",
+        "to_dict": "method(self) -> 'dict[str, Any]'",
+        "to_json": "method(self, indent: 'int | None' = None) -> 'str'"
+      },
+      "frozen": true,
+      "fields": [
+        {
+          "name": "coordinates",
+          "type": "Coordinate",
+          "default": null
+        },
+        {
+          "name": "date",
+          "type": "date",
+          "default": null
+        },
+        {
+          "name": "solar_noon",
+          "type": "datetime",
+          "default": null
+        },
+        {
+          "name": "sunrise",
+          "type": "datetime | None",
+          "default": null
+        },
+        {
+          "name": "sunset",
+          "type": "datetime | None",
+          "default": null
+        },
+        {
+          "name": "day_length_hours",
+          "type": "float",
+          "default": null
+        },
+        {
+          "name": "noon_sun_height",
+          "type": "float",
+          "default": null
+        }
+      ]
+    },
     "Timezone": {
       "kind": "dataclass",
       "signature": "(id: 'str', january_utc_offset_hours: 'float', july_utc_offset_hours: 'float', raw_utc_offset_hours: 'float', source: 'SourceReference | None' = None) -> None",
@@ -1693,6 +1749,41 @@
         {
           "name": "raw_utc_offset_hours",
           "type": "float",
+          "default": null
+        },
+        {
+          "name": "source",
+          "type": "SourceReference | None",
+          "default": "None"
+        }
+      ]
+    },
+    "TravelBasics": {
+      "kind": "dataclass",
+      "signature": "(plug_types: 'tuple[str, ...]', voltages_v: 'tuple[int, ...]', frequencies_hz: 'tuple[int, ...]', driving_side: 'str | None', source: 'SourceReference | None' = None) -> None",
+      "members": {
+        "summary": "property"
+      },
+      "frozen": true,
+      "fields": [
+        {
+          "name": "plug_types",
+          "type": "tuple[str, ...]",
+          "default": null
+        },
+        {
+          "name": "voltages_v",
+          "type": "tuple[int, ...]",
+          "default": null
+        },
+        {
+          "name": "frequencies_hz",
+          "type": "tuple[int, ...]",
+          "default": null
+        },
+        {
+          "name": "driving_side",
+          "type": "str | None",
           "default": null
         },
         {
@@ -1737,6 +1828,8 @@
     "QuizQuestion",
     "River",
     "SourceReference",
-    "Timezone"
+    "SunTimes",
+    "Timezone",
+    "TravelBasics"
   ]
 }

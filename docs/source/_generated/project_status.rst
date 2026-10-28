@@ -14,7 +14,7 @@ snapshot of the package, dataset, and coverage that ship together.
 
    .. container:: atlas-stat
 
-      **2026.10.26.1**
+      **2026.10.27.1**
 
       dataset version
 
@@ -70,7 +70,7 @@ Detailed coverage
 Build identity
 --------------
 
-Schema version: **7**
+Schema version: **8**
 
 .. note::
 

@@ -333,6 +333,7 @@ The current source checkout can be installed with ``python -m pip install -e .``
    local_names
    capitals_cities
    coordinates_distances
+   sun
    borders
    discovery
    searching

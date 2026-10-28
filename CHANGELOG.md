@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased: 0.11.1
+
+- New: travel basics for 245 countries and areas. `Country.travel` gives plug
+  types (IEC letters A to N), the household mains voltage and frequency, and
+  the side of the road people drive on, from CC0 Wikidata statements. A value
+  stays missing when the source does not agree. Country summaries show a
+  "Travel" line.
+- New learning topics for flashcards and quizzes: `driving_sides`,
+  `plug_types`, and `mains_electricity`.
+- New: `Atlas.sun` and `pyworldatlas sun` give sunrise, sunset, day length,
+  and the noon sun height for any place and date, worked out offline with the
+  NOAA solar equations. A new "Sun and seasons" guide shows why seasons happen.
+- Dataset `2026.10.27.1`, schema 8.
+
 ## 0.11.0
 
 Every place on Earth.
