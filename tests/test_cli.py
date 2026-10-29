@@ -1,9 +1,13 @@
 from contextlib import redirect_stderr, redirect_stdout
 from io import StringIO
 import json
+from pathlib import Path
 import subprocess
 import sys
+import tempfile
 import unittest
+
+from pack_fixtures import installed_packs
 
 from pyworldatlas.__main__ import main
 
@@ -93,6 +97,19 @@ class InProcessCommandLineTests(unittest.TestCase):
     def test_errors_exit_with_one(self) -> None:
         self.assertEqual(self.call("country", "Atlantis")[0], 1)
         self.assertEqual(self.call("search", "zzz-no-match")[0], 1)
+
+    def test_world_map_saves_html_or_svg(self) -> None:
+        data = str(installed_packs())
+        with tempfile.TemporaryDirectory() as folder:
+            code, output, _ = self.call(
+                "world-map", "forest_area", "--year", "2020", "--output", f"{folder}/forest.svg", "--data-dir", data
+            )
+            self.assertEqual(code, 0)
+            self.assertTrue(Path(output.strip()).read_text(encoding="utf-8").startswith("<svg"))
+            code, output, _ = self.call("world-map", "population", "--output", f"{folder}/people.html", "--data-dir", data)
+            self.assertEqual(code, 0)
+            self.assertIn("<table>", Path(output.strip()).read_text(encoding="utf-8"))
+        self.assertEqual(self.call("world-map", "happiness", "--data-dir", data)[0], 1)
 
 
 if __name__ == "__main__":

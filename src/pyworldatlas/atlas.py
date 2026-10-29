@@ -33,7 +33,7 @@ if TYPE_CHECKING:
     from . import _placefile, packs
     from ._landmarks import Landmarks
     from ._statistics import Statistics
-    from .maps import CountryMap
+    from .maps import CountryMap, WorldMap
 else:
     from ._lazy import LazyModule
 
@@ -1342,6 +1342,36 @@ class Atlas:
                 rows.append(item)
         rows.sort(key=lambda item: (-item.value if descending else item.value, item.area))
         return tuple(rows if limit is None else rows[:limit])
+
+    def world_map(self, indicator: str, *, year: int | None = None) -> WorldMap:
+        """Return a world map with every country colored by one indicator.
+
+        Each country shows its value for ``year``, or its latest value when
+        ``year`` is ``None``. Countries fall into five classes with about the
+        same number of countries each; the colors order the numbers and say
+        nothing about which is better. Call ``show()`` to open the map,
+        ``write_html()`` or ``write_svg()`` to save it, or display it in a
+        notebook. Needs the statistics pack and a map pack
+        (``pyworldatlas get statistics`` and ``pyworldatlas get maps-lite``).
+        """
+        if year is not None and (isinstance(year, bool) or not isinstance(year, int)):
+            raise TypeError("year must be an integer or None")
+        from .exceptions import MapSupportNotInstalledError
+        from .maps import MapDataError, WorldMap
+        from .maps._world import outline_database
+
+        found = self._indicator(indicator)
+        try:
+            database = outline_database(self._data_dir)
+        except MapDataError as error:
+            raise MapSupportNotInstalledError(str(error)) from error
+        names = sorted(((country.alpha2, country.name) for country in self), key=lambda pair: pair[1].casefold())
+        order = {alpha2: index for index, (alpha2, _) in enumerate(names)}
+        values = sorted(
+            (item for item in self.sort_by_statistic(found.key, year=year, limit=None) if item.area in order),
+            key=lambda item: order[item.area],
+        )
+        return WorldMap(found, tuple(values), tuple(names), year, str(database))
 
     def _landmark_pack(self) -> Landmarks:
         """Load the landmarks pack once, or explain how to install it."""

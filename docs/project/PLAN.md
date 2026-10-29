@@ -167,7 +167,8 @@ on a slow 3G connection, and every place on Earth under 2 minutes on a slow
 - Every value carries unit, reference year, and source.
 - Time series, side-by-side fact listing without judgement, and one-line
   charts.
-- Map coloring by any indicator.
+- **Done: map coloring by any indicator** (`Atlas.world_map`,
+  `pyworldatlas world-map`).
 
 ## 0.13: The encyclopedia
 

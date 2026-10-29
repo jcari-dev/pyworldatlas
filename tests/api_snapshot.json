@@ -249,7 +249,8 @@
         "time_series": "method(self, country: 'str | Country', indicator: 'str') -> 'StatisticSeries'",
         "world_heritage_site": "method(self, query: 'str | int') -> 'WorldHeritageSite'",
         "world_heritage_sites": "method(self, *, category: 'str | None' = None) -> 'tuple[WorldHeritageSite, ...]'",
-        "world_heritage_sites_near": "method(self, origin: 'str | Country | Capital | City | Place | Coordinate | tuple[float, float]', *, limit: 'int' = 10, category: 'str | None' = None, unit: 'str' = 'km') -> 'tuple[SiteDistance, ...]'"
+        "world_heritage_sites_near": "method(self, origin: 'str | Country | Capital | City | Place | Coordinate | tuple[float, float]', *, limit: 'int' = 10, category: 'str | None' = None, unit: 'str' = 'km') -> 'tuple[SiteDistance, ...]'",
+        "world_map": "method(self, indicator: 'str', *, year: 'int | None' = None) -> 'WorldMap'"
       }
     },
     "AtlasClosedError": {

@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- **World maps of statistics:** `Atlas.world_map("life_expectancy")` and
+  `pyworldatlas world-map life_expectancy` color every country by one
+  statistic, for its latest year or a chosen one. The map is plain SVG on the
+  Equal Earth projection, needs no download when it opens, follows light and
+  dark mode, and comes with a summary and a table of every value for screen
+  readers. Needs the statistics pack and a map pack.
+
 ## 0.12.1
 
 A more welcoming atlas, honest licensing, and up-to-date documentation.
