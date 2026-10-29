@@ -222,7 +222,7 @@ class AtlasTests(unittest.TestCase):
             [(card.country.alpha2, card.answer) for card in count_cards],
             [("KW", "2"), ("BS", "0"), ("BI", "3")],
         )
-        with self.assertRaisesRegex(ValueError, "unsupported flashcard topic"):
+        with self.assertRaisesRegex(ValueError, "Unknown topic .trivia."):
             self.atlas.flashcards(topic="trivia", count=1)
         with self.assertRaisesRegex(ValueError, "exceeds"):
             self.atlas.flashcards(topic="local_names", count=249)
