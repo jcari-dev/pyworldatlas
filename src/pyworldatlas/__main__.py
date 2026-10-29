@@ -219,7 +219,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 if series.points:
                     print(f"{series.points[0][0]} {series.sparkline()} {series.points[-1][0]}")
             elif args.command == "world-map":
-                chart = atlas.statistic_map(args.indicator, year=args.year)
+                chart = atlas.world_map(args.indicator, year=args.year)
                 if args.output is None:
                     print(chart.show())
                 elif args.output.casefold().endswith(".svg"):

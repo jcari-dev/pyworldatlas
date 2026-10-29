@@ -11,7 +11,7 @@ from pack_fixtures import installed_packs, pack_files
 
 from pyworldatlas import (Atlas, Indicator, MapSupportNotInstalledError, PackNotInstalledError,
                           StatisticSeries, StatisticValue, packs)
-from pyworldatlas.maps import StatisticMap
+from pyworldatlas.maps import WorldMap
 from pyworldatlas.maps._world import COLORS, _class_edges, _short
 
 
@@ -83,11 +83,11 @@ class StatisticsTests(unittest.TestCase):
                 atlas.indicators()
 
 
-class StatisticMapTests(unittest.TestCase):
+class WorldMapTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.atlas = Atlas(data_dir=installed_packs())
-        cls.map = cls.atlas.statistic_map("life expectancy")
+        cls.map = cls.atlas.world_map("life expectancy")
 
     @classmethod
     def tearDownClass(cls) -> None:
@@ -95,7 +95,7 @@ class StatisticMapTests(unittest.TestCase):
 
     def test_map_holds_every_country_and_only_published_values(self) -> None:
         chart = self.map
-        self.assertIsInstance(chart, StatisticMap)
+        self.assertIsInstance(chart, WorldMap)
         self.assertEqual(len(chart.names), len(list(self.atlas)))
         self.assertEqual(chart.title, "Life expectancy at birth (years), latest year")
         japan = next(item for item in chart.values if item.area == "JP")
@@ -103,13 +103,13 @@ class StatisticMapTests(unittest.TestCase):
         self.assertNotIn("AQ", {item.area for item in chart.values})  # no value, so not drawn as one
         names = [dict(chart.names)[item.area] for item in chart.values]
         self.assertEqual(names, sorted(names, key=str.casefold))  # alphabetical, never ranked
-        in_2000 = self.atlas.statistic_map("population", year=2000)
+        in_2000 = self.atlas.world_map("population", year=2000)
         self.assertTrue(all(item.year == 2000 for item in in_2000.values))
         self.assertIn("in 2000", in_2000.title)
         with self.assertRaises(TypeError):
-            self.atlas.statistic_map("population", year="2000")  # type: ignore[arg-type]
+            self.atlas.world_map("population", year="2000")  # type: ignore[arg-type]
         with self.assertRaises(ValueError):
-            self.atlas.statistic_map("happiness")
+            self.atlas.world_map("happiness")
 
     def test_svg_is_valid_accessible_and_offline(self) -> None:
         svg = self.map.to_svg()
@@ -157,7 +157,7 @@ class StatisticMapTests(unittest.TestCase):
             packs.add(pack_files() / "pyworldatlas-statistics.pack", folder)
             with Atlas(data_dir=folder) as atlas:
                 with self.assertRaisesRegex(MapSupportNotInstalledError, "pyworldatlas get maps-lite"):
-                    atlas.statistic_map("population")
+                    atlas.world_map("population")
 
 
 if __name__ == "__main__":

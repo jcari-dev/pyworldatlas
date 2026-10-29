@@ -86,7 +86,7 @@ From the command line:
 On a world map
 --------------
 
-:meth:`~pyworldatlas.Atlas.statistic_map` colors every country by one
+:meth:`~pyworldatlas.Atlas.world_map` colors every country by one
 indicator, using each country's latest value or the value for one year. It
 needs a map pack as well (``pyworldatlas get maps-lite``). Countries fall into
 five classes that each hold about the same number of countries, from light
@@ -96,7 +96,7 @@ hatched and marked "No data".
 .. doctest::
 
    >>> atlas = Atlas()
-   >>> world = atlas.statistic_map("life_expectancy")
+   >>> world = atlas.world_map("life_expectancy")
    >>> world.title
    'Life expectancy at birth (years), latest year'
    >>> world.to_svg().startswith("<svg")

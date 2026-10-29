@@ -19,9 +19,9 @@ import webbrowser
 from .. import packs
 from ._html import document, rotation_options
 from ._scene import MapDataError, build_figure, describe, load_payload
-from ._world import StatisticMap
+from ._world import WorldMap
 
-__all__ = ["QUALITY_PACKS", "CountryMap", "MapDataError", "StatisticMap", "available_map_qualities"]
+__all__ = ["QUALITY_PACKS", "CountryMap", "MapDataError", "WorldMap", "available_map_qualities"]
 
 QUALITY_PACKS = {"overview": "maps-lite", "standard": "maps"}
 """The data pack that provides each map quality."""

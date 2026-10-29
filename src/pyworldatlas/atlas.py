@@ -33,7 +33,7 @@ if TYPE_CHECKING:
     from . import _placefile, packs
     from ._landmarks import Landmarks
     from ._statistics import Statistics
-    from .maps import CountryMap, StatisticMap
+    from .maps import CountryMap, WorldMap
 else:
     from ._lazy import LazyModule
 
@@ -1343,7 +1343,7 @@ class Atlas:
         rows.sort(key=lambda item: (-item.value if descending else item.value, item.area))
         return tuple(rows if limit is None else rows[:limit])
 
-    def statistic_map(self, indicator: str, *, year: int | None = None) -> StatisticMap:
+    def world_map(self, indicator: str, *, year: int | None = None) -> WorldMap:
         """Return a world map with every country colored by one indicator.
 
         Each country shows its value for ``year``, or its latest value when
@@ -1357,7 +1357,7 @@ class Atlas:
         if year is not None and (isinstance(year, bool) or not isinstance(year, int)):
             raise TypeError("year must be an integer or None")
         from .exceptions import MapSupportNotInstalledError
-        from .maps import MapDataError, StatisticMap
+        from .maps import MapDataError, WorldMap
         from .maps._world import outline_database
 
         found = self._indicator(indicator)
@@ -1371,7 +1371,7 @@ class Atlas:
             (item for item in self.sort_by_statistic(found.key, year=year, limit=None) if item.area in order),
             key=lambda item: order[item.area],
         )
-        return StatisticMap(found, tuple(values), tuple(names), year, str(database))
+        return WorldMap(found, tuple(values), tuple(names), year, str(database))
 
     def _landmark_pack(self) -> Landmarks:
         """Load the landmarks pack once, or explain how to install it."""

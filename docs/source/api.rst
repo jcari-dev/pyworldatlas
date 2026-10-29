@@ -39,7 +39,7 @@ Find the right object
      - Specific subclasses of ``AtlasError``
    * - :ref:`Optional maps <api-maps>`
      - Opening or exporting a 3D country map or a world map of a statistic
-     - ``CountryMap``, ``StatisticMap``, and map-data errors
+     - ``CountryMap``, ``WorldMap``, and map-data errors
    * - :ref:`Data packs <api-packs>`
      - Installing and listing optional packs from Python
      - ``pyworldatlas.packs`` functions and ``PackNotInstalledError``
@@ -302,7 +302,7 @@ experimental map API.
 .. autoclass:: pyworldatlas.maps.CountryMap
    :members:
 
-.. autoclass:: pyworldatlas.maps.StatisticMap
+.. autoclass:: pyworldatlas.maps.WorldMap
    :members:
 
 .. autofunction:: pyworldatlas.maps.available_map_qualities

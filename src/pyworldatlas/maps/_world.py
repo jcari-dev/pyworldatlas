@@ -153,7 +153,7 @@ def _short(value: float, decimals: int) -> str:
 
 
 @dataclass(frozen=True, slots=True)
-class StatisticMap:
+class WorldMap:
     """A world map with every country colored by one statistic.
 
     Countries fall into five classes that each hold about the same number of
