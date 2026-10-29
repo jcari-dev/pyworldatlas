@@ -8,6 +8,16 @@
   Equal Earth projection, needs no download when it opens, follows light and
   dark mode, and comes with a summary and a table of every value for screen
   readers. Needs the statistics pack and a map pack.
+- **Did you mean...?** Mistyped countries, places, cities, quiz topics, and
+  indicators now suggest the closest names, such as "No country matches
+  'Japn'. Did you mean Japan?".
+- **Friendlier learning calls:** `atlas.quiz("capitals")` and
+  `atlas.flashcards("capitals")` take the topic first and ask 5 questions or
+  make 10 cards by default. Topics and indicators accept any case, spaces,
+  and singular or plural forms ("Capital", "life expectancy").
+- **Fixed:** the land-border methods (`neighbors`, `shares_border`,
+  `border_path`, and the rest) accept a `Country` as well as a name or code,
+  instead of failing with a database error.
 
 ## 0.12.1
 

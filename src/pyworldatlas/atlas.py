@@ -20,6 +20,7 @@ from ._rankings import METRIC_UNITS, metric_value, normalize_metric
 from ._profiles import build_country, city_from_row, read_local_names
 from ._placekinds import CATEGORIES, KINDS, category_of, kind_of
 from ._sun import sun_times
+from ._suggest import by_prefix, choice, closest, did_you_mean
 from .exceptions import (AmbiguousCountryError, AmbiguousPlaceError,
                          AtlasClosedError, CapitalNotFoundError,
                          CountryNotFoundError, DatasetVersionError,
@@ -177,6 +178,24 @@ class Atlas:
         ids = self._country_ids(query)
         return ids[0] if len(ids) == 1 else None
 
+    def _country_suggestions(self, query: str) -> list[str]:
+        """Return up to three country names that look like a mistyped ``query``."""
+        partial = [match.country.name for match in self.search_countries(query, limit=3)]
+        if partial:
+            return partial
+        # No name contains the text, so compare spellings against every known
+        # name, alias, and local name, then show each country's usual name.
+        rows = self._db.connection.execute("SELECT DISTINCT country_id, name FROM country_name").fetchall()
+        by_name: dict[str, int] = {}
+        for row in rows:
+            by_name.setdefault(str(row["name"]), int(row["country_id"]))
+        found: list[str] = []
+        for name in closest(query, by_name, limit=6):
+            display = self._load_country(by_name[name]).name
+            if display not in found:
+                found.append(display)
+        return found[:3]
+
     def country(self, query: str) -> Country:
         """Return one country profile resolved from a name or standard code.
 
@@ -193,8 +212,7 @@ class Atlas:
             raise ValueError("query must contain at least one letter or number")
         country_ids = self._country_ids(query)
         if not country_ids:
-            suggestions = ", ".join(match.country.name for match in self.search_countries(query, limit=3))
-            hint = f" Try: {suggestions}." if suggestions else ""
+            hint = did_you_mean(self._country_suggestions(query))
             raise CountryNotFoundError(f"No country matches {query!r}.{hint}")
         if len(country_ids) > 1:
             matches = ", ".join(
@@ -565,15 +583,17 @@ class Atlas:
             for country_id, neighbors in graph.items()
         }
 
-    def _border_country_id(self, query: str) -> int:
-        """Resolve a public country query for an internal graph operation."""
+    def _border_country_id(self, query: str | Country) -> int:
+        """Resolve a country name, code, or profile for an internal graph operation."""
+        if isinstance(query, Country):
+            query = query.alpha2
         country_id = self._country_id(query)
         if country_id is None:
             self.country(query)  # raises the public error with ranked suggestions
             raise CountryNotFoundError(f"No unambiguous country matches {query!r}")  # pragma: no cover
         return country_id
 
-    def neighbors(self, country: str) -> tuple[Country, ...]:
+    def neighbors(self, country: str | Country) -> tuple[Country, ...]:
         """Return countries sharing a reviewed land border with ``country``.
 
         Results are alphabetized and immutable. Maritime neighbors, proximity,
@@ -583,20 +603,20 @@ class Atlas:
         country_id = self._border_country_id(country)
         return tuple(self._load_country(item) for item in self._border_adjacency()[country_id])
 
-    def shares_border(self, country1: str, country2: str) -> bool:
+    def shares_border(self, country1: str | Country, country2: str | Country) -> bool:
         """Return whether two countries share a reviewed land border."""
         first = self._border_country_id(country1)
         second = self._border_country_id(country2)
         return second in self._border_adjacency()[first]
 
-    def shared_neighbors(self, country1: str, country2: str) -> tuple[Country, ...]:
+    def shared_neighbors(self, country1: str | Country, country2: str | Country) -> tuple[Country, ...]:
         """Return alphabetized land neighbors shared by two countries."""
         first = self._border_country_id(country1)
         second = self._border_country_id(country2)
         common = set(self._border_adjacency()[first]) & set(self._border_adjacency()[second])
         return tuple(sorted((self._load_country(item) for item in common), key=lambda item: item.name))
 
-    def border_path(self, origin: str, destination: str) -> BorderPathResult | None:
+    def border_path(self, origin: str | Country, destination: str | Country) -> BorderPathResult | None:
         """Return a deterministic shortest land-border path, or ``None``.
 
         The path uses breadth-first search over the reviewed undirected graph.
@@ -626,12 +646,12 @@ class Atlas:
         references = tuple(self._load_country(item).reference() for item in path)
         return BorderPathResult(references, len(references) - 1)
 
-    def border_crossings(self, origin: str, destination: str) -> int | None:
+    def border_crossings(self, origin: str | Country, destination: str | Country) -> int | None:
         """Return the fewest land-border crossings, or ``None`` if unreachable."""
         path = self.border_path(origin, destination)
         return path.crossings if path else None
 
-    def has_land_route(self, origin: str, destination: str) -> bool:
+    def has_land_route(self, origin: str | Country, destination: str | Country) -> bool:
         """Return whether ``origin`` and ``destination`` are land-connected.
 
         This is derived at query time from the reviewed border graph; it does
@@ -642,7 +662,7 @@ class Atlas:
         """
         return self.border_path(origin, destination) is not None
 
-    def countries_reachable_by_land(self, country: str) -> tuple[Country, ...]:
+    def countries_reachable_by_land(self, country: str | Country) -> tuple[Country, ...]:
         """Return every other entity in ``country``'s land-connected component.
 
         The starting country is excluded. Results are alphabetized; an island
@@ -700,11 +720,21 @@ class Atlas:
         self._ensure_open()
         return FLASHCARD_TOPICS
 
+    def _learning_topic(self, topic: str) -> str:
+        """Return the topic ``topic`` means ("Capital" means "capitals"), or list the choices."""
+        if not isinstance(topic, str):
+            raise TypeError("topic must be a string")
+        found = choice(topic, FLASHCARD_TOPICS)
+        if found is None:
+            hint = did_you_mean(closest(topic, FLASHCARD_TOPICS))
+            raise ValueError(f"Unknown topic {topic!r}.{hint} Choose from {', '.join(FLASHCARD_TOPICS)}.")
+        return found
+
     def flashcards(
         self,
-        *,
         topic: str,
-        count: int,
+        *,
+        count: int = 10,
         continent: str | None = None,
         region: str | None = None,
         seed: int | str = 0,
@@ -728,9 +758,7 @@ class Atlas:
         UNGEGN identity record for every country and area.
         Flashcards are structured values, not an interactive game.
         """
-        if topic not in FLASHCARD_TOPICS:
-            allowed = ", ".join(FLASHCARD_TOPICS)
-            raise ValueError(f"unsupported flashcard topic {topic!r}; choose from {allowed}")
+        topic = self._learning_topic(topic)
         candidates = tuple(
             country
             for country in self.countries(continent=continent, region=region)
@@ -741,9 +769,9 @@ class Atlas:
 
     def quiz(
         self,
-        *,
         topic: str,
-        count: int,
+        *,
+        count: int = 5,
         choices: int = 4,
         continent: str | None = None,
         region: str | None = None,
@@ -760,9 +788,7 @@ class Atlas:
         provide enough distinct answers for the requested number of choices.
         No scoring, learner data, or session state is stored.
         """
-        if topic not in FLASHCARD_TOPICS:
-            allowed = ", ".join(FLASHCARD_TOPICS)
-            raise ValueError(f"unsupported quiz topic {topic!r}; choose from {allowed}")
+        topic = self._learning_topic(topic)
         if isinstance(choices, bool) or not isinstance(choices, int):
             raise TypeError("choices must be an integer")
         if not 2 <= choices <= 6:
@@ -905,7 +931,10 @@ class Atlas:
         ).fetchall()
         if not rows:
             suffix = f" in {country!r}" if country else ""
-            raise PlaceNotFoundError(f"No city matches {query!r}{suffix}")
+            hint = did_you_mean(by_prefix(
+                query, lambda text: [found.name for found in self.search_cities(text, country=country, limit=40)]
+            ))
+            raise PlaceNotFoundError(f"No city matches {query!r}{suffix}.{hint}")
         if len(rows) > 1:
             options = ", ".join(f"{row['name']} ({row['alpha2']})" for row in rows[:5])
             raise AmbiguousPlaceError(f"City {query!r} is ambiguous. Specify country; matches include {options}")
@@ -1149,7 +1178,14 @@ class Atlas:
             if key in {normalize_name(match.name), normalize_name(match.english_name)}:
                 return match
         suffix = f" in {country!r}" if country else ""
-        raise PlaceNotFoundError(f"No place is named {query!r}{suffix}")
+        hint = did_you_mean(by_prefix(
+            query,
+            lambda text: [
+                found.english_name
+                for found in self.search_places(text, kind=kind, country=country, limit=40)
+            ],
+        )) if isinstance(query, str) else ""
+        raise PlaceNotFoundError(f"No place is named {query!r}{suffix}.{hint}")
 
     def places_in(
         self,
@@ -1284,10 +1320,12 @@ class Atlas:
         return tuple(self._statistics_pack().indicators.values())
 
     def _indicator(self, key: str) -> Indicator:
-        found = self._statistics_pack().indicators.get(str(key).strip().casefold().replace(" ", "_").replace("-", "_"))
-        if found is None:
-            choices = ", ".join(self._statistics_pack().indicators)
-            raise ValueError(f"Unknown indicator {key!r}; choose from {choices}")
+        indicators = self._statistics_pack().indicators
+        name = choice(str(key), indicators)
+        if name is None:
+            hint = did_you_mean(closest(str(key), indicators))
+            raise ValueError(f"Unknown indicator {key!r}.{hint} Choose from {', '.join(indicators)}.")
+        found = indicators[name]
         return found
 
     def time_series(self, country: str | Country, indicator: str) -> StatisticSeries:
@@ -1532,8 +1570,11 @@ class Atlas:
         mountains (3,000 m and higher), islands, lakes, rivers, and seas in the
         school atlas, and the same ``seed`` always gives the same questions.
         """
-        if topic not in self.PLACE_QUIZ_TOPICS:
-            raise ValueError(f"topic must be one of {', '.join(self.PLACE_QUIZ_TOPICS)}")
+        found_topic = choice(topic, self.PLACE_QUIZ_TOPICS) if isinstance(topic, str) else None
+        if found_topic is None:
+            hint = did_you_mean(closest(str(topic), self.PLACE_QUIZ_TOPICS))
+            raise ValueError(f"Unknown topic {topic!r}.{hint} Choose from {', '.join(self.PLACE_QUIZ_TOPICS)}.")
+        topic = found_topic
         if isinstance(count, bool) or not isinstance(count, int) or not 1 <= count <= 50:
             raise ValueError("count must be an integer from 1 through 50")
         from hashlib import sha256
