@@ -344,7 +344,7 @@ class Country:
         if self.capital is not None:
             lines.append(f"Capital: {self.capital.name}")
         location = tuple(
-            value for value in (self.continent, self.subregion) if value
+            value for value in (self.continent, self.subregion or self.region) if value
         )
         if location:
             lines.append(f"Location: {' · '.join(dict.fromkeys(location))}")

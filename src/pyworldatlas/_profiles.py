@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 import json
+import re
 import sqlite3
 from typing import overload
 
@@ -12,6 +13,39 @@ from .models import (Area, Capital, City, ClimateProfile, ClimateZone, Coordinat
                      Geography, Lake, Language, LocalizedName, NationalAnthem,
                      NationalMotto, PhysicalGeography, PostalCodeFormat, River,
                      SourceReference, Timezone, TravelBasics)
+
+
+# A trailing area note in a source feature name: "Biwa-ko 688 sq km",
+# "Huron* - 23,597 sq km" (the source uses a hyphen or a dash), or
+# "Nettilling Lake - 5,542 sq km note".
+_AREA_NOTE = re.compile(r"\s*[-–]?\s*[\d][\d,.\-–]*\s*sq km(\s+note)?\s*$")
+# A long sharing note that repeats other countries' names.
+_SHARED_NOTE = re.compile(r"\s*\([^)]*shared with[^)]*\)")
+
+
+def _feature_name(text: str) -> str | None:
+    """Return a clean river or lake name, or ``None`` when the text is not a name.
+
+    The source lists features as free text, so a few entries carry an area
+    note ("Biwa-ko 688 sq km"), a shared-lake marker ("Huron*"), or a long
+    sharing note. Some entries are not names at all but sentences about a
+    nearby feature ("9.6 times saltier than the ocean"); real names start with
+    a capital letter, so those are left out. Short descriptions such as
+    "(ephemeral)" are kept because they are part of how the source names it.
+    """
+    name = _SHARED_NOTE.sub("", _AREA_NOTE.sub("", text)).rstrip(" *-–").strip()
+    if not name or not name[0].isupper():
+        return None
+    return name
+
+
+def _sentence(text: str | None) -> str | None:
+    """Start source notes with a capital letter and end them with a full stop."""
+    if not text:
+        return text
+    text = text.strip()
+    text = text[0].upper() + text[1:]
+    return text if text.endswith((".", "!", "?")) else f"{text}."
 
 
 @overload
@@ -82,7 +116,7 @@ def build_country(
         for item in climate_rows
     )
     climate = ClimateProfile(
-        summary=physical_row["climate_summary"] if physical_row else None,
+        summary=_sentence(physical_row["climate_summary"]) if physical_row else None,
         koppen_geiger_zones=zones,
         reference_period=climate_rows[0]["reference_period"] if climate_rows else None,
         resolution_degrees=climate_rows[0]["resolution_degrees"] if climate_rows else None,
@@ -120,15 +154,17 @@ def build_country(
         highest_point=highest_point,
         lowest_point=lowest_point,
         rivers=tuple(
-            River(item["name"], _tidy(item["length_km"]), item["source_label"])
+            River(name, _tidy(item["length_km"]), item["source_label"])
             for item in river_rows
+            if (name := _feature_name(item["name"])) is not None
         ),
         lakes=tuple(
             Lake(
-                item["name"], _tidy(item["area_km2"]), item["water_type"],
+                name, _tidy(item["area_km2"]), item["water_type"],
                 item["source_label"],
             )
             for item in lake_rows
+            if (name := _feature_name(item["name"])) is not None
         ),
         climate=climate,
         source=source_by_id.get("cia-world-factbook-2025"),
@@ -137,6 +173,10 @@ def build_country(
     land_area = _tidy(physical_row["land_area_km2"]) if physical_row else None
     water_area = _tidy(physical_row["water_area_km2"]) if physical_row else None
     total_area = _tidy(row["total_area_km2"])
+    if total_area is not None and total_area <= 0:
+        # The source rounds a few tiny areas, such as Vatican City, down to 0.
+        # A country cannot have no area, so the value is treated as missing.
+        total_area = None
     water_percent = (
         round(water_area / total_area * 100, 2)
         if water_area is not None
@@ -148,7 +188,9 @@ def build_country(
     geography = Geography(
         continent=row["continent"],
         region=row["region"],
-        subregion=row["subregion"],
+        # UN M49 gives an intermediate region only for some countries; when it
+        # would just repeat the region, there is no separate subregion.
+        subregion=row["subregion"] if row["subregion"] != row["region"] else None,
         area=Area(total_area, land_area, water_area, water_percent),
         landlocked=physical.is_landlocked,
         physical=physical,

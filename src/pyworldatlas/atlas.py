@@ -16,7 +16,7 @@ from ._version import SCHEMA_VERSION, __version__
 from .database import Database
 from ._learning import (FLASHCARD_TOPICS, build_flashcard, has_flashcard_answer,
                         stable_country_sample, stable_text_order)
-from ._rankings import METRIC_UNITS, metric_value, normalize_metric
+from ._rankings import METRIC_SOURCES, METRIC_UNITS, metric_value, normalize_metric
 from ._profiles import build_country, city_from_row, read_local_names
 from ._placekinds import CATEGORIES, KINDS, category_of, kind_of
 from ._sun import sun_times
@@ -402,7 +402,8 @@ class Atlas:
         ``"highest_elevation"``, ``"lowest_elevation"``, ``"river_count"``,
         ``"lake_count"``, and ``"climate_zone_count"``. Existing population,
         total area, density, border, and city metrics remain available. Missing
-        values are excluded.
+        values are excluded. Each row names its ``source``; for dated World Bank
+        figures, such as population by year, use :meth:`sort_by_statistic`.
         """
         normalized_metric = normalize_metric(metric)
         if limit is not None and (
@@ -426,7 +427,10 @@ class Atlas:
         if limit is not None:
             ranked = ranked[:limit]
         return tuple(
-            CountryRanking(position, country.reference(), normalized_metric, value, METRIC_UNITS[normalized_metric])
+            CountryRanking(
+                position, country.reference(), normalized_metric, value,
+                METRIC_UNITS[normalized_metric], METRIC_SOURCES[normalized_metric],
+            )
             for position, (country, value) in enumerate(ranked, 1)
         )
 
@@ -1272,10 +1276,19 @@ class Atlas:
         start = self._coordinates_of(origin, country=origin_country)
         where, params = self._place_filter(kind, category, None)
         factor = {"km": 1.0, "mi": 0.621371192237334, "nmi": 0.539956803455724}[unit]
-        found = _placefile.near(self._places(), start.latitude, start.longitude, limit + 1, where, params)
+        # A named origin such as "Tokyo" sits on top of places with the same
+        # name (Tokyo the city and Tokyo the prefecture), so ask for a few
+        # extra and leave out every same-named place within 10 km.
+        origin_name = normalize_name(origin if isinstance(origin, str) else getattr(origin, "name", "") or "")
+        found = _placefile.near(self._places(), start.latitude, start.longitude, limit + 6, where, params)
         result: list[PlaceDistance] = []
         for distance, row in found:
-            if not include_origin and distance <= 1e-6:
+            if not include_origin and (
+                distance <= 1e-6
+                or (origin_name and distance <= 10 and origin_name in {
+                    normalize_name(row["name"]), normalize_name(row["english"] or "")
+                })
+            ):
                 continue
             result.append(PlaceDistance(self._place_from_row(row), distance * factor, unit))
             if len(result) == limit:
@@ -1668,12 +1681,18 @@ class Atlas:
         the antipode: the latitude flips north and south, and the longitude
         moves halfway around the world. ``where`` is a city or place name, a
         country (its capital), a model with coordinates, or a ``(latitude,
-        longitude)`` tuple. Most antipodes are at sea.
+        longitude)`` tuple. Most antipodes are at sea. ``nearest`` lists
+        well-known places within 500 km of the antipode first, nearest first.
         """
         point = self._point_of(where)
         longitude = point.longitude + 180 if point.longitude <= 0 else point.longitude - 180
         opposite = Coordinate(round(-point.latitude, 6), round(longitude, 6))
-        return Antipode(point, opposite, self.places_near(opposite, limit=limit))
+        # The very nearest named point is often an unknown hill or stream, so
+        # well-known places within 500 km come first, then the rest by distance.
+        nearby = self.places_near(opposite, limit=max(limit, 40))
+        known = [item for item in nearby if item.place.fame > 0 and item.distance <= 500]
+        unknown = [item for item in nearby if item not in known]
+        return Antipode(point, opposite, tuple((known + unknown)[:limit]))
 
     def _point_of(
         self, where: str | Country | Capital | City | Place | Coordinate | tuple[float, float]

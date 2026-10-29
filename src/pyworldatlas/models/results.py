@@ -45,13 +45,20 @@ class CountryReference:
 
 @dataclass(frozen=True, slots=True)
 class CountryRanking:
-    """One deterministic position in a country ranking."""
+    """One deterministic position in a country ranking.
+
+    ``source`` names where the value comes from, such as ``"GeoNames country
+    population snapshot"``. Different sources can disagree: the statistics
+    pack's World Bank population (see :meth:`pyworldatlas.Atlas.sort_by_statistic`)
+    is newer and dated by year.
+    """
 
     position: int
     country: CountryReference
     metric: str
     value: int | float
     unit: str
+    source: str | None = None
 
     def __str__(self) -> str:
         value = f"{self.value:,}" if float(self.value).is_integer() else f"{self.value:,.2f}"
@@ -195,8 +202,9 @@ class SiteDistance:
 class Antipode:
     """The point on the exact opposite side of the Earth from an origin.
 
-    ``nearest`` lists the known places closest to the antipode, nearest first;
-    most antipodes are at sea, so the nearest place can be far away.
+    ``nearest`` lists well-known places within 500 km of the antipode first,
+    then other places, each group nearest first. Most antipodes are at sea, so
+    the nearest place can be far away.
     """
 
     origin: Coordinate
@@ -212,7 +220,7 @@ class Antipode:
         )
         if self.nearest:
             first = self.nearest[0]
-            text += f" The nearest known place there is {first.place}, {first.distance} away."
+            text += f" The nearest well-known place is {first.place}, {first.distance} away."
         return text
 
     def __str__(self) -> str:
