@@ -267,6 +267,31 @@ structured dictionaries. Their ``to_dict()`` methods provide portable output.
 .. autoclass:: pyworldatlas.SourceReference
    :members:
 
+.. _api-printing:
+
+Printing results
+----------------
+
+Every result prints as one readable line, such as
+``CountryRanking('#1 Russia: 17,098,242 km²')``. Call
+:func:`pyworldatlas.show_details` to print every field instead, or set the
+environment variable ``PYWORLDATLAS_DETAILS=1``. Details change only how
+results print; ``to_dict()`` always returns every field.
+
+.. code-block:: python
+
+   import pyworldatlas
+
+   with pyworldatlas.show_details():
+       print(repr(atlas.rank("area", limit=1)[0]))
+
+.. autoclass:: pyworldatlas.show_details
+
+.. autoclass:: pyworldatlas.Distance
+   :members: text
+
+.. autoclass:: pyworldatlas.models.units.SummaryText
+
 .. _api-exceptions:
 
 Exceptions
@@ -356,7 +381,7 @@ their contributing source when one is bundled. ``Country.sources`` lists
 sources used somewhere in the profile; it is not a field-by-field provenance
 map. See :doc:`reference_facts` for coverage and interpretation rules.
 
-``Country.summary()`` is presentation-ready text that omits unavailable facts.
+``Country.summary`` is presentation-ready text that omits unavailable facts.
 Use model attributes, ``to_dict()``, or ``discovery_card()`` when a stable
 structured shape matters. Rankings describe sourced or directly calculated
 values; they do not score or judge countries. Quiz and flashcard helpers are

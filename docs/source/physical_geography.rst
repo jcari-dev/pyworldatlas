@@ -65,8 +65,8 @@ coastline length.
    ...     print(japan.area_km2, japan.land_area_km2, japan.water_area_km2)
    ...     print(round(japan.water_percent, 2), japan.coastline_km)
    ...     print(japan.is_coastal, japan.is_landlocked)
-   377915.0 364485.0 13430.0
-   3.55 29751.0
+   377915 364485 13430
+   3.55 29751
    True False
 
 The boolean conveniences remain ``None`` when coastline data is unavailable.
@@ -88,9 +88,9 @@ point is below sea level.
    ...     print(japan.mean_elevation_m)
    ...     print(japan.highest_point.name, japan.highest_point.elevation_m)
    ...     print(japan.lowest_point.name, japan.lowest_point.elevation_m)
-   438.0
-   Mount Fuji 3776.0
-   Hachiro-gata -4.0
+   438
+   Mount Fuji 3776
+   Hachiro-gata -4
 
 ``source_label`` preserves the compact source wording. ``is_approximate`` is
 true only when the source explicitly marked its measurement as approximate.
@@ -175,7 +175,7 @@ Physical ranking metrics include ``land_area``, ``water_area``,
    >>> with Atlas() as atlas:
    ...     rows = atlas.rank("coastline", limit=5)
    ...     print([(row.country.name, row.value) for row in rows])
-   [('Canada', 202080.0), ('Indonesia', 54716.0), ('Greenland', 44087.0), ('Russia', 37653.0), ('Philippines', 36289.0)]
+   [('Canada', 202080), ('Indonesia', 54716), ('Greenland', 44087), ('Russia', 37653), ('Philippines', 36289)]
 
 Rankings describe the bundled source fields; they do not judge countries.
 Missing values are excluded and ties use the country name for deterministic

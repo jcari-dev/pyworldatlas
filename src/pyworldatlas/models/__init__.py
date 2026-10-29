@@ -12,9 +12,11 @@ from .places import Airport, Capital, City, Place, WorldHeritageSite
 from .results import Antipode, BorderPathResult, CapitalDistance, CityDistance, CountryMatch, CountryRanking, CountryReference, PlaceDistance, SiteDistance, SunTimes
 from .learning import CountryDiscoveryCard, Flashcard, PlaceQuestion, QuizQuestion
 from .statistics import Indicator, StatisticSeries, StatisticValue
+from .units import Distance
 from .country import Country
 
 __all__ = [
+    "Distance",
     "Airport",
     "Antipode",
     "Area",

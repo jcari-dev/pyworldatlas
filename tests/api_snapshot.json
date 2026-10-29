@@ -31,6 +31,7 @@
     "DatasetNotFoundError",
     "DatasetVersionError",
     "Demonym",
+    "Distance",
     "ElevationPoint",
     "Flashcard",
     "Geography",
@@ -59,7 +60,8 @@
     "Timezone",
     "TravelBasics",
     "WorldHeritageSite",
-    "__version__"
+    "__version__",
+    "show_details"
   ],
   "pyworldatlas": {
     "Airport": {
@@ -612,7 +614,7 @@
         "romanized_name_in": "method(self, language_code: 'str') -> 'str | None'",
         "romanized_official_name_in": "method(self, language_code: 'str') -> 'str | None'",
         "subregion": "property",
-        "summary": "method(self, *, local_language: 'str | None' = None) -> 'str'",
+        "summary": "property",
         "timezone_ids": "property",
         "to_dict": "method(self) -> 'dict[str, Any]'",
         "to_json": "method(self, indent: 'int | None' = None) -> 'str'",
@@ -989,7 +991,9 @@
     "CountryReference": {
       "kind": "dataclass",
       "signature": "(name: 'str', alpha2: 'str', alpha3: 'str | None', numeric: 'str | None') -> None",
-      "members": {},
+      "members": {
+        "country_code": "property"
+      },
       "frozen": true,
       "fields": [
         {
@@ -1152,6 +1156,13 @@
         }
       ]
     },
+    "Distance": {
+      "kind": "class",
+      "signature": "(value: 'float', unit: 'str' = 'km') -> 'Distance'",
+      "members": {
+        "text": "property"
+      }
+    },
     "ElevationPoint": {
       "kind": "dataclass",
       "signature": "(name: 'str', elevation_m: 'float', is_approximate: 'bool' = False, source_label: 'str | None' = None) -> None",
@@ -1213,7 +1224,7 @@
     },
     "Geography": {
       "kind": "dataclass",
-      "signature": "(continent: 'str | None', region: 'str | None', subregion: 'str | None', area: 'Area' = Area(total_km2=None, land_km2=None, water_km2=None, water_percent=None), landlocked: 'bool | None' = None, physical: 'PhysicalGeography' = PhysicalGeography(coastline_km=None, mean_elevation_m=None, highest_point=None, lowest_point=None, rivers=(), lakes=(), climate=ClimateProfile(summary=None, koppen_geiger_zones=(), reference_period=None, resolution_degrees=None, minimum_share_percent=None, summary_source=None, classification_source=None), source=None, source_locator=None)) -> None",
+      "signature": "(continent: 'str | None', region: 'str | None', subregion: 'str | None', area: 'Area' = Area('area unknown'), landlocked: 'bool | None' = None, physical: 'PhysicalGeography' = PhysicalGeography(coastline_km=None, highest_point=None, rivers=0, lakes=0)) -> None",
       "members": {},
       "frozen": true,
       "fields": [
@@ -1235,7 +1246,7 @@
         {
           "name": "area",
           "type": "Area",
-          "default": "Area(total_km2=None, land_km2=None, water_km2=None, water_percent=None)"
+          "default": "Area('area unknown')"
         },
         {
           "name": "landlocked",
@@ -1245,7 +1256,7 @@
         {
           "name": "physical",
           "type": "PhysicalGeography",
-          "default": "PhysicalGeography(coastline_km=None, mean_elevation_m=None, highest_point=None, lowest_point=None, rivers=(), lakes=(), climate=ClimateProfile(summary=None, koppen_geiger_zones=(), reference_period=None, resolution_degrees=None, minimum_share_percent=None, summary_source=None, classification_source=None), source=None, source_locator=None)"
+          "default": "PhysicalGeography(coastline_km=None, highest_point=None, rivers=0, lakes=0)"
         }
       ]
     },
@@ -1508,7 +1519,7 @@
     },
     "PhysicalGeography": {
       "kind": "dataclass",
-      "signature": "(coastline_km: 'float | None' = None, mean_elevation_m: 'float | None' = None, highest_point: 'ElevationPoint | None' = None, lowest_point: 'ElevationPoint | None' = None, rivers: 'tuple[River, ...]' = (), lakes: 'tuple[Lake, ...]' = (), climate: 'ClimateProfile' = ClimateProfile(summary=None, koppen_geiger_zones=(), reference_period=None, resolution_degrees=None, minimum_share_percent=None, summary_source=None, classification_source=None), source: 'SourceReference | None' = None, source_locator: 'str | None' = None) -> None",
+      "signature": "(coastline_km: 'float | None' = None, mean_elevation_m: 'float | None' = None, highest_point: 'ElevationPoint | None' = None, lowest_point: 'ElevationPoint | None' = None, rivers: 'tuple[River, ...]' = (), lakes: 'tuple[Lake, ...]' = (), climate: 'ClimateProfile' = ClimateProfile('climate unknown'), source: 'SourceReference | None' = None, source_locator: 'str | None' = None) -> None",
       "members": {
         "is_coastal": "property",
         "is_landlocked": "property"
@@ -1548,7 +1559,7 @@
         {
           "name": "climate",
           "type": "ClimateProfile",
-          "default": "ClimateProfile(summary=None, koppen_geiger_zones=(), reference_period=None, resolution_degrees=None, minimum_share_percent=None, summary_source=None, classification_source=None)"
+          "default": "ClimateProfile('climate unknown')"
         },
         {
           "name": "source",
@@ -1862,6 +1873,7 @@
       "kind": "dataclass",
       "signature": "(indicator: 'Indicator', area: 'str', area_name: 'str', first_year: 'int', values: 'tuple[float | None, ...]') -> None",
       "members": {
+        "country_code": "property",
         "last_year": "property",
         "latest": "property",
         "points": "property",
@@ -1904,6 +1916,7 @@
       "kind": "dataclass",
       "signature": "(indicator: 'Indicator', area: 'str', year: 'int', value: 'float') -> None",
       "members": {
+        "country_code": "property",
         "to_dict": "method(self) -> 'dict[str, Any]'",
         "to_json": "method(self, indent: 'int | None' = None) -> 'str'"
       },
@@ -1933,9 +1946,11 @@
     },
     "SunTimes": {
       "kind": "dataclass",
-      "signature": "(coordinates: 'Coordinate', date: 'date', solar_noon: 'datetime', sunrise: 'datetime | None', sunset: 'datetime | None', day_length_hours: 'float', noon_sun_height: 'float') -> None",
+      "signature": "(coordinates: 'Coordinate', date: 'date', solar_noon: 'datetime', sunrise: 'datetime | None', sunset: 'datetime | None', day_length_hours: 'float', noon_sun_height: 'float', timezone_id: 'str | None' = None) -> None",
       "members": {
         "daylight": "property",
+        "local_sunrise": "property",
+        "local_sunset": "property",
         "summary": "property",
         "to_dict": "method(self) -> 'dict[str, Any]'",
         "to_json": "method(self, indent: 'int | None' = None) -> 'str'"
@@ -1976,6 +1991,11 @@
           "name": "noon_sun_height",
           "type": "float",
           "default": null
+        },
+        {
+          "name": "timezone_id",
+          "type": "str | None",
+          "default": "None"
         }
       ]
     },
@@ -2081,6 +2101,14 @@
           "default": null
         }
       ]
+    },
+    "show_details": {
+      "kind": "class",
+      "signature": "(on: 'bool' = True) -> 'None'",
+      "members": {
+        "__enter__": "method(self) -> 'show_details'",
+        "__exit__": "method(self, *exc_info: 'object') -> 'None'"
+      }
     }
   },
   "pyworldatlas.models": [
@@ -2104,6 +2132,7 @@
     "Currency",
     "DatasetInfo",
     "Demonym",
+    "Distance",
     "ElevationPoint",
     "Flashcard",
     "Geography",

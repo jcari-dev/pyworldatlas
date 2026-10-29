@@ -469,7 +469,7 @@ class AtlasTests(unittest.TestCase):
             (brazil.land_area_km2, brazil.water_area_km2, brazil.coastline_km),
             (8_358_140, 157_630, 7_491),
         )
-        self.assertAlmostEqual(brazil.water_percent, 1.851, places=3)
+        self.assertEqual(brazil.water_percent, 1.85)  # rounded to two decimals
         self.assertEqual(
             (brazil.highest_point.name, brazil.highest_point.elevation_m),
             ("Pico da Neblina", 2_994),

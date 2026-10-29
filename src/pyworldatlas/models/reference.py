@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from ._display import friendly_repr
+
 
 @dataclass(frozen=True, slots=True)
 class DatasetInfo:
@@ -15,6 +17,12 @@ class DatasetInfo:
     country_count: int
     built_at: str
 
+    def __str__(self) -> str:
+        return f"PyWorldAtlas {self.library_version}, dataset {self.dataset_version}, {self.country_count} countries"
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"{str(self)!r}")
+
 
 @dataclass(frozen=True, slots=True)
 class CountryCodes:
@@ -24,6 +32,9 @@ class CountryCodes:
     alpha3: str | None
     numeric: str | None
     geonames: int | None = None
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"alpha2={self.alpha2!r}, alpha3={self.alpha3!r}, numeric={self.numeric!r}")
 
 
 @dataclass(frozen=True, slots=True)
@@ -38,6 +49,12 @@ class SourceReference:
     license_name: str | None = None
     license_url: str | None = None
     notes: str | None = None
+
+    def __str__(self) -> str:
+        return f"{self.name} ({self.license_name})" if self.license_name else self.name
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"{self.id!r}")
 
 
 @dataclass(frozen=True, slots=True)
@@ -66,6 +83,12 @@ class LocalizedName:
     source_locator: str | None = None
     language_status: str | None = None
 
+    def __str__(self) -> str:
+        return self.text
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"{self.text!r}, language_code={self.language_code!r}, kind={self.kind!r}")
+
     @property
     def short_name(self) -> str:
         """Return the short local-language form."""
@@ -92,6 +115,13 @@ class Currency:
     minor_unit_digits: int | None = None
     source: SourceReference | None = None
 
+    def __str__(self) -> str:
+        details = ", ".join(part for part in (self.code, self.symbol) if part and part != self.name)
+        return f"{self.name} ({details})" if self.name else self.code
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"{str(self)!r}")
+
 
 @dataclass(frozen=True, slots=True)
 class Language:
@@ -102,6 +132,12 @@ class Language:
     name: str | None = None
     script_code: str | None = None
     source: SourceReference | None = None
+
+    def __str__(self) -> str:
+        return f"{self.name} ({self.code})" if self.name else self.code
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"{str(self)!r}")
 
 
 @dataclass(frozen=True, slots=True)
@@ -114,6 +150,15 @@ class Timezone:
     raw_utc_offset_hours: float
     source: SourceReference | None = None
 
+    def __str__(self) -> str:
+        offset = self.raw_utc_offset_hours
+        sign = "+" if offset >= 0 else "-"
+        hours, minutes = divmod(round(abs(offset) * 60), 60)
+        return f"{self.id}, UTC{sign}{hours}" + (f":{minutes:02d}" if minutes else "")
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"{str(self)!r}")
+
 
 @dataclass(frozen=True, slots=True)
 class PostalCodeFormat:
@@ -122,6 +167,12 @@ class PostalCodeFormat:
     format: str
     regex: str | None = None
     source: SourceReference | None = None
+
+    def __str__(self) -> str:
+        return self.format
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"{self.format!r}")
 
 
 @dataclass(frozen=True, slots=True)
@@ -139,6 +190,12 @@ class TravelBasics:
     frequencies_hz: tuple[int, ...]
     driving_side: str | None
     source: SourceReference | None = None
+
+    def __str__(self) -> str:
+        return self.summary
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"{self.summary!r}")
 
     @property
     def summary(self) -> str:
@@ -165,6 +222,12 @@ class NationalAnthem:
     source: SourceReference
     source_locator: str
 
+    def __str__(self) -> str:
+        return f"{self.title} ({self.english_title})" if self.english_title and self.english_title != self.title else self.title
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"{self.title!r}")
+
 
 @dataclass(frozen=True, slots=True)
 class NationalMotto:
@@ -181,6 +244,12 @@ class NationalMotto:
     source: SourceReference
     source_locator: str
 
+    def __str__(self) -> str:
+        return f"{self.text} ({self.english_text})" if self.english_text and self.english_text != self.text else self.text
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"{self.text!r}")
+
 
 @dataclass(frozen=True, slots=True)
 class Demonym:
@@ -191,3 +260,9 @@ class Demonym:
     language_code: str
     source: SourceReference
     source_locator: str
+
+    def __str__(self) -> str:
+        return self.noun or self.adjective or ""
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"noun={self.noun!r}, adjective={self.adjective!r}")

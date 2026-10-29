@@ -7,11 +7,13 @@ import json
 from typing import Any
 
 from ._serialize import _jsonable
+from ._display import friendly_repr
 from .reference import CountryCodes, Currency, Demonym, Language, LocalizedName, NationalAnthem, NationalMotto, PostalCodeFormat, SourceReference, Timezone, TravelBasics
 from .geography import ClimateProfile, Coordinate, ElevationPoint, Geography, Lake, PhysicalGeography, River
 from .places import Capital, City
 from .results import CountryReference
 from .learning import CountryDiscoveryCard
+from .units import SummaryText
 
 
 @dataclass(frozen=True, slots=True)
@@ -305,15 +307,21 @@ class Country:
             climate_zone_codes=self.climate.zone_codes,
         )
 
-    def summary(self, *, local_language: str | None = None) -> str:
+    @property
+    def summary(self) -> SummaryText:
         """Return a readable, multiline introduction to this country profile.
 
-        The summary favors useful classroom facts and omits unavailable values.
-        Pass a language code to request a particular bundled local name; with
-        no code, the selected non-English local identity is used when present.
-        This is a presentation helper rather than a serialization format; use
-        :meth:`to_dict` when field names and machine-readable values matter.
+        ``print(country.summary)`` shows useful classroom facts and leaves out
+        unavailable values. To show the local name in a particular language,
+        call it with a language code: ``country.summary(local_language="fr")``.
+        Without one, the selected non-English local identity is used when
+        present. This is for reading; use :meth:`to_dict` when field names and
+        machine-readable values matter.
         """
+        return SummaryText(self._summary(), self._summary)
+
+    def _summary(self, *, local_language: str | None = None) -> str:
+        """Build the text behind :attr:`summary`."""
         local_name = (
             self.local_name(local_language)
             if local_language is not None
@@ -405,7 +413,7 @@ class Country:
         """
         from html import escape
 
-        heading, *lines = self.summary().splitlines()
+        heading, *lines = self.summary.splitlines()
         rows = "".join(
             '<tr><th scope="row" style="text-align:left;padding:2px 14px 2px 0;'
             f'font-weight:600;vertical-align:top">{escape(label)}</th>'
@@ -426,4 +434,4 @@ class Country:
         return self.name
 
     def __repr__(self) -> str:
-        return f"Country(name={self.name!r}, alpha2={self.alpha2!r})"
+        return friendly_repr(self, f"name={self.name!r}, alpha2={self.alpha2!r}")

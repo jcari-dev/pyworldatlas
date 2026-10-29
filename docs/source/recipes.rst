@@ -50,7 +50,7 @@ profile into an unstructured dictionary.
 
    with Atlas() as atlas:
        country = atlas.country("Brazil")
-       print(country.summary())
+       print(country.summary)
 
 .. raw:: html
 

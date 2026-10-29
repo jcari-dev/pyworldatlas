@@ -15,6 +15,29 @@
   `atlas.flashcards("capitals")` take the topic first and ask 5 questions or
   make 10 cards by default. Topics and indicators accept any case, spaces,
   and singular or plural forms ("Capital", "life expectancy").
+- **Results that read well:** printing any result gives one clear line, such
+  as `#1 Russia: 17,098,242 km²`, `Seoul, South Korea · 1,153 km`, or
+  `France → Germany → Poland → Russia → China (4 border crossings)`, and the
+  REPL shows short reprs instead of nested objects. Quiz questions print with
+  numbered choices.
+- **Every result reads well**, including areas, climate, currencies, time
+  zones, anthems, and dataset info, such as `Area('377,915 km², 3.55%
+  water')` or `Timezone('Asia/Tokyo, UTC+9')`.
+- **`pyworldatlas.show_details()`** prints every field instead of the short
+  form, for the whole session or inside a `with` block; the environment
+  variable `PYWORLDATLAS_DETAILS=1` turns it on from the start.
+- **Distances:** `distance_between` and every "nearest" result return a
+  `Distance`, a number that prints with its unit (`9,713 km`) and still works
+  in arithmetic and JSON.
+- **Sun times on the local clock:** `atlas.sun("Paris")` uses the local time
+  of a city, capital, or country when the computer has time zone data
+  (`SunTimes.timezone_id`, `local_sunrise`, `local_sunset`), and UTC otherwise.
+- **Tidy numbers:** whole measurements are whole numbers (`3776`, not
+  `3776.0`), and the water share of an area is rounded to two decimals.
+- **`country.summary` is a property**, like every other `summary`; calling it
+  as `country.summary()` still works.
+- **One name for country codes:** statistics and country references also offer
+  `country_code`.
 - **Fixed:** the land-border methods (`neighbors`, `shares_border`,
   `border_path`, and the rest) accept a `Country` as well as a name or code,
   instead of failing with a database error.
