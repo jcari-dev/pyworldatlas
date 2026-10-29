@@ -83,6 +83,38 @@ From the command line:
    Life expectancy at birth in Japan rose from 67.7 years in 1960 to 84.0 years in 2024.
    1960 ▁▂▃▃▃▄▄▅▅▅▆▆▆▇▇▇▇▇████ 2024
 
+On a world map
+--------------
+
+:meth:`~pyworldatlas.Atlas.statistic_map` colors every country by one
+indicator, using each country's latest value or the value for one year. It
+needs a map pack as well (``pyworldatlas get maps-lite``). Countries fall into
+five classes that each hold about the same number of countries, from light
+(smaller numbers) to dark (larger numbers). Countries without a value are
+hatched and marked "No data".
+
+.. doctest::
+
+   >>> atlas = Atlas()
+   >>> world = atlas.statistic_map("life_expectancy")
+   >>> world.title
+   'Life expectancy at birth (years), latest year'
+   >>> world.to_svg().startswith("<svg")
+   True
+   >>> atlas.close()
+
+``show()`` opens the map in your browser, ``write_html()`` saves a page with
+the map and a table of every value, and ``write_svg()`` saves just the image.
+In a notebook the map displays on its own. Hover over a country to see its
+value and year. The map is drawn with plain SVG on the Equal Earth
+projection, which keeps every country's area in proportion; nothing is
+downloaded when it opens.
+
+.. code-block:: console
+
+   $ pyworldatlas world-map forest_area
+   $ pyworldatlas world-map population --year 2000 --output population-2000.html
+
 How the numbers are kept
 ------------------------
 

@@ -2,13 +2,17 @@
 
 from __future__ import annotations
 
+import re
 import tempfile
 import unittest
+from xml.etree import ElementTree
 
-from pack_fixtures import installed_packs
+from pack_fixtures import installed_packs, pack_files
 
-from pyworldatlas import (Atlas, Indicator, PackNotInstalledError, StatisticSeries,
-                          StatisticValue)
+from pyworldatlas import (Atlas, Indicator, MapSupportNotInstalledError, PackNotInstalledError,
+                          StatisticSeries, StatisticValue, packs)
+from pyworldatlas.maps import StatisticMap
+from pyworldatlas.maps._world import COLORS, _class_edges, _short
 
 
 class StatisticsTests(unittest.TestCase):
@@ -77,6 +81,83 @@ class StatisticsTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as empty, Atlas(data_dir=empty) as atlas:
             with self.assertRaisesRegex(PackNotInstalledError, "pyworldatlas get statistics"):
                 atlas.indicators()
+
+
+class StatisticMapTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.atlas = Atlas(data_dir=installed_packs())
+        cls.map = cls.atlas.statistic_map("life expectancy")
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        cls.atlas.close()
+
+    def test_map_holds_every_country_and_only_published_values(self) -> None:
+        chart = self.map
+        self.assertIsInstance(chart, StatisticMap)
+        self.assertEqual(len(chart.names), len(list(self.atlas)))
+        self.assertEqual(chart.title, "Life expectancy at birth (years), latest year")
+        japan = next(item for item in chart.values if item.area == "JP")
+        self.assertEqual(japan, self.atlas.time_series("Japan", "life_expectancy").latest)
+        self.assertNotIn("AQ", {item.area for item in chart.values})  # no value, so not drawn as one
+        names = [dict(chart.names)[item.area] for item in chart.values]
+        self.assertEqual(names, sorted(names, key=str.casefold))  # alphabetical, never ranked
+        in_2000 = self.atlas.statistic_map("population", year=2000)
+        self.assertTrue(all(item.year == 2000 for item in in_2000.values))
+        self.assertIn("in 2000", in_2000.title)
+        with self.assertRaises(TypeError):
+            self.atlas.statistic_map("population", year="2000")  # type: ignore[arg-type]
+        with self.assertRaises(ValueError):
+            self.atlas.statistic_map("happiness")
+
+    def test_svg_is_valid_accessible_and_offline(self) -> None:
+        svg = self.map.to_svg()
+        root = ElementTree.fromstring(svg)
+        self.assertEqual(root.get("role"), "img")
+        self.assertIn("aria-labelledby", root.attrib)
+        self.assertNotIn("http://", svg.replace("http://www.w3.org/2000/svg", ""))
+        self.assertNotIn("https://", svg)
+        self.assertIn("Japan: 8", svg)  # hover title with value and year
+        self.assertIn("Antarctica: no data", svg)
+        self.assertIn("prefers-color-scheme:dark", svg)
+        for color in COLORS:
+            self.assertIn(color, svg)
+        self.assertLess(len(svg), 400_000)
+        # Every number in a path stays inside the drawing, so nothing spills over the legend.
+        paths = " ".join(element.get("d", "") for element in root.iter("{http://www.w3.org/2000/svg}path"))
+        numbers = [float(n) for n in re.findall(r"-?\d+(?:\.\d+)?", paths)]
+        self.assertGreater(min(numbers), -1100)
+        self.assertLess(max(numbers), 2100)
+
+    def test_html_page_has_a_table_of_every_value(self) -> None:
+        page = self.map.to_html()
+        self.assertIn("<table>", page)
+        self.assertEqual(page.count("<tr><th scope=row>"), len(self.map.values))
+        self.assertIn("No data: ", page)
+        with tempfile.TemporaryDirectory() as folder:
+            html_file = self.map.write_html(f"{folder}/map.html")
+            svg_file = self.map.write_svg(f"{folder}/map.svg")
+            self.assertEqual(html_file.read_text(encoding="utf-8"), page)
+            ElementTree.fromstring(svg_file.read_text(encoding="utf-8"))
+        self.assertEqual(self.map._repr_html_(), self.map.to_svg())
+
+    def test_classes_split_countries_evenly(self) -> None:
+        edges = self.map.class_edges
+        self.assertEqual(len(edges), 4)
+        self.assertEqual(list(edges), sorted(set(edges)))
+        self.assertEqual(_class_edges([1.0] * 10), ())  # identical values share one class
+        self.assertEqual(_class_edges([float(n) for n in range(10)]), (2.0, 4.0, 6.0, 8.0))
+        self.assertEqual(_short(1_463_865_525, 0), "1.5 billion")
+        self.assertEqual(_short(466_000, 0), "466 thousand")
+        self.assertEqual(_short(72.46, 1), "72.5")
+
+    def test_missing_map_pack_explains_how_to_install_it(self) -> None:
+        with tempfile.TemporaryDirectory() as folder:
+            packs.add(pack_files() / "pyworldatlas-statistics.pack", folder)
+            with Atlas(data_dir=folder) as atlas:
+                with self.assertRaisesRegex(MapSupportNotInstalledError, "pyworldatlas get maps-lite"):
+                    atlas.statistic_map("population")
 
 
 if __name__ == "__main__":

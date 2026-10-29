@@ -38,8 +38,8 @@ Find the right object
      - Handling missing, ambiguous, closed, or incompatible data
      - Specific subclasses of ``AtlasError``
    * - :ref:`Optional maps <api-maps>`
-     - Opening or exporting an installed 3D map edition
-     - ``CountryMap`` and map-data errors
+     - Opening or exporting a 3D country map or a world map of a statistic
+     - ``CountryMap``, ``StatisticMap``, and map-data errors
    * - :ref:`Data packs <api-packs>`
      - Installing and listing optional packs from Python
      - ``pyworldatlas.packs`` functions and ``PackNotInstalledError``
@@ -300,6 +300,9 @@ Maps read their data from an installed map pack (``pyworldatlas get maps`` or
 experimental map API.
 
 .. autoclass:: pyworldatlas.maps.CountryMap
+   :members:
+
+.. autoclass:: pyworldatlas.maps.StatisticMap
    :members:
 
 .. autofunction:: pyworldatlas.maps.available_map_qualities

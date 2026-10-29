@@ -78,6 +78,15 @@ def _parser() -> argparse.ArgumentParser:
     stat.add_argument("country", help='country name or code, or "world"')
     stat.add_argument("indicator", help="indicator such as population or life_expectancy")
     stat.add_argument("--data-dir", help="pack folder with the statistics pack")
+    world_map = subcommands.add_parser(
+        "world-map",
+        help="color a world map by a statistic (statistics and map packs)",
+        description="Open a world map with every country colored by an indicator such as life_expectancy.",
+    )
+    world_map.add_argument("indicator", help="indicator such as population or life_expectancy")
+    world_map.add_argument("--year", type=int, help="use this year instead of each country's latest value")
+    world_map.add_argument("--output", help="save the map to this .html or .svg file instead of opening it")
+    world_map.add_argument("--data-dir", help="pack folder with the statistics and map packs")
 
     antipode = subcommands.add_parser(
         "antipode",
@@ -209,6 +218,14 @@ def main(argv: Sequence[str] | None = None) -> int:
                 print(series.summary)
                 if series.points:
                     print(f"{series.points[0][0]} {series.sparkline()} {series.points[-1][0]}")
+            elif args.command == "world-map":
+                chart = atlas.statistic_map(args.indicator, year=args.year)
+                if args.output is None:
+                    print(chart.show())
+                elif args.output.casefold().endswith(".svg"):
+                    print(chart.write_svg(args.output))
+                else:
+                    print(chart.write_html(args.output))
             elif args.command == "antipode":
                 print(atlas.antipode(args.where).summary)
             elif args.command == "sun":

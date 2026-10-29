@@ -11,7 +11,9 @@ point-in-country operations, or route data.
 Version 0.9 uses generalized Natural Earth map-unit outlines inside optional
 interactive terrain views. Those display records are not returned as boundary
 coordinates, GeoJSON, border lengths, legal extents, or point-in-country
-results. Their purpose is to clip and orient an educational relief surface.
+results. Their purpose is to clip and orient an educational relief surface. The same
+outlines also draw the flat world maps that color countries by a statistic;
+there they are only shapes to color, generalized for display.
 
 The automatic review baseline is the intersection of the captured GeoNames
 neighbor field and shared polygon segments in Natural Earth 1:50m map units.
