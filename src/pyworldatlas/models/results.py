@@ -8,8 +8,10 @@ import json
 from typing import TYPE_CHECKING, Any
 
 from ._serialize import _jsonable
+from ._display import friendly_repr
 from .geography import Coordinate
 from .places import Capital, City, Place, WorldHeritageSite
+from .units import Distance
 
 if TYPE_CHECKING:
     from .country import Country
@@ -29,6 +31,17 @@ class CountryReference:
     alpha3: str | None
     numeric: str | None
 
+    @property
+    def country_code(self) -> str:
+        """Return the two-letter code, the same value other results call ``country_code``."""
+        return self.alpha2
+
+    def __str__(self) -> str:
+        return self.name
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"name={self.name!r}, alpha2={self.alpha2!r}")
+
 
 @dataclass(frozen=True, slots=True)
 class CountryRanking:
@@ -39,6 +52,13 @@ class CountryRanking:
     metric: str
     value: int | float
     unit: str
+
+    def __str__(self) -> str:
+        value = f"{self.value:,}" if float(self.value).is_integer() else f"{self.value:,.2f}"
+        return f"#{self.position} {self.country.name}: {value} {self.unit}"
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"{str(self)!r}")
 
     def to_dict(self) -> dict[str, Any]:
         """Return JSON-compatible primitives for this ranking row."""
@@ -58,6 +78,16 @@ class CapitalDistance:
     capital: Capital
     distance: float
     unit: str
+
+    def __post_init__(self) -> None:
+        # Store the distance as a Distance, a float that prints as "1,153 km".
+        object.__setattr__(self, "distance", Distance(self.distance, self.unit))
+
+    def __str__(self) -> str:
+        return f"{self.capital.name}, {self.country.name} · {self.distance}"
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"{str(self)!r}")
 
     def to_dict(self) -> dict[str, Any]:
         """Return JSON-compatible primitives for this distance result."""
@@ -82,6 +112,16 @@ class CityDistance:
     distance: float
     unit: str
 
+    def __post_init__(self) -> None:
+        # Store the distance as a Distance, a float that prints as "1,153 km".
+        object.__setattr__(self, "distance", Distance(self.distance, self.unit))
+
+    def __str__(self) -> str:
+        return f"{self.city.label} · {self.distance}"
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"{str(self)!r}")
+
     def to_dict(self) -> dict[str, Any]:
         """Return JSON-compatible primitives for this nearby-city result."""
         data: dict[str, Any] = _jsonable(self)
@@ -103,6 +143,16 @@ class PlaceDistance:
     distance: float
     unit: str
 
+    def __post_init__(self) -> None:
+        # Store the distance as a Distance, a float that prints as "1,153 km".
+        object.__setattr__(self, "distance", Distance(self.distance, self.unit))
+
+    def __str__(self) -> str:
+        return f"{self.place.label} · {self.distance}"
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"{str(self)!r}")
+
     def to_dict(self) -> dict[str, Any]:
         """Return JSON-compatible primitives for this nearby-place result."""
         data: dict[str, Any] = _jsonable(self)
@@ -120,6 +170,16 @@ class SiteDistance:
     site: WorldHeritageSite
     distance: float
     unit: str
+
+    def __post_init__(self) -> None:
+        # Store the distance as a Distance, a float that prints as "1,153 km".
+        object.__setattr__(self, "distance", Distance(self.distance, self.unit))
+
+    def __str__(self) -> str:
+        return f"{self.site.label} · {self.distance}"
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"{str(self)!r}")
 
     def to_dict(self) -> dict[str, Any]:
         """Return JSON-compatible primitives for this nearby-site result."""
@@ -152,8 +212,14 @@ class Antipode:
         )
         if self.nearest:
             first = self.nearest[0]
-            text += f" The nearest known place there is {first.place}, {first.distance:,.0f} {first.unit} away."
+            text += f" The nearest known place there is {first.place}, {first.distance} away."
         return text
+
+    def __str__(self) -> str:
+        return self.summary
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"{self.antipode.format(precision=2)!r}")
 
     def to_dict(self) -> dict[str, Any]:
         """Return JSON-compatible primitives for this antipode."""
@@ -167,8 +233,12 @@ class Antipode:
 
 @dataclass(frozen=True, slots=True)
 class SunTimes:
-    """Sunrise, sunset, and daylight for one place on one date, in UTC.
+    """Sunrise, sunset, and daylight for one place on one date.
 
+    ``sunrise``, ``sunset``, and ``solar_noon`` are in UTC. When the place's
+    time zone is known (``timezone_id``, such as ``"Europe/Paris"``) and the
+    computer has time zone data, :attr:`local_sunrise` and
+    :attr:`local_sunset` give the local clock times and the summary uses them.
     ``sunrise`` and ``sunset`` are ``None`` during the midnight sun (day length
     24 hours) and the polar night (day length 0). A UTC time can fall on the
     day before or after ``date`` far from Greenwich. ``noon_sun_height`` is the
@@ -183,6 +253,28 @@ class SunTimes:
     sunset: datetime | None
     day_length_hours: float
     noon_sun_height: float
+    timezone_id: str | None = None
+
+    def _local(self, moment: datetime | None) -> datetime | None:
+        if moment is None or self.timezone_id is None:
+            return None
+        try:
+            from zoneinfo import ZoneInfo
+            # Windows has no built-in time zone data unless the optional
+            # tzdata package is installed, so a missing zone means "unknown".
+            return moment.astimezone(ZoneInfo(self.timezone_id))
+        except (ImportError, LookupError, ValueError):
+            return None
+
+    @property
+    def local_sunrise(self) -> datetime | None:
+        """Return sunrise on the local clock, or ``None`` when the time zone is unknown."""
+        return self._local(self.sunrise)
+
+    @property
+    def local_sunset(self) -> datetime | None:
+        """Return sunset on the local clock, or ``None`` when the time zone is unknown."""
+        return self._local(self.sunset)
 
     @property
     def daylight(self) -> str:
@@ -198,16 +290,32 @@ class SunTimes:
             if self.day_length_hours >= 24:
                 return f"On {when} the sun does not set: this is the midnight sun."
             return f"On {when} the sun does not rise: this is the polar night."
+        local = self.local_sunrise is not None and self.local_sunset is not None
+
         def clock(moment: datetime) -> str:
-            text = f"{moment:%H:%M} UTC"
-            if moment.date() != self.date:
-                text += f" on {moment.day} {moment:%B}"
+            shown = self._local(moment) if local else moment
+            assert shown is not None
+            text = f"{shown:%H:%M} {'local time' if local else 'UTC'}"
+            if shown.date() != self.date:
+                text += f" on {shown.day} {shown:%B}"
             return text
 
         return (
             f"On {when} the sun rises at {clock(self.sunrise)} and sets at "
             f"{clock(self.sunset)}, giving {self.daylight} of daylight. At noon "
             f"it is {self.noon_sun_height:.0f}° above the horizon."
+        )
+
+    def __str__(self) -> str:
+        return self.summary
+
+    def __repr__(self) -> str:
+        if self.sunrise is None or self.sunset is None:
+            return friendly_repr(self, f"{self.date.isoformat()}, daylight={self.daylight!r}")
+        return friendly_repr(
+            self,
+            f"{self.date.isoformat()}, sunrise='{self.sunrise:%H:%M} UTC', "
+            f"sunset='{self.sunset:%H:%M} UTC', daylight={self.daylight!r}",
         )
 
     def to_dict(self) -> dict[str, Any]:
@@ -259,6 +367,13 @@ class BorderPathResult:
         """Return alpha-2 country codes in path order."""
         return tuple(country.alpha2 for country in self.countries)
 
+    def __str__(self) -> str:
+        crossings = "crossing" if self.crossings == 1 else "crossings"
+        return f"{' → '.join(self.names)} ({self.crossings} border {crossings})"
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"{str(self)!r}")
+
     def to_dict(self) -> dict[str, Any]:
         """Return JSON-compatible primitives for this path."""
         data: dict[str, Any] = _jsonable(self)
@@ -276,3 +391,11 @@ class CountryMatch:
     country: Country
     matched_name: str
     score: int
+
+    def __str__(self) -> str:
+        if self.matched_name == self.country.name:
+            return self.country.name
+        return f"{self.country.name} (matched {self.matched_name!r})"
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"{str(self)!r}")

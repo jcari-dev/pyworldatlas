@@ -17,6 +17,7 @@ from typing import Any
 import webbrowser
 
 from .. import packs
+from ..models._display import friendly_repr
 from ._html import document, rotation_options
 from ._scene import MapDataError, build_figure, describe, load_payload
 from ._world import WorldMap
@@ -105,6 +106,12 @@ class CountryMap:
                 for place in places
             ),
         )
+
+    def __str__(self) -> str:
+        return f"3D map of {self.country_name}"
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"{self.country_name!r}, quality={self.requested_quality!r}, places={len(self.places)}")
 
     @property
     def quality(self) -> str:

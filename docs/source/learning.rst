@@ -49,7 +49,7 @@ A country in one friendly call
 
    with Atlas() as atlas:
        brazil = atlas.country("Brazil")
-       print(brazil.summary())
+       print(brazil.summary)
 
 The summary brings together the flag, selected local identity, capital,
 location, snapshot population, currencies and languages, anthem title,

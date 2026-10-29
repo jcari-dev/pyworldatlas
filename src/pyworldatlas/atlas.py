@@ -25,7 +25,7 @@ from .exceptions import (AmbiguousCountryError, AmbiguousPlaceError,
                          AtlasClosedError, CapitalNotFoundError,
                          CountryNotFoundError, DatasetVersionError,
                          PackNotInstalledError, PlaceNotFoundError)
-from .models import (Airport, Antipode, BorderPathResult, Capital, CapitalDistance, City,
+from .models import (Airport, Distance, Antipode, BorderPathResult, Capital, CapitalDistance, City,
                      CityDistance, Coordinate, Country, Indicator, StatisticSeries, StatisticValue,
                      CountryMatch, CountryRanking, DatasetInfo, Flashcard, LocalizedName, Place,
                      PlaceDistance, PlaceQuestion, QuizQuestion, SiteDistance, SunTimes, WorldHeritageSite)
@@ -966,7 +966,7 @@ class Atlas:
         """
         start = self._coordinates_of(first, country=first_country)
         finish = self._coordinates_of(second, country=second_country)
-        return start.distance_to(finish, unit=unit)
+        return Distance(start.distance_to(finish, unit=unit), unit)
 
     def nearest_capitals(
         self,
@@ -1539,18 +1539,38 @@ class Atlas:
 
         ``where`` is a city or place name, a country (its capital), a model with
         coordinates, or a ``(latitude, longitude)`` tuple. ``on`` defaults to
-        today. Times are in UTC and agree with almanac times to about a minute
+        today. Times are in UTC, and also on the local clock when the place is a
+        city, capital, or country and the computer has time zone data (see
+        :class:`SunTimes`). They agree with almanac times to about a minute
         between latitudes 72° north and south. Compare ``atlas.sun("Oslo",
         date(2026, 6, 21))`` with December to see why seasons happen.
         """
         point = self._point_of(where)
+        zone = self._timezone_of(where)
         day = on if on is not None else date.today()
         if not isinstance(day, date):
             raise TypeError("on must be a datetime.date")
         if isinstance(day, datetime):
             day = day.date()
         noon, sunrise, sunset, hours, height = sun_times(point.latitude, point.longitude, day)
-        return SunTimes(point, day, noon, sunrise, sunset, round(hours, 4), round(height, 2))
+        return SunTimes(point, day, noon, sunrise, sunset, round(hours, 4), round(height, 2), zone)
+
+    def _timezone_of(self, where: object) -> str | None:
+        """Return the time zone of a country's capital, a capital, or a city, when known."""
+        if isinstance(where, Country):
+            return where.capital.timezone_id if where.capital else None
+        if isinstance(where, (Capital, City)):
+            return where.timezone_id
+        if isinstance(where, str):
+            try:
+                return self.city(where).timezone_id
+            except (PlaceNotFoundError, AmbiguousPlaceError):
+                pass
+            try:
+                return self._timezone_of(self.country(where))
+            except (CountryNotFoundError, AmbiguousCountryError, ValueError):
+                return None  # a place, not a city or country: places carry no time zone
+        return None
 
     PLACE_QUIZ_TOPICS = ("closer_to_equator", "higher", "kinds")
     """Topics accepted by :meth:`place_quiz`."""

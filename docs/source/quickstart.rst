@@ -52,7 +52,7 @@ introduction for a terminal, notebook, or lesson:
 .. code-block:: python
 
    with Atlas() as atlas:
-       print(atlas.country("Dominican Republic").summary())
+       print(atlas.country("Dominican Republic").summary)
 
 Explore the world in five minutes
 ---------------------------------

@@ -22,6 +22,7 @@ import webbrowser
 import zlib
 
 from .. import packs
+from ..models._display import friendly_repr
 from ._scene import MapDataError
 
 if TYPE_CHECKING:
@@ -271,6 +272,12 @@ class WorldMap:
 
     def _repr_html_(self) -> str:
         return self.to_svg()
+
+    def __str__(self) -> str:
+        return self.title
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"{self.title!r}")
 
     def to_html(self) -> str:
         """Return a complete offline HTML page with the map and a table of every value.

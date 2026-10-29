@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .geography import Coordinate
+from ._display import friendly_repr
 
 
 @dataclass(frozen=True, slots=True)
@@ -22,7 +23,7 @@ class Capital:
     geonames_id: int | None = None
 
     def __repr__(self) -> str:
-        return f"Capital(name={self.name!r}, country_code={self.country_code!r})"
+        return friendly_repr(self, f"name={self.name!r}, country_code={self.country_code!r}")
 
 
 @dataclass(frozen=True, slots=True)
@@ -50,6 +51,9 @@ class City:
 
     def __str__(self) -> str:
         return self.label
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"name={self.name!r}, country_code={self.country_code!r}")
 
 
 @dataclass(frozen=True, slots=True)
@@ -79,6 +83,9 @@ class Airport:
     def __str__(self) -> str:
         return self.label
 
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"iata_code={self.iata_code!r}, name={self.name!r}")
+
 
 @dataclass(frozen=True, slots=True)
 class WorldHeritageSite:
@@ -104,6 +111,9 @@ class WorldHeritageSite:
 
     def __str__(self) -> str:
         return self.label
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"site_id={self.site_id!r}, name={self.name!r}")
 
 
 @dataclass(frozen=True, slots=True)
@@ -137,3 +147,8 @@ class Place:
 
     def __str__(self) -> str:
         return self.label
+
+    def __repr__(self) -> str:
+        return friendly_repr(
+            self, f"english_name={self.english_name!r}, kind={self.kind!r}, country_code={self.country_code!r}"
+        )

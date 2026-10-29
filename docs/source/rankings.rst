@@ -104,10 +104,10 @@ values are excluded.
 
    >>> coastlines = atlas.rank("coastline", limit=3)
    >>> [(row.country.name, row.value, row.unit) for row in coastlines]
-   [('Canada', 202080.0, 'km'), ('Indonesia', 54716.0, 'km'), ('Greenland', 44087.0, 'km')]
+   [('Canada', 202080, 'km'), ('Indonesia', 54716, 'km'), ('Greenland', 44087, 'km')]
    >>> peaks = atlas.rank("highest_elevation", limit=3)
    >>> [(row.country.name, row.value) for row in peaks]
-   [('China', 8849.0), ('Nepal', 8849.0), ('Pakistan', 8611.0)]
+   [('China', 8849), ('Nepal', 8849), ('Pakistan', 8611)]
 
 River and lake counts measure source-listed records, not every physical feature.
 Climate counts depend on the documented 0.1% class-share threshold. See

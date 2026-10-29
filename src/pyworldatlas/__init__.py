@@ -7,7 +7,7 @@ from .exceptions import (AmbiguousCountryError, AmbiguousPlaceError, AtlasClosed
                          DatasetError, DatasetIntegrityError, DatasetNotFoundError,
                          DatasetVersionError, MapSupportNotInstalledError,
                          PackNotInstalledError, PlaceNotFoundError)
-from .models import (Airport, Antipode, Area, Indicator, StatisticSeries, StatisticValue, BorderPathResult, Capital, CapitalDistance, City,
+from .models import (Airport, Antipode, Area, Distance, Indicator, StatisticSeries, StatisticValue, BorderPathResult, Capital, CapitalDistance, City,
                      CityDistance, ClimateProfile, ClimateZone, Coordinate, Country,
                      CountryCodes, CountryDiscoveryCard, CountryMatch,
                      CountryRanking, CountryReference, Currency, DatasetInfo,
@@ -17,7 +17,10 @@ from .models import (Airport, Antipode, Area, Indicator, StatisticSeries, Statis
                      SiteDistance, SourceReference, SunTimes, Timezone, TravelBasics,
                      WorldHeritageSite)
 
+from .models._display import show_details
+
 __all__ = [
+    "show_details",
     "Atlas", "Country", "CountryCodes", "CountryReference", "CountryDiscoveryCard",
     "BorderPathResult", "CountryRanking", "CapitalDistance", "CityDistance",
     "LocalizedName", "Flashcard", "QuizQuestion", "PlaceQuestion",
@@ -25,7 +28,7 @@ __all__ = [
     "Airport", "WorldHeritageSite", "SiteDistance", "Currency", "Language", "CountryMatch",
     "PhysicalGeography", "ElevationPoint", "River", "Lake", "ClimateProfile", "ClimateZone",
     "NationalAnthem", "NationalMotto", "Demonym", "Timezone", "PostalCodeFormat", "TravelBasics",
-    "DatasetInfo", "SourceReference", "SunTimes", "Indicator", "StatisticSeries", "StatisticValue", "AtlasError", "AtlasClosedError",
+    "DatasetInfo", "Distance", "SourceReference", "SunTimes", "Indicator", "StatisticSeries", "StatisticValue", "AtlasError", "AtlasClosedError",
     "DatasetError", "DatasetNotFoundError", "DatasetVersionError",
     "DatasetIntegrityError", "CountryNotFoundError", "AmbiguousCountryError",
     "PlaceNotFoundError", "AmbiguousPlaceError", "CapitalNotFoundError",

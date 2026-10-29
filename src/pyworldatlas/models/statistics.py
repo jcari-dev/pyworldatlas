@@ -7,6 +7,7 @@ import json
 from typing import Any
 
 from ._serialize import _jsonable
+from ._display import friendly_repr
 
 _BARS = "▁▂▃▄▅▆▇█"
 
@@ -31,6 +32,12 @@ class Indicator:
         number = f"{value:,.{self.decimals}f}"
         return f"{number}{self.unit}" if self.unit.startswith("%") else f"{number} {self.unit}"
 
+    def __str__(self) -> str:
+        return f"{self.name} ({self.unit})"
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"key={self.key!r}, unit={self.unit!r}")
+
 
 @dataclass(frozen=True, slots=True)
 class StatisticValue:
@@ -41,8 +48,18 @@ class StatisticValue:
     year: int
     value: float
 
+    @property
+    def country_code(self) -> str | None:
+        """Return the two-letter country code, or ``None`` for the world total."""
+        return None if self.area == "world" else self.area
+
     def __str__(self) -> str:
         return f"{self.indicator.format(self.value)} ({self.year})"
+
+    def __repr__(self) -> str:
+        return friendly_repr(
+            self, f"indicator={self.indicator.key!r}, area={self.area!r}, year={self.year}, value={self.value!r}"
+        )
 
     def to_dict(self) -> dict[str, Any]:
         """Return JSON-compatible primitives for this value."""
@@ -67,6 +84,18 @@ class StatisticSeries:
     area_name: str
     first_year: int
     values: tuple[float | None, ...]
+
+    @property
+    def country_code(self) -> str | None:
+        """Return the two-letter country code, or ``None`` for the world total."""
+        return None if self.area == "world" else self.area
+
+    def __str__(self) -> str:
+        return self.summary
+
+    def __repr__(self) -> str:
+        years = f"{self.first_year}-{self.last_year}" if self.values else "no values"
+        return friendly_repr(self, f"indicator={self.indicator.key!r}, area={self.area!r}, years={years!r}")
 
     @property
     def last_year(self) -> int:

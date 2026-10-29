@@ -7,6 +7,7 @@ import json
 from typing import Any
 
 from ._serialize import _jsonable
+from ._display import friendly_repr
 from .reference import Currency, LocalizedName
 from .geography import Coordinate, ElevationPoint
 from .places import Place
@@ -26,6 +27,12 @@ class Flashcard:
     prompt: str
     answer: str
     country: CountryReference
+
+    def __str__(self) -> str:
+        return f"{self.prompt} {self.answer}"
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"topic={self.topic!r}, prompt={self.prompt!r}")
 
     def to_dict(self) -> dict[str, Any]:
         """Return JSON-compatible primitives for this flashcard."""
@@ -51,6 +58,13 @@ class PlaceQuestion:
     choices: tuple[str, ...]
     answer: str
     places: tuple[Place, ...]
+
+    def __str__(self) -> str:
+        options = "  ".join(f"{number}) {text}" for number, text in enumerate(self.choices, 1))
+        return f"{self.prompt}  {options}"
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"topic={self.topic!r}, prompt={self.prompt!r}")
 
     def __post_init__(self) -> None:
         if len(self.choices) < 2 or len(set(self.choices)) != len(self.choices):
@@ -95,6 +109,13 @@ class QuizQuestion:
     choices: tuple[str, ...]
     answer: str
     country: CountryReference
+
+    def __str__(self) -> str:
+        options = "  ".join(f"{number}) {text}" for number, text in enumerate(self.choices, 1))
+        return f"{self.prompt}  {options}"
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"topic={self.topic!r}, prompt={self.prompt!r}")
 
     def __post_init__(self) -> None:
         if len(self.choices) < 2:
@@ -170,6 +191,12 @@ class CountryDiscoveryCard:
     coastline_km: float | None = None
     highest_point: ElevationPoint | None = None
     climate_zone_codes: tuple[str, ...] = ()
+
+    def __str__(self) -> str:
+        return self.country.name
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"{self.country.name!r}")
 
     def to_dict(self) -> dict[str, Any]:
         """Return JSON-compatible primitives for this discovery card."""

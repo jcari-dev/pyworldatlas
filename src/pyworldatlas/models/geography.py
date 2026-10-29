@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from math import asin, atan2, cos, degrees, isclose, radians, sin, sqrt
 
+from ._display import friendly_repr
 from .reference import SourceReference
 
 
@@ -186,6 +187,15 @@ class Area:
     water_km2: float | None = None
     water_percent: float | None = None
 
+    def __str__(self) -> str:
+        if self.total_km2 is None:
+            return "area unknown"
+        text = f"{self.total_km2:,} km²"
+        return f"{text}, {self.water_percent:g}% water" if self.water_percent is not None else text
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"{str(self)!r}")
+
 
 @dataclass(frozen=True, slots=True)
 class ElevationPoint:
@@ -202,6 +212,13 @@ class ElevationPoint:
     is_approximate: bool = False
     source_label: str | None = None
 
+    def __str__(self) -> str:
+        about = "about " if self.is_approximate else ""
+        return f"{self.name}, {about}{self.elevation_m:,} m"
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"{str(self)!r}")
+
 
 @dataclass(frozen=True, slots=True)
 class River:
@@ -215,6 +232,12 @@ class River:
     name: str
     length_km: float | None
     source_label: str
+
+    def __str__(self) -> str:
+        return f"{self.name}, {self.length_km:,} km" if self.length_km is not None else self.name
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"{str(self)!r}")
 
 
 @dataclass(frozen=True, slots=True)
@@ -231,6 +254,12 @@ class Lake:
     water_type: str | None
     source_label: str
 
+    def __str__(self) -> str:
+        return f"{self.name}, {self.area_km2:,} km²" if self.area_km2 is not None else self.name
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"{str(self)!r}")
+
 
 @dataclass(frozen=True, slots=True)
 class ClimateZone:
@@ -246,6 +275,12 @@ class ClimateZone:
     group: str
     share_percent: float
 
+    def __str__(self) -> str:
+        return f"{self.code} · {self.name} · {self.share_percent:.1f}%"
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"{str(self)!r}")
+
 
 @dataclass(frozen=True, slots=True)
 class ClimateProfile:
@@ -258,6 +293,16 @@ class ClimateProfile:
     minimum_share_percent: float | None = None
     summary_source: SourceReference | None = None
     classification_source: SourceReference | None = None
+
+    def __str__(self) -> str:
+        zones = ", ".join(
+            f"{zone.code} {zone.share_percent:.0f}%" if zone.share_percent >= 1 else f"{zone.code} {zone.share_percent:.1f}%"
+            for zone in self.koppen_geiger_zones
+        )
+        return zones or self.summary or "climate unknown"
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"{str(self)!r}")
 
     @property
     def dominant_zone(self) -> ClimateZone | None:
@@ -289,6 +334,9 @@ class PhysicalGeography:
     source: SourceReference | None = None
     source_locator: str | None = None
 
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"coastline_km={self.coastline_km!r}, highest_point={str(self.highest_point) if self.highest_point else None!r}, rivers={len(self.rivers)}, lakes={len(self.lakes)}")
+
     @property
     def is_coastal(self) -> bool | None:
         """Return whether the sourced coastline is positive, or ``None``."""
@@ -311,3 +359,10 @@ class Geography:
     area: Area = Area()
     landlocked: bool | None = None
     physical: PhysicalGeography = PhysicalGeography()
+
+    def __str__(self) -> str:
+        place = " · ".join(dict.fromkeys(part for part in (self.continent, self.region, self.subregion) if part))
+        return f"{place} · {self.area}" if place else str(self.area)
+
+    def __repr__(self) -> str:
+        return friendly_repr(self, f"{str(self)!r}")

@@ -5,12 +5,33 @@ from __future__ import annotations
 from collections.abc import Callable
 import json
 import sqlite3
+from typing import overload
 
 from .models import (Area, Capital, City, ClimateProfile, ClimateZone, Coordinate,
                      Country, CountryCodes, Currency, Demonym, ElevationPoint,
                      Geography, Lake, Language, LocalizedName, NationalAnthem,
                      NationalMotto, PhysicalGeography, PostalCodeFormat, River,
                      SourceReference, Timezone, TravelBasics)
+
+
+@overload
+def _tidy(value: float) -> float: ...
+
+
+@overload
+def _tidy(value: None) -> None: ...
+
+
+def _tidy(value: float | None) -> float | None:
+    """Return a whole number as an ``int`` (``377915.0`` becomes ``377915``).
+
+    Sources store measurements as decimals even when they are whole, which
+    prints as ``3776.0 m``. Values with a real fraction, such as Vatican City's
+    0.49 km², are kept exactly.
+    """
+    if value is None:
+        return None
+    return int(value) if float(value).is_integer() else value
 
 
 def flag(alpha2: str) -> str:
@@ -20,7 +41,7 @@ def flag(alpha2: str) -> str:
 
 def city_from_row(row: sqlite3.Row) -> City:
     """Build one populated place from a city row joined with its country code."""
-    return City(row["name"], row["alpha2"], Coordinate(row["latitude"], row["longitude"]), row["population"], row["elevation_m"], row["timezone_id"], ("official",) if row["is_capital"] else (), row["geonames_id"])
+    return City(row["name"], row["alpha2"], Coordinate(row["latitude"], row["longitude"]), row["population"], _tidy(row["elevation_m"]), row["timezone_id"], ("official",) if row["is_capital"] else (), row["geonames_id"])
 
 
 def build_country(
@@ -37,9 +58,9 @@ def build_country(
     names = tuple(LocalizedName(n["name"], n["language_code"], n["kind"], bool(n["preferred"])) for n in names_rows)
     aliases = tuple(n.text for n in names if n.kind == "alias")
     capital_rows = child_rows("SELECT * FROM capital WHERE country_id=? ORDER BY is_primary DESC, name")
-    capitals = tuple(Capital(c["name"], row["alpha2"], Coordinate(c["latitude"], c["longitude"]), c["role"], bool(c["is_primary"]), c["population"], c["elevation_m"], c["timezone_id"], c["geonames_id"]) for c in capital_rows)
+    capitals = tuple(Capital(c["name"], row["alpha2"], Coordinate(c["latitude"], c["longitude"]), c["role"], bool(c["is_primary"]), c["population"], _tidy(c["elevation_m"]), c["timezone_id"], c["geonames_id"]) for c in capital_rows)
     city_rows = child_rows("SELECT * FROM city WHERE country_id=? ORDER BY population DESC, name")
-    cities = tuple(City(c["name"], row["alpha2"], Coordinate(c["latitude"], c["longitude"]), c["population"], c["elevation_m"], c["timezone_id"], ("official",) if c["is_capital"] else (), c["geonames_id"]) for c in city_rows)
+    cities = tuple(City(c["name"], row["alpha2"], Coordinate(c["latitude"], c["longitude"]), c["population"], _tidy(c["elevation_m"]), c["timezone_id"], ("official",) if c["is_capital"] else (), c["geonames_id"]) for c in city_rows)
     source_rows = child_rows("SELECT DISTINCT f.country_id AS country_id, s.* FROM source s JOIN field_source f ON f.source_id=s.id WHERE f.country_id=? ORDER BY s.id")
     sources = tuple(
         SourceReference(
@@ -74,7 +95,7 @@ def build_country(
     highest_point = (
         ElevationPoint(
             physical_row["highest_point_name"],
-            physical_row["highest_point_elevation_m"],
+            _tidy(physical_row["highest_point_elevation_m"]),
             bool(physical_row["highest_point_is_approximate"]),
             physical_row["highest_point_source_label"],
         )
@@ -84,7 +105,7 @@ def build_country(
     lowest_point = (
         ElevationPoint(
             physical_row["lowest_point_name"],
-            physical_row["lowest_point_elevation_m"],
+            _tidy(physical_row["lowest_point_elevation_m"]),
             bool(physical_row["lowest_point_is_approximate"]),
             physical_row["lowest_point_source_label"],
         )
@@ -92,19 +113,19 @@ def build_country(
         else None
     )
     physical = PhysicalGeography(
-        coastline_km=physical_row["coastline_km"] if physical_row else None,
+        coastline_km=_tidy(physical_row["coastline_km"]) if physical_row else None,
         mean_elevation_m=(
-            physical_row["mean_elevation_m"] if physical_row else None
+            _tidy(physical_row["mean_elevation_m"]) if physical_row else None
         ),
         highest_point=highest_point,
         lowest_point=lowest_point,
         rivers=tuple(
-            River(item["name"], item["length_km"], item["source_label"])
+            River(item["name"], _tidy(item["length_km"]), item["source_label"])
             for item in river_rows
         ),
         lakes=tuple(
             Lake(
-                item["name"], item["area_km2"], item["water_type"],
+                item["name"], _tidy(item["area_km2"]), item["water_type"],
                 item["source_label"],
             )
             for item in lake_rows
@@ -113,11 +134,11 @@ def build_country(
         source=source_by_id.get("cia-world-factbook-2025"),
         source_locator=physical_row["source_locator"] if physical_row else None,
     )
-    land_area = physical_row["land_area_km2"] if physical_row else None
-    water_area = physical_row["water_area_km2"] if physical_row else None
-    total_area = row["total_area_km2"]
+    land_area = _tidy(physical_row["land_area_km2"]) if physical_row else None
+    water_area = _tidy(physical_row["water_area_km2"]) if physical_row else None
+    total_area = _tidy(row["total_area_km2"])
     water_percent = (
-        water_area / total_area * 100
+        round(water_area / total_area * 100, 2)
         if water_area is not None
         and total_area is not None
         and total_area > 0
