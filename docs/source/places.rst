@@ -64,10 +64,10 @@ full profile, then the best-known places.
 
 .. doctest::
 
-   >>> [str(item) for item in atlas.find("Georgia", limit=2)]
-   ['Georgia', 'Georgia, state or province (US)']
-   >>> atlas.find("Georgia")[0].capital.name
-   'Tbilisi'
+   >>> [str(item) for item in atlas.find("Luxembourg", limit=2)]
+   ['Luxembourg', 'Luxembourg, capital city (LU)']
+   >>> atlas.find("Luxembourg")[0].capital.name
+   'Luxembourg'
 
 The best-known places in a country
 ----------------------------------
@@ -149,9 +149,9 @@ The command line has the same searches:
 
 .. code-block:: bash
 
-   pyworldatlas find Georgia
+   pyworldatlas find Luxembourg
    pyworldatlas place "Lake Titicaca"
-   pyworldatlas near 27.9881 86.9250 --kind peak
+   pyworldatlas near -3.0674 37.3556 --kind peak
 
 How it stays small and fast
 ---------------------------

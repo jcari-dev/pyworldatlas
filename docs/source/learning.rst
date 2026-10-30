@@ -81,16 +81,16 @@ source locator. The package never manufactures a translation or romanization.
    >>> with Atlas() as atlas:
    ...     for country_name, language_code in (
    ...         ("Dominican Republic", "es"),
-   ...         ("China", "zh"),
-   ...         ("India", "hi"),
+   ...         ("Mongolia", "mn"),
+   ...         ("Nepal", "ne"),
    ...         ("Japan", "ja"),
    ...     ):
    ...         country = atlas.country(country_name)
    ...         local = country.local_name(language_code)
    ...         print(country.flag, local.short_name, f"[{local.script_code}]")
    🇩🇴 República Dominicana [Latn]
-   🇨🇳 中国 [Hans]
-   🇮🇳 भारत [Deva]
+   🇲🇳 Монгол [Cyrl]
+   🇳🇵 नेपाल [Deva]
    🇯🇵 日本 [Jpan]
 
 Turn coordinates into a compass activity

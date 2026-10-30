@@ -622,7 +622,7 @@ class Atlas:
             region: Rank only countries in this region or subregion.
 
         Returns:
-            :class:`CountryRanking` rows that print as ``#1 Russia: 17,098,242 km²``.
+            :class:`CountryRanking` rows that print as ``#1 Canada: 202,080 km``.
             Every row names its ``source``. Missing values are left out, never
             guessed.
 
@@ -635,12 +635,12 @@ class Atlas:
         orders numbers only; it says nothing about which is better.
 
         Example:
-            >>> print(atlas.rank("area", limit=1)[0])
-            #1 Russia: 17,098,242 km²
-            >>> atlas.rank("coastline", continent="Africa", limit=2)
-            (CountryRanking('#1 Madagascar: 4,828 km'), CountryRanking('#2 Somalia: 3,025 km'))
-            >>> atlas.rank("life_expectancy", year=2020, limit=2)
-            (CountryRanking('#1 Monaco: 86.1 years (2020)'), CountryRanking('#2 Hong Kong: 85.5 years (2020)'))
+            >>> print(atlas.rank("coastline", limit=1)[0])
+            #1 Canada: 202,080 km
+            >>> atlas.rank("coastline", continent="Oceania", limit=2)
+            (CountryRanking('#1 Australia: 25,760 km'), CountryRanking('#2 New Zealand: 15,134 km'))
+            >>> atlas.rank("life_expectancy", year=2020, limit=1)
+            (CountryRanking('#1 Monaco: 86.1 years (2020)'),)
         """
         if year is None:
             try:
@@ -769,8 +769,8 @@ class Atlas:
             Matching :class:`Country` profiles, alphabetical.
 
         Example:
-            >>> atlas.countries_with_local_names(script_code="Deva")[:2]
-            (Country(name='India', alpha2='IN'), Country(name='Nepal', alpha2='NP'))
+            >>> atlas.countries_with_local_names(language_code="pt")[:2]
+            (Country(name='Angola', alpha2='AO'), Country(name='Brazil', alpha2='BR'))
         """
         self._ensure_open()
         clauses: list[str] = []
@@ -940,8 +940,8 @@ class Atlas:
             A :class:`BorderPathResult` that prints as the route, or ``None``.
 
         Example:
-            >>> print(atlas.border_path("France", "China"))
-            France → Germany → Poland → Russia → China (4 border crossings)
+            >>> print(atlas.border_path("Portugal", "Poland"))
+            Portugal → Spain → France → Germany → Poland (4 border crossings)
             >>> atlas.border_path("Japan", "France") is None
             True
         """
@@ -980,7 +980,7 @@ class Atlas:
         Example:
             >>> atlas.border_crossings("Portugal", "Germany")
             3
-            >>> atlas.border_crossings("Japan", "China") is None
+            >>> atlas.border_crossings("Japan", "Iceland") is None
             True
         """
         path = self.border_path(origin, destination)
@@ -1003,9 +1003,9 @@ class Atlas:
             ``True`` when you could walk from one to the other across borders.
 
         Example:
-            >>> atlas.has_land_route("Portugal", "China")
+            >>> atlas.has_land_route("Portugal", "Austria")
             True
-            >>> atlas.has_land_route("Japan", "China")
+            >>> atlas.has_land_route("Iceland", "Norway")
             False
         """
         return self.border_path(origin, destination) is not None
@@ -1156,11 +1156,11 @@ class Atlas:
             ValueError: The topic is unknown or ``count`` is too large.
 
         Example:
-            >>> card = atlas.flashcards("capitals", count=1, seed=7)[0]
+            >>> card = atlas.flashcards("capitals", count=1, region="Western Europe")[0]
             >>> print(card)
-            What is the capital of Morocco? Rabat
+            What is the capital of Switzerland? Bern
             >>> card.answer
-            'Rabat'
+            'Bern'
         """
         topic = self._learning_topic(topic)
         candidates = tuple(
@@ -1235,11 +1235,11 @@ class Atlas:
         No scoring, learner data, or session state is stored.
 
         Example:
-            >>> question = atlas.quiz("capitals", count=1, seed=7)[0]
+            >>> question = atlas.quiz("capitals", count=1, region="Western Europe")[0]
             >>> print(question)
-            What is the capital of Morocco?  1) Tórshavn  2) The Valley  3) Rabat  4) Zagreb
+            What is the capital of Switzerland?  1) Monaco  2) Bern  3) Amsterdam  4) Berlin
             >>> question.answer
-            'Rabat'
+            'Bern'
             >>> print(atlas.quiz("higher", count=1, seed=7)[0])
             Which is higher: Mauna Loa or Weisshorn?  1) Mauna Loa  2) Weisshorn
         """
@@ -1414,8 +1414,8 @@ class Atlas:
             AmbiguousPlaceError: Several cities share the name; pass ``country``.
 
         Example:
-            >>> atlas.city("Lagos")
-            City(name='Lagos', country_code='NG')
+            >>> atlas.city("Lima")
+            City(name='Lima', country_code='PE')
             >>> atlas.city("bogota").name
             'Bogotá'
         """
@@ -1847,19 +1847,19 @@ class Atlas:
         exactly (by name, alias, or code) comes first as a full
         :class:`Country` profile; then come the best-known places from
         :meth:`search_places`, where a country-level place is replaced by its
-        :class:`Country` profile. ``atlas.find("Georgia")`` gives the country
-        and then the US state.
+        :class:`Country` profile. ``atlas.find("Luxembourg")`` gives the country
+        and then its capital city.
 
         Args:
-            query: Any name, such as ``"Georgia"`` or ``"Everest"``.
+            query: Any name, such as ``"Luxembourg"`` or ``"Kilimanjaro"``.
             limit: The most results to return.
 
         Returns:
             :class:`Country` profiles and :class:`Place` records, best first.
 
         Example:
-            >>> atlas.find("Georgia", limit=2)
-            (Country(name='Georgia', alpha2='GE'), Place(english_name='Georgia', kind='state or province', country_code='US'))
+            >>> atlas.find("Luxembourg", limit=2)
+            (Country(name='Luxembourg', alpha2='LU'), Place(english_name='Luxembourg', kind='capital city', country_code='LU'))
         """
         if isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0:
             raise ValueError("limit must be a positive integer")
