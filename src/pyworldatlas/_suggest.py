@@ -65,11 +65,13 @@ def choice(value: str, choices: Iterable[str]) -> str | None:
     ``"Capital"``, ``"capital"``, and ``"capitals"`` all mean ``"capitals"``;
     ``"plug types"`` means ``"plug_types"``. Returns ``None`` when nothing fits.
     """
-    options = tuple(choices)
+    # Compare in lower case but return the choice as written, so "cfb"
+    # finds the climate code "Cfb".
+    options = {option.casefold(): option for option in choices}
     key = value.strip().casefold().replace(" ", "_").replace("-", "_")
     for candidate in (key, f"{key}s", f"{key}es", key.removesuffix("s")):
         if candidate in options:
-            return candidate
+            return options[candidate]
     return None
 
 

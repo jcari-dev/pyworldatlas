@@ -37,7 +37,7 @@ API at a glance
    * - ``countries_reachable_by_land(country)``
      - ``tuple[Country, ...]``
      - Other entities in the same component
-   * - ``countries_with_no_land_borders()``
+   * - ``countries(land_borders=False)``
      - ``tuple[Country, ...]``
      - Entities with no accepted edge
 
@@ -137,7 +137,7 @@ Connected land regions
 country's connected component. The starting country is excluded. An island or
 other borderless entity returns an empty tuple.
 
-``countries_with_no_land_borders()`` returns all 85 entities that have no edge
+``countries(land_borders=False)`` returns all 85 entities that have no edge
 in the reviewed graph. This classification follows the package entity scope and
 border policy; it is not a general definition of an island country.
 

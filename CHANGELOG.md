@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- **One naming style:** every distance search ends in `_near`
+  (`capitals_near`, `cities_near`, `places_near`, `heritage_sites_near`),
+  `rank()` ranks statistics too (`atlas.rank("life_expectancy", year=2020)`),
+  `quiz()` takes place topics such as `"higher"`, `countries()` is the one
+  filter (`countries(river="Danube")`, `countries(land_borders=False)`), and
+  `find()` matches the `find` command. The older names still work and are
+  listed in the API reference; they will be removed in 1.0.
+- **`atlas.help()` and `pyworldatlas tour`** print a dozen things to try,
+  grouped by topic.
 - **World maps of statistics:** `Atlas.world_map("life_expectancy")` and
   `pyworldatlas world-map life_expectancy` color every country by one
   statistic, for its latest year or a chosen one. The map is plain SVG on the

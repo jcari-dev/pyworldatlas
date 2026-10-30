@@ -267,6 +267,44 @@ structured dictionaries. Their ``to_dict()`` methods provide portable output.
 .. autoclass:: pyworldatlas.SourceReference
    :members:
 
+.. _api-renamed:
+
+Newer names
+-----------
+
+Version 0.13 gave every method the same naming style. The older names still
+work and return exactly the same results, so existing code keeps running. They
+will be removed in 1.0, so new code should use the newer names.
+
+.. list-table::
+   :header-rows: 1
+
+   * - Older name
+     - Newer name
+   * - ``nearest_capitals(...)``
+     - :meth:`~pyworldatlas.Atlas.capitals_near`
+   * - ``nearest_cities(...)``
+     - :meth:`~pyworldatlas.Atlas.cities_near`
+   * - ``world_heritage_sites_near(...)``
+     - :meth:`~pyworldatlas.Atlas.heritage_sites_near`
+   * - ``lookup(...)``
+     - :meth:`~pyworldatlas.Atlas.find`
+   * - ``rank_countries(...)`` and ``sort_by_statistic(...)``
+     - :meth:`~pyworldatlas.Atlas.rank`, which ranks statistics too
+   * - ``place_quiz("higher")``
+     - :meth:`quiz("higher") <pyworldatlas.Atlas.quiz>`, which takes place topics too
+   * - ``countries_with_river("Nile")``
+     - ``countries(river="Nile")``
+   * - ``countries_with_lake("Victoria")``
+     - ``countries(lake="Victoria")``
+   * - ``countries_in_climate_zone("Cfb")``
+     - ``countries(climate_zone="Cfb")``
+   * - ``countries_with_no_land_borders()``
+     - ``countries(land_borders=False)``
+
+New to the atlas? :meth:`atlas.help() <pyworldatlas.Atlas.help>` prints a short
+tour of things to try, and ``pyworldatlas tour`` prints it on the command line.
+
 .. _api-printing:
 
 Printing results
@@ -410,7 +448,7 @@ measurements; compass labels are orientation aids, not route instructions.
 
 ``Atlas.city()`` performs exact lookup and reports ambiguous names.
 ``search_cities()`` performs accent-tolerant partial matching, while
-``nearest_cities()`` orders results by great-circle distance. Optional country
+``cities_near()`` orders results by great-circle distance. Optional country
 arguments narrow the lookup or returned places.
 
 Land borders

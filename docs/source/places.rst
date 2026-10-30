@@ -58,15 +58,15 @@ exactly that name. Narrow any search with ``kind`` (see
 One search for everything
 -------------------------
 
-:meth:`~pyworldatlas.Atlas.lookup` searches countries and places together, for
+:meth:`~pyworldatlas.Atlas.find` searches countries and places together, for
 a search box that accepts anything. A country named exactly comes first as its
 full profile, then the best-known places.
 
 .. doctest::
 
-   >>> [str(item) for item in atlas.lookup("Georgia", limit=2)]
+   >>> [str(item) for item in atlas.find("Georgia", limit=2)]
    ['Georgia', 'Georgia, state or province (US)']
-   >>> atlas.lookup("Georgia")[0].capital.name
+   >>> atlas.find("Georgia")[0].capital.name
    'Tbilisi'
 
 The best-known places in a country
