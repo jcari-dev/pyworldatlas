@@ -55,18 +55,21 @@ the value for a year. Each value knows its unit and year:
    >>> str(atlas.statistic("Brazil", "urban_population", 1960))
    '44.7% of people (1960)'
 
-Sorting
+Ranking
 -------
 
-:meth:`~pyworldatlas.Atlas.sort_by_statistic` lists countries by one
-indicator. Sorting only orders the published numbers; it does not say which
-is better.
+:meth:`~pyworldatlas.Atlas.rank` ranks countries by any indicator, the same
+way it ranks area or coastline. Without a ``year`` each country uses its latest
+published value, and every row says which year that is. Ranking only orders
+the published numbers; it does not say which is better.
 
 .. doctest::
 
-   >>> top = atlas.sort_by_statistic("forest_area", limit=3)
-   >>> all(item.value > 90 for item in top)
+   >>> top = atlas.rank("forest_area", limit=3)
+   >>> all(row.value > 90 for row in top)
    True
+   >>> top[0].unit, top[0].source.startswith("World Bank")
+   ('% of land', True)
    >>> [indicator.key for indicator in atlas.indicators()][:3]
    ['birth_rate', 'death_rate', 'drinking_water']
    >>> atlas.close()

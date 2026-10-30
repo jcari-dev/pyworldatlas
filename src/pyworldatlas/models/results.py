@@ -49,8 +49,9 @@ class CountryRanking:
 
     ``source`` names where the value comes from, such as ``"GeoNames country
     population snapshot"``. Different sources can disagree: the statistics
-    pack's World Bank population (see :meth:`pyworldatlas.Atlas.sort_by_statistic`)
-    is newer and dated by year.
+    pack's World Bank population (``atlas.rank("population", year=2020)``)
+    is newer and dated by year. ``year`` is the year of a statistic, and
+    ``None`` for profile metrics such as area.
     """
 
     position: int
@@ -59,10 +60,14 @@ class CountryRanking:
     value: int | float
     unit: str
     source: str | None = None
+    year: int | None = None
 
     def __str__(self) -> str:
-        value = f"{self.value:,}" if float(self.value).is_integer() else f"{self.value:,.2f}"
-        return f"#{self.position} {self.country.name}: {value} {self.unit}"
+        # Up to two decimals without trailing zeros: "86.5", not "86.50".
+        value = f"{self.value:,}" if float(self.value).is_integer() else f"{self.value:,.2f}".rstrip("0").rstrip(".")
+        # Percent signs sit next to the number ("12.5%"); other units get a space.
+        text = f"#{self.position} {self.country.name}: {value}{'' if self.unit.startswith('%') else ' '}{self.unit}"
+        return text if self.year is None else f"{text} ({self.year})"
 
     def __repr__(self) -> str:
         return friendly_repr(self, f"{str(self)!r}")
@@ -111,7 +116,7 @@ class CityDistance:
     """A nearby populated place and its great-circle distance from an origin.
 
     The compact country reference disambiguates city names. ``unit`` records
-    the unit requested from :meth:`pyworldatlas.Atlas.nearest_cities`.
+    the unit requested from :meth:`pyworldatlas.Atlas.cities_near`.
     """
 
     country: CountryReference

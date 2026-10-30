@@ -45,6 +45,7 @@ def _parser() -> argparse.ArgumentParser:
     )
     search.add_argument("query", help="partial country name or alias")
     subcommands.add_parser("dataset-info", help="show bundled dataset metadata")
+    subcommands.add_parser("tour", help="show a dozen friendly things to try")
 
     find = subcommands.add_parser(
         "find",
@@ -198,6 +199,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         sys.stderr.reconfigure(encoding="utf-8")
     parser = _parser()
     args = parser.parse_args(argv)
+    if args.command == "tour":
+        from ._tour import TOUR
+
+        print(TOUR)
+        return 0
     if args.command in {"get", "add", "packs", "remove"}:
         try:
             return _pack_command(args)
@@ -210,7 +216,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 town = f", {found_airport.municipality}" if found_airport.municipality else ""
                 print(f"{found_airport.label}{town}\t{found_airport.coordinates.format(precision=3)}")
             elif args.command == "heritage":
-                for near_site in atlas.world_heritage_sites_near(args.where, limit=args.limit):
+                for near_site in atlas.heritage_sites_near(args.where, limit=args.limit):
                     year = f" ({near_site.site.inscribed})" if near_site.site.inscribed else ""
                     print(f"{near_site.distance:8.1f} km  {near_site.site.label}{year}")
             elif args.command == "stat":
@@ -233,7 +239,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 day = date.fromisoformat(args.date) if args.date else None
                 print(atlas.sun(args.where, day).summary)
             elif args.command == "find":
-                found_items = atlas.lookup(args.query, limit=args.limit)
+                found_items = atlas.find(args.query, limit=args.limit)
                 if not found_items:
                     parser.exit(1, f"Nothing found for {args.query!r}.\n")
                 for entry in found_items:

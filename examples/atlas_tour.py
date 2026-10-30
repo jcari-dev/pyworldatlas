@@ -25,5 +25,5 @@ with Atlas() as atlas:
         print(f"{result.position}. {result.country.name}: {result.value:,.0f} km")
 
     print("\nCapitals nearest to Tokyo:")
-    for result in atlas.nearest_capitals("Tokyo", country="JP", limit=3):
+    for result in atlas.capitals_near("Tokyo", country="JP", limit=3):
         print(f"{result.capital.name}: {result.distance:,.0f} km")

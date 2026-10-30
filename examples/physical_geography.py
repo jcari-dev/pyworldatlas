@@ -21,11 +21,11 @@ with Atlas() as atlas:
 
     print(
         "Amazon profiles:",
-        ", ".join(country.name for country in atlas.countries_with_river("Amazon")),
+        ", ".join(country.name for country in atlas.countries(river="Amazon")),
     )
     print(
         "Lake Geneva profiles:",
-        ", ".join(country.name for country in atlas.countries_with_lake("Geneva")),
+        ", ".join(country.name for country in atlas.countries(lake="Geneva")),
     )
 
     print("Longest sourced coastlines:")

@@ -86,8 +86,8 @@ nearby-city results serialize recursively:
    >>> with Atlas() as atlas:
    ...     japan = atlas.country("Japan").to_dict()
    ...     ranking = atlas.rank("population", limit=1)[0]
-   ...     nearby = atlas.nearest_capitals("Tokyo", country="JP", limit=1)[0]
-   ...     nearby_city = atlas.nearest_cities(
+   ...     nearby = atlas.capitals_near("Tokyo", country="JP", limit=1)[0]
+   ...     nearby_city = atlas.cities_near(
    ...         "Santo Domingo", origin_country="DO", within_country="DO", limit=1
    ...     )[0]
    >>> japan["anthems"][0]["title"]

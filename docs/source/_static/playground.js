@@ -157,7 +157,7 @@ with Atlas() as atlas:
 
 with Atlas() as atlas:
     origin = atlas.city("Santo Domingo", country="DO")
-    nearby = atlas.nearest_capitals(origin, limit=8)
+    nearby = atlas.capitals_near(origin, limit=8)
 
     print(f"NEAREST CAPITALS TO {origin.name.upper()}")
     for number, place in enumerate(nearby, 1):
@@ -190,8 +190,8 @@ with Atlas() as atlas:
       code: `from pyworldatlas import Atlas
 
 with Atlas() as atlas:
-    amazon = atlas.countries_with_river("Amazon")
-    geneva = atlas.countries_with_lake("Geneva")
+    amazon = atlas.countries(river="Amazon")
+    geneva = atlas.countries(lake="Geneva")
 
     print("Countries linked to the source-listed Amazon:")
     print("  " + " → ".join(country.name for country in amazon))
@@ -259,7 +259,7 @@ with Atlas() as atlas:
     for city in matches:
         print(f"  {city.label:<30} {city.coordinates.format()}")
 
-    nearby = atlas.nearest_cities(
+    nearby = atlas.cities_near(
         "Santo Domingo",
         origin_country="DO",
         within_country="DO",
@@ -389,7 +389,7 @@ with Atlas() as atlas:
 with Atlas() as atlas:
     for query in ("Georgia", "Victoria", "Amazon"):
         print(f"{query}:")
-        for result in atlas.lookup(query, limit=4):
+        for result in atlas.find(query, limit=4):
             print(f"  {result}")`,
     },
     {

@@ -106,8 +106,8 @@ features easy to discover:
 .. doctest::
 
    >>> with Atlas() as atlas:
-   ...     print([country.name for country in atlas.countries_with_river("Amazon")])
-   ...     print([country.name for country in atlas.countries_with_lake("Geneva")])
+   ...     print([country.name for country in atlas.countries(river="Amazon")])
+   ...     print([country.name for country in atlas.countries(lake="Geneva")])
    ['Brazil', 'Peru']
    ['France', 'Switzerland']
 
@@ -149,7 +149,7 @@ site-level climate determination.
 .. doctest::
 
    >>> with Atlas() as atlas:
-   ...     print(len(atlas.countries_in_climate_zone("Af")))
+   ...     print(len(atlas.countries(climate_zone="Af")))
    ...     print(atlas.climate_zone_codes()[-2:])
    73
    ('ET', 'EF')

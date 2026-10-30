@@ -33,8 +33,8 @@ the source reports zero coastline and never turns missing data into a result.
 Country rankings
 ----------------
 
-:meth:`Atlas.rank_countries <pyworldatlas.Atlas.rank_countries>` and its short
-alias :meth:`Atlas.rank <pyworldatlas.Atlas.rank>` support these metrics:
+:meth:`Atlas.rank <pyworldatlas.Atlas.rank>` ranks countries by any of these
+metrics, and by every statistic in the statistics pack (see :doc:`statistics`):
 
 .. list-table:: Ranking metrics
    :header-rows: 1
@@ -116,14 +116,14 @@ Climate counts depend on the documented 0.1% class-share threshold. See
 Nearest capitals
 ----------------
 
-:meth:`Atlas.nearest_capitals <pyworldatlas.Atlas.nearest_capitals>` accepts an
+:meth:`Atlas.capitals_near <pyworldatlas.Atlas.capitals_near>` accepts an
 exact city name, a country, a capital or city object, a
 :class:`~pyworldatlas.Coordinate`, or a ``(latitude, longitude)`` tuple.
 
 .. doctest::
 
    >>> origin = atlas.country("Dominican Republic")
-   >>> nearest = atlas.nearest_capitals(origin, limit=3)
+   >>> nearest = atlas.capitals_near(origin, limit=3)
    >>> [(item.capital.name, item.country.alpha2) for item in nearest]
    [('Port-au-Prince', 'HT'), ('Cockburn Town', 'TC'), ('San Juan', 'PR')]
    >>> nearest[0].unit

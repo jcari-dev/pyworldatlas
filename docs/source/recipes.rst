@@ -156,7 +156,7 @@ Combine partial city-name search with nearby-place discovery.
        matches = atlas.search_cities("santo", country="DO", limit=3)
        print("Search results:", ", ".join(city.label for city in matches))
 
-       nearby = atlas.nearest_cities(
+       nearby = atlas.cities_near(
            "Santo Domingo",
            origin_country="DO",
            within_country="DO",
@@ -184,13 +184,13 @@ connection questions.
        print(" → ".join(path.names))
        print("Crossings:", path.crossings)
 
-       amazon = atlas.countries_with_river("Amazon")
+       amazon = atlas.countries(river="Amazon")
        print(
            "Source-listed Amazon profiles:",
            ", ".join(country.name for country in amazon),
        )
 
-       geneva = atlas.countries_with_lake("Geneva")
+       geneva = atlas.countries(lake="Geneva")
        print(
            "Source-listed Lake Geneva profiles:",
            ", ".join(country.name for country in geneva),

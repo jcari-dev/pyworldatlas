@@ -8,7 +8,7 @@ import heapq
 from math import asin, cos, radians, sin, sqrt
 from pathlib import Path
 import sqlite3
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal, overload
 from collections.abc import Iterable, Iterator
 
 from ._normalization import normalize_name
@@ -322,18 +322,34 @@ class Atlas:
         koppen_geiger_code: str | None = None,
         has_rivers: bool | None = None,
         has_lakes: bool | None = None,
+        river: str | None = None,
+        lake: str | None = None,
+        climate_zone: str | None = None,
+        land_borders: bool | None = None,
     ) -> tuple[Country, ...]:
-        """Return countries alphabetically with optional exact profile filters.
+        """Return countries alphabetically, keeping only those that match every filter.
 
-        Filters can be combined and use AND semantics. With no filters, every
-        bundled profile is returned in display-name order.
+        This is the one place to filter countries. With no filters, every
+        bundled profile is returned in display-name order. For example::
+
+            atlas.countries(continent="Africa", coastal=False)  # landlocked in Africa
+            atlas.countries(river="Danube")                      # the Danube flows through
+            atlas.countries(climate_zone="Cfb")                  # has a Köppen-Geiger zone
+            atlas.countries(land_borders=False)                  # islands and other
+                                                                 # countries with no land border
+
+        ``river`` and ``lake`` match part of a feature name, ignoring case.
+        ``climate_zone`` is a Köppen-Geiger code from :meth:`climate_zone_codes`
+        (``koppen_geiger_code`` is its older name). ``land_borders`` uses the
+        reviewed land-border graph.
 
         Physical-data filters only include profiles covered by the relevant
         source layer. For example, ``coastal=False`` means a sourced coastline
         of zero kilometres; it does not treat missing coastline data as zero.
         """
         self._ensure_open()
-        clauses, params = [], []
+        clauses: list[str] = []
+        params: list[Any] = []
         if continent:
             clauses.append("continent = ?")
             params.append(continent)
@@ -367,6 +383,8 @@ class Atlas:
                 "id IN (SELECT country_id FROM country_physical "
                 f"WHERE coastline_km {comparison})"
             )
+        if climate_zone is not None:
+            koppen_geiger_code = self._climate_zone(climate_zone)
         if koppen_geiger_code:
             clauses.append(
                 "id IN (SELECT country_id FROM country_climate_zone "
@@ -382,6 +400,24 @@ class Atlas:
                     raise TypeError(f"{label} must be bool or None")
                 operator = "IN" if requested else "NOT IN"
                 clauses.append(f"id {operator} (SELECT country_id FROM {table})")
+        for name, table in ((river, "country_river"), (lake, "country_lake")):
+            if name is not None:
+                # The retained source label is searched too, so "Nile" also
+                # finds rows whose short name is the local "An Nil".
+                pattern = f"%{name.casefold()}%"
+                clauses.append(
+                    f"id IN (SELECT country_id FROM {table} "
+                    "WHERE lower(name) LIKE ? OR lower(source_label) LIKE ?)"
+                )
+                params.extend((pattern, pattern))
+        if land_borders is not None:
+            if not isinstance(land_borders, bool):
+                raise TypeError("land_borders must be bool or None")
+            alone = [cid for cid, neighbors in self._border_adjacency().items() if not neighbors]
+            if alone or not land_borders:
+                marks = ",".join("?" * len(alone)) or "NULL"
+                clauses.append(f"id {'NOT IN' if land_borders else 'IN'} ({marks})")
+                params.extend(alone)
         where = f" WHERE {' AND '.join(clauses)}" if clauses else ""
         rows = self._db.connection.execute(f"SELECT id FROM country{where} ORDER BY name", params).fetchall()
         return self._load_countries(int(row[0]) for row in rows)
@@ -402,8 +438,10 @@ class Atlas:
         ``"highest_elevation"``, ``"lowest_elevation"``, ``"river_count"``,
         ``"lake_count"``, and ``"climate_zone_count"``. Existing population,
         total area, density, border, and city metrics remain available. Missing
-        values are excluded. Each row names its ``source``; for dated World Bank
-        figures, such as population by year, use :meth:`sort_by_statistic`.
+        values are excluded. Each row names its ``source``.
+
+        :meth:`rank` does the same and also ranks statistics; prefer it in new
+        code.
         """
         normalized_metric = normalize_metric(metric)
         if limit is not None and (
@@ -434,9 +472,90 @@ class Atlas:
             for position, (country, value) in enumerate(ranked, 1)
         )
 
-    def rank(self, metric: str, **kwargs: Any) -> tuple[CountryRanking, ...]:
-        """Alias for :meth:`rank_countries` suited to exploratory sessions."""
-        return self.rank_countries(metric, **kwargs)
+    def rank(
+        self,
+        metric: str,
+        *,
+        year: int | None = None,
+        limit: int | None = None,
+        descending: bool = True,
+        continent: str | None = None,
+        region: str | None = None,
+    ) -> tuple[CountryRanking, ...]:
+        """Rank countries by anything the atlas can measure, largest first.
+
+        Args:
+            metric: A profile metric such as ``"area"``, ``"coastline"``, or
+                ``"border_count"`` (all are listed in :meth:`rank_countries`),
+                or a statistic such as ``"life_expectancy"`` from
+                :meth:`indicators`.
+            year: Rank a statistic for one year. Without it, each country
+                uses its latest published value, and the row's ``year`` says
+                which year that is.
+            limit: Keep only the first ``limit`` rows.
+            descending: ``False`` ranks smallest first.
+            continent: Rank only countries on this continent.
+            region: Rank only countries in this region or subregion.
+
+        Returns:
+            :class:`CountryRanking` rows that print as ``#1 Russia: 17,098,242 km²``.
+            Every row names its ``source``. Missing values are left out, never
+            guessed.
+
+        Raises:
+            ValueError: The metric is unknown. The message suggests a close
+                spelling and lists the choices.
+
+        ``"population"`` ranks the bundled GeoNames snapshot; with a ``year``
+        it ranks the World Bank figures from the statistics pack. Ranking
+        orders numbers only; it says nothing about which is better.
+        """
+        if year is None:
+            try:
+                key = normalize_metric(metric)
+            except ValueError:
+                pass  # not a profile metric, so try the statistics below
+            else:
+                return self.rank_countries(
+                    key, limit=limit, descending=descending, continent=continent, region=region
+                )
+        if limit is not None and (isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0):
+            raise ValueError("limit must be a positive integer or None")
+        indicator = self._rank_indicator(metric, year)
+        keep = (
+            None if continent is None and region is None
+            else {country.alpha2 for country in self.countries(continent=continent, region=region)}
+        )
+        rows: list[CountryRanking] = []
+        for item in self.sort_by_statistic(indicator.key, year=year, descending=descending, limit=None):
+            if keep is not None and item.area not in keep:
+                continue
+            profile = self.get(item.area)
+            if profile is None:
+                continue
+            rows.append(CountryRanking(
+                len(rows) + 1, profile.reference(), indicator.key, item.value,
+                indicator.unit, indicator.source, item.year,
+            ))
+            if limit is not None and len(rows) == limit:
+                break
+        return tuple(rows)
+
+    def _rank_indicator(self, metric: str, year: int | None) -> Indicator:
+        """Return the statistic ``rank`` should use, or explain every choice."""
+        try:
+            indicators = self._statistics_pack().indicators
+        except PackNotInstalledError:
+            indicators = {}
+        name = choice(str(metric), indicators) if indicators else None
+        if name is not None:
+            return indicators[name]
+        options = tuple(indicators) if year is not None else (*METRIC_UNITS, *indicators)
+        hint = did_you_mean(closest(str(metric), options))
+        message = f"Unknown metric {metric!r}.{hint} Choose from {', '.join(options)}."
+        if not indicators:
+            message += " Statistics such as life_expectancy need the statistics pack: pyworldatlas get statistics"
+        raise ValueError(message)
 
     def climate_zone_codes(self) -> tuple[str, ...]:
         """Return every represented Köppen-Geiger code in source legend order."""
@@ -455,53 +574,34 @@ class Atlas:
         present = {str(row[0]) for row in rows}
         return tuple(code for code in order if code in present)
 
-    def countries_in_climate_zone(self, code: str) -> tuple[Country, ...]:
-        """Return profiles containing the exact Köppen-Geiger class ``code``."""
-        if code.casefold() not in {
-            item.casefold() for item in self.climate_zone_codes()
-        }:
+    def _climate_zone(self, code: str) -> str:
+        """Return the Köppen-Geiger code ``code`` means, or explain the choices."""
+        codes = self.climate_zone_codes()
+        found = choice(code, codes) if isinstance(code, str) else None
+        if found is None:
+            hint = did_you_mean(closest(str(code), codes))
             raise ValueError(
-                f"Unknown or unrepresented Köppen-Geiger code {code!r}"
+                f"Unknown or unrepresented Köppen-Geiger code {code!r}.{hint} Choose from {', '.join(codes)}."
             )
-        return self.countries(koppen_geiger_code=code)
+        return found
+
+    def countries_in_climate_zone(self, code: str) -> tuple[Country, ...]:
+        """Older name for ``countries(climate_zone=code)``, kept until 1.0."""
+        return self.countries(climate_zone=code)
 
     def countries_with_river(self, name: str | None = None) -> tuple[Country, ...]:
-        """Return profiles with source-listed major rivers.
+        """Older name for ``countries(river=name)``, kept until 1.0.
 
-        When ``name`` is supplied, it is matched case-insensitively against the
-        concise feature name and retained source label. Results are alphabetical.
+        With no ``name`` it is ``countries(has_rivers=True)``.
         """
-        self._ensure_open()
-        if name is None:
-            return self.countries(has_rivers=True)
-        query = f"%{name.casefold()}%"
-        rows = self._db.connection.execute(
-            """SELECT DISTINCT c.id FROM country c
-               JOIN country_river r ON r.country_id=c.id
-               WHERE lower(r.name) LIKE ? OR lower(r.source_label) LIKE ?
-               ORDER BY c.name""",
-            (query, query),
-        ).fetchall()
-        return self._load_countries(int(row[0]) for row in rows)
+        return self.countries(has_rivers=True) if name is None else self.countries(river=name)
 
     def countries_with_lake(self, name: str | None = None) -> tuple[Country, ...]:
-        """Return profiles with source-listed major lakes.
+        """Older name for ``countries(lake=name)``, kept until 1.0.
 
-        When ``name`` is supplied, it is matched case-insensitively against the
-        concise feature name and retained source label. Results are alphabetical.
+        With no ``name`` it is ``countries(has_lakes=True)``.
         """
-        self._ensure_open()
-        if name is None:
-            return self.countries(has_lakes=True)
-        query = f"%{name.casefold()}%"
-        rows = self._db.connection.execute(
-            """SELECT DISTINCT c.id FROM country c
-               JOIN country_lake l ON l.country_id=c.id
-               WHERE lower(l.name) LIKE ? OR lower(l.source_label) LIKE ?
-               ORDER BY c.name""",
-            (query, query),
-        ).fetchall()
-        return self._load_countries(int(row[0]) for row in rows)
+        return self.countries(has_lakes=True) if name is None else self.countries(lake=name)
 
     def countries_with_local_names(
         self,
@@ -685,12 +785,8 @@ class Atlas:
         return tuple(sorted((self._load_country(item) for item in reached), key=lambda item: item.name))
 
     def countries_with_no_land_borders(self) -> tuple[Country, ...]:
-        """Return all bundled entities with no accepted land-border relation."""
-        return tuple(
-            self._load_country(country_id)
-            for country_id, neighbors in self._border_adjacency().items()
-            if not neighbors
-        )
+        """Older name for ``countries(land_borders=False)``, kept until 1.0."""
+        return self.countries(land_borders=False)
 
     def sample_countries(
         self,
@@ -724,14 +820,19 @@ class Atlas:
         self._ensure_open()
         return FLASHCARD_TOPICS
 
-    def _learning_topic(self, topic: str) -> str:
-        """Return the topic ``topic`` means ("Capital" means "capitals"), or list the choices."""
+    def _learning_topic(self, topic: str, also: tuple[str, ...] = ()) -> str:
+        """Return the topic ``topic`` means ("Capital" means "capitals"), or list the choices.
+
+        ``also`` names extra topics to suggest, such as the place topics that
+        only :meth:`quiz` accepts.
+        """
         if not isinstance(topic, str):
             raise TypeError("topic must be a string")
         found = choice(topic, FLASHCARD_TOPICS)
         if found is None:
-            hint = did_you_mean(closest(topic, FLASHCARD_TOPICS))
-            raise ValueError(f"Unknown topic {topic!r}.{hint} Choose from {', '.join(FLASHCARD_TOPICS)}.")
+            options = (*FLASHCARD_TOPICS, *also)
+            hint = did_you_mean(closest(topic, options))
+            raise ValueError(f"Unknown topic {topic!r}.{hint} Choose from {', '.join(options)}.")
         return found
 
     def flashcards(
@@ -771,6 +872,21 @@ class Atlas:
         selected = stable_country_sample(candidates, count, seed)
         return tuple(self._flashcard(country, topic) for country in selected)
 
+    # A place topic gives PlaceQuestion rows; any other string gives
+    # QuizQuestion rows. The overlap is deliberate, as in the standard open().
+    @overload
+    def quiz(  # type: ignore[overload-overlap]
+        self,
+        topic: Literal["closer_to_equator", "higher", "kinds"],
+        *,
+        count: int = 5,
+        choices: int = 4,
+        continent: str | None = None,
+        region: str | None = None,
+        seed: int | str = 0,
+    ) -> tuple[PlaceQuestion, ...]: ...
+
+    @overload
     def quiz(
         self,
         topic: str,
@@ -780,19 +896,54 @@ class Atlas:
         continent: str | None = None,
         region: str | None = None,
         seed: int | str = 0,
-    ) -> tuple[QuizQuestion, ...]:
-        """Build deterministic multiple-choice questions from sourced facts.
+    ) -> tuple[QuizQuestion, ...]: ...
 
-        ``topic`` accepts every value returned by :meth:`learning_topics`.
-        ``choices`` must be an integer from 2 through 6. Questions, distractors,
-        and answer positions remain stable for the same dataset, filters, and
-        seed, making answer keys reproducible across supported Python versions.
+    def quiz(
+        self,
+        topic: str,
+        *,
+        count: int = 5,
+        choices: int = 4,
+        continent: str | None = None,
+        region: str | None = None,
+        seed: int | str = 0,
+    ) -> tuple[QuizQuestion, ...] | tuple[PlaceQuestion, ...]:
+        """Build multiple-choice questions from sourced facts.
 
-        The method raises :class:`ValueError` when the filtered profiles do not
-        provide enough distinct answers for the requested number of choices.
+        Args:
+            topic: A country topic from :meth:`learning_topics`, such as
+                ``"capitals"`` or ``"flags"``, or a place topic from
+                :attr:`PLACE_QUIZ_TOPICS`: ``"higher"`` (which mountain is
+                higher?), ``"kinds"`` (what kind of place is it?), or
+                ``"closer_to_equator"``.
+            count: How many questions to make.
+            choices: Answers per country question, from 2 through 6. Place
+                questions come with their own choices.
+            continent: Ask only about countries on this continent.
+            region: Ask only about countries in this region or subregion.
+            seed: The same seed always gives the same questions, choices, and
+                answer positions, on every supported Python version.
+
+        Returns:
+            :class:`QuizQuestion` rows for country topics, or
+            :class:`PlaceQuestion` rows for place topics. Each prints as the
+            question with numbered choices.
+
+        Raises:
+            ValueError: The topic is unknown, or the filters leave too few
+                distinct answers for the requested number of choices.
+
         No scoring, learner data, or session state is stored.
         """
-        topic = self._learning_topic(topic)
+        if isinstance(topic, str) and choice(topic, FLASHCARD_TOPICS) is None:
+            place_topic = choice(topic, self.PLACE_QUIZ_TOPICS)
+            if place_topic is not None:
+                if continent is not None or region is not None:
+                    raise ValueError("Place questions cover the whole world, so continent and region do not apply.")
+                if choices != 4:
+                    raise ValueError("Place questions come with their own choices, so choices does not apply.")
+                return self._place_quiz(place_topic, count=count, seed=seed)
+        topic = self._learning_topic(topic, self.PLACE_QUIZ_TOPICS)
         if isinstance(choices, bool) or not isinstance(choices, int):
             raise TypeError("choices must be an integer")
         if not 2 <= choices <= 6:
@@ -972,7 +1123,7 @@ class Atlas:
         finish = self._coordinates_of(second, country=second_country)
         return Distance(start.distance_to(finish, unit=unit), unit)
 
-    def nearest_capitals(
+    def capitals_near(
         self,
         origin: str | Country | Capital | City | Coordinate | tuple[float, float],
         *,
@@ -1006,7 +1157,7 @@ class Atlas:
         results.sort(key=lambda result: (result.distance, result.country.name))
         return tuple(results[:limit])
 
-    def nearest_cities(
+    def cities_near(
         self,
         origin: str | Country | Capital | City | Coordinate | tuple[float, float],
         *,
@@ -1221,14 +1372,14 @@ class Atlas:
         ).fetchall()
         return tuple(self._place_from_row(row) for row in rows)
 
-    def lookup(self, query: str, *, limit: int = 10) -> tuple[Country | Place, ...]:
+    def find(self, query: str, *, limit: int = 10) -> tuple[Country | Place, ...]:
         """Find anything by name: countries, cities, regions, and landmarks.
 
         One search for human-entered text. A country that the query names
         exactly (by name, alias, or code) comes first as a full
         :class:`Country` profile; then come the best-known places from
         :meth:`search_places`, where a country-level place is replaced by its
-        :class:`Country` profile. ``atlas.lookup("Georgia")`` gives the country
+        :class:`Country` profile. ``atlas.find("Georgia")`` gives the country
         and then the US state.
         """
         if isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0:
@@ -1376,7 +1527,8 @@ class Atlas:
 
         Sorting only orders the published numbers; it says nothing about which
         is better. Countries without a value are left out. Needs the
-        statistics pack.
+        statistics pack. :meth:`rank` gives the same order as numbered rows
+        with country names; prefer it in new code.
         """
         found = self._indicator(indicator)
         if limit is not None and (isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0):
@@ -1475,7 +1627,7 @@ class Atlas:
         """Return UNESCO World Heritage sites in list order.
 
         Narrow with ``category`` (``"cultural"``, ``"natural"``, or ``"mixed"``).
-        Use :meth:`world_heritage_sites_near` to find the sites around a place.
+        Use :meth:`heritage_sites_near` to find the sites around a place.
         Needs the landmarks pack (``pyworldatlas get landmarks``).
         """
         if category is not None and category not in {"cultural", "natural", "mixed"}:
@@ -1485,7 +1637,7 @@ class Atlas:
             found = tuple(site for site in found if site.category == category)
         return found
 
-    def world_heritage_sites_near(
+    def heritage_sites_near(
         self,
         origin: str | Country | Capital | City | Place | Coordinate | tuple[float, float],
         *,
@@ -1586,7 +1738,7 @@ class Atlas:
         return None
 
     PLACE_QUIZ_TOPICS = ("closer_to_equator", "higher", "kinds")
-    """Topics accepted by :meth:`place_quiz`."""
+    """Topics about famous places that :meth:`quiz` accepts besides :meth:`learning_topics`."""
 
     _QUIZ_KINDS = (
         "atoll", "bay", "cape", "desert", "glacier", "gulf", "island", "lake", "mountain",
@@ -1594,7 +1746,7 @@ class Atlas:
         "volcano", "waterfall",
     )
 
-    def place_quiz(self, topic: str, *, count: int = 5, seed: int | str = 0) -> tuple[PlaceQuestion, ...]:
+    def _place_quiz(self, topic: str, *, count: int = 5, seed: int | str = 0) -> tuple[PlaceQuestion, ...]:
         """Return multiple-choice questions about famous natural places.
 
         Topics are ``"kinds"`` (what kind of place is it?), ``"higher"`` (which
@@ -1790,6 +1942,43 @@ class Atlas:
 
     def __iter__(self) -> Iterator[Country]:
         return iter(self.countries())
+
+    def help(self) -> None:
+        """Print a short tour: about a dozen things to try, grouped by topic.
+
+        Every line is a real call you can copy. ``pyworldatlas tour`` prints
+        the same tour on the command line.
+        """
+        from ._tour import TOUR
+
+        print(TOUR)
+
+    # Older names. They keep working until 1.0 so nobody's code breaks, but
+    # the docs teach only the new names above.
+
+    def nearest_capitals(self, *args: Any, **kwargs: Any) -> tuple[CapitalDistance, ...]:
+        """Older name for :meth:`capitals_near`, kept until 1.0."""
+        return self.capitals_near(*args, **kwargs)
+
+    def nearest_cities(self, *args: Any, **kwargs: Any) -> tuple[CityDistance, ...]:
+        """Older name for :meth:`cities_near`, kept until 1.0."""
+        return self.cities_near(*args, **kwargs)
+
+    def world_heritage_sites_near(self, *args: Any, **kwargs: Any) -> tuple[SiteDistance, ...]:
+        """Older name for :meth:`heritage_sites_near`, kept until 1.0."""
+        return self.heritage_sites_near(*args, **kwargs)
+
+    def lookup(self, query: str, *, limit: int = 10) -> tuple[Country | Place, ...]:
+        """Older name for :meth:`find`, kept until 1.0."""
+        return self.find(query, limit=limit)
+
+    def place_quiz(self, topic: str, *, count: int = 5, seed: int | str = 0) -> tuple[PlaceQuestion, ...]:
+        """Older name for ``quiz(topic)`` with a place topic, kept until 1.0."""
+        found = choice(topic, self.PLACE_QUIZ_TOPICS) if isinstance(topic, str) else None
+        if found is None:
+            hint = did_you_mean(closest(str(topic), self.PLACE_QUIZ_TOPICS))
+            raise ValueError(f"Unknown topic {topic!r}.{hint} Choose from {', '.join(self.PLACE_QUIZ_TOPICS)}.")
+        return self._place_quiz(found, count=count, seed=seed)
 
     def close(self) -> None:
         """Close the read-only database connection.
