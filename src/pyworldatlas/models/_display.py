@@ -1,7 +1,7 @@
 """How results look when printed: short by default, every field on request.
 
 Every result prints as one readable line, such as
-``CountryRanking('#1 Russia: 17,098,242 km²')``. Turn on details to see every
+``CountryRanking('#1 Canada: 202,080 km')``. Turn on details to see every
 field instead, as plain Python dataclasses show them::
 
     import pyworldatlas
@@ -54,7 +54,7 @@ def friendly_repr(value: Any, short: str) -> str:
     """Return ``Name(short)``, or ``Name(field=value, ...)`` when details are on.
 
     ``short`` is the readable inside of the repr, already quoted where it is
-    text, such as ``"'#1 Russia: 17,098,242 km²'"``.
+    text, such as ``"'#1 Canada: 202,080 km'"``.
     """
     name = type(value).__name__
     if _STATE["details"] and is_dataclass(value):

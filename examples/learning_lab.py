@@ -9,8 +9,8 @@ with Atlas() as atlas:
     print("\nWRITING SYSTEMS AROUND THE WORLD")
     for country_name, language_code in (
         ("Dominican Republic", "es"),
-        ("China", "zh"),
-        ("India", "hi"),
+        ("Mongolia", "mn"),
+        ("Nepal", "ne"),
         ("Japan", "ja"),
     ):
         country = atlas.country(country_name)

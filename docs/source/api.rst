@@ -442,7 +442,7 @@ Printing results
 ----------------
 
 Every result prints as one readable line, such as
-``CountryRanking('#1 Russia: 17,098,242 km²')``. Call
+``CountryRanking('#1 Canada: 202,080 km')``. Call
 :func:`pyworldatlas.show_details` to print every field instead, or set the
 environment variable ``PYWORLDATLAS_DETAILS=1``. Details change only how
 results print; ``to_dict()`` always returns every field.

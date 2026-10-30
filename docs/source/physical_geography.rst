@@ -173,9 +173,9 @@ Physical ranking metrics include ``land_area``, ``water_area``,
 .. doctest::
 
    >>> with Atlas() as atlas:
-   ...     rows = atlas.rank("coastline", limit=5)
+   ...     rows = atlas.rank("coastline", limit=3)
    ...     print([(row.country.name, row.value) for row in rows])
-   [('Canada', 202080), ('Indonesia', 54716), ('Greenland', 44087), ('Russia', 37653), ('Philippines', 36289)]
+   [('Canada', 202080), ('Indonesia', 54716), ('Greenland', 44087)]
 
 Rankings describe the bundled source fields; they do not judge countries.
 Missing values are excluded and ties use the country name for deterministic

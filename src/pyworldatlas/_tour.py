@@ -12,8 +12,8 @@ PyWorldAtlas: things to try
 
 Look things up
   atlas["Japan"]                               a country profile
-  atlas.find("Georgia")                        anything by name
-  atlas.city("Lagos")                          one city
+  atlas.find("Kilimanjaro")                    anything by name
+  atlas.city("Lima")                           one city
 
 Measure
   atlas.distance_between("Paris", "Tokyo")     great-circle distance
@@ -22,9 +22,9 @@ Measure
   atlas.sun("Reykjavik")                       sunrise and sunset today
 
 Compare
-  atlas.rank("area", limit=5)                  biggest countries
-  atlas.countries(continent="Africa", coastal=False)
-  atlas.border_path("France", "China")         crossing borders by land
+  atlas.rank("coastline", limit=5)             longest coastlines
+  atlas.countries(region="Western Europe", coastal=False)
+  atlas.border_path("Portugal", "Poland")      crossing borders by land
 
 Learn
   atlas.quiz("capitals", count=3)              multiple-choice questions

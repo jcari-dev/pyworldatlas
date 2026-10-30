@@ -31,7 +31,6 @@ Flag emoji
    - |flag-jp| Japan
    - |flag-br| Brazil
    - |flag-ch| Switzerland
-   - |flag-cn| China
    - |flag-fr| France
    - |flag-ae| United Arab Emirates
 

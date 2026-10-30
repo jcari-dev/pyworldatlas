@@ -114,8 +114,8 @@ with Atlas() as atlas:
 with Atlas() as atlas:
     for query, language in [
         ("Dominican Republic", "es"),
-        ("China", "zh"),
-        ("India", "hi"),
+        ("Mongolia", "mn"),
+        ("Nepal", "ne"),
         ("Japan", "ja"),
     ]:
         country = atlas.country(query)
@@ -174,7 +174,7 @@ with Atlas() as atlas:
       code: `from pyworldatlas import Atlas
 
 with Atlas() as atlas:
-    path = atlas.border_path("Portugal", "China")
+    path = atlas.border_path("Portugal", "Poland")
     print(" → ".join(path.names))
     print(f"\\nFewest reviewed land-border crossings: {path.crossings}")
 
@@ -374,7 +374,7 @@ with Atlas() as atlas:
       code: `from pyworldatlas import Atlas
 
 with Atlas() as atlas:
-    for name in ("Japan", "United Kingdom", "Brazil", "India", "Kenya"):
+    for name in ("Japan", "United Kingdom", "Brazil", "Canada", "Kenya"):
         country = atlas.country(name)
         if country.travel:
             print(f"{country.flag} {country.name:<15} {country.travel.summary}")`,
@@ -387,7 +387,7 @@ with Atlas() as atlas:
       code: `from pyworldatlas import Atlas
 
 with Atlas() as atlas:
-    for query in ("Georgia", "Victoria", "Amazon"):
+    for query in ("Luxembourg", "Victoria", "Titicaca"):
         print(f"{query}:")
         for result in atlas.find(query, limit=4):
             print(f"  {result}")`,

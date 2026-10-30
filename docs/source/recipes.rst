@@ -69,8 +69,8 @@ selected identity.
    with Atlas() as atlas:
        for country_name, language_code in (
            ("Dominican Republic", "es"),
-           ("China", "zh"),
-           ("India", "hi"),
+           ("Mongolia", "mn"),
+           ("Nepal", "ne"),
            ("Japan", "ja"),
        ):
            country = atlas.country(country_name)
@@ -180,7 +180,7 @@ connection questions.
    from pyworldatlas import Atlas
 
    with Atlas() as atlas:
-       path = atlas.border_path("Portugal", "China")
+       path = atlas.border_path("Portugal", "Poland")
        print(" → ".join(path.names))
        print("Crossings:", path.crossings)
 

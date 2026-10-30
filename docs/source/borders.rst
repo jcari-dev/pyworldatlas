@@ -60,7 +60,7 @@ itself.
 .. doctest::
 
    >>> with Atlas() as atlas:
-   ...     print(atlas.shares_border("Spain", "Morocco"))
+   ...     print(atlas.shares_border("Spain", "Portugal"))
    ...     print(atlas.shares_border("United States", "Cuba"))
    True
    False
@@ -86,20 +86,20 @@ order makes equal-length choices deterministic.
 .. doctest::
 
    >>> with Atlas() as atlas:
-   ...     path = atlas.border_path("Portugal", "China")
+   ...     path = atlas.border_path("Portugal", "Poland")
    ...     print(path.crossings)
    ...     print(" -> ".join(country.name for country in path.countries))
-   6
-   Portugal -> Spain -> France -> Germany -> Poland -> Russia -> China
+   4
+   Portugal -> Spain -> France -> Germany -> Poland
 
 Convenience properties avoid repeatedly unpacking the country references:
 
 .. doctest::
 
    >>> path.names
-   ('Portugal', 'Spain', 'France', 'Germany', 'Poland', 'Russia', 'China')
+   ('Portugal', 'Spain', 'France', 'Germany', 'Poland')
    >>> path.alpha2_codes
-   ('PT', 'ES', 'FR', 'DE', 'PL', 'RU', 'CN')
+   ('PT', 'ES', 'FR', 'DE', 'PL')
 
 The result is detached from the database and serializable. If no land route
 exists, ``border_path`` and ``border_crossings`` return ``None``.
@@ -107,8 +107,8 @@ exists, ``border_path`` and ``border_crossings`` return ``None``.
 .. doctest::
 
    >>> with Atlas() as atlas:
-   ...     print(atlas.border_path("Japan", "China"))
-   ...     print(atlas.border_crossings("Japan", "China"))
+   ...     print(atlas.border_path("Japan", "Iceland"))
+   ...     print(atlas.border_crossings("Japan", "Iceland"))
    None
    None
 
@@ -123,8 +123,8 @@ shortest graph path contains zero crossings.
 .. doctest::
 
    >>> with Atlas() as atlas:
-   ...     print(atlas.has_land_route("Portugal", "China"))
-   ...     print(atlas.has_land_route("Japan", "China"))
+   ...     print(atlas.has_land_route("Portugal", "Austria"))
+   ...     print(atlas.has_land_route("Iceland", "Norway"))
    ...     print(atlas.has_land_route("Japan", "Japan"))
    True
    False
@@ -149,16 +149,16 @@ The deterministic flashcard API supports two graph topics:
 .. doctest::
 
    >>> with Atlas() as atlas:
-   ...     neighbor_card = atlas.flashcards(topic="neighbors", count=1, seed=42)[0]
-   ...     count_card = atlas.flashcards(topic="border_counts", count=1, seed=42)[0]
+   ...     neighbor_card = atlas.flashcards(topic="neighbors", count=1, seed=17)[0]
+   ...     count_card = atlas.flashcards(topic="border_counts", count=1, seed=17)[0]
    ...     print(neighbor_card.prompt)
    ...     print(neighbor_card.answer)
    ...     print(count_card.prompt)
    ...     print(count_card.answer)
-   Which countries or areas share a reviewed land border with Kuwait?
-   Iraq, Saudi Arabia
-   How many reviewed land neighbors does Kuwait have?
-   2
+   Which countries or areas share a reviewed land border with Denmark?
+   Germany
+   How many reviewed land neighbors does Denmark have?
+   1
 
 ``neighbors`` cards exclude entities with no accepted land neighbor because
 they would have no answer. ``border_counts`` cards include them and use ``0``.

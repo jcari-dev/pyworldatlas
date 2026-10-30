@@ -89,9 +89,9 @@ metrics, and by every statistic in the statistics pack (see :doc:`statistics`):
 
    >>> from pyworldatlas import Atlas
    >>> atlas = Atlas()
-   >>> results = atlas.rank("area", limit=3)
+   >>> results = atlas.rank("area", region="Western Europe", limit=3)
    >>> [(row.position, row.country.name, row.unit) for row in results]
-   [(1, 'Russia', 'km²'), (2, 'Antarctica', 'km²'), (3, 'Canada', 'km²')]
+   [(1, 'France', 'km²'), (2, 'Germany', 'km²'), (3, 'Austria', 'km²')]
    >>> smallest = atlas.rank("density", limit=2, descending=False)
    >>> smallest[0].value <= smallest[1].value
    True
@@ -105,9 +105,9 @@ values are excluded.
    >>> coastlines = atlas.rank("coastline", limit=3)
    >>> [(row.country.name, row.value, row.unit) for row in coastlines]
    [('Canada', 202080, 'km'), ('Indonesia', 54716, 'km'), ('Greenland', 44087, 'km')]
-   >>> peaks = atlas.rank("highest_elevation", limit=3)
+   >>> peaks = atlas.rank("highest_elevation", region="Western Europe", limit=3)
    >>> [(row.country.name, row.value) for row in peaks]
-   [('China', 8849), ('Nepal', 8849), ('Pakistan', 8611)]
+   [('France', 4810), ('Switzerland', 4634), ('Austria', 3798)]
 
 River and lake counts measure source-listed records, not every physical feature.
 Climate counts depend on the documented 0.1% class-share threshold. See

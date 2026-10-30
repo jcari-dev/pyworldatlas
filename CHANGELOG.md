@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **A shorter, calmer welcome page:** the docs home page now fits on one
+  screen: a headline, three ways in, a three-line start, and a few examples.
+  The coverage table moved to "Why PyWorldAtlas?". Examples across the docs,
+  the tour, and the playground now use calm, everyday places; the data itself
+  is unchanged.
 - **Every method explains itself:** each `Atlas` method's help now lists its
   arguments, what it returns, the errors it raises, and a short example that
   runs as a test. The API reference groups methods by task ("Look things up",
