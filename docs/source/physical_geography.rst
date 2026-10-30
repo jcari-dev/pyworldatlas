@@ -4,7 +4,7 @@ Physical geography
 Each covered profile acts as a compact physical-geography reference: land and
 water area, coastline, elevation, named highest and lowest points,
 source-listed major rivers and lakes, a plain-language climate summary, and
-represented Köppen-Geiger climate classes. Everything works offline.
+represented :term:`Köppen-Geiger climate classes <Köppen climate zone>`. Everything works offline.
 
 .. container:: atlas-stat-grid
 

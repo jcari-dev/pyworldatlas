@@ -682,6 +682,20 @@ with Atlas() as atlas:
     }
   }
 
+  // Code sent from a "Try it" link on another page, carried in the URL hash so
+  // it never reaches a server.
+  function requestedExample() {
+    return new URLSearchParams(window.location.hash.slice(1)).get("example");
+  }
+
+  function loadExample(code) {
+    editor.value = code;
+    filename.textContent = "example.py";
+    for (const button of presetsElement.querySelectorAll("button")) {
+      button.setAttribute("aria-pressed", "false");
+    }
+  }
+
   function renderPresets() {
     const categories = [...new Set(presets.map((preset) => preset.category))];
     for (const category of categories) {
@@ -903,10 +917,16 @@ with Atlas() as atlas:
     const requested = presets.find((preset) => preset.id === parameters.get("recipe"));
     if (requested) {
       selectPreset(requested, false);
+    } else if (parameters.get("example")) {
+      loadExample(parameters.get("example"));
     }
   });
 
   renderPresets();
-  selectPreset(selectedPreset, false);
+  if (requestedExample()) {
+    loadExample(requestedExample());
+  } else {
+    selectPreset(selectedPreset, false);
+  }
   createWorker();
 })();

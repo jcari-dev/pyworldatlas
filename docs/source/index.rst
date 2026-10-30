@@ -40,6 +40,8 @@ Start in three lines
 
    python -m pip install pyworldatlas
 
+.. rst-class:: atlas-try-these
+
 .. doctest::
 
    >>> from pyworldatlas import Atlas
@@ -76,12 +78,16 @@ Try these
 
 Find anything by name:
 
+.. rst-class:: atlas-try-these
+
 .. doctest::
 
    >>> atlas.find("Kilimanjaro", limit=1)
    (Place(english_name='Mount Kilimanjaro', kind='mountain', country_code='TZ'),)
 
 Measure the world:
+
+.. rst-class:: atlas-try-these
 
 .. doctest::
 
@@ -90,12 +96,16 @@ Measure the world:
 
 Quiz yourself:
 
+.. rst-class:: atlas-try-these
+
 .. doctest::
 
    >>> print(atlas.quiz("capitals", region="Western Europe")[0])
    What is the capital of Switzerland?  1) Monaco  2) Bern  3) Amsterdam  4) Berlin
 
 Rank countries:
+
+.. rst-class:: atlas-try-these
 
 .. doctest::
 
@@ -126,6 +136,7 @@ To learn where the data comes from, read :doc:`why`, :doc:`data_sources`, and
    :caption: Start here
 
    quickstart
+   cheatsheet
    playground
    installation
 
@@ -135,6 +146,7 @@ To learn where the data comes from, read :doc:`why`, :doc:`data_sources`, and
    :caption: Examples and learning
 
    learning
+   quests
    teaching
    recipes
 
@@ -178,4 +190,5 @@ To learn where the data comes from, read :doc:`why`, :doc:`data_sources`, and
    :caption: Reference
 
    api
+   glossary
    changelog

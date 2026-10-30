@@ -25,7 +25,7 @@ nitpick_ignore = [
     ("py:class", "datetime.date"), ("py:class", "datetime.datetime"),
 ]
 html_theme = "sphinx_rtd_theme"
-pygments_style = "friendly"
+pygments_style = "xcode"
 html_title = "PyWorldAtlas 0.12.1"
 html_short_title = "PyWorldAtlas"
 html_baseurl = "https://jcari-dev.github.io/pyworldatlas-documentation/"
@@ -119,8 +119,8 @@ def _write_sitemap(app, exception):
 
 
 LLMS_SECTIONS = (
-    ("Start here", ("quickstart", "playground", "installation")),
-    ("Examples and learning", ("learning", "teaching", "recipes")),
+    ("Start here", ("quickstart", "cheatsheet", "playground", "installation")),
+    ("Examples and learning", ("learning", "quests", "teaching", "recipes")),
     (
         "Explore the atlas",
         (
@@ -136,7 +136,7 @@ LLMS_SECTIONS = (
             "_generated/project_status", "roadmap",
         ),
     ),
-    ("Reference", ("api", "migration", "changelog")),
+    ("Reference", ("api", "glossary", "migration", "changelog")),
 )
 LLMS_SUMMARY = (
     "PyWorldAtlas is an offline world-geography Python package built around one "
@@ -233,9 +233,31 @@ def _set_page_url(app, pagename, templatename, context, doctree):
         context["pageurl"] = html_baseurl
 
 
+def _glossary_hover_titles(app, doctree, docname):
+    """Show each glossary definition as the hover title of links to its term."""
+
+    from docutils import nodes
+
+    if "glossary" not in app.env.found_docs:
+        return
+    definitions = {}
+    for term in app.env.get_doctree("glossary").findall(nodes.term):
+        item = term.parent
+        definition = next(iter(item.findall(nodes.definition)), None)
+        if definition is not None:
+            text = " ".join(definition.astext().split())
+            for term_id in term["ids"]:
+                definitions[term_id] = text
+    for reference in doctree.findall(nodes.reference):
+        anchor = reference.get("refuri", "").rpartition("#")[2] or reference.get("refid", "")
+        if anchor.startswith("term-") and anchor in definitions:
+            reference["reftitle"] = definitions[anchor]
+
+
 def setup(app):
     """Register small build-time additions used by the public documentation."""
 
     app.connect("html-page-context", _set_page_url)
+    app.connect("doctree-resolved", _glossary_hover_titles)
     app.connect("build-finished", _write_sitemap)
     app.connect("build-finished", _write_llms_files)
