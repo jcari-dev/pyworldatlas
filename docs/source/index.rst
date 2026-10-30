@@ -136,7 +136,6 @@ To learn where the data comes from, read :doc:`why`, :doc:`data_sources`, and
    :caption: Start here
 
    quickstart
-   cheatsheet
    playground
    installation
 
@@ -147,6 +146,7 @@ To learn where the data comes from, read :doc:`why`, :doc:`data_sources`, and
 
    learning
    quests
+   cheatsheet
    teaching
    recipes
 

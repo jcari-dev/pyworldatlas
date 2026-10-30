@@ -119,8 +119,8 @@ def _write_sitemap(app, exception):
 
 
 LLMS_SECTIONS = (
-    ("Start here", ("quickstart", "cheatsheet", "playground", "installation")),
-    ("Examples and learning", ("learning", "quests", "teaching", "recipes")),
+    ("Start here", ("quickstart", "playground", "installation")),
+    ("Examples and learning", ("learning", "quests", "cheatsheet", "teaching", "recipes")),
     (
         "Explore the atlas",
         (
