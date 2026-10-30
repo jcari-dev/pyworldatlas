@@ -1,4 +1,18 @@
-"""PyWorldAtlas public API."""
+"""PyWorldAtlas: an offline world atlas for Python, with no dependencies.
+
+Everything starts with :class:`Atlas`::
+
+    from pyworldatlas import Atlas
+
+    atlas = Atlas()
+    atlas["Japan"].capital.name       # 'Tokyo'
+    atlas.distance_between("Paris", "Tokyo")
+    atlas.help()                      # a dozen more things to try
+
+Every result is an immutable model that prints as one readable line. Call
+:func:`show_details` to print every field instead. Optional data packs add
+maps, landmarks, places, and statistics; see :mod:`pyworldatlas.packs`.
+"""
 
 from ._version import SCHEMA_VERSION, __version__
 from .atlas import Atlas

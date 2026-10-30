@@ -1,4 +1,9 @@
-"""Read-only access to the bundled SQLite database."""
+"""Read-only access to the bundled SQLite database.
+
+The database ships inside the package, so the atlas works offline. It is
+opened read-only with ``mode=ro`` so nothing can change it by accident. The
+atlas then checks the schema version, so the code and the data always match.
+"""
 
 from __future__ import annotations
 

@@ -1,4 +1,10 @@
-"""Deterministic sampling and flashcard construction for the learning tools."""
+"""Flashcards and quiz answers, picked the same way on every computer.
+
+Teachers need the same seed to give the same questions to every student, on
+every Python version. So countries are ordered by a SHA-256 hash of their
+stable M49 code and the seed, never by :mod:`random`, whose results can
+change between Python versions.
+"""
 
 from __future__ import annotations
 

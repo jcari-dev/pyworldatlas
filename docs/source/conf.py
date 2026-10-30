@@ -21,6 +21,7 @@ python_use_unqualified_type_names = True
 nitpicky = True
 nitpick_ignore = [
     ("py:class", "pathlib.Path"), ("py:class", "collections.abc.Callable"),
+    ("py:class", "collections.abc.Iterator"),
     ("py:class", "datetime.date"), ("py:class", "datetime.datetime"),
 ]
 html_theme = "sphinx_rtd_theme"

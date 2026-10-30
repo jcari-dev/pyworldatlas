@@ -1,4 +1,8 @@
-"""Internal text normalization helpers."""
+"""Turn names into lookup keys, so "Bogota", "bogotá", and "BOGOTÁ" all match.
+
+Every name stored for searching and every query goes through the same
+:func:`normalize_name`, so matching stays consistent across the package.
+"""
 
 from __future__ import annotations
 

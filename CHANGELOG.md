@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- **Every method explains itself:** each `Atlas` method's help now lists its
+  arguments, what it returns, the errors it raises, and a short example that
+  runs as a test. The API reference groups methods by task ("Look things up",
+  "Measure", "Learn", and more) instead of one long list.
 - **One naming style:** every distance search ends in `_near`
   (`capitals_near`, `cities_near`, `places_near`, `heritage_sites_near`),
   `rank()` ranks statistics too (`atlas.rank("life_expectancy", year=2020)`),
