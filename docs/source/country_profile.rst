@@ -46,8 +46,8 @@ Profile example
    'Asia'
    >>> japan.region
    'Eastern Asia'
-   >>> japan.subregion
-   'Eastern Asia'
+   >>> japan.subregion is None  # UN M49 has no smaller region for Japan
+   True
    >>> japan.area_km2
    377915
    >>> japan.population

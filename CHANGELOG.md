@@ -38,6 +38,21 @@
   as `country.summary()` still works.
 - **One name for country codes:** statistics and country references also offer
   `country_code`.
+- **Cleaner data:**
+  - Lake and river names no longer carry area notes or markers
+    (`"Biwa-ko 688 sq km"` is now `"Biwa-ko"`, `"Huron*"` is `"Huron"`), and
+    three source sentences that were listed as lakes or rivers (such as
+    "9.6 times saltier than the ocean") are left out.
+  - Vatican City and the United States Minor Outlying Islands, which the
+    source rounds to 0 km², have no area instead of a wrong one.
+  - `subregion` is `None` when UN M49 gives no intermediate region, instead
+    of repeating `region` (Jamaica keeps "Caribbean").
+  - Climate notes start with a capital letter and end with a full stop.
+- **Rankings name their source:** `CountryRanking.source`, such as "GeoNames
+  country population snapshot". For dated World Bank figures, use
+  `sort_by_statistic`.
+- **Nearby searches:** `places_near("Tokyo")` no longer lists Tokyo itself,
+  and antipodes name well-known places first.
 - **Fixed:** the land-border methods (`neighbors`, `shares_border`,
   `border_path`, and the rest) accept a `Country` as well as a name or code,
   instead of failing with a database error.

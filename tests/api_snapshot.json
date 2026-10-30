@@ -954,7 +954,7 @@
     },
     "CountryRanking": {
       "kind": "dataclass",
-      "signature": "(position: 'int', country: 'CountryReference', metric: 'str', value: 'int | float', unit: 'str') -> None",
+      "signature": "(position: 'int', country: 'CountryReference', metric: 'str', value: 'int | float', unit: 'str', source: 'str | None' = None) -> None",
       "members": {
         "to_dict": "method(self) -> 'dict[str, Any]'",
         "to_json": "method(self, indent: 'int | None' = None) -> 'str'"
@@ -985,6 +985,11 @@
           "name": "unit",
           "type": "str",
           "default": null
+        },
+        {
+          "name": "source",
+          "type": "str | None",
+          "default": "None"
         }
       ]
     },

@@ -34,6 +34,26 @@ METRIC_UNITS = {
     "climate_zone_count": "classes",
 }
 
+_FACTBOOK = "CIA World Factbook"
+METRIC_SOURCES = {
+    "population": "GeoNames country population snapshot",
+    "area": "CIA World Factbook, or GeoNames where it has no value",
+    "population_density": "GeoNames population divided by total area",
+    "border_count": "PyWorldAtlas reviewed land-border graph",
+    "major_city_count": "GeoNames",
+    "land_area": _FACTBOOK,
+    "water_area": _FACTBOOK,
+    "water_percent": "CIA World Factbook water area divided by total area",
+    "coastline": _FACTBOOK,
+    "mean_elevation": _FACTBOOK,
+    "highest_elevation": _FACTBOOK,
+    "lowest_elevation": _FACTBOOK,
+    "river_count": _FACTBOOK,
+    "lake_count": _FACTBOOK,
+    "climate_zone_count": "Köppen-Geiger 1991-2020 maps (Beck et al.)",
+}
+"""Where each ranking metric comes from, shown on every :class:`CountryRanking`."""
+
 
 def normalize_metric(metric: str) -> str:
     """Resolve a documented metric name or alias, or raise ``ValueError``."""

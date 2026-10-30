@@ -48,7 +48,7 @@ A country in four lines
    🇧🇷 Brazil
    Land 8,358,140 km² | Water 157,630 km²
    Pico da Neblina 2,994 m
-   mostly tropical, but temperate in south
+   Mostly tropical, but temperate in south.
 
 Area and coastline
 ------------------
