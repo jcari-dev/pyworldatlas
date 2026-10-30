@@ -1,4 +1,9 @@
-"""Metric names, units, and per-country values for country rankings."""
+"""Metric names, units, sources, and per-country values for :meth:`Atlas.rank`.
+
+Each metric has one unit and one named source, so every ranking row can say
+where its number comes from. Statistics from the statistics pack are ranked
+separately in :mod:`pyworldatlas.atlas`, because they are dated by year.
+"""
 
 from __future__ import annotations
 

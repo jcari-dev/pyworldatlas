@@ -1,4 +1,9 @@
-"""Public exception hierarchy for PyWorldAtlas."""
+"""Errors PyWorldAtlas raises, all subclasses of :class:`AtlasError`.
+
+Catch :class:`AtlasError` to handle any atlas problem in one place, or a
+specific error such as :class:`CountryNotFoundError`. Lookup errors explain
+what went wrong and suggest close spellings ("Did you mean Japan?").
+"""
 
 
 class AtlasError(Exception):

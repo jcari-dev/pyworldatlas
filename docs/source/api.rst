@@ -72,10 +72,141 @@ nearby-place search; filtering; distances, sun times, and antipodes; border
 paths and rankings; flashcards and quizzes; dataset metadata; and the optional
 maps, landmarks, and statistics packs.
 
+The examples on this page assume an open atlas, made with
+``from pyworldatlas import Atlas`` and ``atlas = Atlas()``. Every example is run
+as a test, so what you see is what you get.
+
+.. testsetup:: *
+
+   from pyworldatlas import Atlas
+   atlas = Atlas()
+
+.. testcleanup:: *
+
+   atlas.close()
+
 .. autoclass:: pyworldatlas.Atlas
-   :members:
-   :special-members: __getitem__, __contains__, __len__, __iter__, __enter__, __exit__
-   :exclude-members: __weakref__
+
+   .. autoattribute:: PLACE_QUIZ_TOPICS
+
+Look things up
+~~~~~~~~~~~~~~
+
+Find one country, city, or place by name or code.
+
+.. automethod:: pyworldatlas.Atlas.country
+.. automethod:: pyworldatlas.Atlas.get
+.. automethod:: pyworldatlas.Atlas.find
+.. automethod:: pyworldatlas.Atlas.search_countries
+.. automethod:: pyworldatlas.Atlas.city
+.. automethod:: pyworldatlas.Atlas.search_cities
+.. automethod:: pyworldatlas.Atlas.major_cities
+.. automethod:: pyworldatlas.Atlas.coordinates
+.. automethod:: pyworldatlas.Atlas.place
+.. automethod:: pyworldatlas.Atlas.search_places
+.. automethod:: pyworldatlas.Atlas.places_in
+.. automethod:: pyworldatlas.Atlas.place_kinds
+.. automethod:: pyworldatlas.Atlas.place_categories
+.. automethod:: pyworldatlas.Atlas.__getitem__
+.. automethod:: pyworldatlas.Atlas.__contains__
+.. automethod:: pyworldatlas.Atlas.__len__
+.. automethod:: pyworldatlas.Atlas.__iter__
+
+Filter and rank
+~~~~~~~~~~~~~~~
+
+Pick countries that match, and put them in order.
+
+.. automethod:: pyworldatlas.Atlas.countries
+.. automethod:: pyworldatlas.Atlas.rank
+.. automethod:: pyworldatlas.Atlas.sample_countries
+.. automethod:: pyworldatlas.Atlas.countries_with_local_names
+.. automethod:: pyworldatlas.Atlas.countries_with_formal_names
+.. automethod:: pyworldatlas.Atlas.climate_zone_codes
+.. automethod:: pyworldatlas.Atlas.rank_countries
+
+Measure
+~~~~~~~
+
+Distances, the nearest things, the sun, and the other side of the Earth.
+
+.. automethod:: pyworldatlas.Atlas.distance_between
+.. automethod:: pyworldatlas.Atlas.capitals_near
+.. automethod:: pyworldatlas.Atlas.cities_near
+.. automethod:: pyworldatlas.Atlas.places_near
+.. automethod:: pyworldatlas.Atlas.heritage_sites_near
+.. automethod:: pyworldatlas.Atlas.sun
+.. automethod:: pyworldatlas.Atlas.antipode
+
+Borders
+~~~~~~~
+
+Who touches whom by land, and how to get there.
+
+.. automethod:: pyworldatlas.Atlas.neighbors
+.. automethod:: pyworldatlas.Atlas.shares_border
+.. automethod:: pyworldatlas.Atlas.shared_neighbors
+.. automethod:: pyworldatlas.Atlas.border_path
+.. automethod:: pyworldatlas.Atlas.border_crossings
+.. automethod:: pyworldatlas.Atlas.has_land_route
+.. automethod:: pyworldatlas.Atlas.countries_reachable_by_land
+
+Learn
+~~~~~
+
+Quizzes, flashcards, and a short tour.
+
+.. automethod:: pyworldatlas.Atlas.quiz
+.. automethod:: pyworldatlas.Atlas.flashcards
+.. automethod:: pyworldatlas.Atlas.learning_topics
+.. automethod:: pyworldatlas.Atlas.help
+
+Numbers and maps
+~~~~~~~~~~~~~~~~
+
+World Bank statistics, world maps, and 3D country maps. These need the statistics or a map pack.
+
+.. automethod:: pyworldatlas.Atlas.indicators
+.. automethod:: pyworldatlas.Atlas.statistic
+.. automethod:: pyworldatlas.Atlas.time_series
+.. automethod:: pyworldatlas.Atlas.world_map
+.. automethod:: pyworldatlas.Atlas.map
+.. automethod:: pyworldatlas.Atlas.sort_by_statistic
+
+Landmarks
+~~~~~~~~~
+
+Airports and UNESCO World Heritage sites. These need the landmarks pack.
+
+.. automethod:: pyworldatlas.Atlas.airport
+.. automethod:: pyworldatlas.Atlas.airports
+.. automethod:: pyworldatlas.Atlas.world_heritage_site
+.. automethod:: pyworldatlas.Atlas.world_heritage_sites
+
+The atlas itself
+~~~~~~~~~~~~~~~~
+
+Versions, and closing the database.
+
+.. automethod:: pyworldatlas.Atlas.dataset_info
+.. automethod:: pyworldatlas.Atlas.close
+.. automethod:: pyworldatlas.Atlas.__enter__
+.. automethod:: pyworldatlas.Atlas.__exit__
+
+Older names
+~~~~~~~~~~~
+
+These still work and return the same results, but will be removed in 1.0. See :ref:`api-renamed`.
+
+.. automethod:: pyworldatlas.Atlas.nearest_capitals
+.. automethod:: pyworldatlas.Atlas.nearest_cities
+.. automethod:: pyworldatlas.Atlas.world_heritage_sites_near
+.. automethod:: pyworldatlas.Atlas.lookup
+.. automethod:: pyworldatlas.Atlas.place_quiz
+.. automethod:: pyworldatlas.Atlas.countries_with_river
+.. automethod:: pyworldatlas.Atlas.countries_with_lake
+.. automethod:: pyworldatlas.Atlas.countries_in_climate_zone
+.. automethod:: pyworldatlas.Atlas.countries_with_no_land_borders
 
 .. _api-country-models:
 

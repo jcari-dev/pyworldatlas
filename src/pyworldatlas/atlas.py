@@ -1,4 +1,18 @@
-"""Primary offline atlas interface."""
+"""The :class:`Atlas` class: every question you can ask, in one place.
+
+Methods are grouped in the file by topic, in this order: country lookup and
+filters, rankings, physical geography, borders, learning, cities and
+distances, places, statistics, landmarks, the sun and antipodes, and the tour.
+Older method names sit at the end and simply call the newer ones.
+
+Why one big class: beginners type ``atlas.`` and find everything without
+learning any imports. The work behind each method lives in small private
+modules (``_profiles``, ``_rankings``, ``_learning``, ``_placefile``, and
+others), so this file mostly checks arguments and puts results together.
+
+The bundled SQLite database is opened read-only. Results are cached per
+atlas, so repeated questions are fast even on a Raspberry Pi Zero 2 W.
+"""
 
 from __future__ import annotations
 
@@ -117,6 +131,15 @@ class Atlas:
         """Return the installed library, database schema, and dataset versions.
 
         Record these values when a lesson or calculation must be reproducible.
+
+        Returns:
+            A :class:`DatasetInfo` with versions, build date, and source names.
+
+        Example:
+            >>> print(atlas.dataset_info())  # doctest: +ELLIPSIS
+            PyWorldAtlas ..., 248 countries
+            >>> atlas.dataset_info().country_count
+            248
         """
         self._ensure_open()
         return DatasetInfo(__version__, SCHEMA_VERSION, self._meta("dataset_version"), len(self), self._meta("built_at"))
@@ -204,6 +227,26 @@ class Atlas:
         accent-tolerant. Missing queries raise :class:`CountryNotFoundError`,
         with suggestions when available. A name shared by multiple profiles
         raises :class:`AmbiguousCountryError` and lists the matches.
+
+        Args:
+            query: A country name (``"Japan"``), alias, alpha-2 code (``"JP"``),
+                alpha-3 code (``"JPN"``), or M49 code (``"392"``).
+
+        Returns:
+            The full :class:`Country` profile.
+
+        Raises:
+            CountryNotFoundError: Nothing matches. The message suggests close
+                spellings, such as "Did you mean Japan?".
+            AmbiguousCountryError: The name fits more than one country.
+
+        Example:
+            >>> atlas.country("Japan")
+            Country(name='Japan', alpha2='JP')
+            >>> atlas.country("DE").name
+            'Germany'
+            >>> atlas.country("392").name
+            'Japan'
         """
         self._ensure_open()
         if not isinstance(query, str):
@@ -229,6 +272,19 @@ class Atlas:
 
         Use :meth:`country` when a missing profile should be treated as an
         error. ``default`` is returned for both missing and non-unique queries.
+
+        Args:
+            query: A country name or code, as for :meth:`country`.
+            default: What to return when nothing matches.
+
+        Returns:
+            The :class:`Country`, or ``default``.
+
+        Example:
+            >>> atlas.get("FR")
+            Country(name='France', alpha2='FR')
+            >>> atlas.get("Atlantis") is None
+            True
         """
         try:
             return self.country(query)
@@ -256,6 +312,22 @@ class Atlas:
         method is called. Maps need a map pack, installed once with
         ``pyworldatlas get maps`` (Standard) or ``pyworldatlas get maps-lite``
         (Overview). Packs are read from this atlas's ``data_dir``.
+
+        Args:
+            country: A country name, code, or profile.
+            quality: ``"auto"``, ``"standard"``, or ``"overview"``.
+            places: How many well-known places to mark.
+
+        Returns:
+            A :class:`~pyworldatlas.maps.CountryMap`.
+
+        Raises:
+            MapSupportNotInstalledError: No map pack is installed.
+
+        Example:
+            >>> japan = atlas.map("Japan")
+            >>> print(japan)
+            3D map of Japan
         """
         self._ensure_open()
         if isinstance(country, str):
@@ -288,6 +360,17 @@ class Atlas:
         Matching is case-insensitive and accent-tolerant. Exact matches rank
         before prefixes and substrings. The returned tuple is empty when no
         indexed name matches; use :meth:`country` for exact resolution.
+
+        Args:
+            query: Part of a country name, such as ``"guin"``.
+            limit: The most matches to return.
+
+        Returns:
+            :class:`CountryMatch` rows, best match first.
+
+        Example:
+            >>> atlas.search_countries("guin", limit=3)
+            (CountryMatch('Guinea'), CountryMatch('Guinea-Bissau'), CountryMatch('Equatorial Guinea'))
         """
         self._ensure_open()
         if not isinstance(query, str):
@@ -330,22 +413,44 @@ class Atlas:
         """Return countries alphabetically, keeping only those that match every filter.
 
         This is the one place to filter countries. With no filters, every
-        bundled profile is returned in display-name order. For example::
-
-            atlas.countries(continent="Africa", coastal=False)  # landlocked in Africa
-            atlas.countries(river="Danube")                      # the Danube flows through
-            atlas.countries(climate_zone="Cfb")                  # has a Köppen-Geiger zone
-            atlas.countries(land_borders=False)                  # islands and other
-                                                                 # countries with no land border
-
-        ``river`` and ``lake`` match part of a feature name, ignoring case.
-        ``climate_zone`` is a Köppen-Geiger code from :meth:`climate_zone_codes`
-        (``koppen_geiger_code`` is its older name). ``land_borders`` uses the
-        reviewed land-border graph.
+        bundled profile is returned in display-name order.
 
         Physical-data filters only include profiles covered by the relevant
         source layer. For example, ``coastal=False`` means a sourced coastline
         of zero kilometres; it does not treat missing coastline data as zero.
+
+        Args:
+            continent: Keep countries on this continent, such as ``"Africa"``.
+            region: Keep countries in this UN region or subregion.
+            currency_code: Keep countries using this currency, such as ``"EUR"``.
+            language_code: Keep countries with this language, such as ``"es"``.
+            script_code: Keep countries writing in this script, such as ``"Cyrl"``.
+            timezone_id: Keep countries in this time zone, such as ``"Asia/Tokyo"``.
+            coastal: ``True`` for a coastline, ``False`` for landlocked.
+            koppen_geiger_code: Older name for ``climate_zone``.
+            has_rivers: Keep countries with (or without) listed major rivers.
+            has_lakes: Keep countries with (or without) listed major lakes.
+            river: Keep countries a river flows through; part of the name is
+                enough, in any case.
+            lake: Keep countries with this lake; part of the name is enough.
+            climate_zone: Keep countries with this Köppen-Geiger zone, a code
+                from :meth:`climate_zone_codes` such as ``"Cfb"``.
+            land_borders: ``False`` for islands and other countries with no
+                land border, ``True`` for the rest.
+
+        Returns:
+            Matching :class:`Country` profiles, alphabetical.
+
+        Raises:
+            ValueError: The climate zone is unknown.
+
+        Example:
+            >>> len(atlas.countries(continent="Africa", coastal=False))  # landlocked
+            16
+            >>> atlas.countries(river="Danube")[:3]
+            (Country(name='Austria', alpha2='AT'), Country(name='Bulgaria', alpha2='BG'), Country(name='Croatia', alpha2='HR'))
+            >>> len(atlas.countries(land_borders=False))
+            85
         """
         self._ensure_open()
         clauses: list[str] = []
@@ -442,6 +547,25 @@ class Atlas:
 
         :meth:`rank` does the same and also ranks statistics; prefer it in new
         code.
+
+        Args:
+            metric: One of the metrics above, or ``"population"``, ``"area"``,
+                ``"population_density"``, ``"border_count"``, or
+                ``"major_city_count"``.
+            limit: Keep only the first ``limit`` rows.
+            descending: ``False`` ranks smallest first.
+            continent: Rank only countries on this continent.
+            region: Rank only countries in this region or subregion.
+
+        Returns:
+            :class:`CountryRanking` rows, first place first.
+
+        Raises:
+            ValueError: The metric is unknown.
+
+        Example:
+            >>> atlas.rank_countries("coastline", limit=2)
+            (CountryRanking('#1 Canada: 202,080 km'), CountryRanking('#2 Indonesia: 54,716 km'))
         """
         normalized_metric = normalize_metric(metric)
         if limit is not None and (
@@ -509,6 +633,14 @@ class Atlas:
         ``"population"`` ranks the bundled GeoNames snapshot; with a ``year``
         it ranks the World Bank figures from the statistics pack. Ranking
         orders numbers only; it says nothing about which is better.
+
+        Example:
+            >>> print(atlas.rank("area", limit=1)[0])
+            #1 Russia: 17,098,242 km²
+            >>> atlas.rank("coastline", continent="Africa", limit=2)
+            (CountryRanking('#1 Madagascar: 4,828 km'), CountryRanking('#2 Somalia: 3,025 km'))
+            >>> atlas.rank("life_expectancy", year=2020, limit=2)
+            (CountryRanking('#1 Monaco: 86.1 years (2020)'), CountryRanking('#2 Hong Kong: 85.5 years (2020)'))
         """
         if year is None:
             try:
@@ -558,7 +690,16 @@ class Atlas:
         raise ValueError(message)
 
     def climate_zone_codes(self) -> tuple[str, ...]:
-        """Return every represented Köppen-Geiger code in source legend order."""
+        """Return every represented Köppen-Geiger code in source legend order.
+
+        Returns:
+            Codes such as ``"Af"`` (tropical rainforest) for use with
+            ``countries(climate_zone=...)``.
+
+        Example:
+            >>> atlas.climate_zone_codes()[:5]
+            ('Af', 'Am', 'Aw', 'BWh', 'BWk')
+        """
         self._ensure_open()
         rows = self._db.connection.execute(
             "SELECT DISTINCT code FROM country_climate_zone"
@@ -618,6 +759,18 @@ class Atlas:
         identity. Inspect ``LocalizedName.kind`` to distinguish reviewed
         national official forms from CLDR locale display names, or pass
         ``name_kind="national_official"`` or ``"locale_display"`` directly.
+
+        Args:
+            language_code: Keep names in this language, such as ``"hi"``.
+            script_code: Keep names in this script, such as ``"Deva"``.
+            name_kind: ``"national_official"`` or ``"locale_display"``.
+
+        Returns:
+            Matching :class:`Country` profiles, alphabetical.
+
+        Example:
+            >>> atlas.countries_with_local_names(script_code="Deva")[:2]
+            (Country(name='India', alpha2='IN'), Country(name='Nepal', alpha2='NP'))
         """
         self._ensure_open()
         clauses: list[str] = []
@@ -652,6 +805,16 @@ class Atlas:
         Results are alphabetical. Some countries use the same sourced text for
         their short and formal forms; check ``Country.has_distinct_formal_name``
         when an application needs only distinct long forms.
+
+        Returns:
+            Matching :class:`Country` profiles, alphabetical.
+
+        Example:
+            >>> france = atlas["France"]
+            >>> france in atlas.countries_with_formal_names()
+            True
+            >>> france.formal_name
+            'French Republic'
         """
         self._ensure_open()
         rows = self._db.connection.execute(
@@ -703,18 +866,59 @@ class Atlas:
         Results are alphabetized and immutable. Maritime neighbors, proximity,
         and mere point contacts are excluded. Countries and areas without an
         accepted land-border relationship return an empty tuple.
+
+        Args:
+            country: A country name, code, or profile.
+
+        Returns:
+            The neighboring :class:`Country` profiles, alphabetical.
+
+        Raises:
+            CountryNotFoundError: The country is unknown.
+
+        Example:
+            >>> atlas.neighbors("Portugal")
+            (Country(name='Spain', alpha2='ES'),)
+            >>> atlas.neighbors("Japan")
+            ()
         """
         country_id = self._border_country_id(country)
         return tuple(self._load_country(item) for item in self._border_adjacency()[country_id])
 
     def shares_border(self, country1: str | Country, country2: str | Country) -> bool:
-        """Return whether two countries share a reviewed land border."""
+        """Return whether two countries share a reviewed land border.
+
+        Args:
+            country1: A country name, code, or profile.
+            country2: Another country.
+
+        Returns:
+            ``True`` when the two touch by land.
+
+        Example:
+            >>> atlas.shares_border("France", "Spain")
+            True
+            >>> atlas.shares_border("France", "Portugal")
+            False
+        """
         first = self._border_country_id(country1)
         second = self._border_country_id(country2)
         return second in self._border_adjacency()[first]
 
     def shared_neighbors(self, country1: str | Country, country2: str | Country) -> tuple[Country, ...]:
-        """Return alphabetized land neighbors shared by two countries."""
+        """Return alphabetized land neighbors shared by two countries.
+
+        Args:
+            country1: A country name, code, or profile.
+            country2: Another country.
+
+        Returns:
+            The :class:`Country` profiles that border both.
+
+        Example:
+            >>> atlas.shared_neighbors("France", "Germany")
+            (Country(name='Belgium', alpha2='BE'), Country(name='Luxembourg', alpha2='LU'), Country(name='Switzerland', alpha2='CH'))
+        """
         first = self._border_country_id(country1)
         second = self._border_country_id(country2)
         common = set(self._border_adjacency()[first]) & set(self._border_adjacency()[second])
@@ -727,6 +931,19 @@ class Atlas:
         Both endpoints are included. Equal-length alternatives are resolved by
         alphabetic neighbor order. ``None`` means the two entities have no path
         through accepted land-border relationships; it is not an error.
+
+        Args:
+            origin: The starting country.
+            destination: The country to reach.
+
+        Returns:
+            A :class:`BorderPathResult` that prints as the route, or ``None``.
+
+        Example:
+            >>> print(atlas.border_path("France", "China"))
+            France → Germany → Poland → Russia → China (4 border crossings)
+            >>> atlas.border_path("Japan", "France") is None
+            True
         """
         start = self._border_country_id(origin)
         finish = self._border_country_id(destination)
@@ -751,7 +968,21 @@ class Atlas:
         return BorderPathResult(references, len(references) - 1)
 
     def border_crossings(self, origin: str | Country, destination: str | Country) -> int | None:
-        """Return the fewest land-border crossings, or ``None`` if unreachable."""
+        """Return the fewest land-border crossings, or ``None`` if unreachable.
+
+        Args:
+            origin: The starting country.
+            destination: The country to reach.
+
+        Returns:
+            The number of borders crossed on the shortest land route.
+
+        Example:
+            >>> atlas.border_crossings("Portugal", "Germany")
+            3
+            >>> atlas.border_crossings("Japan", "China") is None
+            True
+        """
         path = self.border_path(origin, destination)
         return path.crossings if path else None
 
@@ -763,6 +994,19 @@ class Atlas:
         endpoints return ``True`` because their shortest graph path has zero
         border crossings. Unknown country queries raise
         :class:`~pyworldatlas.CountryNotFoundError`.
+
+        Args:
+            origin: The starting country.
+            destination: The country to reach.
+
+        Returns:
+            ``True`` when you could walk from one to the other across borders.
+
+        Example:
+            >>> atlas.has_land_route("Portugal", "China")
+            True
+            >>> atlas.has_land_route("Japan", "China")
+            False
         """
         return self.border_path(origin, destination) is not None
 
@@ -771,6 +1015,18 @@ class Atlas:
 
         The starting country is excluded. Results are alphabetized; an island
         or otherwise borderless entity returns an empty tuple.
+
+        Args:
+            country: The starting country.
+
+        Returns:
+            The other :class:`Country` profiles you could reach across borders.
+
+        Example:
+            >>> len(atlas.countries_reachable_by_land("Portugal")) > 50
+            True
+            >>> atlas.countries_reachable_by_land("Japan")
+            ()
         """
         start = self._border_country_id(country)
         graph = self._border_adjacency()
@@ -806,6 +1062,22 @@ class Atlas:
 
         ``count`` must be positive and cannot exceed the filtered population.
         ``continent`` and ``region`` follow :meth:`countries` semantics.
+
+        Args:
+            count: How many countries to pick.
+            continent: Pick only from this continent.
+            region: Pick only from this region or subregion.
+            seed: The same seed always picks the same countries.
+
+        Returns:
+            The picked :class:`Country` profiles.
+
+        Raises:
+            ValueError: ``count`` is not positive or is larger than the choices.
+
+        Example:
+            >>> atlas.sample_countries(count=3, continent="Europe", seed="class-1")
+            (Country(name='Andorra', alpha2='AD'), Country(name='Hungary', alpha2='HU'), Country(name='Monaco', alpha2='MC'))
         """
         return stable_country_sample(
             self.countries(continent=continent, region=region), count, seed
@@ -816,6 +1088,13 @@ class Atlas:
 
         The tuple is stable, alphabetized, and safe to use for menus, lesson
         builders, or playground controls.
+
+        Returns:
+            Topic names such as ``"capitals"`` and ``"flags"``.
+
+        Example:
+            >>> atlas.learning_topics()[:4]
+            ('alpha_2_codes', 'alpha_3_codes', 'areas', 'border_counts')
         """
         self._ensure_open()
         return FLASHCARD_TOPICS
@@ -862,6 +1141,26 @@ class Atlas:
         reviewed land-border graph. Local-name cards use the selected CLDR or
         UNGEGN identity record for every country and area.
         Flashcards are structured values, not an interactive game.
+
+        Args:
+            topic: A topic from :meth:`learning_topics`, such as ``"capitals"``.
+            count: How many cards to make.
+            continent: Use only countries on this continent.
+            region: Use only countries in this region or subregion.
+            seed: The same seed always gives the same cards.
+
+        Returns:
+            :class:`Flashcard` rows that print as the prompt and its answer.
+
+        Raises:
+            ValueError: The topic is unknown or ``count`` is too large.
+
+        Example:
+            >>> card = atlas.flashcards("capitals", count=1, seed=7)[0]
+            >>> print(card)
+            What is the capital of Morocco? Rabat
+            >>> card.answer
+            'Rabat'
         """
         topic = self._learning_topic(topic)
         candidates = tuple(
@@ -934,6 +1233,15 @@ class Atlas:
                 distinct answers for the requested number of choices.
 
         No scoring, learner data, or session state is stored.
+
+        Example:
+            >>> question = atlas.quiz("capitals", count=1, seed=7)[0]
+            >>> print(question)
+            What is the capital of Morocco?  1) Tórshavn  2) The Valley  3) Rabat  4) Zagreb
+            >>> question.answer
+            'Rabat'
+            >>> print(atlas.quiz("higher", count=1, seed=7)[0])
+            Which is higher: Mauna Loa or Weisshorn?  1) Mauna Loa  2) Weisshorn
         """
         if isinstance(topic, str) and choice(topic, FLASHCARD_TOPICS) is None:
             place_topic = choice(topic, self.PLACE_QUIZ_TOPICS)
@@ -1010,6 +1318,17 @@ class Atlas:
 
         ``limit=None`` returns every bundled place for the country. The records
         come from the package snapshot and are not live population estimates.
+
+        Args:
+            country: A country name or code.
+            limit: The most cities to return, or ``None`` for all.
+
+        Returns:
+            :class:`City` records, largest first.
+
+        Example:
+            >>> atlas.major_cities("Japan", limit=3)
+            (City(name='Tokyo', country_code='JP'), City(name='Yokohama', country_code='JP'), City(name='Osaka', country_code='JP'))
         """
         result = self.country(country).major_cities
         if limit is None:
@@ -1031,6 +1350,18 @@ class Atlas:
         first, followed by prefix and substring matches; population breaks
         ties. Pass ``country`` as a familiar country name or code to narrow the
         search. An empty result is returned when nothing matches.
+
+        Args:
+            query: Part of a city name.
+            country: Search only in this country.
+            limit: The most cities to return.
+
+        Returns:
+            :class:`City` records, best match first.
+
+        Example:
+            >>> atlas.search_cities("sao paulo", limit=2)
+            (City(name='São Paulo', country_code='BR'),)
         """
         self._ensure_open()
         if not isinstance(query, str):
@@ -1069,6 +1400,24 @@ class Atlas:
         country name or code when the city name is shared. Missing names raise
         :class:`PlaceNotFoundError`; ambiguous names raise
         :class:`AmbiguousPlaceError` with example matches.
+
+        Args:
+            query: The city's name, in any case and with or without accents.
+            country: The country, when several cities share the name.
+
+        Returns:
+            The :class:`City`.
+
+        Raises:
+            PlaceNotFoundError: No city has this name. The message suggests
+                close spellings.
+            AmbiguousPlaceError: Several cities share the name; pass ``country``.
+
+        Example:
+            >>> atlas.city("Lagos")
+            City(name='Lagos', country_code='NG')
+            >>> atlas.city("bogota").name
+            'Bogotá'
         """
         self._ensure_open()
         normalized = normalize_name(query)
@@ -1099,6 +1448,17 @@ class Atlas:
         """Return WGS84 coordinates for an exact bundled city lookup.
 
         This is shorthand for ``atlas.city(query, country=country).coordinates``.
+
+        Args:
+            query: The city's name.
+            country: The country, when several cities share the name.
+
+        Returns:
+            The city's :class:`Coordinate`.
+
+        Example:
+            >>> print(atlas.coordinates("Nairobi"))
+            Coordinate(latitude=-1.28333, longitude=36.81667)
         """
         return self.city(query, country=country).coordinates
 
@@ -1118,6 +1478,22 @@ class Atlas:
         ``(latitude, longitude)`` tuples. Country objects use their primary
         capitals. ``unit`` accepts ``"km"``, ``"mi"``, or ``"nmi"``.
         The result is a surface measurement, not a road or flight route.
+
+        Args:
+            first: Where to measure from.
+            second: Where to measure to.
+            unit: ``"km"``, ``"mi"``, or ``"nmi"``.
+            first_country: The country of ``first``, when its name is shared.
+            second_country: The country of ``second``, when its name is shared.
+
+        Returns:
+            A :class:`Distance`: a number that prints with its unit.
+
+        Example:
+            >>> atlas.distance_between("Paris", "Tokyo")
+            Distance(9712.5, 'km')
+            >>> print(atlas.distance_between("Paris", "Tokyo", unit="mi"))
+            6,035 mi
         """
         start = self._coordinates_of(first, country=first_country)
         finish = self._coordinates_of(second, country=second_country)
@@ -1139,6 +1515,21 @@ class Atlas:
         capital or a :class:`Coordinate` for an arbitrary starting point.
         ``unit`` accepts ``"km"``, ``"mi"``, or ``"nmi"``. Results are ordered
         nearest first with deterministic name tie-breaking.
+
+        Args:
+            origin: A city or place name, a country (its capital), any model
+                with coordinates, or a ``(latitude, longitude)`` tuple.
+            limit: The most capitals to return.
+            unit: ``"km"``, ``"mi"``, or ``"nmi"``.
+            country: The country of ``origin``, when its name is shared.
+            include_origin: Also list a capital at the origin itself.
+
+        Returns:
+            :class:`CapitalDistance` rows, nearest first.
+
+        Example:
+            >>> atlas.capitals_near("Paris", limit=2)
+            (CapitalDistance('Brussels, Belgium · 264 km'), CapitalDistance('Luxembourg, Luxembourg · 287 km'))
         """
         if isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0:
             raise ValueError("limit must be a positive integer")
@@ -1173,6 +1564,22 @@ class Atlas:
         ``origin_country``. ``within_country`` limits results to one country or
         area. By default, records at the origin's exact coordinates are omitted.
         Distances are great-circle surface measurements, not road distances.
+
+        Args:
+            origin: A city or place name, a country (its capital), any model
+                with coordinates, or a ``(latitude, longitude)`` tuple.
+            limit: The most cities to return.
+            unit: ``"km"``, ``"mi"``, or ``"nmi"``.
+            origin_country: The country of ``origin``, when its name is shared.
+            within_country: Return only cities in this country.
+            include_origin: Also list a city at the origin itself.
+
+        Returns:
+            :class:`CityDistance` rows, nearest first.
+
+        Example:
+            >>> atlas.cities_near("Reykjavik", limit=2)
+            (CityDistance('Tórshavn (FO) · 795 km'), CityDistance('Aberdeen (GB) · 1,321 km'))
         """
         if isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0:
             raise ValueError("limit must be a positive integer")
@@ -1266,12 +1673,28 @@ class Atlas:
 
     @staticmethod
     def place_kinds() -> tuple[str, ...]:
-        """Return every place kind accepted by place searches, such as ``"volcano"``."""
+        """Return every place kind accepted by place searches, such as ``"volcano"``.
+
+        Returns:
+            Kind names for the ``kind`` argument of place searches.
+
+        Example:
+            >>> "volcano" in atlas.place_kinds()
+            True
+        """
         return tuple(sorted(set(KINDS.values())))
 
     @staticmethod
     def place_categories() -> tuple[str, ...]:
-        """Return the general place categories, such as ``"water"`` and ``"landform"``."""
+        """Return the general place categories, such as ``"water"`` and ``"landform"``.
+
+        Returns:
+            Category names for the ``category`` argument of place searches.
+
+        Example:
+            >>> atlas.place_categories()
+            ('area', 'forest', 'landform', 'landmark', 'region', 'route', 'town', 'undersea', 'water')
+        """
         return tuple(sorted(CATEGORIES.values()))
 
     def search_places(
@@ -1294,6 +1717,20 @@ class Atlas:
 
         Narrow results with ``kind`` (see :meth:`place_kinds`), ``category``
         (see :meth:`place_categories`), or ``country``.
+
+        Args:
+            query: A name or the start of one.
+            kind: Keep only this kind, such as ``"lake"``.
+            category: Keep only this category, such as ``"water"``.
+            country: Keep only places in this country.
+            limit: The most places to return.
+
+        Returns:
+            :class:`Place` records, best match first.
+
+        Example:
+            >>> atlas.search_places("Titicaca", limit=1)
+            (Place(english_name='Lake Titicaca', kind='lake', country_code='BO'),)
         """
         if not isinstance(query, str):
             raise TypeError("query must be a string")
@@ -1327,6 +1764,24 @@ class Atlas:
         Victoria")`` the African lake. Narrow with ``kind`` or ``country`` to pick
         a less famous namesake. Raises :class:`PlaceNotFoundError` when no place
         has this exact name.
+
+        Args:
+            query: The place's exact name.
+            kind: Pick a place of this kind, such as ``"mountain"``.
+            country: Pick a place in this country.
+
+        Returns:
+            The :class:`Place`.
+
+        Raises:
+            PlaceNotFoundError: No place has this name. The message suggests
+                close spellings.
+
+        Example:
+            >>> atlas.place("Kilimanjaro")
+            Place(english_name='Mount Kilimanjaro', kind='mountain', country_code='TZ')
+            >>> atlas.place("Kilimanjaro").elevation_m
+            5895
         """
         key = normalize_name(query) if isinstance(query, str) else ""
         for match in self.search_places(query, kind=kind, country=country, limit=10):
@@ -1356,6 +1811,19 @@ class Atlas:
         with ``kind`` (see :meth:`place_kinds`) or ``category`` (see
         :meth:`place_categories`). The capital, whole regions, schools,
         airports, and river points are left out unless asked for by ``kind``.
+
+        Args:
+            country: A country name, code, or profile.
+            kind: Keep only this kind, such as ``"lake"``.
+            category: Keep only this category, such as ``"water"``.
+            limit: The most places to return.
+
+        Returns:
+            :class:`Place` records, best known first.
+
+        Example:
+            >>> atlas.places_in("Peru", kind="lake", limit=2)
+            (Place(english_name='Lake Junín', kind='lake', country_code='PE'),)
         """
         if isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0:
             raise ValueError("limit must be a positive integer")
@@ -1381,6 +1849,17 @@ class Atlas:
         :meth:`search_places`, where a country-level place is replaced by its
         :class:`Country` profile. ``atlas.find("Georgia")`` gives the country
         and then the US state.
+
+        Args:
+            query: Any name, such as ``"Georgia"`` or ``"Everest"``.
+            limit: The most results to return.
+
+        Returns:
+            :class:`Country` profiles and :class:`Place` records, best first.
+
+        Example:
+            >>> atlas.find("Georgia", limit=2)
+            (Country(name='Georgia', alpha2='GE'), Place(english_name='Georgia', kind='state or province', country_code='US'))
         """
         if isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0:
             raise ValueError("limit must be a positive integer")
@@ -1419,6 +1898,23 @@ class Atlas:
         ``kind`` or ``category`` (``category="water"`` finds the nearest lakes
         and rivers). Distances are great-circle surface measurements in
         ``"km"``, ``"mi"``, or ``"nmi"``.
+
+        Args:
+            origin: A city or place name, a country (its capital), any model
+                with coordinates, or a ``(latitude, longitude)`` tuple.
+            limit: The most places to return.
+            kind: Keep only this kind, such as ``"volcano"``.
+            category: Keep only this category, such as ``"water"``.
+            unit: ``"km"``, ``"mi"``, or ``"nmi"``.
+            include_origin: Also list places named like the origin, at the origin.
+            origin_country: The country of ``origin``, when its name is shared.
+
+        Returns:
+            :class:`PlaceDistance` rows, nearest first.
+
+        Example:
+            >>> atlas.places_near("Reykjavik", kind="volcano", limit=2)
+            (PlaceDistance('Sundhnúkur, volcano (IS) · 38 km'), PlaceDistance('Lágafell, volcano (IS) · 42 km'))
         """
         if isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0:
             raise ValueError("limit must be a positive integer")
@@ -1480,6 +1976,18 @@ class Atlas:
         """Return every statistic in the statistics pack, such as ``life_expectancy``.
 
         Needs the statistics pack (``pyworldatlas get statistics``).
+
+        Returns:
+            Every :class:`Indicator`, with its unit and source.
+
+        Raises:
+            PackNotInstalledError: The statistics pack is not installed.
+
+        Example:
+            >>> len(atlas.indicators())
+            11
+            >>> atlas.indicators()[0]
+            Indicator(key='birth_rate', unit='per 1,000 people a year')
         """
         return tuple(self._statistics_pack().indicators.values())
 
@@ -1498,6 +2006,21 @@ class Atlas:
         ``country`` is a country name, code, or profile, or ``"world"`` for the
         World Bank's world total. Years without a published value are ``None``.
         Needs the statistics pack (``pyworldatlas get statistics``).
+
+        Args:
+            country: A country name, code, or profile, or ``"world"``.
+            indicator: A key from :meth:`indicators`, such as ``"life_expectancy"``.
+
+        Returns:
+            A :class:`StatisticSeries` with a ``summary`` sentence.
+
+        Raises:
+            ValueError: The indicator is unknown.
+            PackNotInstalledError: The statistics pack is not installed.
+
+        Example:
+            >>> print(atlas.time_series("Kenya", "electricity_access").summary)
+            Access to electricity in Kenya rose from 10.9% of people in 1993 to 77.0% of people in 2024.
         """
         found = self._indicator(indicator)
         if isinstance(country, str) and country.strip().casefold() == "world":
@@ -1513,6 +2036,18 @@ class Atlas:
 
         Returns ``None`` when the publisher has no value; missing values are
         never estimated. Needs the statistics pack.
+
+        Args:
+            country: A country name, code, or profile, or ``"world"``.
+            indicator: A key from :meth:`indicators`.
+            year: The year to read, or ``None`` for the latest.
+
+        Returns:
+            A :class:`StatisticValue`, or ``None``.
+
+        Example:
+            >>> print(atlas.statistic("Brazil", "urban_population", 1960))
+            44.7% of people (1960)
         """
         series = self.time_series(country, indicator)
         if year is None:
@@ -1529,6 +2064,19 @@ class Atlas:
         is better. Countries without a value are left out. Needs the
         statistics pack. :meth:`rank` gives the same order as numbered rows
         with country names; prefer it in new code.
+
+        Args:
+            indicator: A key from :meth:`indicators`.
+            year: The year to compare, or ``None`` for each country's latest.
+            descending: ``False`` sorts smallest first.
+            limit: The most rows to return, or ``None`` for all.
+
+        Returns:
+            :class:`StatisticValue` rows, sorted.
+
+        Example:
+            >>> atlas.sort_by_statistic("forest_area", limit=2)
+            (StatisticValue(indicator='forest_area', area='FM', year=2024, value=92.1), StatisticValue(indicator='forest_area', area='SR', year=2024, value=91.5))
         """
         found = self._indicator(indicator)
         if limit is not None and (isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0):
@@ -1556,6 +2104,17 @@ class Atlas:
         ``write_html()`` or ``write_svg()`` to save it, or display it in a
         notebook. Needs the statistics pack and a map pack
         (``pyworldatlas get statistics`` and ``pyworldatlas get maps-lite``).
+
+        Args:
+            indicator: A key from :meth:`indicators`.
+            year: The year to show, or ``None`` for each country's latest.
+
+        Returns:
+            A :class:`~pyworldatlas.maps.WorldMap`.
+
+        Example:
+            >>> print(atlas.world_map("life_expectancy", year=2020))
+            Life expectancy at birth (years), in 2020
         """
         if year is not None and (isinstance(year, bool) or not isinstance(year, int)):
             raise TypeError("year must be an integer or None")
@@ -1596,6 +2155,16 @@ class Atlas:
 
         Needs the landmarks pack (``pyworldatlas get landmarks``). Raises
         :class:`PlaceNotFoundError` for an unknown code.
+
+        Args:
+            code: A three-letter IATA or four-letter ICAO code.
+
+        Returns:
+            The :class:`Airport`.
+
+        Example:
+            >>> atlas.airport("LHR")
+            Airport(iata_code='LHR', name='London Heathrow Airport')
         """
         if not isinstance(code, str):
             raise TypeError("code must be a string")
@@ -1611,6 +2180,17 @@ class Atlas:
 
         Narrow with ``country`` and ``size`` (``"large"``, ``"medium"``, or
         ``"small"``). Needs the landmarks pack (``pyworldatlas get landmarks``).
+
+        Args:
+            country: Keep only airports in this country.
+            size: Keep only ``"large"``, ``"medium"``, or ``"small"`` airports.
+
+        Returns:
+            :class:`Airport` records.
+
+        Example:
+            >>> atlas.airports("Iceland", size="medium")[:2]
+            (Airport(iata_code='EGS', name='Egilsstaðir Airport'), Airport(iata_code='GRY', name='Grímsey Airport'))
         """
         if size is not None and size not in {"large", "medium", "small"}:
             raise ValueError("size must be 'large', 'medium', or 'small'")
@@ -1629,6 +2209,16 @@ class Atlas:
         Narrow with ``category`` (``"cultural"``, ``"natural"``, or ``"mixed"``).
         Use :meth:`heritage_sites_near` to find the sites around a place.
         Needs the landmarks pack (``pyworldatlas get landmarks``).
+
+        Args:
+            category: Keep only ``"cultural"``, ``"natural"``, or ``"mixed"`` sites.
+
+        Returns:
+            :class:`WorldHeritageSite` records.
+
+        Example:
+            >>> atlas.world_heritage_sites(category="mixed")[0]
+            WorldHeritageSite(site_id=39, name='Ngorongoro Conservation Area')
         """
         if category is not None and category not in {"cultural", "natural", "mixed"}:
             raise ValueError("category must be 'cultural', 'natural', or 'mixed'")
@@ -1650,6 +2240,20 @@ class Atlas:
         ``origin`` is a city or place name, a country (its capital), a model
         with coordinates, or a ``(latitude, longitude)`` tuple. ``unit`` is
         ``"km"`` or ``"mi"``. Needs the landmarks pack.
+
+        Args:
+            origin: A city or place name, a country (its capital), any model
+                with coordinates, or a ``(latitude, longitude)`` tuple.
+            limit: The most sites to return.
+            category: Keep only ``"cultural"``, ``"natural"``, or ``"mixed"`` sites.
+            unit: ``"km"`` or ``"mi"``.
+
+        Returns:
+            :class:`SiteDistance` rows, nearest first.
+
+        Example:
+            >>> atlas.heritage_sites_near("Cusco", limit=1)
+            (SiteDistance('Historic centre of Cusco, cultural · 1.9 km'),)
         """
         if isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0:
             raise ValueError("limit must be a positive integer")
@@ -1674,6 +2278,16 @@ class Atlas:
         Names match without regard to case or accents: an exact name first,
         then the one site whose name contains the query. Raises
         :class:`PlaceNotFoundError` or :class:`AmbiguousPlaceError`.
+
+        Args:
+            query: The site's list number, or its name or part of it.
+
+        Returns:
+            The :class:`WorldHeritageSite`.
+
+        Example:
+            >>> atlas.world_heritage_site("Machu Picchu")
+            WorldHeritageSite(site_id=274, name='Historic Sanctuary of Machu Picchu')
         """
         sites = self._landmark_pack().world_heritage
         if isinstance(query, int) and not isinstance(query, bool):
@@ -1709,6 +2323,19 @@ class Atlas:
         :class:`SunTimes`). They agree with almanac times to about a minute
         between latitudes 72° north and south. Compare ``atlas.sun("Oslo",
         date(2026, 6, 21))`` with December to see why seasons happen.
+
+        Args:
+            where: A city or place name, a country (its capital), any model
+                with coordinates, or a ``(latitude, longitude)`` tuple.
+            on: The day, or ``None`` for today.
+
+        Returns:
+            :class:`SunTimes` that print as one sentence.
+
+        Example:
+            >>> from datetime import date
+            >>> print(atlas.sun((59.91, 10.75), date(2026, 6, 21)))  # Oslo
+            On 21 June 2026 the sun rises at 01:53 UTC and sets at 20:43 UTC, giving 18 h 50 min of daylight. At noon it is 54° above the horizon.
         """
         point = self._point_of(where)
         zone = self._timezone_of(where)
@@ -1835,6 +2462,18 @@ class Atlas:
         country (its capital), a model with coordinates, or a ``(latitude,
         longitude)`` tuple. Most antipodes are at sea. ``nearest`` lists
         well-known places within 500 km of the antipode first, nearest first.
+
+        Args:
+            where: A city or place name, a country (its capital), any model
+                with coordinates, or a ``(latitude, longitude)`` tuple.
+            limit: How many nearby places to list.
+
+        Returns:
+            An :class:`Antipode` with the opposite point and the places nearest it.
+
+        Example:
+            >>> print(atlas.antipode("Madrid"))
+            Straight through the centre of the Earth from 40.42° N, 3.70° W you would come out at 40.42° S, 176.30° E. The nearest well-known place is Waipatiki, town (NZ), 4.9 km away.
         """
         point = self._point_of(where)
         longitude = point.longitude + 180 if point.longitude <= 0 else point.longitude - 180
@@ -1948,6 +2587,11 @@ class Atlas:
 
         Every line is a real call you can copy. ``pyworldatlas tour`` prints
         the same tour on the command line.
+
+        Example:
+            >>> atlas.help()  # doctest: +ELLIPSIS
+            PyWorldAtlas: things to try
+            ...
         """
         from ._tour import TOUR
 
@@ -1985,6 +2629,11 @@ class Atlas:
 
         Calling ``close()`` more than once is safe. Queries on a closed atlas
         raise :class:`AtlasClosedError`; models returned earlier remain usable.
+
+        Example:
+            >>> other = Atlas()
+            >>> other.close()
+            >>> other.close()  # closing twice is safe
         """
         if not self._closed:
             self._db.close()
