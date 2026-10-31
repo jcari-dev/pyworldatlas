@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- **Fixed:** printing a result such as a border path no longer fails on
+  Windows when a script's output is saved to a file or piped to another
+  program. If the output cannot show symbols such as `→` and `°`, it
+  switches to UTF-8, as the `pyworldatlas` command already does.
+
 ## 0.13.0
 
 Friendly by default: clearer names, results that read well, and docs that
