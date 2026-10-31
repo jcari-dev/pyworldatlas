@@ -80,7 +80,7 @@ Shortest land paths
 
 :meth:`~pyworldatlas.Atlas.border_path` uses breadth-first search. Both
 endpoints appear in the returned :class:`~pyworldatlas.BorderPathResult`, and
-``crossings`` is one fewer than the number of countries. Alphabetic neighbor
+``crossings``, the number of :term:`border crossings <border crossing>`, is one fewer than the number of countries. Alphabetic neighbor
 order makes equal-length choices deterministic.
 
 .. doctest::

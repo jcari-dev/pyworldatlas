@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **Cheat sheet, quests, and glossary:** a one-page cheat sheet of the most
+  useful calls that prints cleanly, six small quests with answers to open
+  when you are ready, and a glossary. Words such as "antipode" and "pack"
+  link to the glossary across the guides and show their meaning on hover.
+- **Try it:** examples on the welcome page, the cheat sheet, and the quests
+  have a "Try it" link that opens them in the browser playground, ready to
+  run. The code travels in the link itself and is never sent to a server.
+- **Dark mode:** the docs follow the dark or light setting of your device.
+  Every page passes the WCAG 2.2 AA contrast check in both, and code examples
+  use higher-contrast colors.
 - **A shorter, calmer welcome page:** the docs home page now fits on one
   screen: a headline, three ways in, a three-line start, and a few examples.
   The coverage table moved to "Why PyWorldAtlas?". Examples across the docs,
@@ -34,8 +44,8 @@
   make 10 cards by default. Topics and indicators accept any case, spaces,
   and singular or plural forms ("Capital", "life expectancy").
 - **Results that read well:** printing any result gives one clear line, such
-  as `#1 Russia: 17,098,242 km²`, `Seoul, South Korea · 1,153 km`, or
-  `France → Germany → Poland → Russia → China (4 border crossings)`, and the
+  as `#1 Canada: 202,080 km`, `Madrid, Spain · 503 km`, or
+  `Portugal → Spain → France → Germany → Poland (4 border crossings)`, and the
   REPL shows short reprs instead of nested objects. Quiz questions print with
   numbered choices.
 - **Every result reads well**, including areas, climate, currencies, time
