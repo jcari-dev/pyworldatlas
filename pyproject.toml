@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyworldatlas"
-version = "0.13.0"
+version = "0.13.1"
 description = "Offline world atlas for Python: 248 countries, 11 million places, statistics since 1960, and 3D maps, with zero dependencies"
 keywords = ["atlas", "classroom", "countries", "education", "gazetteer", "geography", "learning", "maps", "offline", "places", "quiz", "statistics", "sunrise", "world-data"]
 readme = "README.md"

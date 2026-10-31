@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased
+## 0.13.1
+
+A fix for printing results on Windows.
 
 - **Fixed:** printing a result such as a border path no longer fails on
   Windows when a script's output is saved to a file or piped to another
