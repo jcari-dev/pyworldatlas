@@ -1,5 +1,5 @@
 {
-  "library_version": "0.12.1",
+  "library_version": "0.13.0",
   "schema_version": 8,
   "dataset_version": "2026.10.27.1",
   "milestones": [
@@ -142,6 +142,16 @@
       "dataset": "Dataset 2026.10.27.1 with travel basics; 121,713 World Bank values; 4,010 airports and 1,266 World Heritage sites",
       "docs": "The world in numbers, Airports and World Heritage, Sun and seasons, learning activities, and the official statistics policy",
       "release": "Published as v0.12.0"
+    },
+    {
+      "name": "13: Friendly by default",
+      "version": "0.13.0",
+      "status": "complete",
+      "functions": "One naming style with older names kept until 1.0; readable one-line results and Distance values; did-you-mean suggestions; atlas.help() and pyworldatlas tour; world maps of statistics; sun times on the local clock",
+      "tests": "Every method's example runs as a test, deprecated names still work, readable output snapshots, Try it examples run without packs, and WCAG 2.2 AA contrast in light and dark",
+      "dataset": "Dataset 2026.10.27.1 unchanged in content, with tidier lake and river names and no fake zero areas",
+      "docs": "Shorter welcome page, cheat sheet, quests, glossary with hover meanings, Try it links into the playground, API grouped by task, and dark mode",
+      "release": "Published as v0.13.0"
     }
   ],
   "coverage": {
@@ -228,7 +238,7 @@
       "TV",
       "UM"
     ],
-    "database_sha256": "78dd14c29aae7a217d998b8cc1ee8ae7a7e42cdbd2266898e1faf804144ab3bb",
+    "database_sha256": "526ed21e8c4a3103e6d9ef7bdc4ab8a7269e817d06baa1c0800d7dfd1566b27e",
     "validation": "PASS"
   }
 }

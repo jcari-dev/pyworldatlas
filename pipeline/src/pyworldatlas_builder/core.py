@@ -2043,6 +2043,16 @@ def report(root: Path, normalized: dict[str, object], database: Path) -> None:
                 "docs": "The world in numbers, Airports and World Heritage, Sun and seasons, learning activities, and the official statistics policy",
                 "release": "Published as v0.12.0",
             },
+            {
+                "name": "13: Friendly by default",
+                "version": "0.13.0",
+                "status": "complete",
+                "functions": "One naming style with older names kept until 1.0; readable one-line results and Distance values; did-you-mean suggestions; atlas.help() and pyworldatlas tour; world maps of statistics; sun times on the local clock",
+                "tests": "Every method's example runs as a test, deprecated names still work, readable output snapshots, Try it examples run without packs, and WCAG 2.2 AA contrast in light and dark",
+                "dataset": "Dataset 2026.10.27.1 unchanged in content, with tidier lake and river names and no fake zero areas",
+                "docs": "Shorter welcome page, cheat sheet, quests, glossary with hover meanings, Try it links into the playground, API grouped by task, and dark mode",
+                "release": "Published as v0.13.0",
+            },
         ]
     )
     status = {
