@@ -32,6 +32,9 @@ from .models import (Airport, Antipode, Area, Distance, Indicator, StatisticSeri
                      WorldHeritageSite)
 
 from .models._display import show_details
+from ._console import ensure_printable as _ensure_printable
+
+_ensure_printable()
 
 __all__ = [
     "show_details",
