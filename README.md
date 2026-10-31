@@ -54,9 +54,9 @@ source; missing data stays missing.
 
 ## Start here
 
-- 🧒 **Students:** the [playground](https://jcari-dev.github.io/pyworldatlas-documentation/playground.html) and [learning activities](https://jcari-dev.github.io/pyworldatlas-documentation/learning.html)
+- 🧒 **Students:** the [playground](https://jcari-dev.github.io/pyworldatlas-documentation/playground.html), [quests](https://jcari-dev.github.io/pyworldatlas-documentation/quests.html), and [learning activities](https://jcari-dev.github.io/pyworldatlas-documentation/learning.html)
 - 🍎 **Teachers and classrooms:** [teaching with PyWorldAtlas](https://jcari-dev.github.io/pyworldatlas-documentation/teaching.html), with a 15-minute lesson and printable quizzes
-- 💻 **Developers:** the [quickstart](https://jcari-dev.github.io/pyworldatlas-documentation/quickstart.html), [example programs](https://jcari-dev.github.io/pyworldatlas-documentation/recipes.html), and [API reference](https://jcari-dev.github.io/pyworldatlas-documentation/api.html)
+- 💻 **Developers:** the [quickstart](https://jcari-dev.github.io/pyworldatlas-documentation/quickstart.html), [cheat sheet](https://jcari-dev.github.io/pyworldatlas-documentation/cheatsheet.html), [example programs](https://jcari-dev.github.io/pyworldatlas-documentation/recipes.html), and [API reference](https://jcari-dev.github.io/pyworldatlas-documentation/api.html)
 
 ## Trust and neutrality
 

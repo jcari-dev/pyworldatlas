@@ -26,7 +26,7 @@ class CommandLineTests(unittest.TestCase):
     def test_version_and_country_summary_are_readable(self) -> None:
         version = self.run_cli("--version")
         self.assertEqual(version.returncode, 0)
-        self.assertEqual(version.stdout.strip(), "PyWorldAtlas 0.12.1")
+        self.assertEqual(version.stdout.strip(), "PyWorldAtlas 0.13.0")
 
         country = self.run_cli("country", "JP")
         self.assertEqual(country.returncode, 0)

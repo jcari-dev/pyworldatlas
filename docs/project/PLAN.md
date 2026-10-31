@@ -170,7 +170,18 @@ on a slow 3G connection, and every place on Earth under 2 minutes on a slow
 - **Done: map coloring by any indicator** (`Atlas.world_map`,
   `pyworldatlas world-map`).
 
-## 0.13: The encyclopedia
+## 0.13: Friendly by default (released)
+
+- **Done: one naming style.** Distance searches end in `_near`, `rank()`
+  ranks statistics too, `quiz()` takes every topic, and older names keep
+  working until 1.0.
+- **Done: results that read well,** "did you mean" suggestions,
+  `atlas.help()`, and `pyworldatlas tour`.
+- **Done: world maps of statistics** (`Atlas.world_map`).
+- **Done: friendlier docs.** A shorter welcome page, a cheat sheet, quests, a
+  glossary, "Try it" links, and dark mode that passes WCAG 2.2 AA.
+
+## 0.14: The encyclopedia
 
 - Generated reference entries for every country, place, and landmark, built
   only from sourced structured data.

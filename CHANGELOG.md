@@ -1,6 +1,9 @@
 # Changelog
 
-## Unreleased
+## 0.13.0
+
+Friendly by default: clearer names, results that read well, and docs that
+are easier to start with.
 
 - **Cheat sheet, quests, and glossary:** a one-page cheat sheet of the most
   useful calls that prints cleanly, six small quests with answers to open
